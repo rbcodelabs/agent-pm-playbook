@@ -1,0 +1,25 @@
+{
+  "name": "richardbowman",
+  "owner": {
+    "name": "Rick Bowman"
+  },
+  "plugins": [
+    {
+      "name": "agentic-pm",
+      "source": "./",
+      "description": "Agentic PM Playbook: AI-augmented product management using Opportunity Solution Trees and continuous discovery",
+      "author": {
+        "name": "Rick Bowman"
+      },
+      "repository": "https://github.com/richardbowman/agent-pm-playbook",
+      "license": "MIT",
+      "keywords": [
+        "product-management",
+        "OST",
+        "continuous-discovery",
+        "agentic-pm",
+        "product-discovery"
+      ]
+    }
+  ]
+}

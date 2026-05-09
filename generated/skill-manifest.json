@@ -1,0 +1,172 @@
+{
+  "generatedAt": "2026-05-09T12:00:00.000Z",
+  "version": 2,
+  "skills": {
+    "agentic-pm": {
+      "priority": 3,
+      "summary": "AI-augmented PM coaching: OSTs, continuous discovery, experiment design, and weekly synthesis workflows grounded in the Agentic PM Playbook",
+      "docs": [
+        "https://github.com/richardbowman/agent-pm-playbook"
+      ],
+      "pathPatterns": [],
+      "bashPatterns": [],
+      "importPatterns": [],
+      "bodyPath": "skills/agentic-pm/SKILL.md",
+      "pathRegexSources": [],
+      "bashRegexSources": [],
+      "importRegexSources": [],
+      "chainTo": [
+        {
+          "pattern": "opportunity solution tree|\\bOST\\b|build.*tree|tree.*health|my tree",
+          "targetSkill": "ost-workflow",
+          "message": "Switching to OST workflow for tree-specific work"
+        },
+        {
+          "pattern": "interview|transcript|signal|synthesis|research|feedback|survey|tickets",
+          "targetSkill": "pm-signal-synthesis",
+          "message": "Switching to signal synthesis for research processing"
+        }
+      ],
+      "retrieval": {
+        "aliases": [
+          "agentic pm",
+          "pm coach",
+          "product management coach",
+          "product manager",
+          "continuous discovery",
+          "agentic product manager"
+        ],
+        "intents": [
+          "help me with product management",
+          "coach me on product discovery",
+          "I need product strategy help",
+          "review my product approach",
+          "help me prioritize",
+          "act as a PM coach",
+          "outcomes over output",
+          "I want to do continuous discovery"
+        ],
+        "entities": [
+          "opportunity solution tree",
+          "OST",
+          "continuous discovery",
+          "desired outcome",
+          "opportunity",
+          "experiment",
+          "Teresa Torres",
+          "Marty Cagan"
+        ],
+        "examples": []
+      }
+    },
+    "ost-workflow": {
+      "priority": 5,
+      "summary": "Build, review, and maintain Opportunity Solution Trees: construction, health checks, prioritization, and common mistake correction",
+      "docs": [
+        "https://github.com/richardbowman/agent-pm-playbook"
+      ],
+      "pathPatterns": [],
+      "bashPatterns": [],
+      "importPatterns": [],
+      "bodyPath": "skills/ost-workflow/SKILL.md",
+      "pathRegexSources": [],
+      "bashRegexSources": [],
+      "importRegexSources": [],
+      "chainTo": [
+        {
+          "pattern": "interview|transcript|signal|feedback|research|survey",
+          "targetSkill": "pm-signal-synthesis",
+          "message": "Switching to signal synthesis to process research before updating the tree"
+        },
+        {
+          "pattern": "coach|playbook|philosophy|how should I|what should I|strategy",
+          "targetSkill": "agentic-pm",
+          "message": "Switching to PM coaching for broader strategic guidance"
+        }
+      ],
+      "retrieval": {
+        "aliases": [
+          "OST",
+          "opportunity solution tree",
+          "opportunity tree",
+          "solution tree",
+          "tree review",
+          "tree health"
+        ],
+        "intents": [
+          "build an OST",
+          "review my opportunity solution tree",
+          "check my tree health",
+          "add opportunities to my tree",
+          "prioritize within my OST",
+          "help me structure opportunities and solutions",
+          "validate my opportunity",
+          "my tree needs work"
+        ],
+        "entities": [
+          "opportunity solution tree",
+          "OST",
+          "desired outcome",
+          "opportunity layer",
+          "solution layer",
+          "experiment layer",
+          "tree health",
+          "opportunity framing"
+        ],
+        "examples": []
+      }
+    },
+    "pm-signal-synthesis": {
+      "priority": 5,
+      "summary": "Synthesize user research signals into OST-ready opportunities: interview synthesis, signal clustering, contradiction detection, and confidence tagging",
+      "docs": [
+        "https://github.com/richardbowman/agent-pm-playbook"
+      ],
+      "pathPatterns": [],
+      "bashPatterns": [],
+      "importPatterns": [],
+      "bodyPath": "skills/pm-signal-synthesis/SKILL.md",
+      "pathRegexSources": [],
+      "bashRegexSources": [],
+      "importRegexSources": [],
+      "chainTo": [
+        {
+          "pattern": "opportunity solution tree|\\bOST\\b|add to.*tree|update.*tree",
+          "targetSkill": "ost-workflow",
+          "message": "Switching to OST workflow to map synthesized signals into the tree"
+        }
+      ],
+      "retrieval": {
+        "aliases": [
+          "signal synthesis",
+          "interview synthesis",
+          "research synthesis",
+          "user research",
+          "transcript synthesis",
+          "signal clustering",
+          "feedback synthesis"
+        ],
+        "intents": [
+          "synthesize my user interviews",
+          "process research transcripts",
+          "cluster customer feedback",
+          "analyze support tickets for opportunities",
+          "help me make sense of this feedback",
+          "what patterns are in this research",
+          "I have interviews to process"
+        ],
+        "entities": [
+          "interview transcript",
+          "user research",
+          "customer signals",
+          "support tickets",
+          "NPS responses",
+          "sales call notes",
+          "signal cluster",
+          "opportunity theme"
+        ],
+        "examples": []
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "agentic-pm",
+  "version": "1.0.0",
+  "description": "AI-augmented product management coaching using Opportunity Solution Trees and continuous discovery",
+  "author": {
+    "name": "Rick Bowman",
+    "url": "https://github.com/richardbowman"
+  },
+  "repository": "https://github.com/richardbowman/agent-pm-playbook",
+  "license": "MIT",
+  "keywords": [
+    "product-management",
+    "OST",
+    "continuous-discovery",
+    "agentic-pm"
+  ],
+  "skills": [
+    "./skills/agentic-pm/SKILL.md",
+    "./skills/ost-workflow/SKILL.md",
+    "./skills/pm-signal-synthesis/SKILL.md"
+  ]
+}
