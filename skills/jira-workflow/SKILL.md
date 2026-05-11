@@ -2,10 +2,10 @@
 name: jira-workflow
 description: >-
   Manage Jira ticket status during a build session. Handles credential retrieval
-  from Keeper, ticket transitions, and enforces the correct status progression
-  (Idea → To Do → In Progress → Testing → Done). Use whenever Claude is actively
-  building against a Jira backlog — move tickets inline as work completes, never
-  batch at the end.
+  from a secrets manager, ticket transitions, and enforces the correct status
+  progression (Idea → To Do → In Progress → Testing → Done). Use whenever Claude
+  is actively building against a Jira backlog — move tickets inline as work
+  completes, never batch at the end.
 metadata:
   priority: 5
   docs:
@@ -75,27 +75,31 @@ means Testing. Done requires human verification and CI passage.
 
 ## Credential Retrieval
 
-Jira credentials are stored in Keeper vault. Before making any Jira API calls:
+Jira credentials (email + API token) should never be hardcoded. Retrieve them
+from the project's secrets manager before making any Jira API calls.
 
-1. Check if `JIRA_EMAIL` and `JIRA_TOKEN` are already set in the environment
-2. If not, use the Keeper CLI to retrieve them:
-
+**Step 1:** Check if already set in the environment:
 ```bash
-# Keeper requires an active SSO session — user must run this first:
-keeper login <email>
-# (complete browser SSO flow, paste token back)
-
-# Then retrieve credentials:
-keeper get <RECORD_UID> --format json
+echo $JIRA_EMAIL && echo $JIRA_TOKEN
 ```
 
-The Keeper record title to search for is typically **"Atlassian - Claude Code API Key"**
-or similar. Search with: `keeper search jira` or `keeper search atlassian`
+**Step 2:** If not set, check the project's `CLAUDE.md` for the secrets manager
+and record location to use. Common patterns:
+
+- **1Password:** `op item get "Jira API Token" --fields username,credential`
+- **Keeper CLI:** `keeper get <record-uid> --format json`
+- **AWS Secrets Manager:** `aws secretsmanager get-secret-value --secret-id jira-api-token`
+- **Environment file:** `source .env.local`
+
+**Step 3:** If no `CLAUDE.md` exists with this information, ask the user:
+> "Where are your Jira credentials stored? (e.g. 1Password, Keeper, env file)"
+
+Generate a Jira API token at: https://id.atlassian.com/manage-profile/security/api-tokens
 
 ## Jira API Reference
 
-**All projects use the new search endpoint** (the old `/rest/api/3/search?jql=` was
-removed — use POST to `/rest/api/3/search/jql`):
+**Use the new search endpoint** — the old `GET /rest/api/3/search?jql=` was
+removed. Use `POST /rest/api/3/search/jql` instead:
 
 ```bash
 # Build auth header
@@ -105,37 +109,36 @@ AUTH=$(echo -n "$JIRA_EMAIL:$JIRA_TOKEN" | base64)
 curl -s -X POST "https://<org>.atlassian.net/rest/api/3/search/jql" \
   -H "Authorization: Basic $AUTH" \
   -H "Content-Type: application/json" \
-  -d '{"jql":"project=KEY ORDER BY key ASC","maxResults":80,"fields":["summary","status","issuetype"]}'
+  -d '{"jql":"project=MYPROJECT ORDER BY key ASC","maxResults":80,"fields":["summary","status","issuetype"]}'
 
 # Get available transitions for an issue
-curl -s "https://<org>.atlassian.net/rest/api/3/issue/KEY-123/transitions" \
+curl -s "https://<org>.atlassian.net/rest/api/3/issue/PROJ-123/transitions" \
   -H "Authorization: Basic $AUTH" \
   -H "Content-Type: application/json"
 
 # Apply a transition
-curl -s -X POST "https://<org>.atlassian.net/rest/api/3/issue/KEY-123/transitions" \
+curl -s -X POST "https://<org>.atlassian.net/rest/api/3/issue/PROJ-123/transitions" \
   -H "Authorization: Basic $AUTH" \
   -H "Content-Type: application/json" \
   -d '{"transition":{"id":"<transition_id>"}}'
 
 # Add a comment
-curl -s -X POST "https://<org>.atlassian.net/rest/api/3/issue/KEY-123/comment" \
+curl -s -X POST "https://<org>.atlassian.net/rest/api/3/issue/PROJ-123/comment" \
   -H "Authorization: Basic $AUTH" \
   -H "Content-Type: application/json" \
   -d '{"body":{"type":"doc","version":1,"content":[{"type":"paragraph","content":[{"type":"text","text":"<comment>"}]}]}}'
 ```
 
-**Note:** Transition IDs vary by project. Always fetch them dynamically with the
-transitions endpoint rather than hardcoding — the IDs above are illustrative only.
+**Important:** Transition IDs vary by project and workflow configuration. Always
+fetch them dynamically with the transitions endpoint — never hardcode them.
 
 ## Session Workflow
 
 ### Starting a session
 
-1. Retrieve Jira credentials from Keeper if not already in env
+1. Retrieve Jira credentials from the project's secrets manager
 2. Identify which tickets are being worked in this session
-3. Move each to **To Do** if they're currently in Idea, or **In Progress** if
-   work is starting immediately
+3. Move each to **To Do** if currently in Idea, or **In Progress** if starting immediately
 
 ### During a session
 
@@ -144,12 +147,12 @@ transitions endpoint rather than hardcoding — the IDs above are illustrative o
   - Code is written and compiles
   - The route/feature returns a correct response
   - The app runs without errors related to this ticket
-- Add a brief comment on transition summarizing what was built
+- Add a brief comment on each transition summarizing what was built
 
 ### Ending a session
 
-- Verify every ticket that was touched has an accurate status
-- Leave a comment on any **In Progress** ticket with current state and next steps
+- Verify every touched ticket has an accurate status
+- Leave a comment on any **In Progress** ticket noting current state and next steps
 - Never leave tickets in a state that doesn't reflect reality
 
 ## Anti-Patterns
@@ -161,11 +164,19 @@ transitions endpoint rather than hardcoding — the IDs above are illustrative o
 | Skipping In Progress (Idea → Testing) | Loses the signal of when work actually started |
 | Not commenting on transitions | Team loses context on what changed and why |
 | Hardcoding transition IDs | IDs differ per project; always fetch dynamically |
+| Hardcoding credentials | Always retrieve from secrets manager |
 
-## Project-Specific Notes
+## Project-Specific Configuration
 
-These are populated per-project in the project's `CLAUDE.md`. If you're working
-on a project without a `CLAUDE.md`, ask the user for:
-- Jira base URL (e.g. `https://redventures.atlassian.net`)
-- Project key (e.g. `ARC`)
-- Keeper record UID or search term for Jira credentials
+Each project should have a `CLAUDE.md` at its root with:
+
+```markdown
+## Jira
+
+- **Base URL:** https://<org>.atlassian.net
+- **Project key:** MYPROJECT
+- **Credentials:** <how to retrieve — secrets manager, record name/UID, etc.>
+```
+
+If no `CLAUDE.md` exists, ask the user for these three things before starting
+any Jira work.
