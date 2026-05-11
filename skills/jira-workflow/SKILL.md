@@ -138,16 +138,38 @@ fetch them dynamically with the transitions endpoint — never hardcode them.
 
 1. Retrieve Jira credentials from the project's secrets manager
 2. Identify which tickets are being worked in this session
-3. Move each to **To Do** if currently in Idea, or **In Progress** if starting immediately
+3. **Fetch the full description of each ticket** — read the Acceptance Criteria and
+   Definition of Done before writing a single line of code:
+   ```bash
+   curl -s "https://<org>.atlassian.net/rest/api/3/issue/PROJ-123" \
+     -H "Authorization: Basic $AUTH" | python3 -c "
+   import json,sys,re
+   d=json.load(sys.stdin)
+   desc = d['fields'].get('description') or {}
+   # Extract plain text from Atlassian Document Format
+   def extract(node):
+       if isinstance(node, dict):
+           if node.get('type') == 'text': return node.get('text','')
+           return ''.join(extract(c) for c in node.get('content',[]))
+       return ''
+   print(extract(desc))
+   "
+   ```
+4. Move each ticket to **To Do** if currently in Idea, or **In Progress** if starting immediately
 
 ### During a session
 
 - Move a ticket to **In Progress** the moment you start coding it
-- Move to **Testing** the moment:
-  - Code is written and compiles
-  - The route/feature returns a correct response
-  - The app runs without errors related to this ticket
-- Add a brief comment on each transition summarizing what was built
+- **Before moving to Testing**, run the AC checklist:
+  - Read every `- [ ]` item in the Acceptance Criteria
+  - Mark each as met ✅, partially met ⚠️, or not met ❌
+  - If any AC item is ❌: either implement it, or explicitly flag it as deferred
+    with a reason (e.g. "depends on Auth0 config not yet available")
+  - Post the AC checklist as a Jira comment when transitioning to Testing
+- Move to **Testing** only when:
+  - All AC items are either ✅ or explicitly deferred with justification
+  - Code compiles and the feature runs without errors
+- Add a brief comment on each transition summarizing what was built and any deferred AC
 
 ### Ending a session
 
@@ -160,9 +182,12 @@ fetch them dynamically with the transitions endpoint — never hardcode them.
 | Anti-pattern | Why it's wrong |
 |---|---|
 | Marking Done because code is written | Code complete ≠ verified. Use Testing. |
+| Moving to Testing without checking AC | The AC is the contract — unmet items mean the work isn't done |
 | Batching all updates at session end | Status is stale during the session; board is unreliable |
+| Starting work without reading the story | You'll miss AC items and build the wrong thing |
 | Skipping In Progress (Idea → Testing) | Loses the signal of when work actually started |
 | Not commenting on transitions | Team loses context on what changed and why |
+| Silently deferring AC items | Always flag deferred items explicitly with a reason in a Jira comment |
 | Hardcoding transition IDs | IDs differ per project; always fetch dynamically |
 | Hardcoding credentials | Always retrieve from secrets manager |
 
