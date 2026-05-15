@@ -1,7 +1,7 @@
 {
-  "name": "agentic-pm",
-  "version": "1.0.0",
-  "description": "AI-augmented product management coaching using Opportunity Solution Trees and continuous discovery",
+  "name": "agentic-product-team",
+  "version": "2.0.0",
+  "description": "Full AI-augmented product team — PM, Architect, Engineer, QA, and Code Reviewer agents with PM coaching skills built on continuous discovery and outcome-driven thinking",
   "author": {
     "name": "Rick Bowman",
     "url": "https://github.com/richardbowman"
@@ -12,11 +12,22 @@
     "product-management",
     "OST",
     "continuous-discovery",
-    "agentic-pm"
+    "agentic-pm",
+    "software-architecture",
+    "qa",
+    "code-review",
+    "agentic-team"
   ],
   "skills": [
     "./skills/agentic-pm/SKILL.md",
     "./skills/ost-workflow/SKILL.md",
     "./skills/pm-signal-synthesis/SKILL.md"
+  ],
+  "agents": [
+    "./agents/pm.md",
+    "./agents/architect.md",
+    "./agents/engineer.md",
+    "./agents/qa.md",
+    "./agents/reviewer.md"
   ]
 }
