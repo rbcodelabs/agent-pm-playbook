@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-09T12:00:00.000Z",
+  "generatedAt": "2026-05-15T00:00:00.000Z",
   "version": 2,
   "skills": {
     "agentic-pm": {
@@ -112,6 +112,77 @@
           "experiment layer",
           "tree health",
           "opportunity framing"
+        ],
+        "examples": []
+      }
+    },
+    "investment-gate": {
+      "priority": 5,
+      "summary": "Investment gate assessment: evaluate whether an opportunity or solution is ready to advance to the next stage (Exploring → Validating → Testing → Building → Scaling), check evidence thresholds, and recommend the cheapest path forward",
+      "docs": [
+        "https://github.com/richardbowman/agent-pm-playbook"
+      ],
+      "pathPatterns": [],
+      "bashPatterns": [],
+      "importPatterns": [],
+      "bodyPath": "skills/investment-gate/SKILL.md",
+      "pathRegexSources": [],
+      "bashRegexSources": [],
+      "importRegexSources": [],
+      "chainTo": [
+        {
+          "pattern": "more.*signal|more.*evidence|more.*research|gather.*signal|interview|transcript",
+          "targetSkill": "pm-signal-synthesis",
+          "message": "Switching to signal synthesis to gather the evidence needed to clear this gate"
+        },
+        {
+          "pattern": "opportunity.*framing|reframe|solution.*masquerad|OST|tree",
+          "targetSkill": "ost-workflow",
+          "message": "Switching to OST workflow to address the opportunity framing issue first"
+        },
+        {
+          "pattern": "coach|strategy|philosophy|broader|what should we|how should we",
+          "targetSkill": "agentic-pm",
+          "message": "Switching to PM coaching for broader strategic guidance"
+        }
+      ],
+      "retrieval": {
+        "aliases": [
+          "investment gate",
+          "gate assessment",
+          "readiness check",
+          "ready to build",
+          "ready to test",
+          "ready to scale",
+          "enough evidence",
+          "move to next stage",
+          "progressive investment",
+          "stage gate"
+        ],
+        "intents": [
+          "are we ready to build this?",
+          "do we have enough evidence to move forward?",
+          "should we start testing?",
+          "is this opportunity validated?",
+          "can we move this to the next stage?",
+          "how do we know when to build?",
+          "are we ready to scale?",
+          "what do we still need before we can ship?",
+          "we've been in discovery too long, should we build?",
+          "stakeholder wants us to build, are we ready?"
+        ],
+        "entities": [
+          "Exploring",
+          "Validating",
+          "Testing",
+          "Building",
+          "Scaling",
+          "gate criteria",
+          "evidence threshold",
+          "kill condition",
+          "investment ceiling",
+          "experiment type",
+          "riskiest assumption"
         ],
         "examples": []
       }

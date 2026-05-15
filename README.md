@@ -19,7 +19,7 @@ cd agent-pm-playbook
 
 ## The Team
 
-Five specialized agents, each with a focused role and explicit escalation rules:
+Six specialized agents, each with a focused role and explicit escalation rules:
 
 | Agent | Role | Tool Access |
 |---|---|---|
@@ -28,6 +28,7 @@ Five specialized agents, each with a focused role and explicit escalation rules:
 | `engineer` | Senior Engineer — implementation, refactoring, debugging | Full access |
 | `qa` | QA Engineer — test strategy, test writing, edge case hunting | Read/Write/Edit (test files) |
 | `reviewer` | Code Reviewer — correctness, security, performance audits | Read-only (enforced) |
+| `release-manager` | Release Manager — triage and merge open PRs, then ship via Vercel deploy or GitHub release | Full access |
 
 ### How Orchestration Works
 
@@ -39,11 +40,13 @@ to decide when to delegate. Spawn agents explicitly or let Claude route automati
 "Have the architect design the data model for X"
 "Have the reviewer audit the changes in src/auth"
 "Have QA write tests for the new checkout flow"
+"Ship all open PRs for obsidian-claude-threads"
 
 # Automatic routing
 "Review this PR" → reviewer agent
 "Design the caching layer" → architect agent
 "Write tests for this feature" → qa agent
+"Merge and ship all open PRs" → release-manager agent
 ```
 
 Agents can run in parallel for independent work:
@@ -66,7 +69,21 @@ Reviewer (code review)                ←── runs in parallel with QA
 
 ---
 
-## PM Skills (via `claude plugins add`)
+## Skills (via `claude plugins add`)
+
+### `release-manager` — Release Manager
+
+Triage all open PRs on a repo, build a safe merge order, execute the merges
+one-at-a-time, and ship the result. For Vercel web apps: waits for the deploy
+and smoke-tests live URLs. For Obsidian plugins and other distributable apps:
+runs the build, bumps the version, and publishes a GitHub release with built
+artifacts.
+
+**Triggers on:** "merge and ship open PRs", "ship my plugin", "process open pull requests", "babysit my PRs"
+
+---
+
+### PM Skills
 
 Three skills that activate when you're doing PM work:
 
