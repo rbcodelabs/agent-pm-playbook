@@ -176,7 +176,7 @@ Create the `Discovery/` folder if it does not exist. The OST for your active ini
 
 1. After synthesis, open `Discovery/Signal Ledger.md` and add a new entry at the top of the file using the template. Most-recent-first keeps the file usable without scrolling.
 2. For each signal cluster, check whether it maps to an existing OST opportunity. If yes, record the opportunity name. If no, mark Unmapped.
-3. When a cluster reaches Medium+ confidence and has appeared in at least two independent sessions, create a Linear issue labeled `[opportunity]`. Add the Linear issue ID to the ledger entry's OST mapping field (e.g., `Unmapped → GW-142`).
+3. When a cluster reaches Medium+ confidence and has appeared in at least two independent sessions, create a Linear issue labeled `[opportunity]`. Add the Linear issue ID to the ledger entry's OST mapping field (e.g., `Unmapped → PROJ-142`).
 4. For longitudinal checks: paste the relevant date range from the ledger directly into the longitudinal check prompt. No export needed.
 5. Monthly: copy the past 90 days of entries and paste into the trends briefing prompt.
 

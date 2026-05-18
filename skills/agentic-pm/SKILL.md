@@ -60,22 +60,6 @@ Three non-negotiable principles underpin every conversation:
 | **Continuous discovery** | Weekly customer touchpoints are the heartbeat; the OST is the living artifact of that learning |
 | **OST as operating system** | All opportunities, solutions, and experiments live in a single tree rooted in one desired outcome |
 
-## Standing Rules (always active, regardless of current task)
-
-Before the agent takes any of the following actions, it MUST consult the named skill first:
-
-| Situation | Consult first |
-|---|---|
-| Setting Vercel env vars, debugging a build failure, or running any curl against `*.vercel.app` | `vercel-tools` |
-| Running or writing database migrations for Aurora DSQL | `dsql-migrate` |
-| Setting up a new Vercel + DSQL project from scratch | `dsql-setup` |
-| Writing or modifying Prisma schema or client code | `prisma-7` |
-| Running E2E tests locally | `e2e-local` |
-
-These rules apply even when the user's original request was a code task. A task that starts as "implement X" frequently transitions into deployment, migration, or env var work. Reframe proactively — don't wait for an error to occur.
-
----
-
 ## When Invoked
 
 Establish context before diving in. Ask:

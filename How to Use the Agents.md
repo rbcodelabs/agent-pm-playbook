@@ -73,9 +73,9 @@ The playbook ships six specialized agents. Each one has a defined role, a set of
 
 **Example invocations:**
 ```
-"Implement the beneficiary invite flow per GW-47. Repo is at ~/projects/golden-wealth-app. Read existing auth patterns before writing anything."
+"Implement the user invitation flow per PROJ-47. Repo is at ~/projects/your-app. Read existing auth patterns before writing anything."
 
-"Fix the bug where the estate summary page crashes when there are no assets. Write a test that covers the empty state."
+"Fix the bug where the account summary page crashes when there are no records. Write a test that covers the empty state."
 
 "Refactor the document upload component — it's doing too many things. Don't change external behavior."
 ```
@@ -98,11 +98,11 @@ The playbook ships six specialized agents. Each one has a defined role, a set of
 
 **Example invocations:**
 ```
-"Write tests for the beneficiary invite flow. Focus on: auth boundaries, what happens when the invite link expires, and duplicate submissions."
+"Write tests for the user invitation flow. Focus on: auth boundaries, what happens when the invite link expires, and duplicate submissions."
 
 "Audit test coverage for src/auth/ and write tests for the highest-risk gaps — especially wrong-tenant access."
 
-"Verify the fix for GW-83. Write a test that reproduces the original bug first, then confirm the fix makes it pass."
+"Verify the fix for PROJ-83. Write a test that reproduces the original bug first, then confirm the fix makes it pass."
 ```
 
 **What it will ask before acting:** What tooling is already in use, what the riskiest paths in the feature are, whether there are existing tests to use as a pattern.
@@ -165,7 +165,7 @@ You don't need to invoke agents explicitly — you can just tell Claude what you
 "Review this PR"                        → reviewer
 "Design the caching layer"              → architect
 "Write tests for the new flow"          → qa
-"Implement GW-47"                       → engineer
+"Implement PROJ-47"                     → engineer
 "Merge and ship open PRs"              → release-manager
 "Synthesize my interviews"              → pm
 ```

@@ -183,16 +183,16 @@ Update the OST doc weekly. The format mirrors the tree structure directly:
 ### Opportunity: [Customer voice statement] [Exploring | Validating | Active | Archived]
 Evidence: [N sources — types and dates]
 Confidence: Medium
-Linear: GW-42
+Linear: PROJ-42
 
 #### Solution: [Hypothesis name] [Exploring | Testing | Validated | Killed]
-Linear: GW-55
+Linear: PROJ-55
 
 ##### Experiment: [What we're testing] [Running | Complete]
 Assumption: [State it]
 Kill condition: [State it]
 Result: [Fill in after]
-Linear: GW-61
+Linear: PROJ-61
 ```
 
 ### Handling the Signal Layer
