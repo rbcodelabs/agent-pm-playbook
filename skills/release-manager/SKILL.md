@@ -202,7 +202,7 @@ After all merges are done, watch for the Vercel deployment to go live. Use the
 
 ```bash
 # Wait for deploy (polls until ready, writes URL to /tmp/vercel_prod_url.txt)
-vercel-wait-deploy --cwd <repo-path>
+vercel-wait-deploy --cwd <repo-path> --target production
 DEPLOY_URL=$(cat /tmp/vercel_prod_url.txt)
 echo "Deploy live at: $DEPLOY_URL"
 ```
