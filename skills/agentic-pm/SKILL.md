@@ -123,6 +123,81 @@ Before any major decision — prioritization, build commitment, experiment launc
 
 If the user can't answer all five, that's the work to do before moving forward.
 
+## Agentic Build Epics
+
+When an epic will be executed by an AI agent (Claude Code or similar) rather than
+a human engineer, the story structure needs one additional layer that human-only
+epics don't require: **agent safety infrastructure**.
+
+Human engineers carry institutional knowledge — they know to run tests, check CI,
+and look at the PR checklist before shipping. Agents don't carry that context
+session-to-session. Without structural enforcement, quality gates are voluntary
+and will be skipped under momentum.
+
+### The E0 Story — Always First, Always Blocking
+
+Every agentic build epic must include an **E0 (Agent Safety Baseline) story** as
+its first story. It is non-negotiable and blocks all feature work.
+
+**Template:**
+
+```
+### [EPIC-E0] — Agent safety baseline
+**Type:** Infrastructure
+**Points:** 1
+**Priority:** 🔴 Must complete before any other story in this epic
+
+Setup the safety infrastructure that makes autonomous execution trustworthy:
+
+- [ ] `.claude/settings.json` exists at repo root with `git push` quality gate hook
+      (see pr-checklist skill for the exact hook JSON)
+- [ ] `pnpm test:e2e` runs clean from repo root — zero pre-run crashes, no
+      test runner scanning wrong directories
+- [ ] `pnpm test` (unit tests) runs clean
+- [ ] `pnpm tsc --noEmit` compiles clean
+- [ ] At minimum a stub CI workflow exists (.github/workflows/) that runs on PR:
+      lint + typecheck + test — even if it only passes on green
+
+**Acceptance criteria:**
+- [ ] All four commands above exit 0
+- [ ] CI workflow file committed (can be minimal — must exist)
+- [ ] `.claude/settings.json` committed and quality gate hook pipe-tested
+```
+
+### Story AC requirements for agentic epics
+
+Every story in an agentic epic should include an explicit acceptance criteria line:
+
+```
+- [ ] E2E test count: N passing (or: existing N tests still passing + M new tests added)
+```
+
+This makes test coverage a *measurable gate*, not a suggestion. When the agent
+writes "46/46 passing" it's verifiable. When the AC says "tests pass" without a
+count, there's no way to know if tests were written at all.
+
+### Anti-pattern: CI as a "later" story
+
+A common mistake is placing CI (GitHub Actions) at the end of an epic — "after
+structure is solid." This is wrong for agentic execution. CI is not polish; it is
+the feedback loop that catches every quality gap. Without it, the only signal that
+something broke is a manual test run that the agent may not execute.
+
+**Rule:** If an epic has a CI story, it belongs in the first sprint alongside E0,
+not the last.
+
+### Checklist: Is this epic ready for agentic execution?
+
+Before handing an epic to an agent to execute, verify:
+
+- [ ] E0 story exists and is the first story
+- [ ] Every story has explicit, measurable AC (not "works correctly")
+- [ ] Every story that touches user-facing UI has an AC line for E2E tests
+- [ ] A CI story exists and is prioritized early (not last)
+- [ ] The epic file references the `pr-checklist` skill or links to it
+
+---
+
 ## Anti-Patterns to Challenge
 
 | Anti-pattern | How to challenge it |
@@ -133,6 +208,9 @@ If the user can't answer all five, that's the work to do before moving forward.
 | Assumption-free experiments | "What would have to be true for this to work?" |
 | Confidence without evidence | "What's the source of that signal?" |
 | Velocity theater | "Are you shipping faster, or learning faster?" |
+| CI as polish (agentic) | "CI is not the last story — it's the second story. Move it before any feature work." |
+| Vague AC on agentic stories | "How will the agent know this is done? Add a measurable test count to the AC." |
+| No E0 story in agentic epic | "Add an Agent Safety Baseline story as story zero. It blocks everything else." |
 
 ## Prompt Library
 
