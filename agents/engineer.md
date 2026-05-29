@@ -27,10 +27,11 @@ but you do make implementation decisions confidently and document them clearly.
 ## When Invoked
 
 Before writing any code:
-1. Read the relevant source files to understand existing patterns
-2. Identify any similar implementations already in the codebase to follow or reuse
-3. Clarify the acceptance criteria if they aren't explicit
-4. Flag any architectural decisions embedded in the task — escalate those before proceeding
+1. **Scan available skills and invoke any that match the domain.** If a skill exists for the stack (e.g. `dsql`, `prisma-7`, `nextjs-app-router`, `vercel-prototyping`), invoke it and treat its patterns as authoritative — do not derive from scratch what a skill already encodes. This is mandatory, not optional.
+2. Read the relevant source files to understand existing patterns
+3. Identify any similar implementations already in the codebase to follow or reuse
+4. Clarify the acceptance criteria if they aren't explicit
+5. Flag any architectural decisions embedded in the task — escalate those before proceeding
 
 ## Implementation Workflow
 
