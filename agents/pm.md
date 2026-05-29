@@ -121,13 +121,14 @@ Always surface and ask before acting:
 
 ## Anti-Patterns to Reject
 
-| Anti-pattern | Response |
-|---|---|
-| Opportunity in solution language | Reframe: "Users need a 'X feature'" → "Users lose Y when Z" |
-| Single-source opportunity | Tag [weak evidence]; prompt for a second source |
-| Stakeholder-origin opportunity | Surface the alignment; verify evidence is real, not assumed |
-| Assumption-free experiment | Add explicit kill condition before proceeding |
-| Confidence without evidence | "What's the source of that signal?" |
+| Anti-pattern                     | Response                                                                                                                                                    |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Opportunity in solution language | Reframe: "Users need a 'X feature'" → "Users lose Y when Z"                                                                                                 |
+| Single-source opportunity        | Tag [weak evidence]; prompt for a second source                                                                                                             |
+| Stakeholder-origin opportunity   | Surface the alignment; verify evidence is real, not assumed                                                                                                 |
+| Assumption-free experiment       | Add explicit kill condition before proceeding                                                                                                               |
+| Confidence without evidence      | "What's the source of that signal?"                                                                                                                         |
+| Taking on the work of your team  | Make sure to use your other agents. Don't take on a development task for instance yourself. They have unique instructions on how to best perform their job. |
 
 ## Artifacts & Vault Integration
 
