@@ -1,9 +1,6 @@
 # Agentic Product Team Playbook
 
-A Claude Code plugin for AI-augmented product teams — built on Teresa Torres's
-Continuous Discovery Habits and Marty Cagan's outcome-driven thinking. Provides
-a full virtual product team: PM, Architect, Engineer, QA, and Code Reviewer, each
-as a specialized Claude agent with tailored expertise, tool access, and escalation rules.
+A Claude Code plugin for AI-augmented product teams — built on Teresa Torres's Continuous Discovery Habits and Marty Cagan's outcome-driven thinking. Provides a full virtual product team: PM, Architect, Engineer, QA, and Code Reviewer, each as a specialized Claude agent with tailored expertise and escalation rules.
 
 ## Install
 
@@ -17,30 +14,50 @@ cd agent-pm-playbook
 ./setup.sh
 ```
 
+## Getting Started
+
+After installing, configure your environment before your first session:
+
+```
+Run the pm-setup skill to configure your notes system, issue tracker, and current desired outcome.
+```
+
+This writes a `pm-config.md` to your project that all PM agents and skills will use automatically. You only need to do this once per project.
+
+Once configured, just start working. The `pm-coach` skill activates whenever you ask a PM question:
+
+```
+"Help me frame what I learned from these customer interviews"
+"What opportunities might we be missing in our discovery?"
+"I need to review the health of my OST"
+"Help me design an experiment for this assumption"
+```
+
+---
+
 ## The Team
 
 Six specialized agents, each with a focused role and explicit escalation rules:
 
-| Agent | Role | Tool Access |
-|---|---|---|
-| `pm` | Product Manager — discovery, OST, signal synthesis, stories | Read/Write + Obsidian MCP |
-| `architect` | Software Architect — system design, ADRs, schema review | Read/Write (docs), Bash (read-only) |
-| `engineer` | Senior Engineer — implementation, refactoring, debugging | Full access |
-| `qa` | QA Engineer — test strategy, test writing, edge case hunting | Read/Write/Edit (test files) |
-| `reviewer` | Code Reviewer — correctness, security, performance audits | Read-only (enforced) |
-| `release-manager` | Release Manager — triage and merge open PRs, then ship via Vercel deploy or GitHub release | Full access |
+| Agent | Role |
+|---|---|
+| `pm` | Product Manager — discovery, OST, signal synthesis, stories |
+| `architect` | Software Architect — system design, ADRs, schema review |
+| `engineer` | Senior Engineer — implementation, refactoring, debugging |
+| `qa` | QA Engineer — test strategy, test writing, edge case hunting |
+| `reviewer` | Code Reviewer — correctness, security, performance audits |
+| `release-manager` | Release Manager — triage and merge open PRs, then ship |
 
 ### How Orchestration Works
 
-The main Claude acts as the team lead — it reads each agent's `description` field
-to decide when to delegate. Spawn agents explicitly or let Claude route automatically:
+The main Claude acts as the team lead — it reads each agent's `description` field to decide when to delegate. Spawn agents explicitly or let Claude route automatically:
 
 ```
 # Explicit delegation
 "Have the architect design the data model for X"
 "Have the reviewer audit the changes in src/auth"
 "Have QA write tests for the new checkout flow"
-"Ship all open PRs for obsidian-claude-threads"
+"Ship all open PRs for my-repo"
 
 # Automatic routing
 "Review this PR" → reviewer agent
@@ -69,17 +86,13 @@ Reviewer (code review)                ←── runs in parallel with QA
 
 ---
 
-## Skills (via `claude plugins add`)
+## Skills
 
-### `release-manager` — Release Manager
+### `pm-setup` — Environment Setup
 
-Triage all open PRs on a repo, build a safe merge order, execute the merges
-one-at-a-time, and ship the result. For Vercel web apps: waits for the deploy
-and smoke-tests live URLs. For Obsidian plugins and other distributable apps:
-runs the build, bumps the version, and publishes a GitHub release with built
-artifacts.
+Configure your PM environment. Run once per project to set up your notes system, issue tracker, and current desired outcome. Writes a `pm-config.md` that all PM agents and skills use automatically.
 
-**Triggers on:** "merge and ship open PRs", "ship my plugin", "process open pull requests", "babysit my PRs"
+**Run when:** starting a new project with the playbook, or when your environment changes.
 
 ---
 
@@ -87,31 +100,32 @@ artifacts.
 
 Three skills that activate when you're doing PM work:
 
-### `agentic-pm` — PM Coach
-Top-level coaching skill. Covers the full playbook: opportunity framing, OST review,
-solution ideation, experiment design, weekly synthesis, and retrospectives.
+### `pm-coach` — PM Thinking Partner
 
-**Triggers on:** "act as a PM coach", "help me with discovery", "outcomes over output"
+Activates in the current conversation as a thinking partner. Covers the full playbook: opportunity framing, OST review, solution ideation, experiment design, weekly synthesis, and retrospectives. Spawns the `pm` agent when a deliverable needs to be written.
+
+**Triggers on:** "act as a PM coach", "help me with discovery", "outcomes over output", "help me think through this opportunity"
 
 ### `ost-workflow` — Opportunity Solution Tree
-Specialist skill for building, reviewing, and maintaining OSTs. Tree construction,
-health checks, opportunity prioritization, structural mistake detection.
+
+Specialist skill for building, reviewing, and maintaining OSTs. Tree construction, health checks, opportunity prioritization, structural mistake detection.
 
 **Triggers on:** "build an OST", "review my opportunity solution tree", "tree health check"
 
 ### `pm-signal-synthesis` — Signal Synthesis
-Transforms raw signals — interviews, support tickets, NPS, sales calls — into
-OST-ready opportunity clusters with confidence tagging and contradiction detection.
+
+Transforms raw signals — interviews, support tickets, NPS, sales calls — into OST-ready opportunity clusters with confidence tagging and contradiction detection.
 
 **Triggers on:** "synthesize my user interviews", "cluster this feedback", "process these transcripts"
 
 ### Skills Chain
 
 ```
-agentic-pm ──── "let's build a tree" ────► ost-workflow
-agentic-pm ──── "I have interviews" ──────► pm-signal-synthesis
-pm-signal-synthesis ── "update the tree" ► ost-workflow
-ost-workflow ── "broader strategy" ───────► agentic-pm
+pm-coach ──── "let's build a tree" ────► ost-workflow
+pm-coach ──── "I have interviews" ─────► pm-signal-synthesis
+pm-signal-synthesis ── "update tree" ──► ost-workflow
+ost-workflow ── "broader strategy" ────► pm-coach
+pm-coach ──── execution needed ────────► pm agent (spawned)
 ```
 
 ---
@@ -134,11 +148,4 @@ ost-workflow ── "broader strategy" ───────► agentic-pm
 
 ## Philosophy
 
-Outcomes over output. Continuous discovery. OST as the operating system.
-Agents as thinking partners, not just executors. Each team member has a scope,
-an escalation rule, and a handoff protocol — not because bureaucracy is good,
-but because clarity is what makes autonomous agents safe to trust.
-
----
-
-*Built by Rick Bowman · [richardbowman](https://github.com/richardbowman)*
+Outcomes over output. Continuous discovery. OST as the operating system. Agents as thinking partners, not just executors. Each team member has a scope, an escalation rule, and a handoff protocol — not because bureaucracy is good, but because clarity is what makes autonomous agents safe to trust.
