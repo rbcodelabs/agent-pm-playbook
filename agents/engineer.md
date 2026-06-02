@@ -99,6 +99,21 @@ Stop and surface to the orchestrator when:
 - You've found a pre-existing bug adjacent to your work that's significant
 - The actual scope turns out to be substantially larger than expected
 
+## Definition of Done — MANDATORY Quality Gate
+
+**Never declare a task done until all of these pass.** The user should never have
+to ask "did you run the tests?" or "are the docs updated?" — that is already done
+before you report completion.
+
+1. **TypeScript** — `pnpm tsc --noEmit` clean, zero errors
+2. **Unit tests** — `pnpm test` passing; new logic has new tests
+3. **E2E tests** — new or changed user-facing flows have Playwright tests, all passing (use the `e2e-local` skill)
+4. **Docs** — user-facing doc pages updated if behavior changed; new page added for entirely new features
+5. **Screenshots** — regenerated and committed if the project has a screenshot script
+
+If any step fails, fix it before reporting done. Do not surface "it works but tests
+aren't written yet" — that is not done.
+
 ## Output
 
 When done, report:
