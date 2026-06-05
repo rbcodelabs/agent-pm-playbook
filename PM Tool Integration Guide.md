@@ -2,7 +2,7 @@
 
 > A practical reference for mapping the full OST workflow into your PM tool stack. This guide replaces and expands Section 4 of the [[Agentic PM Playbook]].
 
-**Last updated:** 2026-05-15
+**Last updated:** 2026-06-04
 **See also:** [[Signal Ledger]], [[Agentic PM — Agent Capability Framework]], [[How to Use the Agents]]
 
 ---
@@ -208,7 +208,123 @@ Never create a Linear opportunity issue before you have at least one verbatim qu
 
 ---
 
-## 4. Markdown Only
+## 4. Linear + Obsidian + Repo Bridges (Solo → Team)
+
+An extension of the Linear + Obsidian stack that solves its core limitation: Obsidian is a single-user system. A co-founder, early engineer, or future PM can't open your vault. This pattern uses a git repository as the shared, team-accessible canonical store for structured product docs, while keeping Obsidian as the primary editing interface via bidirectional vault bridges.
+
+**When to use this:** You're a solo founder who expects to bring on a co-founder or first team member within 6–18 months and want product docs accessible via standard git tooling from day one. Or you already have a small team (2–4 people) who are comfortable with git.
+
+**When to skip it:** Your team includes non-technical members who won't work in GitHub. Evaluate Notion or Confluence instead once the team exceeds ~5 people.
+
+---
+
+### Architecture
+
+```
+Obsidian vault (Rick's editing interface)
+    ↕ bidirectional vault bridge
+Git repo: product/ folder (team-accessible canonical store)
+    ↔ GitHub PRs (team edits, reviews, change history)
+```
+
+The vault bridge syncs changes in both directions. Edits made in Obsidian propagate to the repo (and can open a PR). Edits made in the repo (by a teammate in VS Code or GitHub) sync into the vault on the next bridge pull.
+
+---
+
+### Layer Mapping
+
+| OST Layer | Construct | Location |
+|---|---|---|
+| Desired Outcome | `product/vision.md` — north star metric section | Git repo (bridged) |
+| Signals (structured) | `product/signals/Signal Ledger.md` | Git repo (bridged) |
+| Signals (raw capture) | Session notes in Obsidian `Discovery/` | Vault only — not bridged |
+| Opportunities | Linear issue, label: `opportunity` + `product/ost.md` | Linear + repo (bridged) |
+| Solutions | Linear issue, label: `solution`, parent: opportunity | Linear |
+| Experiments | Linear issue, label: `experiment`, parent: solution | Linear |
+| Build items | Linear stories and tasks, linked to validated solution | Linear |
+| OST tree structure | `product/ost.md` — **source of truth** | Git repo (bridged) |
+| ICP | `product/icp.md` | Git repo (bridged) |
+| Roadmap | `product/roadmap.md` | Git repo (bridged) |
+
+---
+
+### Repo Folder Structure
+
+One `product/` folder per repo, committed to the main branch:
+
+```
+product/
+  vision.md          # North star, metric, team, strategic bets
+  icp.md             # Ideal customer profile, segments, anti-ICP
+  ost.md             # OST tree structure — source of truth
+  roadmap.md         # Shipped, active, and planned work
+  signals/
+    Signal Ledger.md # Structured synthesis entries (see below)
+```
+
+Keep one `product/` folder per product repo. If multiple products share a monorepo, create `product/[product-name]/` subfolders.
+
+---
+
+### Vault Bridge Setup
+
+Create one bridge per product using the vault-bridges Obsidian plugin:
+
+| Bridge name | Repo path | Vault path |
+|---|---|---|
+| Golden Wealth | `~/projects/golden-wealth-app/product/` | `Products/Golden Wealth/` |
+| HipTrip | `~/projects/hip-trip-marketing-site/product/` | `Products/HipTrip/` |
+| Helio | `~/projects/helio/product/` | `Products/Helio/` |
+
+Set `autoSync: true` so the vault pulls from the repo on Obsidian open. Changes made in Obsidian can be pushed back to the repo and opened as a PR directly from the plugin.
+
+---
+
+### How the Team Interacts With Product Docs
+
+**Rick (vault-first):** Opens and edits `Products/[Product]/ost.md` in Obsidian. The bridge syncs changes back to the repo. Rick can open a PR from the plugin or push directly to main for low-stakes updates.
+
+**Teammate (repo-first):** Clones the repo and edits `product/ost.md` in VS Code or GitHub. Opens a PR for review. On the next bridge pull, the change appears in Rick's vault.
+
+**Both:** Linear for opportunities, solutions, experiments, and delivery work. The OST in `product/ost.md` references Linear IDs; Linear issues link back to the OST doc.
+
+No Notion license. No Confluence. No "let me find that doc." Product strategy lives where the code does.
+
+---
+
+### The Signal Layer Split
+
+Raw signal capture is high-frequency and messy — you want zero friction when logging an interview note or a user quote. Committing every raw capture to git is unnecessary friction. The split:
+
+**Vault-only (no git friction):**
+- Interview notes and transcripts
+- Support ticket reviews
+- Individual user quotes before synthesis
+- Exploratory research scratchpad
+
+**Repo (bridged, team-visible):**
+- Structured Signal Ledger entries (one per synthesis session, post-synthesis)
+- These follow the [[Signal Ledger]] schema and are safe to commit once complete
+
+The workflow: capture raw signals in `Discovery/` in Obsidian. After synthesis, write the structured ledger entry into `product/signals/Signal Ledger.md` (which is bridged to the repo). The structured entry is what the team sees; the raw notes stay in your vault.
+
+---
+
+### Linear Integration
+
+Same as the base Linear + Obsidian stack (section 3), with one change: the OST source of truth lives in the repo's `product/ost.md`, not in an Obsidian-only file. This means team members can read and propose changes to the OST tree structure via PR, not just Rick.
+
+Follow the same signal-to-opportunity handoff protocol:
+
+1. Log raw signals vault-only.
+2. After synthesis, commit the structured entry to `product/signals/Signal Ledger.md`.
+3. When a cluster reaches medium confidence (2+ independent sources), create the Linear opportunity issue.
+4. Update `product/ost.md` with the new opportunity node and the Linear ID.
+5. In the Linear issue description, link back to the OST doc and the signal ledger entry date.
+
+---
+
+## 5. Markdown Only
 
 For teams with no dedicated PM tool, or individuals bootstrapping a discovery practice. Everything lives in markdown files. The tradeoff: no automation, no status workflows, no linking infrastructure. The compensation: a weekly 10-minute manual review.
 
@@ -261,7 +377,7 @@ The whole review should take under 15 minutes. If it takes longer, the tree is t
 
 ---
 
-## 5. Cross-Tool Principles
+## 6. Cross-Tool Principles
 
 These apply regardless of tool stack.
 

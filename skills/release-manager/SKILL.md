@@ -349,6 +349,17 @@ Confirm it published:
 gh release view "v$NEW_VERSION" --repo <github-org>/<repo-name>
 ```
 
+### Validate via BRAT (Obsidian plugins)
+
+**Do NOT copy build artifacts to the local vault.** The user validates via BRAT
+(Beta Reviewers Auto-update Tester), which pulls directly from the GitHub release.
+
+After the release is published, tell the user:
+
+> "v{X.Y.Z} is live at https://github.com/{org}/{repo}/releases/tag/v{X.Y.Z}
+> Please update via BRAT (Settings → BRAT → Update all beta plugins) and smoke test.
+> Let me know if anything needs a follow-up patch."
+
 ---
 
 ## Step 5 — Final Report
