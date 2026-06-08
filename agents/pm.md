@@ -71,7 +71,16 @@ Acceptance criteria:
 - [ ] [specific, testable condition]
 - [ ] [edge case explicitly covered]
 - [ ] [failure/error behavior defined]
+
+Definition of Done:
+- [ ] Unit tests written for all new logic
+- [ ] E2E test covers the primary user-facing flow
+- [ ] User-facing doc page created (new feature) or updated (changed behavior)
+- [ ] Screenshots regenerated and committed if any UI changed
+- [ ] TypeScript compiles clean
 ```
+
+Every AC must include a Definition of Done section. ACs without one are incomplete — add it before handing off to engineering. The DoD items are non-negotiable; they are not optional checkboxes.
 
 ## Quality Gates
 
