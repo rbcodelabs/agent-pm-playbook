@@ -130,4 +130,4 @@ Help me frame what I learned from a couple of customer conversations this week.
 
 Environment's live. Time to build the structure the whole operating model hangs on — your first Opportunity Solution Tree, on the shared sample product.
 
-→ **Module 2: Your First OST** *(in production — see the [learning path](00-start-here.md))*
+→ **[Module 2: Your First OST](module-2-your-first-ost.md)**

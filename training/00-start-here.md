@@ -37,8 +37,8 @@ Work the modules in order. Each builds on the artifact the previous one produced
 |---|---|---|---|---|
 | **0** | [The Operating Model](module-0-operating-model.md) | Half day | No | A backward trace from a real feature to its (missing) outcome |
 | **1** | [Environment Setup](module-1-environment-setup.md) | Half day | A little | A working environment + `pm-config.md` |
-| **2** | Your First OST | 1 day | No | A health-checked Opportunity Solution Tree |
-| **3** | Signal Synthesis | 1 day | No | Clustered, evidence-tagged opportunities mapped to the OST |
+| **2** | [Your First OST](module-2-your-first-ost.md) | 1 day | No | A health-checked Opportunity Solution Tree |
+| **3** | [Signal Synthesis](module-3-signal-synthesis.md) | 1 day | No | Clustered, evidence-tagged opportunities mapped to the OST |
 | **4** | Experiments & Progressive Investment | 1 day | No | One assumption decomposed, leanest test designed, gated |
 | **5** | The Agent Team | 1 day | Delegation only | One solution run from story → design brief |
 | **6** | Cadences & Health | Half day | No | Recurring rituals scheduled in your own calendar |
