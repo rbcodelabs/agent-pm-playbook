@@ -26,18 +26,6 @@
 | T-20 | Day 11 | Warehouse mgr | Email | "The schedule grid doesn't load on Safari, just spins. Works in Chrome. Heads up." |
 | T-21 | Day 11 | Clinic mgr | Chat | "I have 60 employees and adding them one at a time is brutal. Please tell me there's a bulk option." |
 
-## Notes for the facilitator (not for learners doing the exercise)
+---
 
-<details>
-<summary>Spoiler — planted structure. Don't open until after the synthesis exercise.</summary>
-
-- **Strongest cluster (high confidence, many sources, both channels + interviews):** roster setup / bulk import friction — T-01, T-02, T-03, T-04, T-11, T-14, T-15, T-21, plus Maria and Devon. This is the cluster that maps to the most leverage on the activation outcome.
-- **Strong cluster:** availability collection from staff — T-07, T-08, T-09, T-17, plus Priya. Note the manager-is-the-bottleneck framing.
-- **Medium / contradicted:** auto-scheduler trust — T-06 and T-13 (distrust / can't-see-reasoning) vs. Priya (loves it) and Devon (wants managers to lean on it). A genuine contradiction to flag, not resolve by majority vote.
-- **Weak / contradicted:** staff mobile app — T-09 and Priya (staff love viewing) vs. T-10 and Devon (won't download). Lower volume; weaker evidence for activation specifically.
-- **First-run / "where's the button" confusion:** T-05, T-13 — supports an onboarding-orientation opportunity.
-- **Copy-forward / starting-from-blank:** T-12 — small but relevant to "reduce first-session effort."
-- **Noise (should NOT become opportunities):** T-18 (billing), T-19 (password reset — though repeated expiry is a minor real bug), T-20 (Safari bug — real bug, route to engineering, not an opportunity), T-16 (tips/pay — real request but **off-outcome**; it's the orphan that should not hang under the activation root. Watch for learners attaching it anyway).
-- **Duplicate-ish:** T-03 and T-21 are near-duplicates by design — good test of whether the synthesis dedupes or double-counts.
-
-</details>
+> **Answer key:** the planted clusters, contradictions, noise, and the near-duplicate are documented in [`facilitator-key.md`](facilitator-key.md). Do your own synthesis first, then open it to compare — it's deliberately in a separate file so the answers aren't sitting at the bottom of the corpus you're analyzing.

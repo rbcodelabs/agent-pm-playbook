@@ -18,6 +18,7 @@
 | [`interviews/interview-03-priya.md`](interviews/interview-03-priya.md) | Small-store manager — fast setup, loves the auto-scheduler, pain is collecting staff availability; raises the off-topic tips request | Module 3 |
 | [`support-tickets.md`](support-tickets.md) | 21 tickets across themes, with planted noise, contradictions, and a near-duplicate | Module 3 (clustering, contradiction detection, confidence tagging) |
 | [`seed-ost.md`](seed-ost.md) | A partial, **deliberately flawed** OST — solution-as-opportunity, outcome drift, an orphan branch, a solution wired straight to the root | Module 2 (health-check practice); Module 3 (cleaning the tree with real signals) |
+| [`facilitator-key.md`](facilitator-key.md) | ⚠️ Answer sheet — planted seed-OST flaws, signal clusters, the two contradictions, noise. **Do exercises first.** | Facilitators / self-check after Modules 2–3 |
 
 ## What's planted (high level — full keys live in each file)
 
@@ -26,7 +27,7 @@
 - **Auto-scheduler trust** is a genuine **contradiction** (Maria/T-06 distrust vs. Priya/Devon want-more-reliance) — meant to be *flagged*, not resolved by majority vote.
 - **Staff mobile app** is weaker and contradicted (love viewing vs. won't download) — a test of confidence tagging.
 - **Noise** (billing, a Safari bug, a password-reset bug, the tips request) must *not* become opportunities. The tips request is the **orphan** that doesn't ladder up to activation — watch whether learners attach it anyway.
-- `seed-ost.md` and `support-tickets.md` each end with a **spoiler-gated facilitator key** listing the planted structure. Don't read those until after the exercise.
+- The planted structure (seed-OST flaws, signal clusters, the two contradictions, noise, and the near-duplicate) is documented in a single separate [`facilitator-key.md`](facilitator-key.md) — kept out of the exercise files so the answers aren't sitting next to the work. Don't open it until after the exercise.
 
 ## Design constraints honored
 

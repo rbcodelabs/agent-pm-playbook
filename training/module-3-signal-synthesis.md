@@ -50,6 +50,8 @@ A topic is where the word appeared. A need is what the customer was trying to ac
 
 Low confidence isn't worthless — it's a starting point that tells the team what to verify next. Mislabeling low as high is how teams build on sand.
 
+**Count is the floor, not the ceiling.** The table keys off raw signal *count*, but **intensity and method-diversity can promote a cluster.** A small corpus (say 3–4 signals) that shows up *across two methods* (an interview **and** tickets) and is consistent can earn **High** even though the count alone says Medium — note the reason. Conversely, five mild mentions from one source stay Medium. When you promote on intensity, say so explicitly in the cluster.
+
 ### Contradictions are signal, not noise
 
 When two credible signals disagree, **do not resolve it by majority vote.** A contradiction usually means you're looking at *two different segments with two different needs*. Surface it and name the segmentation question. (ShiftLoop has two planted contradictions waiting for you — find them.)
@@ -60,7 +62,38 @@ One passionate, specific, unprompted signal can outweigh three mild mentions. "I
 
 ### The Signal Ledger
 
-Every synthesis session produces one dated **ledger entry** — the memory layer that makes longitudinal pattern tracking possible. A pain mentioned twice in January, five times in February, nine in March is telling you something you can only see across time. The ledger captures, per cluster: opportunity theme, 2–3 verbatims, source identifiers, **severity** (Low/Medium/High/Critical), OST mapping, and confidence. Schema consistency is the whole value — an entry format you only follow sometimes is barely better than nothing.
+Every synthesis session produces one dated **ledger entry** — the memory layer that makes longitudinal pattern tracking possible. A pain mentioned twice in January, five times in February, nine in March is telling you something you can only see across time. Schema consistency is the whole value — an entry format you only follow sometimes is barely better than nothing.
+
+**Per-cluster fields:** opportunity theme · 2–3 verbatims · source identifiers · **severity** · OST mapping · confidence. Plus a session header (date, session type, sources, segment).
+
+**Severity** is *not* the same as confidence. Confidence is *how sure you are the signal is real*; severity is *how much it hurts the customer*:
+
+| Severity | What it means |
+|---|---|
+| **Low** | Minor friction, hedged language, no behavioral impact |
+| **Medium** | Recurring frustration, affects workflow, no workaround yet |
+| **High** | Blocker, workaround adopted, mentioned unprompted |
+| **Critical** | Churn risk, escalation, customers switching tools |
+
+**Worked example — one ledger entry (so you can copy the shape):**
+
+```
+Date: 2026-06-10 | Session: Support review | Product: ShiftLoop
+Sources: 3 interviews (SMB managers) + 21 support tickets | Segment: shift managers
+Outcome: First-schedule activation 38% → 60%
+
+C1  Roster import friction        | "adding them one by one will take forever" (T-01); "I gave up and went
+                                     back to my spreadsheet" (Maria) | src T-01,02,03,04,11,14,15,21 + Maria,Devon
+                                   | Severity High | OST: roster-import opp (update) | Confidence High
+C2  Staff don't submit availability| "I'm chasing eighteen college kids over text" (Priya); "reminder emails
+                                     would save hours" (T-17) | src T-07,08,09,17 + Priya | Severity High
+                                   | OST: availability opp (update) | Confidence Medium
+C3  Auto-scheduler trust [CONTESTED]| "I don't trust a robot" (Maria) vs "love it, it's why I stayed" (Priya)
+                                   | src T-06,13 + Maria,Priya,Devon | Severity Medium | OST: trust opp (update,
+                                     flag contradiction) | Confidence Medium | Seg-Q: trust vs team size?
+OFF-TREE: T-20 Safari bug (defect→eng); T-16 tips/pay (orphan→backlog); T-18 billing (→support)
+Bias: ticket-heavy method skew noted; C2 availability lacks buyer-segment representation
+```
 
 **Go deeper:** [`pm-signal-synthesis` skill](../skills/pm-signal-synthesis/SKILL.md) (full workflow + the standard output format), [Signal Ledger](../Signal%20Ledger.md) (the schema and severity definitions), [Confidence Tagging](../Agent%20Skills/Confidence%20Tagging.md), [Contradiction Detection](../Agent%20Skills/Contradiction%20Detection.md), and [Bias Detection](../Agent%20Skills/Bias%20Detection.md).
 
@@ -68,14 +101,16 @@ Every synthesis session produces one dated **ledger entry** — the memory layer
 
 ## Hands-on exercise
 
-**Setup:** Have your Module 2 OST open, plus the three interviews ([Maria](sample-data/interviews/interview-01-maria.md), [Devon](sample-data/interviews/interview-02-devon.md), [Priya](sample-data/interviews/interview-03-priya.md)) and the [21 support tickets](sample-data/support-tickets.md). **Do not open the facilitator keys** in those files until after you finish — they're the answer sheet.
+> **🎯 Doing this on your own signals?** The exercise uses the ShiftLoop corpus so everyone practices on the same material. To run it on your real product: use *your* OST (from Module 2 on your product) and *your* signals (a batch of real interviews, tickets, reviews, or sales notes) in place of the ShiftLoop files. The **method is identical**; only the inputs change. Where a step below names a specific ShiftLoop finding ("the two planted contradictions," "billing/Safari/tips are the noise"), treat that as the *worked answer for the sample* — your job on your own data is to find *your* clusters, *your* contradictions (could be zero, one, or several), and *your* noise. Don't force your data to match ShiftLoop's shape.
+
+**Setup:** Have your Module 2 OST open, plus the three interviews ([Maria](sample-data/interviews/interview-01-maria.md), [Devon](sample-data/interviews/interview-02-devon.md), [Priya](sample-data/interviews/interview-03-priya.md)) and the [21 support tickets](sample-data/support-tickets.md). **Do not open the [facilitator key](sample-data/facilitator-key.md)** until after you finish — it's the answer sheet.
 
 **Steps:**
 
 1. **Time yourself.** Note the clock. (You'll want the before/after number; it's the proof.)
 2. In a thread, trigger the skill: *"Synthesize these ShiftLoop signals into OST-ready opportunity clusters."* Give it the inventory it asks for — source types, volume (3 interviews + 21 tickets), segments, time window.
 3. Let it produce **clusters by need**, each with a confidence tag, source counts, and 2–3 verbatims. Read critically — does each cluster name a *need* or just a *topic*?
-4. **Hunt the contradictions yourself** before reading the output's flags. Two are planted: one about the auto-scheduler, one about the staff app. Name the segmentation question behind each.
+4. **Hunt the contradictions yourself** before reading the output's flags, and name the segmentation question behind each. *(The ShiftLoop sample has exactly two — auto-scheduler trust, and staff-app adoption. On your own data there may be zero, one, or several; find however many are actually there, don't manufacture two.)*
 5. **Map to your tree.** For each cluster decide: *add new*, *update existing* (strengthen an opportunity already on your Module 2 tree), or *challenge existing*. Critically — decide what does **not** go on the tree: noise (billing, the Safari bug, the password-reset bug) and the off-outcome **orphan** (the tips/pay request). Check for near-duplicate tickets so you don't double-count.
 6. **Run the bias check.** Is any segment overrepresented? Are you weighting the loudest tickets? Name any bias in the output.
 7. **Write the Signal Ledger entry** using the schema: date, session type, sources, then per cluster (theme, verbatims, source IDs, severity, OST mapping, confidence).
@@ -88,9 +123,9 @@ Every synthesis session produces one dated **ledger entry** — the memory layer
 ## Success criteria
 
 - [ ] Every cluster is a **customer need**, not a topic, and carries a **confidence tag** with verbatims and source counts.
-- [ ] The two contradictions (auto-scheduler trust; staff-app adoption) are **surfaced as contested**, with the segmentation question named — not resolved by majority.
-- [ ] Confidence is calibrated to evidence: roster-import lands **High**; the staff-app cluster is **lower** and flagged contradicted.
-- [ ] Noise (billing / Safari bug / password reset) and the **orphan** (tips/pay) are correctly kept **off** the activation tree.
+- [ ] Every contradiction in your corpus is **surfaced as contested**, with the segmentation question named — not resolved by majority. *(In the ShiftLoop sample that's two: auto-scheduler trust and staff-app adoption.)*
+- [ ] Confidence is **calibrated to evidence**: your strongest, multi-method, cross-segment cluster lands High; thin or single-source clusters land lower, and contradicted ones are flagged. *(ShiftLoop: roster-import = High; staff-app = lower + contradicted.)*
+- [ ] **Noise and off-outcome orphans are kept off the tree** — defects route to engineering, billing/pricing routes to support, and requests that don't ladder to the outcome go to a backlog. *(ShiftLoop: Safari bug + password reset = defects; billing = support; tips/pay = orphan.)*
 - [ ] Near-duplicate tickets are deduped, not double-counted.
 - [ ] You wrote a schema-complete **Signal Ledger** entry.
 - [ ] You can state your before/after synthesis time.

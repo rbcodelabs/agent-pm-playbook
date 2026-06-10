@@ -35,6 +35,10 @@ By the end of this module you will be able to:
 
 <!-- Done on the shared sample dataset so everyone works from identical material. State setup, steps, and the expected shape of the output. -->
 
+<!-- REQUIRED if this module's exercise uses the ShiftLoop sample: include a bring-your-own-product callout so a real-product / capstone learner knows what to swap. Pattern:
+> **🎯 Doing this on your own product?** The exercise uses the ShiftLoop sample so everyone practices on the same material. To run it on your real product, swap: (1) [the sample input] → your input; (2) [sample-specific numbers/personas] → yours. The method is identical; only the inputs change. Where a step names a specific ShiftLoop finding, treat it as the worked answer for the sample — find your own equivalents, don't force your data to match ShiftLoop's shape.
+Also: keep success criteria abstract (state the rule, then "(ShiftLoop: …)" as illustration) so they're checkable on any product. -->
+
 **Setup:** [what to open / load from `sample-data/`]
 
 **Steps:**

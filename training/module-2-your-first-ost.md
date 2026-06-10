@@ -2,7 +2,7 @@
 
 **Time:** 1 day
 **Coding required:** No.
-**Prerequisite:** [Module 1](module-1-environment-setup.md) (working environment) and the [ShiftLoop product brief](sample-data/product-brief.md).
+**Prerequisite:** [Module 1](module-1-environment-setup.md) (working environment) and a product brief — the [ShiftLoop sample brief](sample-data/product-brief.md) for practice, or your own product's brief if you're going straight to the real thing (see the *bring-your-own-product* note below).
 **You will produce:** An Opportunity Solution Tree rooted in ShiftLoop's activation outcome, plus a health check that catches the planted flaws in the provided seed tree.
 
 ---
@@ -75,15 +75,17 @@ For ShiftLoop: *"Managers struggle to get their existing team into the tool quic
 
 Two parts: **build** a clean tree, then **diagnose** a broken one. The diagnosis half is where the skill of reading structure actually develops.
 
+> **🎯 Doing this on your own product?** The exercise below is written around the ShiftLoop sample so everyone practices on the same material. To run it on your real product instead, make three swaps: **(1)** open *your* product brief instead of ShiftLoop's; **(2)** use *your* desired outcome as the root (the one in your `pm-config.md`) instead of `38% → 60%`; **(3)** draw opportunities from *your* personas — however many you have. A single-persona B2C product has no "buyer/user split," so all opportunities come from your one user; that's expected, not a gap. Part B (the seed-OST health check) stays the same — it's a shared diagnostic drill. Note that a tree you build on your own product here won't line up with the ShiftLoop signals in Module 3; that's fine — Module 3 has its own bring-your-own-signals note.
+
 ### Part A — Build a tree from the brief (≈ 45 min)
 
 **Setup:** Open the [product brief](sample-data/product-brief.md). Do *not* open the seed OST or the signals yet — build from the brief alone so Part B and Module 3 have something to react to.
 
 **Steps:**
 
-1. In a thread, trigger the skill: *"Build an OST for ShiftLoop. The desired outcome is in the product brief."*
-2. Confirm the **root** with the skill: it must be the activation outcome (38% → 60%), behavior-based and measurable. If you phrase it as a feature, let the skill reframe you — that's the lesson.
-3. Surface **at least 5 opportunities**, each framed as a customer need with context. Pull them from the brief's description of managers, the buyer, and staff. Resist writing solutions.
+1. In a thread, trigger the skill: *"Build an OST for `<product>`. The desired outcome is in the product brief."* *(Sample run: "Build an OST for ShiftLoop…")*
+2. Confirm the **root** with the skill: it must be your activation/desired outcome (for ShiftLoop, 38% → 60%), behavior-based and measurable. If you phrase it as a feature, let the skill reframe you — that's the lesson.
+3. Surface **at least 5 opportunities**, each framed as a customer need with context. Pull them from your personas — for ShiftLoop that's managers, the buyer, and staff; for a single-persona product it's all from that one user. Resist writing solutions.
 4. Under your two strongest opportunities, generate **3 solution directions each** (the skill will push for at least three, spanning incremental to transformative). Don't evaluate them yet.
 5. Save the tree where your notes live (per `pm-config.md`).
 
@@ -91,14 +93,14 @@ Two parts: **build** a clean tree, then **diagnose** a broken one. The diagnosis
 
 ### Part B — Health-check the seed tree (≈ 45 min)
 
-**Setup:** Now open the [seed OST](sample-data/seed-ost.md). It is **deliberately broken**. Do *not* read its facilitator key yet.
+**Setup:** Now open the [seed OST](sample-data/seed-ost.md). It is **deliberately broken**. Do *not* open the [facilitator key](sample-data/facilitator-key.md) yet.
 
 **Steps:**
 
 1. Ask the skill to run a **tree health check** on the seed OST against the seven checks.
 2. Write down every structural flaw you (and the skill) find: which check it fails and why. There are **five planted flaws**; aim to catch at least four.
 3. For each flaw, write the *fix* — not just "this is wrong" but "reframe it to X" or "move it to a different tree."
-4. *Then* open the seed OST's facilitator key and compare. Note anything you missed and, more importantly, anything you flagged that the key didn't — false positives teach too.
+4. *Then* open the [facilitator key](sample-data/facilitator-key.md) and compare. Note anything you missed and, more importantly, anything you flagged that the key didn't — false positives teach too.
 5. Finally, turn the check on **your own** Part A tree. Does it have any of the same problems?
 
 **Deliverable:** a health-check report on the seed OST — flaws found, the check each fails, and the fix — plus a one-line verdict on your own tree.
