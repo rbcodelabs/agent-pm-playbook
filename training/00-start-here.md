@@ -54,6 +54,8 @@ Work the modules in order. Each builds on the artifact the previous one produced
 
 > The full curriculum — Modules 0–6 and the capstone — is written and linked above. Work them in order; each builds on the artifact the previous one produced.
 
+**After the capstone:** check the **[Success Metrics guide](../guides/success-metrics.md)** to evaluate whether the operating model is actually changing how you work at 30, 60, and 90 days.
+
 ---
 
 ## How each module is structured
