@@ -1,12 +1,12 @@
 {
-  "name": "agentic-product-team",
+  "name": "agentic-pm",
   "version": "2.0.0",
   "description": "Full AI-augmented product team — PM, Architect, Engineer, QA, and Code Reviewer agents with PM coaching skills built on continuous discovery and outcome-driven thinking",
   "author": {
     "name": "Rick Bowman",
-    "url": "https://github.com/richardbowman"
+    "url": "https://github.com/rbcodelabs"
   },
-  "repository": "https://github.com/richardbowman/agent-pm-playbook",
+  "repository": "https://github.com/rbcodelabs/agent-pm-playbook",
   "license": "MIT",
   "keywords": [
     "product-management",
@@ -20,14 +20,20 @@
   ],
   "skills": [
     "./skills/agentic-pm/SKILL.md",
+    "./skills/investment-gate/SKILL.md",
+    "./skills/jira-workflow/SKILL.md",
     "./skills/ost-workflow/SKILL.md",
-    "./skills/pm-signal-synthesis/SKILL.md"
+    "./skills/pm-coach/SKILL.md",
+    "./skills/pm-setup/SKILL.md",
+    "./skills/pm-signal-synthesis/SKILL.md",
+    "./skills/release-manager/SKILL.md"
   ],
   "agents": [
-    "./agents/pm.md",
     "./agents/architect.md",
     "./agents/engineer.md",
+    "./agents/pm.md",
     "./agents/qa.md",
+    "./agents/release-manager.md",
     "./agents/reviewer.md"
   ]
 }
