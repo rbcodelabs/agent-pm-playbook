@@ -1,1 +1,5 @@
 .DS_Store
+
+# Claude Code project-level settings — machine-specific, never commit
+.claude/settings.local.json
+.claude/worktrees/
