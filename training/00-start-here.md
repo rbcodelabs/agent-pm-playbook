@@ -39,12 +39,12 @@ Work the modules in order. Each builds on the artifact the previous one produced
 | **1** | [Environment Setup](module-1-environment-setup.md) | Half day | A little | A working environment + `pm-config.md` |
 | **2** | [Your First OST](module-2-your-first-ost.md) | 1 day | No | A health-checked Opportunity Solution Tree |
 | **3** | [Signal Synthesis](module-3-signal-synthesis.md) | 1 day | No | Clustered, evidence-tagged opportunities mapped to the OST |
-| **4** | Experiments & Progressive Investment | 1 day | No | One assumption decomposed, leanest test designed, gated |
-| **5** | The Agent Team | 1 day | Delegation only | One solution run from story → design brief |
-| **6** | Cadences & Health | Half day | No | Recurring rituals scheduled in your own calendar |
-| **Capstone** | One Full Cycle on Your Real Product | 1–2 weeks async | Depends | A complete discovery loop, reviewed against a rubric |
+| **4** | [Experiments & Progressive Investment](module-4-experiments-and-investment.md) | 1 day | No | One assumption decomposed, leanest test designed, gated |
+| **5** | [The Agent Team](module-5-the-agent-team.md) | 1 day | Delegation only | One solution run from story → design brief |
+| **6** | [Cadences & Health](module-6-cadences-and-health.md) | Half day | No | Recurring rituals scheduled in your own calendar |
+| **Capstone** | [One Full Cycle on Your Real Product](capstone.md) | 1–2 weeks async | Depends | A complete discovery loop, reviewed against a rubric |
 
-> Modules 2–6 and the capstone are authored in the build sequence described in the [adoption roadmap](../Agentic%20PM%20Playbook.md). If a module file isn't here yet, it's in production — Modules 0 and 1 are the foundation and ship first.
+> The full curriculum — Modules 0–6 and the capstone — is written and linked above. Work them in order; each builds on the artifact the previous one produced.
 
 ---
 

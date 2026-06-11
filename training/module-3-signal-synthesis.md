@@ -151,4 +151,4 @@ Bias: ticket-heavy method skew noted; C2 availability lacks buyer-segment repres
 
 You now have an evidenced tree with a clear focus branch. Next you take its riskiest assumption and design the cheapest possible test — and decide how much to invest before building anything.
 
-→ **Module 4: Experiments & Progressive Investment** *(in production — see the [learning path](00-start-here.md))*
+→ **[Module 4: Experiments & Progressive Investment](module-4-experiments-and-investment.md)**
