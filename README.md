@@ -5,14 +5,24 @@ A Claude Code plugin for AI-augmented product teams — built on Teresa Torres's
 ## Install
 
 ```bash
-# Install the plugin (installs PM skills)
-claude plugins add richardbowman/agent-pm-playbook
-
-# Install agents (symlinks agent files to ~/.claude/agents/)
-git clone https://github.com/richardbowman/agent-pm-playbook
+# Clone the repo and run the install script (symlinks all 6 agents + PM skills into ~/.claude/)
+git clone https://github.com/rbcodelabs/agent-pm-playbook
 cd agent-pm-playbook
 ./setup.sh
 ```
+
+Restart Claude Code after `setup.sh` finishes (`exit`, then `claude` again).
+
+## Learn the Stack
+
+New to the system? Two entry points depending on what you need first:
+
+| I want to… | Start here |
+|---|---|
+| **Set up my Obsidian + Claude Threads workspace** | [PM Workspace Setup](guides/pm-workspace-setup.md) |
+| **Learn the operating model and run through the curriculum** | [Training: Start Here](training/00-start-here.md) |
+
+The setup guide is tool-first (install, connect, go). The training curriculum is model-first (why this way, then the tools).
 
 ## Getting Started
 
