@@ -6,6 +6,14 @@ This curriculum turns the Agentic PM Playbook from a pile of docs into a teachab
 
 ---
 
+## Before you start: build your desk
+
+If you haven't set up Obsidian + Claude Threads yet, do that first. The **[PM Workspace Setup guide](../guides/pm-workspace-setup.md)** walks you through the one-command vault installer, adding your Anthropic API key as a secret, connecting JIRA or Linear, and Vault Bridges — everything you'll need for this curriculum. (~30 minutes, tool-first, no philosophy.)
+
+Come back here when your workspace is live.
+
+---
+
 ## Who this is for
 
 - **PMs adopting the playbook on a real product.** Work through the modules in order on the sample dataset, then run the capstone on your own product.

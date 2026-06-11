@@ -128,6 +128,8 @@ Re-read your `pm-config.md` one more time and confirm the `desired outcome` fiel
 
 #### Step 5 — Set up your notes + connections (as needed)
 
+> **Full walkthrough:** the [PM Workspace Setup guide](../guides/pm-workspace-setup.md) covers every step here in detail — one-command vault installer, exact BRAT install paths, how to add secrets, and JIRA/Linear API key setup. If you're doing the full stack, follow that guide and come back here when it's done.
+
 - **Notes home — Obsidian + Claude Threads.** Install Obsidian, then the Claude Threads plugin so Claude can work inside your notes.
   ⚠️ **Confirm:** the exact install channel for the Claude Threads and Vault Bridges plugins (Obsidian community store vs. manual/BRAT install) depends on how they're distributed — check the plugin's own README for the current method rather than assuming the community store.
 - **Issue tracker (skip if you use plain notes).** If you use Linear / Jira / JPD, connect it per the [PM Tool Integration Guide](../PM%20Tool%20Integration%20Guide.md). If you track work in Markdown, mark this **N/A** and move on — every exercise in this course works tool-agnostically.
