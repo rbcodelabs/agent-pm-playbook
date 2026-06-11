@@ -100,7 +100,7 @@ Add each: Settings → Claude Threads → Secret environment variables → key n
 
 ## Step 4 — Set up Vault Bridges
 
-Vault Bridges pulls content from a local folder (a product repo, a Notion export, a docs folder) into your vault so it's searchable alongside your notes. You don't need a code repo — any folder of files works.
+Vault Bridges creates a **bidirectional link** between a local folder (a product repo, a Notion export, a docs folder) and your vault. Pull to bring the repo's content into your vault; edit in Obsidian; push to send your changes back to the repo. You don't need a code repo — any folder of files works.
 
 **Install Vault Bridges** (if it's not already in your vault):
 - Settings → Community plugins → Browse → search "Vault Bridges" → Install → Enable
@@ -113,7 +113,7 @@ Vault Bridges pulls content from a local folder (a product repo, a Notion export
    - **Repo path:** the absolute path to the local folder you want to bridge, e.g., `/Users/you/projects/my-product/docs`
    - **Vault path:** where in your vault it should appear, e.g., `Product/Docs`
    - **Branch:** `main` (or whichever branch you want to sync from)
-3. Click **Sync now** to pull the first copy
+3. Click **Sync now** to pull the initial copy into your vault
 
 **Verify:** Navigate to the vault path you specified — you should see the files from your folder.
 
