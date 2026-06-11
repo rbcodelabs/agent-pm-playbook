@@ -19,10 +19,10 @@ It's also the natural before/after artifact — for an internal "certified" bar,
 
 Run one full turn of the cycle, end to end. Lean on the skills and agents you learned — this is exactly what they're for.
 
-1. **Collect real signals.** Gather a real batch this week — interviews, support tickets, reviews, NPS, sales notes. Not last quarter's research; this week's.
+1. **Collect real signals.** Gather a real batch this week — interviews, support tickets, reviews, NPS, sales notes. Not last quarter's research; this week's. *(No minimum volume required, but a single source or single method is a Low confidence ceiling no matter how strong the signal feels — flag it in your ledger entry. Aim for at least 2 sources or 2 methods; 3–5 interviews plus a batch of tickets is a solid capstone corpus.)*
 2. **Synthesize** (Module 3). Cluster by need, tag confidence, surface contradictions, write a real Signal Ledger entry.
 3. **Update your OST** (Module 2). Map the clusters in (add / update / challenge), keep the tree structurally honest, and confirm a focus branch.
-4. **Decompose one assumption and test it cheaply** (Module 4). Take your focus opportunity, name the riskiest assumption, design the *cheapest* test, write the kill condition first, and — if feasible in the window — run it.
+4. **Decompose one assumption and test it cheaply** (Module 4). Take your focus opportunity, name the riskiest assumption, design the *cheapest* test, write the kill condition first, and — if feasible in the window — run it. *(The rubric scores test **design**, not whether the test ran in the capstone window. A well-designed test with a pre-written kill condition scores the same whether or not you had time to execute it.)*
 5. **Run it through a gate** (Module 4). Get an honest investment-gate verdict and the cheapest next action.
 6. **(Optional) Hand off to the team** (Module 5). If a solution survived, run it to user stories / a design brief and note where your judgment was required.
 7. **Report at your weekly synthesis** (Module 6). Bring the loop to a real cadence session — yours or your team's.
@@ -68,6 +68,8 @@ Reviewed across four dimensions. Each is scored **0 / 1 / 2**. **Passing = 6+ of
 | **0** | Jumped to "build it and measure," or proposed an expensive test for a cheap question; no kill condition. |
 | **1** | Reasonable test, but not the cheapest that answers the assumption, or the kill condition is vague/post-hoc. |
 | **2** | Riskiest assumption correctly ranked; cheapest test that answers it chosen with rationale; success + kill conditions written *before* running. |
+
+> **Self-scoring the 1/2 boundary:** Walk the four test types cheapest-first (fake door → concierge → prototype → A/B). Ask: "Is there a cheaper type that still answers my specific riskiest assumption?" If no cheaper test answers the same question — you're at 2. If a cheaper test would have answered it — you're at 1. Note the "why not cheaper" rationale in your brief; that reasoning is what earns the 2.
 
 ### 4. Honest uncertainty
 

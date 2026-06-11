@@ -53,18 +53,29 @@ Do the **Required core** (Steps 1–4) first and confirm it works. Then do as mu
 
 ### Required core
 
+#### Step 0 — Install Claude Code (skip if you already have it)
+
+Claude Code is a separate CLI application — different from claude.ai. If you haven't installed it yet:
+
+1. Follow the install guide at **[docs.anthropic.com/claude-code](https://docs.anthropic.com/en/docs/claude-code)** — it has OS-specific instructions.
+2. You also need `git`. Run `git --version` in your terminal to confirm it's there; if not, install it from [git-scm.com](https://git-scm.com).
+
+**Verify:** `claude --version` returns a version number. If you get "command not found," complete the Claude Code install before continuing.
+
+---
+
 #### Step 1 — Install the agents and skills
 
 The reliable path is to clone the repo and run `setup.sh`, which symlinks the agents and skills into `~/.claude/` (symlinks mean repo updates propagate automatically):
 
 ```bash
-git clone https://github.com/richardbowman/agent-pm-playbook
+git clone https://github.com/rbcodelabs/agent-pm-playbook
 cd agent-pm-playbook
 ./setup.sh --dry-run   # preview exactly what it will symlink
 ./setup.sh             # do it
 ```
 
-`setup.sh` prints a ✓ for each agent and skill it links, then a summary and `Restart Claude Code to pick up the new agents.` Restart Claude Code afterward.
+`setup.sh` prints a ✓ for each agent and skill it links, then a summary and `Restart Claude Code to pick up the new agents.` Restart Claude Code afterward. (To restart: type `exit` in the session and run `claude` again — or close and reopen the desktop app if you're using one.)
 
 > **Optional alternative — the plugin marketplace.** If you'd rather install via Claude Code's plugin system instead of `setup.sh`, the repo ships a marketplace manifest.
 > ⚠️ **Confirm before relying on this:** the exact `claude plugins` subcommand syntax changes between Claude Code versions, and this repo's plugin manifest is currently a subset of what `setup.sh` installs. Until that's reconciled, **`setup.sh` is the install that gives you the full set** (all 6 agents + all PM skills). Treat the marketplace path as advanced/optional and verify it against `claude plugins --help` on your version.
@@ -73,7 +84,17 @@ cd agent-pm-playbook
 
 #### Step 2 — Run `pm-setup`
 
-In a Claude session, invoke the setup skill:
+First, `cd` into the folder you'll use as your product workspace — an empty folder is fine if you have no existing code repo:
+
+```bash
+mkdir my-product-pm   # skip if you already have a project folder
+cd my-product-pm
+claude                # this opens a Claude Code session in the current directory
+```
+
+> **A "Claude Code session"** is a CLI conversation started by running `claude` from inside a folder. The session knows which folder it's in — that's where `pm-config.md` will be written, and it becomes your workspace for the rest of the course.
+
+In the session, invoke the setup skill:
 
 ```
 Run the pm-setup skill to configure my notes system, issue tracker, and current desired outcome.
@@ -83,7 +104,7 @@ Answer its questions. Two notes:
 - For **issue tracker**, "none — I track work in plain notes/Markdown" is a valid answer. Don't invent a tool you don't use.
 - For **current desired outcome**, give the measurable behavior change you're managing toward (Module 0 standard), **not** a feature. This is the single most important field — everything downstream inherits it.
 
-**Verify:** a `pm-config.md` now exists in your project, and its fields match what you entered.
+**Verify:** a `pm-config.md` now exists in your workspace folder, and its fields match what you entered.
 
 #### Step 3 — Wake up the PM coach
 

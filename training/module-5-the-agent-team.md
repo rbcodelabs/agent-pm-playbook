@@ -58,7 +58,7 @@ A good delegation prompt gives the agent the context it would otherwise ask for:
 
 ## Hands-on exercise
 
-> **🎯 Doing this on your own product?** Swap in *your* validated solution from Module 4. The routing and escalation lessons are product- and domain-agnostic. If your product is non-technical or you have no engineering team, do Steps 1–2 (pm → architect) and treat the design brief as a planning artifact; the point is to feel where judgment is required, not to ship code.
+> **🎯 Doing this on your own product?** Swap in *your* validated solution from Module 4. The routing and escalation lessons are product- and domain-agnostic. If your product is non-technical or you have no in-house engineering team, do all five steps — Steps 1–2 (pm → architect) are the highest-value arc, and Steps 3–5 (escalation map, reflection) apply equally: your escalation points are just handed off to a contractor instead of a salaried engineer. The "only-you-decide" bucket is the same regardless of who builds.
 
 **Setup:** Take the solution that survived its Module 4 test. For ShiftLoop, say the concierge test passed and the winning solution is **org-level roster push** (the owner loads all locations' staff so managers never re-key).
 

@@ -82,6 +82,39 @@ Tested Modules 0–3 (the Phase-1 curriculum). Chose a B2C single-persona produc
 
 ---
 
+### Run 2 — 2026-06-10 — product: "Parcel" (B2C, single-persona artisan food subscription app)
+
+Full-curriculum pass: Modules 0–6 + capstone. Chose a B2C single-persona solo-founder product to stress both B2B assumptions (carried from ShiftLoop) and team-participation assumptions. Each module ran as a fresh agent with only its module file; chained modules were fed their predecessor's artifact.
+
+| Module | Verdict | Headline finding |
+|---|---|---|
+| 0 — Operating Model | Minor friction | No fallback for teams with no formal roadmap; no verbatim fallback in Step 3 for pre-evidence PMs. |
+| 1 — Environment Setup | **Blocked** | Claude Code install step still absent (Step 0); clone URL uses `richardbowman` not `rbcodelabs`; "Claude session" undefined; no project directory context for pm-setup. |
+| 2 — Your First OST | Minor friction | Skill trigger assumes harness running (no fallback); ShiftLoop manager/staff example has no B2C parallel; Part B "focus" check trivially passes for solo founder. |
+| 3 — Signal Synthesis | Minor friction | Delight signals (positive confirmations) have no handling recipe; BYO sidebar doesn't say to skip skill invocation on manual path. |
+| 4 — Experiments & Investment | Minor friction | Kill-condition time-horizon not calibrated to monthly/long-cadence products; no N-sizing guidance for small B2C concierge cohorts. |
+| 5 — The Agent Team | Minor friction | Example delegation prompt hard-coded to ShiftLoop B2B; solo/contractor escalation path not covered for Steps 3–5. |
+| 6 — Cadences & Health | Minor friction | "Name your participants" fails for true solo founders; "automate the heartbeat" vague without a link to a recipe. |
+| Capstone | Minor friction → trending Blocked (self-directed) | No signal volume floor; rubric unclear that it scores test **design** not whether test ran; Test Minimalism 1/2 boundary hard to self-score. |
+
+**Cross-cutting findings:**
+
+1. **M1 still Blocked after Run 1 rewrite** — the Run 1 fix addressed plugin names and optional-stack framing correctly, but missed the Claude Code install step and the wrong org in the clone URL. Both re-found in Run 2. Fixed in this commit.
+2. **Solo-founder participation gap** persists across M5, M6, and Capstone. The modules give a non-technical escape hatch but not a solo-founder escape hatch for cross-functional exposure. Fixed in M5 BYO note and M6 Step 5.
+3. **Skill invocation assumes live tooling** — across M2, M3, M4, M5, "trigger the skill / spawn it" steps have no manual fallback. Fixed in M3 BYO callout; others documented for Build #4.
+4. **Monthly/long-cadence products underserved in M4** — the kill condition examples use days; monthly cycles need explicit guidance. Fixed in M4 Step 5.
+5. **Capstone is not reliably self-assessable** on Test Minimalism and "signal volume floor" without fixes. Fixed in this commit.
+
+**All Run 2 findings fixed in commit (see next commit SHA after this one).**
+
+**Still open for Build #4 (troubleshooting guide):**
+- M2: Skill trigger fallback for non-harness users (add a "manual path" note to Step 1)
+- M4: N-sizing guidance for small-cohort concierge tests
+- M6: "Automate the heartbeat" — link to a concrete recipe
+- Capstone: No exemplar / worked submission; "certified" implies a reviewer but none named for solo path
+
+---
+
 ## Repo-level bugs found (outside `training/` — fix separately)
 
 These surfaced during Run 1 but live outside the training folder, so they're parked here rather than fixed in the curriculum branch:

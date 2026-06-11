@@ -70,7 +70,7 @@ Discovery isn't a solo sport. Decide which engineers, designers, or support folk
 2. **Consider automating the heartbeat.** A recurring agent that fires the weekly-synthesis prompt against your passive-feedback source makes the cadence hold even on a busy week. (This is also how the pilot satisfies its "ran twice unattended" gate.)
 3. **Baseline your health metrics.** Honestly record where you are today on each: when did you last synthesize? How many segments/source types in the last 30 days? Any Prioritized opportunity resting on a single source? Any stale experiment?
 4. **Set your flag thresholds** from the table above, written down where you'll see them — so a slip trips a flag instead of going unnoticed.
-5. **Name your participants.** Write down who beyond you will be exposed to customer signal, and how often.
+5. **Name your participants.** Write down who beyond you will be exposed to customer signal, and how often. *(If you're a solo founder with no team: a contractor you brief on synthesis outputs counts; so does an engaged customer you talk to regularly, a peer founder who reviews your OST, or a designer who joins one synthesis session a month. The goal is that someone besides you has unfiltered exposure to customer signal — even once a quarter is better than never.)*
 
 **Deliverable:** scheduled recurring rituals (show the calendar entries / tasks / agent), a one-page Discovery Health baseline with thresholds set, and a short list of discovery participants.
 

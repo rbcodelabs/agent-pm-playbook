@@ -73,13 +73,13 @@ The traditional "are we ready to build?" question is binary and usually answered
 
 No tools. Just you, one real feature, and an honest pen.
 
-**Setup:** Open your *actual* current roadmap — the real one, for your real product. Pick one item that's planned or in progress. Choose one you feel reasonably good about; the exercise is more revealing when you don't expect it to fail.
+**Setup:** Open your *actual* current roadmap — the real one, for your real product. Pick one item that's planned or in progress. Choose one you feel reasonably good about; the exercise is more revealing when you don't expect it to fail. *(If you don't have a formal roadmap document, write three features you're currently considering on a blank page — that's your input.)*
 
 **Steps:**
 
 1. **Write the output.** State the feature in one line. *"We're building X."*
 2. **Climb to the outcome.** Ask: *if this ships and works perfectly, what customer behavior changes, and how would I measure it?* Write the measurable outcome — a behavior plus a number that would move. *Good: "% of new users who complete setup without contacting support." Bad: "users will use the new dashboard" (that's the feature reworded, not a behavior change).*
-3. **Climb again to the opportunity.** What customer need, pain, or desire does that behavior change serve? Whose problem is this, in their words?
+3. **Climb again to the opportunity.** What customer need, pain, or desire does that behavior change serve? Whose problem is this, in their words? *(If you don't have verbatims yet, write the most plausible paraphrase — and mark that rung **assumed** in Step 5.)*
 4. **Climb to the desired outcome.** Does that opportunity ladder up to a business or product outcome your team actually owns? (A quarterly OKR if you have them; an ongoing funnel metric like activation or retention if you don't — both are fine.)
 5. **Check the evidence at each rung.** For the outcome and the opportunity, ask: *what evidence do I have that this is real?* Customer signal, data, a quote — or just a hunch? Mark each rung **evidenced** or **assumed**. (Steps 1–4 build the four rungs of the chain; this step just annotates them.)
 
