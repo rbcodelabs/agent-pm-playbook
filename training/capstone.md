@@ -89,6 +89,12 @@ Reviewed across four dimensions. Each is scored **0 / 1 / 2**. **Passing = 6+ of
 - **As a facilitator:** passing the capstone qualifies you to co-facilitate the next cohort. (If you can't teach a step, the docs aren't done — and you'll know exactly where.)
 - **Keep your friction log.** Anything that tripped you on your real product is a doc fix for the next learner — feed it back (see [`_testing-the-curriculum.md`](_testing-the-curriculum.md)).
 
+### Solo / no-cohort path
+
+If you're working without a cohort facilitator, **self-certification counts** — use the rubric exactly as written, be honest with yourself on each score, and keep your scored rubric alongside your submission artifacts. The test is whether you can produce the artifacts *and* critique them honestly against the criteria. A solo PM who scores themselves a 1 where they deserved a 1 learns more than one who rounds up.
+
+Not sure what a passing submission looks like in practice? See the **[worked exemplar](sample-data/capstone-exemplar.md)** — a full fictional capstone submission scored against the rubric.
+
 ---
 
 ← Back to the [learning path](00-start-here.md)

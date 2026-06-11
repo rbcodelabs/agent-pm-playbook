@@ -81,6 +81,8 @@ The capstone is the moment you drop the sample data and run the whole loop on *y
 - **Concept unclear?** Each module links its source playbook doc. Read that section, then come back.
 - **Tool won't cooperate?** Module 1 is also the install smoke test. Friction there is a real bug — capture it (what you did, what you expected, what happened) so it can be fixed in `setup.sh` or the docs.
 - **Exercise feels wrong?** Re-read the *Success criteria* and *Common failure modes* before assuming you're off track. Most "this feels wrong" moments are the intended discomfort of the new operating model.
+- **Something specific breaking?** The **[Troubleshooting Guide](troubleshooting.md)** covers common failure modes across all modules — skill invocation fallbacks, N-sizing for small cohorts, heartbeat automation, and capstone self-scoring.
+- **Capstone coming up and want to see a full submission?** The **[worked exemplar](sample-data/capstone-exemplar.md)** is a complete fictional capstone scored against the rubric.
 
 ---
 

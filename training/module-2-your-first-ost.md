@@ -84,6 +84,8 @@ Two parts: **build** a clean tree, then **diagnose** a broken one. The diagnosis
 **Steps:**
 
 1. In a thread, trigger the skill: *"Build an OST for `<product>`. The desired outcome is in the product brief."* *(Sample run: "Build an OST for ShiftLoop…")*
+
+   > **No `ost-workflow` skill?** If you're working without the skill active, apply the four-layer structure directly: describe your product and desired outcome in a plain Claude thread, then ask it to help you surface customer needs (opportunities) and candidate solutions. The skill enforces good structure automatically — without it, *you're* the enforcer. Re-read the four-layer rules and the health-check table above and check your own work at each step.
 2. Confirm the **root** with the skill: it must be your activation/desired outcome (for ShiftLoop, 38% → 60%), behavior-based and measurable. If you phrase it as a feature, let the skill reframe you — that's the lesson.
 3. Surface **at least 5 opportunities**, each framed as a customer need with context. Pull them from your personas — for ShiftLoop that's managers, the buyer, and staff; for a single-persona product it's all from that one user. Resist writing solutions.
 4. Under your two strongest opportunities, generate **3 solution directions each** (the skill will push for at least three, spanning incremental to transformative). Don't evaluate them yet.
