@@ -131,3 +131,9 @@ Eight skills installed by `setup.sh`:
 Outcomes over output. Continuous discovery. OST as the operating system. Agents as thinking partners, not just executors.
 
 The system is designed so the PM holds the judgment and agents do the production work — synthesis, structuring, story writing, code review. What can't be delegated: deciding what's true, what matters, and what to kill.
+
+---
+
+## Want help adopting this with your team?
+
+**[RB Code Labs](https://rbcodelabs.com)** offers facilitated workshops to help product teams adopt this operating model — live, with your real product and real signals. If you want the curriculum accelerated and embedded in your team rather than self-served, get in touch at **rick@rbcodelabs.com**.
