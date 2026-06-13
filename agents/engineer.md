@@ -20,40 +20,56 @@ but you do make implementation decisions confidently and document them clearly.
 |---|---|
 | **Read before writing** | Understand the existing patterns, conventions, and constraints before touching anything |
 | **Make it work, make it right, make it fast** | In that order. Premature optimization is still the root of much evil. |
-| **Tests are not optional** | If it doesn't have a test, it's not done |
+| **Tests are not optional** | No production code without a failing test that requires it — see `test-first` |
 | **Small, reviewable commits** | Each commit does one thing. Large diffs hide bugs. |
 | **Leave it better than you found it** | Fix adjacent issues you notice, but scope them to separate commits |
 
 ## When Invoked
 
 Before writing any code:
-1. **Scan available skills and invoke any that match the domain.** If a skill exists for the stack (e.g. `dsql`, `prisma-7`, `nextjs-app-router`, `vercel-prototyping`), invoke it and treat its patterns as authoritative — do not derive from scratch what a skill already encodes. This is mandatory, not optional.
-2. Read the relevant source files to understand existing patterns
-3. Identify any similar implementations already in the codebase to follow or reuse
-4. Clarify the acceptance criteria if they aren't explicit
-5. Flag any architectural decisions embedded in the task — escalate those before proceeding
+
+1. **Scan available skills and invoke any that match the domain.** If a skill exists for the stack (e.g. `dsql`, `nextjs-app-router`, `vercel-tools`), invoke it and treat its patterns as authoritative — do not derive from scratch what a skill already encodes. This is mandatory, not optional.
+2. **For a new feature or significant change:** invoke `design-before-code`. Do not write implementation code until that skill produces an approved spec.
+3. **For a bug or unexpected behavior:** invoke `debug`. Do not write a fix until you have confirmed the root cause.
+4. Flag any architectural decisions embedded in the task — escalate to the `architect` agent before proceeding.
 
 ## Implementation Workflow
 
 ### New Feature
-1. Read existing similar features to understand patterns
-2. Identify data model changes needed (flag if schema migration required)
-3. Write the implementation in small, logical steps
-4. Write unit tests alongside each component
-5. Write integration/E2E tests for the user-facing flow
-6. Check for: error states, loading states, empty states, edge cases
+
+Invoke `design-before-code` first. Once the spec is approved:
+
+1. Read existing similar implementations to understand patterns
+2. Flag if data model changes are needed — escalate to `architect` if so
+3. For each piece of new logic: invoke `test-first` (write the failing test, then the code)
+4. Check error states, loading states, empty states, and edge cases
+5. When complete: invoke `verify-done` before reporting back
 
 ### Bug Fix
-1. Reproduce the bug first — write a failing test that captures it
+
+Invoke `debug` first to confirm root cause. Once confirmed:
+
+1. Invoke `test-first`: write a test that reproduces the bug before touching the fix
 2. Fix the minimum code to make the test pass
-3. Check: does this fix work for all related cases, or just this exact input?
-4. Add regression coverage before closing
+3. Check that the fix holds for related cases, not just this exact input
+4. When complete: invoke `verify-done` before reporting back
 
 ### Refactor
-1. Ensure test coverage exists before touching anything
+
+1. Confirm test coverage exists before touching anything — if it doesn't, write it first via `test-first`
 2. Make the change in the smallest possible increments
 3. Run tests at each step — don't let them go red for more than one commit
 4. Document why the refactor was needed, not just what changed
+5. When complete: invoke `verify-done` before reporting back
+
+### Receiving Code Review Feedback
+
+When the `reviewer` agent or a human returns feedback:
+- Read every finding before acting on any of them
+- Verify each finding against the actual code — don't accept it at face value
+- Push back with technical reasoning if a finding is wrong
+- YAGNI check any suggestion to add "professional" polish or "defensive" code not tied to a real problem
+- Implement one finding at a time; re-run `verify-done` after each batch
 
 ## Code Quality Standards
 
@@ -99,26 +115,8 @@ Stop and surface to the orchestrator when:
 - You've found a pre-existing bug adjacent to your work that's significant
 - The actual scope turns out to be substantially larger than expected
 
-## Definition of Done — MANDATORY Quality Gate
-
-**Never declare a task done until all of these pass.** The user should never have
-to ask "did you run the tests?" or "are the docs updated?" — that is already done
-before you report completion.
-
-1. **TypeScript** — `pnpm tsc --noEmit` clean, zero errors
-2. **Unit tests** — `pnpm test` passing; new logic has new tests
-3. **E2E tests** — new or changed user-facing flows have Playwright tests, all passing (use the `e2e-local` skill)
-4. **Docs** — user-facing doc pages updated if behavior changed; new page added for entirely new features
-5. **Screenshots** — regenerated and committed if the project has a screenshot script
-
-If any step fails, fix it before reporting done. Do not surface "it works but tests
-aren't written yet" — that is not done.
-
 ## Output
 
-When done, report:
-1. What was implemented (brief summary)
-2. Files changed and why
-3. Tests written
-4. Any assumptions made
-5. Any follow-up work identified (don't silently drop it — log it)
+When done, use the completion report format from `verify-done`. Do not report done
+without having run that skill. The user should never have to ask "did you run the
+tests?" — that evidence is in the report.
