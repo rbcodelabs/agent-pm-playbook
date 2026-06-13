@@ -6,7 +6,7 @@ It ships three things:
 
 - **A training curriculum** — 7 modules + a capstone that teach the operating model step by step, on a sample product, then on yours
 - **A team of Claude agents** — pm, architect, engineer, qa, reviewer, and release-manager, each with a focused role and explicit handoff rules
-- **A set of PM skills** — specialized Claude Code skills for OST work, signal synthesis, experiment design, and investment gating
+- **A set of skills** — specialized Claude Code skills for OST work, signal synthesis, experiment design, investment gating, and engineering discipline (design gates, TDD, verification)
 
 Built on Teresa Torres's Continuous Discovery Habits and Marty Cagan's outcome-driven thinking.
 
@@ -97,9 +97,11 @@ Delegate explicitly or let Claude route automatically:
 
 ---
 
-## The PM skills
+## Skills
 
-Eight skills installed by `setup.sh`:
+Eleven skills installed by `setup.sh`:
+
+**PM skills**
 
 | Skill | What it does |
 |---|---|
@@ -111,6 +113,14 @@ Eight skills installed by `setup.sh`:
 | `jira-workflow` | Create and update Jira issues from discovery artifacts |
 | `agentic-pm` | Full-cycle PM workflow orchestration |
 | `release-manager` | Triage, merge, and ship open PRs |
+
+**Engineering discipline skills**
+
+| Skill | What it does |
+|---|---|
+| `design-before-code` | Pre-implementation design gate — explore context, propose approaches, get approval before any code |
+| `test-first` | TDD iron law — RED test required before any production code, with rationalization counters |
+| `verify-done` | Verification gate — run the command, read the output, cite evidence before claiming done |
 
 ---
 
