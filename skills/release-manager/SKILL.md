@@ -4,8 +4,8 @@ description: >-
   Triage, prioritize, and safely merge all open PRs on a repo, then ship the
   result. For Vercel web apps: waits for the deploy and smoke-tests live URLs.
   For Obsidian plugins and other distributable apps: runs the build, bumps the
-  version, and publishes a GitHub release. Use when you have a backlog of open
-  PRs that need to be merged and shipped as a batch.
+  version, and publishes a GitHub release with built artifacts. Use when you have
+  a backlog of open PRs that need to be merged and shipped as a batch.
 metadata:
   priority: 2
 retrieval:
@@ -34,7 +34,7 @@ monitoring a Vercel deploy or publishing a GitHub release with built artifacts.
 
 ---
 
-## Step 0 — Establish Context
+## Step 1 — Establish Context
 
 **Ask if not clear from context:**
 1. Which repo? (resolve from `~/Documents/Personal/Claude/repo-map.md`)
@@ -55,9 +55,13 @@ cat <repo-path>/package.json | python3 -m json.tool | grep '"build"'
 
 ---
 
-## Step 0.5 — Create the Release Todo List
+## Step 2 — Create the Release Checklist
 
-**Do this before any other work.** Use `TodoWrite` to create a task list tracking every phase of this release. Mark each item `in_progress` when you start it and `completed` only after verifying it is actually done — not when you think it should be done. The final item is always "End-to-end verification of every requirement".
+**Do this before any other work.** Use `TodoWrite` to create a task list tracking
+every phase of this release. Mark each item `in_progress` when you start it and
+`completed` only after verifying it is actually done — not when you think it
+should be done. The final item is always "End-to-end verification of every
+requirement".
 
 Checklist template (adapt to the actual PR set and repo type):
 
@@ -76,7 +80,7 @@ Checklist template (adapt to the actual PR set and repo type):
 
 ---
 
-## Step 1 — Triage Open PRs
+## Step 3 — Triage Open PRs
 
 ```bash
 cd <repo-path>
@@ -106,7 +110,7 @@ Build a triage table. Include every open PR. Columns:
 
 ---
 
-## Step 2 — Build the Merge Plan
+## Step 4 — Build the Merge Plan
 
 Order the queue: smallest + most isolated first, largest + most risky last.
 Infrastructure changes (auth, DB schema, shared utilities) always go last.
@@ -129,7 +133,7 @@ Skipping:
 
 ---
 
-## Step 3 — Execute Merges
+## Step 5 — Execute Merges
 
 One PR at a time. After each merge, confirm the branch is gone and pull main:
 
@@ -148,7 +152,7 @@ and surface the issue with the PR number that likely caused it.
 
 ---
 
-## Step 3.5 — Run the Full Test Suite
+## Step 6 — Run the Full Test Suite
 
 **This step is mandatory.** Screenshots are not a substitute for tests. Run every
 test harness that exists in the repo before touching docs or preparing the release.
@@ -176,7 +180,7 @@ until the failure is understood and fixed. Surface exactly which tests failed an
 
 ---
 
-## Step 3.6 — Audit the README
+## Step 7 — Audit the README
 
 Before touching screenshots or generating release notes, audit the README against
 the full set of merged PRs. The question is: if a new user installed this version
@@ -210,7 +214,7 @@ so the README is accurate at the moment the screenshots are captured.
 
 ---
 
-## Step 3.7 — Docs & Screenshots (if applicable)
+## Step 8 — Docs & Screenshots (if applicable)
 
 After tests pass and the README is current, check whether the repo auto-generates
 documentation screenshots:
@@ -265,7 +269,7 @@ and ensures the GitHub release page always reflects the actual current state of 
 
 ---
 
-## Step 4A — Web App (Vercel): Deploy + Smoke Test
+## Step 9A — Web App (Vercel): Deploy + Smoke Test
 
 After all merges are done, watch for the Vercel deployment to go live. Use the
 `vercel-tools` skill for the wait step.
@@ -302,7 +306,7 @@ If smoke test fails: surface the result, don't declare success.
 
 ---
 
-## Step 4B — Plugin / Desktop App: Build + Release
+## Step 9B — Plugin / Desktop App: Build + Release
 
 ### Check current version
 
@@ -381,7 +385,7 @@ git -C <repo-path> commit -m "chore: bump version to v<X.Y.Z>"
 git -C <repo-path> push
 ```
 
-### Write Comprehensive Release Notes
+### Write comprehensive release notes
 
 Do **not** use bare `git log --oneline` as release notes. Users reading the GitHub
 release page need to understand what changed and why, not just commit hashes.
@@ -430,7 +434,7 @@ cat > /tmp/release-notes.md << 'EOF'
 EOF
 ```
 
-### Tag + Publish GitHub Release
+### Tag + publish GitHub release
 
 ```bash
 NEW_VERSION="<X.Y.Z>"
@@ -473,7 +477,7 @@ After the release is published, tell the user:
 
 ---
 
-## Step 5 — Final Report
+## Step 10 — Final Report
 
 ```markdown
 ## Release Complete — [repo-name] [vX.Y.Z or deploy URL]

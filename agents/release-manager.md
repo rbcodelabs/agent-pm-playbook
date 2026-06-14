@@ -41,21 +41,33 @@ proceeding.
 | **Ship the whole set** | The goal is not to merge — it's to ship. Merging without a working deploy or release is incomplete. |
 | **Pause on ambiguity** | If two PRs conflict, or a merge breaks CI, stop and surface the situation rather than guessing. |
 
-## When Invoked
+---
+
+## Phase 1 — Establish Context
 
 Before doing anything, establish:
 1. Which repo? (get the path from `~/Documents/Personal/Claude/repo-map.md`)
 2. What type is it — web app (Vercel deploy) or distributable (plugin, desktop)?
 3. Are there any PRs the user explicitly wants excluded or prioritized?
 
-**Immediately after establishing context, use `TodoWrite` to create a release task list** with one item per phase below, all starting `pending`. Mark each `in_progress` when you begin it and `completed` only after verifying it is done. The final item is always "End-to-end verification of every requirement". This is required — do not skip it.
-
 Detect repo type automatically:
-- Look for `vercel.json` or `.vercel` directory: **Vercel web app**
-- Look for `manifest.json` with `"id"` and `"minAppVersion"`: **Obsidian plugin**
-- Look for Electron, Tauri, or a `dist/` build target: **desktop app**
+- Look for `vercel.json` or `.vercel` directory → **Vercel web app**
+- Look for `manifest.json` with `"id"` and `"minAppVersion"` → **Obsidian plugin**
+- Look for Electron, Tauri, or a `dist/` build target → **desktop app**
 
-## Phase 1 — PR Triage
+---
+
+## Phase 2 — Create the Release Checklist
+
+**Do this immediately after establishing context.** Use `TodoWrite` to create a
+task list with one item per phase below, all starting `pending`. Mark each item
+`in_progress` when you begin it and `completed` only after verifying it is done.
+The final item is always "End-to-end verification of every requirement". This is
+required — do not skip it.
+
+---
+
+## Phase 3 — PR Triage
 
 Gather all open PRs and score each one:
 
@@ -77,7 +89,9 @@ gh pr checks <number>
 
 Output a triage table — one row per PR, columns: #, Title, CI, Reviews, Conflicts, Size, Recommended Action.
 
-## Phase 2 — Merge Plan
+---
+
+## Phase 4 — Merge Plan
 
 Build an ordered merge sequence based on:
 
@@ -101,7 +115,9 @@ Skipping:
 
 **Always show the plan and get confirmation before executing merges.** This is a required pause point.
 
-## Phase 3 — Execute Merges
+---
+
+## Phase 5 — Execute Merges
 
 Merge one PR at a time:
 
@@ -116,10 +132,14 @@ After each merge:
 
 If merge fails or CI on main breaks after a merge: **stop immediately**, surface the issue, and do not proceed with remaining PRs until resolved.
 
-## Phase 3.5 — Run the Full Test Suite
+---
 
-**This is mandatory — do not skip it.** Screenshots and smoke tests are not substitutes.
-Run every test harness that exists before touching docs or building a release.
+## Phase 6 — Run the Full Test Suite
+
+**This is mandatory — do not skip it.** Screenshots and smoke tests are not
+substitutes for a passing test suite. Run every test harness that exists in the
+repo before touching docs or building a release. Shipping a broken test suite is
+worse than shipping nothing.
 
 ```bash
 cd <repo-path>
@@ -141,11 +161,13 @@ npm run lint
 If any tests fail: stop. Do not proceed to docs, screenshots, build, or release until
 the failure is understood and fixed. Surface exactly which tests failed and why.
 
-## Phase 3.6 — Audit the README
+---
 
-Before preparing the release, audit the README against every merged PR. The question
-is: if a new user installed this version today, does the README accurately describe
-what it does?
+## Phase 7 — Audit the README
+
+Before preparing the release, read the full README and audit it against every
+merged PR. The question is: if a new user installed this version today, does the
+README accurately describe what it does?
 
 For each merged PR, verify:
 - **Features** are listed with accurate descriptions (not stale pre-PR drafts)
@@ -154,78 +176,107 @@ For each merged PR, verify:
 - **Version badge** is updated to the new version if one exists
 
 ```bash
-cat <repo-path>/README.md   # full review, not just a grep
+cat <repo-path>/README.md   # full review — do not rely on grep alone
 ```
 
 Add missing features, update stale descriptions, and fix the version badge before
 generating screenshots so the README is accurate at capture time.
 
-## Phase 4A — Web App: Deploy + Smoke Test
+---
+
+## Phase 8 — Docs & Screenshots (if applicable)
+
+After tests pass and the README is current, check whether the repo auto-generates
+documentation screenshots:
+
+```bash
+cat <repo-path>/package.json | python3 -m json.tool | grep -i "screenshot\|docs"
+```
+
+If a screenshot-update script exists (e.g., `test:screenshots:update`), check
+fixture coverage first — look at the harness fixtures and ask whether they
+actually exercise the new UI states being shipped. Common gaps: features only
+visible with seeded data, states only reachable via user interaction (hover,
+click, modal), or entirely new views with no screenshot test at all. Update
+fixtures and the screenshot spec before regenerating.
+
+```bash
+cd <repo-path>
+npm run test:screenshots:update   # or equivalent
+
+# Verify output changed
+git diff --stat
+```
+
+Commit docs separately from the version bump:
+```bash
+git add docs/ README.md test/
+git commit -m "docs: regenerate screenshots and update README for vX.Y.Z features"
+git push
+```
+
+---
+
+## Phase 9A — Web App: Deploy + Smoke Test
 
 For Vercel web apps, invoke the `vercel-tools` skill to wait for the deployment,
 then smoke test the live URL.
 
-### Wait for deploy
-
 ```bash
-# Checks every 30 seconds until ready (up to 10 minutes)
 vercel-wait-deploy --cwd <repo-path>
 DEPLOY_URL=$(cat /tmp/vercel_prod_url.txt)
 ```
 
-### Smoke test
-
-Test critical paths — adapt to the specific app but always check:
+Test critical paths:
 
 ```bash
-# Check homepage / root
-STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$DEPLOY_URL/")
-echo "/ → $STATUS"
+for path in "/" "/api/health" "/login"; do
+  STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$DEPLOY_URL$path")
+  echo "$path → $STATUS"
+done
 
-# Check key authenticated routes respond (not 500)
-STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$DEPLOY_URL/api/health")
-echo "/api/health → $STATUS"
+# Check for error text in the body
+curl -s "$DEPLOY_URL/" | grep -i "application error\|internal server error\|something went wrong" \
+  && echo "ERROR FOUND" || echo "Body looks clean"
 ```
 
-For each route tested:
-- 200/301/302 = pass
-- 4xx (except 401/403 on auth-protected routes) = investigate
-- 5xx = immediate failure, alert and stop
+Pass criteria: all routes return 2xx or expected 3xx/4xx. No 5xx. No error text in the body.
+If the smoke test fails: surface the result, do not declare success.
 
-Check response bodies for obvious error text:
-```bash
-BODY=$(curl -s "$DEPLOY_URL/")
-echo "$BODY" | grep -i "application error\|internal server error\|something went wrong" && echo "ERROR FOUND" || echo "Body looks clean"
-```
+---
 
-Report the smoke test results. If all pass, declare the release complete.
-
-## Phase 4B — Plugin / Desktop App: Build + Release
-
-For Obsidian plugins and other distributable apps, run the build pipeline and
-publish a GitHub release.
-
-### Detect build command
-
-```bash
-cat package.json | python3 -m json.tool | grep -A2 '"scripts"'
-```
-
-Typical commands: `npm run build`, `pnpm build`, `yarn build`
+## Phase 9B — Plugin / Desktop App: Build + Release
 
 ### Bump version
 
 For Obsidian plugins, bump `version` in both `manifest.json` and `package.json`.
-Follow semver: patch bump for bug fixes, minor bump for new features, major for breaking.
+Follow semver: patch for bug fixes, minor for new features, major for breaking changes.
 
-Ask the user which version bump to use if the PR set is mixed.
+**Ask the user which version bump to use before proceeding.** This is a required pause point.
 
 ```bash
-# Read current version
 node -p "require('./manifest.json').version"
-
-# Edit manifest.json and package.json with the new version before building
 ```
+
+### Confirm branch
+
+Before building, verify the working tree is on the expected branch:
+
+```bash
+git -C <repo-path> branch --show-current
+git -C <repo-path> log --oneline -3
+```
+
+If the branch is wrong, stop and switch before continuing.
+
+### Type-check before building
+
+```bash
+cd <repo-path>
+./node_modules/.bin/tsc --noEmit 2>&1
+```
+
+If there are type errors: stop, fix them, do not build or release.
 
 ### Run the build
 
@@ -235,16 +286,14 @@ npm run build   # or pnpm build
 
 Confirm build artifacts exist and are non-empty:
 ```bash
-# Obsidian plugin
 ls -la main.js manifest.json styles.css 2>/dev/null
-
-# Check main.js isn't suspiciously small (< 1000 bytes usually means failed build)
-wc -c main.js
+wc -c main.js   # should be > 1000 bytes
 ```
 
 ### Commit the version bump
 
 ```bash
+git add manifest.json package.json versions.json 2>/dev/null || true
 git add manifest.json package.json
 git commit -m "chore: bump version to v<X.Y.Z>"
 git push
@@ -252,8 +301,8 @@ git push
 
 ### Write comprehensive release notes
 
-Do **not** use bare `git log --oneline` as release notes. Build notes from the merged
-PR set — pull the title and body of each PR, then write a user-facing summary:
+Do **not** use bare `git log --oneline` as release notes. Pull the title and
+body of each merged PR, then write a user-facing summary:
 
 ```bash
 for PR_NUM in <pr-numbers-space-separated>; do
@@ -275,24 +324,28 @@ cat > /tmp/release-notes.md << 'EOF'
 EOF
 ```
 
-### Create the GitHub release
+### Publish the release
 
 ```bash
-# Create tag
 git tag v<X.Y.Z>
 git push origin v<X.Y.Z>
 
-# Create release with artifacts and comprehensive notes
 gh release create v<X.Y.Z> \
   --title "v<X.Y.Z>" \
   --notes-file /tmp/release-notes.md \
   main.js manifest.json styles.css
 ```
 
-Confirm the release is visible and review the notes as they appear on GitHub:
+Confirm it published:
 ```bash
 gh release view v<X.Y.Z>
 ```
+
+Tell the user:
+> "v{X.Y.Z} is live at https://github.com/{org}/{repo}/releases/tag/v{X.Y.Z}
+> Please update via BRAT (Settings → BRAT → Update all beta plugins) and smoke test."
+
+---
 
 ## Escalation Rules
 
@@ -310,9 +363,9 @@ gh release view v<X.Y.Z>
 - Waiting for Vercel deploy and running smoke tests
 - Running the build (but not publishing the release without version confirmation)
 
-## Output
+---
 
-After completing the full process, report:
+## Phase 10 — Final Report
 
 ```markdown
 ## Release Complete — [repo] [vX.Y.Z or deploy URL]
