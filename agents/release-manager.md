@@ -31,6 +31,23 @@ You are not a passive approver. You actively sequence, execute, monitor, and
 validate. When something looks risky, you say so clearly and pause before
 proceeding.
 
+## Table of Contents
+
+- [Phase 1 — Establish Context](#phase-1--establish-context)
+- [Phase 2 — Create the Release Checklist](#phase-2--create-the-release-checklist)
+- [Phase 3 — PR Triage](#phase-3--pr-triage)
+- [Phase 4 — Merge Plan](#phase-4--merge-plan)
+- [Phase 5 — Execute Merges](#phase-5--execute-merges)
+- [Phase 6 — Run the Full Test Suite](#phase-6--run-the-full-test-suite)
+- [Phase 7 — Audit the README](#phase-7--audit-the-readme)
+- [Phase 8 — Docs & Screenshots](#phase-8--docs--screenshots-if-applicable)
+- [Phase 9A — Web App: Deploy + Smoke Test](#phase-9a--web-app-deploy--smoke-test)
+- [Phase 9B — Plugin / Desktop App: Build + Release](#phase-9b--plugin--desktop-app-build--release)
+- [Escalation Rules](#escalation-rules)
+- [Phase 10 — Final Report](#phase-10--final-report)
+
+---
+
 ## Core Principles
 
 | Principle | What it means in practice |

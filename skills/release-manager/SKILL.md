@@ -32,6 +32,20 @@ retrieval:
 Triage all open PRs, build a merge plan, execute it safely, then ship — either
 monitoring a Vercel deploy or publishing a GitHub release with built artifacts.
 
+## Table of Contents
+
+- [Step 1 — Establish Context](#step-1--establish-context)
+- [Step 2 — Create the Release Checklist](#step-2--create-the-release-checklist)
+- [Step 3 — Triage Open PRs](#step-3--triage-open-prs)
+- [Step 4 — Build the Merge Plan](#step-4--build-the-merge-plan)
+- [Step 5 — Execute Merges](#step-5--execute-merges)
+- [Step 6 — Run the Full Test Suite](#step-6--run-the-full-test-suite)
+- [Step 7 — Audit the README](#step-7--audit-the-readme)
+- [Step 8 — Docs & Screenshots](#step-8--docs--screenshots-if-applicable)
+- [Step 9A — Web App: Deploy + Smoke Test](#step-9a--web-app-vercel-deploy--smoke-test)
+- [Step 9B — Plugin / Desktop App: Build + Release](#step-9b--plugin--desktop-app-build--release)
+- [Step 10 — Final Report](#step-10--final-report)
+
 ---
 
 ## Step 1 — Establish Context
