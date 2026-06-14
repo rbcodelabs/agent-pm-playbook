@@ -4,8 +4,8 @@ description: >-
   Triage, prioritize, and safely merge all open PRs on a repo, then ship the
   result. For Vercel web apps: waits for the deploy and smoke-tests live URLs.
   For Obsidian plugins and other distributable apps: runs the build, bumps the
-  version, and publishes a GitHub release. Use when you have a backlog of open
-  PRs that need to be merged and shipped as a batch.
+  version, and publishes a GitHub release with built artifacts. Use when you have
+  a backlog of open PRs that need to be merged and shipped as a batch.
 metadata:
   priority: 2
 retrieval:
@@ -32,9 +32,23 @@ retrieval:
 Triage all open PRs, build a merge plan, execute it safely, then ship — either
 monitoring a Vercel deploy or publishing a GitHub release with built artifacts.
 
+## Table of Contents
+
+- [Step 1 — Establish Context](#step-1--establish-context)
+- [Step 2 — Create the Release Checklist](#step-2--create-the-release-checklist)
+- [Step 3 — Triage Open PRs](#step-3--triage-open-prs)
+- [Step 4 — Build the Merge Plan](#step-4--build-the-merge-plan)
+- [Step 5 — Execute Merges](#step-5--execute-merges)
+- [Step 6 — Run the Full Test Suite](#step-6--run-the-full-test-suite)
+- [Step 7 — Audit the README](#step-7--audit-the-readme)
+- [Step 8 — Docs & Screenshots](#step-8--docs--screenshots-if-applicable)
+- [Step 9A — Web App: Deploy + Smoke Test](#step-9a--web-app-vercel-deploy--smoke-test)
+- [Step 9B — Plugin / Desktop App: Build + Release](#step-9b--plugin--desktop-app-build--release)
+- [Step 10 — Final Report](#step-10--final-report)
+
 ---
 
-## Step 0 — Establish Context
+## Step 1 — Establish Context
 
 **Ask if not clear from context:**
 1. Which repo? (resolve from `~/Documents/Personal/Claude/repo-map.md`)
@@ -55,7 +69,32 @@ cat <repo-path>/package.json | python3 -m json.tool | grep '"build"'
 
 ---
 
-## Step 1 — Triage Open PRs
+## Step 2 — Create the Release Checklist
+
+**Do this before any other work.** Use `TodoWrite` to create a task list tracking
+every phase of this release. Mark each item `in_progress` when you start it and
+`completed` only after verifying it is actually done — not when you think it
+should be done. The final item is always "End-to-end verification of every
+requirement".
+
+Checklist template (adapt to the actual PR set and repo type):
+
+- Triage open PRs and build merge table
+- Review and confirm merge plan with user (required pause)
+- Execute merges (one per PR, validate each before moving on)
+- Run full test suite: unit, integration, E2E — all that exist in the repo
+- Audit README: every feature, config option, and install step is documented and current
+- Update screenshot fixtures and regenerate docs screenshots (if applicable)
+- Commit docs and screenshots separately from the version bump
+- Confirm version bump type with user (required pause)
+- Type-check and build artifacts
+- Commit version bump and publish GitHub release / confirm Vercel deploy
+- Smoke test / BRAT validation
+- End-to-end verification of every requirement
+
+---
+
+## Step 3 — Triage Open PRs
 
 ```bash
 cd <repo-path>
@@ -85,7 +124,7 @@ Build a triage table. Include every open PR. Columns:
 
 ---
 
-## Step 2 — Build the Merge Plan
+## Step 4 — Build the Merge Plan
 
 Order the queue: smallest + most isolated first, largest + most risky last.
 Infrastructure changes (auth, DB schema, shared utilities) always go last.
@@ -108,7 +147,7 @@ Skipping:
 
 ---
 
-## Step 3 — Execute Merges
+## Step 5 — Execute Merges
 
 One PR at a time. After each merge, confirm the branch is gone and pull main:
 
@@ -127,9 +166,72 @@ and surface the issue with the PR number that likely caused it.
 
 ---
 
-## Step 3.5 — Docs & Screenshots (if applicable)
+## Step 6 — Run the Full Test Suite
 
-After all merges, check whether the repo auto-generates documentation screenshots:
+**This step is mandatory.** Screenshots are not a substitute for tests. Run every
+test harness that exists in the repo before touching docs or preparing the release.
+Shipping a merged set that breaks the test suite is worse than shipping nothing.
+
+```bash
+cd <repo-path>
+
+# Discover what test scripts exist
+cat package.json | python3 -m json.tool | grep -E '"test|"e2e|"spec|"check'
+
+# Run unit and integration tests
+npm test        # or: pnpm test / yarn test
+
+# Run E2E tests if they exist (Playwright, Cypress, etc.)
+npm run test:e2e     # or: pnpm test:e2e
+
+# Run lint / type-check if no separate CI enforces it
+npm run lint
+./node_modules/.bin/tsc --noEmit
+```
+
+**If any tests fail:** stop. Do not proceed to docs, screenshots, build, or release
+until the failure is understood and fixed. Surface exactly which tests failed and why.
+
+---
+
+## Step 7 — Audit the README
+
+Before touching screenshots or generating release notes, audit the README against
+the full set of merged PRs. The question is: if a new user installed this version
+today, does the README accurately describe what it does?
+
+Work through each merged PR and check:
+
+1. **Features.** Is the feature listed in the README? Does the description match
+   what was actually shipped (not a stale draft description from before the PR)?
+
+2. **Configuration.** Are any new settings, options, or env vars documented with
+   their accepted values and defaults?
+
+3. **Installation / setup.** If the PR changed prerequisites or setup steps, is
+   the Getting Started section still accurate?
+
+4. **Version badge.** If the README has a version badge (e.g.,
+   `![Version](https://img.shields.io/badge/version-X.Y.Z-blue)`), update it to
+   the new version.
+
+```bash
+# Cross-check: grep for keywords from each merged PR title
+grep -i "<feature keyword>" <repo-path>/README.md
+
+# View full README to spot structural gaps
+cat <repo-path>/README.md
+```
+
+Add missing features and update stale descriptions before generating screenshots —
+so the README is accurate at the moment the screenshots are captured.
+
+---
+
+## Step 8 — Docs & Screenshots (if applicable)
+
+After tests pass and the README is current, check whether the repo auto-generates
+documentation screenshots:
 
 ```bash
 cat <repo-path>/package.json | python3 -m json.tool | grep -i "screenshot\|docs"
@@ -154,21 +256,7 @@ Common gaps:
 screenshot spec file (`test/screenshots/ui.spec.ts` or similar) — new visual states
 typically need new test cases with the right setup (hover, page.evaluate to seed state, etc.).
 
-### 2. Check README coverage
-
-Scan the README for features introduced by the merged PRs:
-
-```bash
-grep -i "<feature keyword>" <repo-path>/README.md
-```
-
-Add any undocumented features to the README key features list (and relevant sections)
-before regenerating — so the feature list is current at the moment the screenshots are taken.
-
-Also check the version badge in the README (e.g., `![Version](https://img.shields.io/badge/version-X.Y.Z-blue)`)
-and update it to the new version.
-
-### 3. Regenerate screenshots
+### 2. Regenerate screenshots
 
 ```bash
 cd <repo-path>
@@ -182,7 +270,7 @@ ls -la <repo-path>/docs/*.png
 git -C <repo-path> diff --stat   # confirm docs/ files changed
 ```
 
-### 4. Commit docs separately from the version bump
+### 3. Commit docs separately from the version bump
 
 ```bash
 git -C <repo-path> add docs/ README.md test/harness/fixtures.ts test/screenshots/
@@ -195,7 +283,7 @@ and ensures the GitHub release page always reflects the actual current state of 
 
 ---
 
-## Step 4A — Web App (Vercel): Deploy + Smoke Test
+## Step 9A — Web App (Vercel): Deploy + Smoke Test
 
 After all merges are done, watch for the Vercel deployment to go live. Use the
 `vercel-tools` skill for the wait step.
@@ -232,7 +320,7 @@ If smoke test fails: surface the result, don't declare success.
 
 ---
 
-## Step 4B — Plugin / Desktop App: Build + Release
+## Step 9B — Plugin / Desktop App: Build + Release
 
 ### Check current version
 
@@ -311,40 +399,81 @@ git -C <repo-path> commit -m "chore: bump version to v<X.Y.Z>"
 git -C <repo-path> push
 ```
 
-### Tag + Publish GitHub Release
+### Write comprehensive release notes
+
+Do **not** use bare `git log --oneline` as release notes. Users reading the GitHub
+release page need to understand what changed and why, not just commit hashes.
+
+Build the notes from the merged PR set:
+
+```bash
+# Fetch title + body for each merged PR
+for PR_NUM in <pr-numbers-space-separated>; do
+  gh pr view "$PR_NUM" --json number,title,body \
+    --jq '"### #\(.number) — \(.title)\n\(.body // "(no description)")\n"'
+done
+```
+
+Then write release notes with this structure (edit manually into the notes file):
+
+```markdown
+## What's New in vX.Y.Z
+
+### Features
+- **Feature name** — one-sentence description of what it does and why it's useful.
+  (closes #N)
+
+### Bug Fixes
+- **What was broken** — what the fix does. (closes #N)
+
+### Improvements
+- Short description of any polish, performance, or UX improvements.
+
+### Notes
+- Any migration steps, breaking changes, or known limitations the user should be
+  aware of before updating.
+```
+
+**Rules for good release notes:**
+- Every merged PR gets at least one line. No silent inclusions.
+- Feature entries describe the user-facing benefit, not the implementation.
+- Bug fix entries describe the symptom that was fixed, not just "fix bug".
+- If a PR body already has a good user-facing summary, use it verbatim (credit it).
+- Do not include internal refactors or chore commits unless they affect the user.
+
+Save the notes to a temp file:
+```bash
+cat > /tmp/release-notes.md << 'EOF'
+[paste your composed notes here]
+EOF
+```
+
+### Tag + publish GitHub release
 
 ```bash
 NEW_VERSION="<X.Y.Z>"
-PREV_TAG=$(git -C <repo-path> describe --tags --abbrev=0 2>/dev/null || echo "")
 
 # Tag
 git -C <repo-path> tag "v$NEW_VERSION"
 git -C <repo-path> push origin "v$NEW_VERSION"
 
-# Build release notes from commits since last tag
-if [ -n "$PREV_TAG" ]; then
-  NOTES=$(git -C <repo-path> log --oneline "$PREV_TAG"..HEAD)
-else
-  NOTES=$(git -C <repo-path> log --oneline -20)
-fi
-
-# Obsidian plugin release
+# Obsidian plugin release with comprehensive notes
 gh release create "v$NEW_VERSION" \
   --repo <github-org>/<repo-name> \
   --title "v$NEW_VERSION" \
-  --notes "$NOTES" \
+  --notes-file /tmp/release-notes.md \
   <repo-path>/main.js \
   <repo-path>/manifest.json \
   <repo-path>/styles.css 2>/dev/null || \
 gh release create "v$NEW_VERSION" \
   --repo <github-org>/<repo-name> \
   --title "v$NEW_VERSION" \
-  --notes "$NOTES" \
+  --notes-file /tmp/release-notes.md \
   <repo-path>/main.js \
   <repo-path>/manifest.json
 ```
 
-Confirm it published:
+Confirm it published and review the notes as they'll appear on GitHub:
 ```bash
 gh release view "v$NEW_VERSION" --repo <github-org>/<repo-name>
 ```
@@ -362,7 +491,7 @@ After the release is published, tell the user:
 
 ---
 
-## Step 5 — Final Report
+## Step 10 — Final Report
 
 ```markdown
 ## Release Complete — [repo-name] [vX.Y.Z or deploy URL]
@@ -372,8 +501,14 @@ After the release is published, tell the user:
 - ...
 
 ### Skipped ([N] total)
-- #N — [title] — [reason]
+- #N — [title] — [reason: draft / CI failing / conflict]
 - ...
+
+### Quality Gates
+- Unit/integration tests: ✅ X passed / ⚠️ failures found
+- E2E tests: ✅ X passed / ⚠️ N/A (no E2E harness)
+- Type check: ✅ clean / ⚠️ errors fixed before build
+- README audit: ✅ all features documented / list any gaps fixed
 
 ### Deployment
 [Web app]
@@ -384,9 +519,11 @@ After the release is published, tell the user:
 - Version: vX.Y.Z
 - Release: https://github.com/.../releases/tag/vX.Y.Z
 - Artifacts: main.js, manifest.json[, styles.css]
+- Release notes: comprehensive (N features, N fixes documented)
 
 ### Follow-up Needed
 - [List any PRs that need CI fixes, conflict resolution, or review before next batch]
+- [Any test gaps or README sections that need more work]
 ```
 
 ---
