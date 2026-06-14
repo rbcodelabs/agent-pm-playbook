@@ -48,6 +48,8 @@ Before doing anything, establish:
 2. What type is it — web app (Vercel deploy) or distributable (plugin, desktop)?
 3. Are there any PRs the user explicitly wants excluded or prioritized?
 
+**Immediately after establishing context, use `TodoWrite` to create a release task list** with one item per phase below, all starting `pending`. Mark each `in_progress` when you begin it and `completed` only after verifying it is done. The final item is always "End-to-end verification of every requirement". This is required — do not skip it.
+
 Detect repo type automatically:
 - Look for `vercel.json` or `.vercel` directory: **Vercel web app**
 - Look for `manifest.json` with `"id"` and `"minAppVersion"`: **Obsidian plugin**
@@ -113,6 +115,50 @@ After each merge:
 - Before moving to the next PR, verify the merge didn't introduce obvious issues
 
 If merge fails or CI on main breaks after a merge: **stop immediately**, surface the issue, and do not proceed with remaining PRs until resolved.
+
+## Phase 3.5 — Run the Full Test Suite
+
+**This is mandatory — do not skip it.** Screenshots and smoke tests are not substitutes.
+Run every test harness that exists before touching docs or building a release.
+
+```bash
+cd <repo-path>
+
+# Discover available test scripts
+cat package.json | python3 -m json.tool | grep -E '"test|"e2e|"spec|"lint|"check'
+
+# Run unit and integration tests
+npm test        # or pnpm test / yarn test
+
+# Run E2E tests if they exist
+npm run test:e2e
+
+# Lint + type-check
+npm run lint
+./node_modules/.bin/tsc --noEmit
+```
+
+If any tests fail: stop. Do not proceed to docs, screenshots, build, or release until
+the failure is understood and fixed. Surface exactly which tests failed and why.
+
+## Phase 3.6 — Audit the README
+
+Before preparing the release, audit the README against every merged PR. The question
+is: if a new user installed this version today, does the README accurately describe
+what it does?
+
+For each merged PR, verify:
+- **Features** are listed with accurate descriptions (not stale pre-PR drafts)
+- **Configuration options** and new settings are documented with accepted values and defaults
+- **Installation / setup** steps are still accurate if prerequisites changed
+- **Version badge** is updated to the new version if one exists
+
+```bash
+cat <repo-path>/README.md   # full review, not just a grep
+```
+
+Add missing features, update stale descriptions, and fix the version badge before
+generating screenshots so the README is accurate at capture time.
 
 ## Phase 4A — Web App: Deploy + Smoke Test
 
@@ -204,6 +250,31 @@ git commit -m "chore: bump version to v<X.Y.Z>"
 git push
 ```
 
+### Write comprehensive release notes
+
+Do **not** use bare `git log --oneline` as release notes. Build notes from the merged
+PR set — pull the title and body of each PR, then write a user-facing summary:
+
+```bash
+for PR_NUM in <pr-numbers-space-separated>; do
+  gh pr view "$PR_NUM" --json number,title,body \
+    --jq '"### #\(.number) — \(.title)\n\(.body // "(no description)")\n"'
+done
+```
+
+Structure the notes as:
+- **Features** — what's new and why it's useful (user benefit, not implementation)
+- **Bug Fixes** — what symptom was fixed
+- **Improvements** — polish, performance, UX
+- **Notes** — migration steps, breaking changes, known limitations
+
+Every merged PR gets at least one line. No silent inclusions. Save to a file:
+```bash
+cat > /tmp/release-notes.md << 'EOF'
+[composed notes here]
+EOF
+```
+
 ### Create the GitHub release
 
 ```bash
@@ -211,14 +282,14 @@ git push
 git tag v<X.Y.Z>
 git push origin v<X.Y.Z>
 
-# Create release with artifacts (Obsidian plugin)
+# Create release with artifacts and comprehensive notes
 gh release create v<X.Y.Z> \
   --title "v<X.Y.Z>" \
-  --notes "$(git log --oneline <prev-tag>..HEAD | head -20)" \
+  --notes-file /tmp/release-notes.md \
   main.js manifest.json styles.css
 ```
 
-Confirm the release is visible:
+Confirm the release is visible and review the notes as they appear on GitHub:
 ```bash
 gh release view v<X.Y.Z>
 ```
@@ -254,6 +325,12 @@ After completing the full process, report:
 - #N — [title] — [reason: draft / failing CI / conflict]
 - ...
 
+### Quality Gates
+- Unit/integration tests: ✅ X passed / ⚠️ failures (describe)
+- E2E tests: ✅ X passed / ⚠️ N/A (no E2E harness in repo)
+- Type check: ✅ clean / ⚠️ errors fixed before build
+- README audit: ✅ all features documented / list any gaps addressed
+
 ### Ship Result
 [For web apps:]
 - Deploy URL: https://...
@@ -263,8 +340,10 @@ After completing the full process, report:
 [For plugins:]
 - Release: https://github.com/.../releases/tag/vX.Y.Z
 - Artifacts: main.js, manifest.json, styles.css
+- Release notes: comprehensive (N features, N fixes, N improvements)
 - Status: ✅ Published
 
 ### Follow-up Items
 - [Any PRs that need attention, CI fixes, or conflict resolutions]
+- [Any test gaps or README gaps identified but not fully resolved]
 ```
