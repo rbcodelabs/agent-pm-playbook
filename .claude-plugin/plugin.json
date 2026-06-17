@@ -18,7 +18,17 @@
     "code-review",
     "agentic-team"
   ],
-  "skills": [
+  "skills": "skills",
+  "agents": [
+    "./agents/architect.md",
+    "./agents/engineer.md",
+    "./agents/pm.md",
+    "./agents/qa.md",
+    "./agents/release-manager.md",
+    "./agents/reviewer.md"
+  ],
+  "displayName": "Agentic PM Playbook",
+  "skillsList": [
     "./skills/agentic-pm/SKILL.md",
     "./skills/investment-gate/SKILL.md",
     "./skills/jira-workflow/SKILL.md",
@@ -27,13 +37,5 @@
     "./skills/pm-setup/SKILL.md",
     "./skills/pm-signal-synthesis/SKILL.md",
     "./skills/release-manager/SKILL.md"
-  ],
-  "agents": [
-    "./agents/architect.md",
-    "./agents/engineer.md",
-    "./agents/pm.md",
-    "./agents/qa.md",
-    "./agents/release-manager.md",
-    "./agents/reviewer.md"
   ]
 }
