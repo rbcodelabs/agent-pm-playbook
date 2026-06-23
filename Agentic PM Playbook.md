@@ -93,6 +93,48 @@ Each solution has a set of underlying assumptions. Experiments test the *riskies
 
 ---
 
+## 2.5 The OKR Layer
+
+OKRs sit above the OST in the hierarchy. They answer the question "why does this outcome matter to the business?" before the OST answers "what customer needs will get us there?"
+
+### Where OKRs Fit
+
+```
+OBJECTIVE (OKR)
+└── Key Result (measurable milestone)
+    └── Desired Outcome (OST root — the product metric that moves this KR)
+        └── Opportunity → Solution → Experiment
+```
+
+An Objective is a qualitative direction ("Make onboarding feel effortless"). A Key Result is a measurable milestone ("New users who complete day-7 onboarding reach 60%"). The Desired Outcome is the specific product metric the team owns to contribute to that KR ("Increase 7-day retention for new users from 34% to 45%").
+
+### The OKR → Desired Outcome Connection
+
+Each active Key Result generates exactly one Desired Outcome in the OST. The KR defines the business target; the Desired Outcome is the PM's translation of that target into a product metric the team can actually influence.
+
+One active KR per OST at a time. If a team is pursuing multiple KRs simultaneously, each gets its own OST. Discovery work — interviews, experiments, solutions — should be traceable to one and only one OST root at any given moment.
+
+### How Check-ins Flow
+
+OKR check-ins are driven by OST evidence, not gut feel. At each check-in:
+
+1. Pull the current Desired Outcome metric from the OST
+2. Report on experiments run, results received, and OST branches updated
+3. Adjust KR confidence based on validated opportunities and solution progress — not on features shipped
+
+This keeps check-ins grounded in learning, not activity. A team that ran 3 experiments and killed 2 solutions has more to report than a team that shipped 5 features without measuring anything.
+
+### Managing OKRs with the `okr-workflow` Skill
+
+The `okr-workflow` skill handles OKR cycle creation, check-ins, and KR-to-OST linking. OKR cycles live at `product/okrs/[CYCLE].md` (e.g., `Q3-2026.md`). Each file tracks the objective, key results, and a pointer to the OST Desired Outcome that connects to each KR.
+
+Run `okr-workflow` at:
+- Cycle start: create the OKR file and connect KRs to Desired Outcomes
+- Mid-cycle check-in: update KR progress using OST evidence
+- Cycle close: retrospective on what OST learning drove (or failed to drive) metric movement
+
+---
+
 ## 3. The Agentic Workflow Layer
 
 ### Overview
@@ -240,6 +282,24 @@ Issues:
 - Update Linear statuses
 - Re-render the OST in Obsidian
 - Add new opportunities as issues before you add solutions
+
+### 4.3 Agentic Stack (Obsidian + Linear)
+
+For agentic teams using Obsidian + Linear, the full JPD-equivalent stack is built into the playbook skills. This is the recommended setup for personal projects and AI-augmented teams. See [[Agentic Discovery Stack]] for the complete reference.
+
+| JPD Construct | Agentic Stack | File / Skill |
+|---|---|---|
+| Goals | OKR cycles | `product/okrs/[CYCLE].md` + `okr-workflow` |
+| Insights (signals) | Signal Ledger | `product/discovery/Signal Ledger.md` + `pm-signal-synthesis` |
+| Ideas / Opportunities | Individual opportunity files | `product/discovery/opportunities/` + `ost-workflow` |
+| Ideas / Solutions | Individual solution files | `product/discovery/solutions/` + `ost-workflow` |
+| Tests / Experiments | Individual experiment files | `product/discovery/experiments/` + `experiment-workflow` |
+| Delivery Issues | Linear issues | `roadmap-workflow` + `jira-workflow` |
+| Hierarchy view | OST summary | `product/discovery/ost-summary.md` |
+| Board / Kanban | Obsidian Bases | `.base` files in product vault folder |
+| Roadmap view | Roadmap Bases | `product/roadmap/` + `roadmap-workflow` |
+
+Individual files for opportunities, solutions, experiments, and roadmap items use consistent frontmatter so Obsidian Bases can create kanban and table views across the whole discovery corpus without any external tool.
 
 ---
 
@@ -410,6 +470,9 @@ If you can't answer all five, you're not ready to build.
 
 ## 8. Getting Started Checklist
 
+- [ ] Define your OKR cycle and active objective
+- [ ] Write your first Key Result with a clear baseline and target
+- [ ] Connect the KR to a Desired Outcome for the OST (this becomes the OST root)
 - [ ] Define the current desired outcome (one metric, this cycle)
 - [ ] Book a recurring 30-min weekly research slot
 - [ ] Set up OST document in Obsidian (or JPD / Linear per tool playbook)
