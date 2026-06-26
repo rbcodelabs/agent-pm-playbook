@@ -220,7 +220,7 @@ After scaffolding, write `pm-config.md` in the current directory using this temp
 - **Compass org slug:** [orgSlug, if using Compass]
 - **Compass workspace slug:** [workspaceSlug, if using Compass]
 - **Compass API key:** [env var or secrets manager location]
-- **Compass URL:** [https://compass-ruby-theta.vercel.app/{orgSlug}/{workspaceSlug}/discovery]
+- **Compass URL:** [https://compass.rbcodelabs.com/{orgSlug}/{workspaceSlug}/discovery]
 
 _(Omit Compass fields if not using Compass. Omit the Discovery Paths section below if using Compass -- opportunities, solutions, and experiments live natively in Compass.)_
 

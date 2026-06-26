@@ -9,7 +9,7 @@ description: >-
 metadata:
   priority: 5
   docs:
-    - https://compass-ruby-theta.vercel.app
+    - https://compass.rbcodelabs.com
     - https://github.com/richardbowman/agent-pm-playbook
 retrieval:
   aliases:
@@ -68,7 +68,7 @@ Batching produces stale state and breaks the product snapshot.
 
 ## MCP API Access
 
-**Endpoint:** `POST https://compass-ruby-theta.vercel.app/api/mcp`
+**Endpoint:** `POST https://compass.rbcodelabs.com/api/mcp`
 **Auth:** `Authorization: Bearer <MCP_API_KEY>`
 
 The API key is stored in the project's secrets manager. Common locations:
@@ -85,7 +85,7 @@ Always start with workspace discovery:
 
 ```bash
 # Discover workspaceId
-curl -s -X POST "https://compass-ruby-theta.vercel.app/api/mcp" \
+curl -s -X POST "https://compass.rbcodelabs.com/api/mcp" \
   -H "Authorization: Bearer $COMPASS_MCP_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"method":"tools/call","params":{"name":"list_workspaces","arguments":{"orgSlug":"<orgSlug>"}}}'
@@ -97,7 +97,7 @@ in a variable rather than re-fetching it on every call.
 ### Calling any tool
 
 ```bash
-curl -s -X POST "https://compass-ruby-theta.vercel.app/api/mcp" \
+curl -s -X POST "https://compass.rbcodelabs.com/api/mcp" \
   -H "Authorization: Bearer $COMPASS_MCP_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -282,7 +282,7 @@ Each project's `pm-config.md` should include a Compass section:
 - **Org slug:** <orgSlug>
 - **Workspace slug:** <workspaceSlug>
 - **API key location:** <how to retrieve -- env var, 1Password record name, etc.>
-- **URL:** https://compass-ruby-theta.vercel.app/<orgSlug>/<workspaceSlug>/discovery
+- **URL:** https://compass.rbcodelabs.com/<orgSlug>/<workspaceSlug>/discovery
 ```
 
 If `pm-config.md` has no Compass section, ask the user for:
@@ -293,7 +293,7 @@ If `pm-config.md` has no Compass section, ask the user for:
 
 ## See Also
 
-- [Compass URL and Data Model](https://compass-ruby-theta.vercel.app)
+- [Compass URL and Data Model](https://compass.rbcodelabs.com)
 - [PM Tool Integration Guide -- Compass section](../../PM Tool Integration Guide.md)
 - [OST Workflow skill](../ost-workflow/SKILL.md)
 - [OKR Workflow skill](../okr-workflow/SKILL.md)

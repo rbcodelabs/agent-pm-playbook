@@ -136,7 +136,7 @@ If your JPD uses a single generic Ideas type, use the `opportunity` / `solution`
 
 Compass is a native discovery platform purpose-built for this workflow. It owns all six OST layers directly -- OKRs, opportunities, solutions, assumptions, experiments, roadmap, and customer feedback are all first-class objects with status progressions, mutual links, and an MCP API for agentic access. Unlike JPD+Jira or Linear+Obsidian, there is no split between a discovery tool and a delivery tracker: everything lives in one place.
 
-**Production URL:** https://compass-ruby-theta.vercel.app
+**Production URL:** https://compass.rbcodelabs.com
 **Delivery work (engineering tasks):** tracked separately in Linear or Jira -- Compass does not replace the engineering backlog.
 
 ### Layer Mapping
@@ -207,7 +207,7 @@ The rule: FeedbackItems in Compass are the team-visible signal record. Raw notes
 
 ### MCP API for Agents
 
-Compass exposes a Streamable HTTP MCP endpoint at `https://compass-ruby-theta.vercel.app/api/mcp`. Agents use it to read the full product snapshot and update state inline during sessions. See the `compass-workflow` skill for the complete tool catalog and session protocol.
+Compass exposes a Streamable HTTP MCP endpoint at `https://compass.rbcodelabs.com/api/mcp`. Agents use it to read the full product snapshot and update state inline during sessions. See the `compass-workflow` skill for the complete tool catalog and session protocol.
 
 ### Automation Notes
 
