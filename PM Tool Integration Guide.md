@@ -132,7 +132,95 @@ If your JPD uses a single generic Ideas type, use the `opportunity` / `solution`
 
 ---
 
-## 3. Linear + Obsidian
+## 3. Compass
+
+Compass is a native discovery platform purpose-built for this workflow. It owns all six OST layers directly -- OKRs, opportunities, solutions, assumptions, experiments, roadmap, and customer feedback are all first-class objects with status progressions, mutual links, and an MCP API for agentic access. Unlike JPD+Jira or Linear+Obsidian, there is no split between a discovery tool and a delivery tracker: everything lives in one place.
+
+**Production URL:** https://compass.rbcodelabs.com
+**Delivery work (engineering tasks):** tracked separately in Linear or Jira -- Compass does not replace the engineering backlog.
+
+### Layer Mapping
+
+| OST Layer | Compass Construct | Notes |
+|---|---|---|
+| Desired Outcome | Key Result (connected to an Objective in an active OKR Cycle) | One KR = one desired outcome. Link every opportunity to a KR. |
+| Signals | FeedbackItem + linked Opportunities | Log signals as Feedback; link to the Opportunity they support. High-frequency raw capture can stay in Obsidian. |
+| Opportunities | Opportunity | Customer-voice framing; link to a KR on creation. |
+| Solutions | Solution (child of Opportunity) | Add 3+ per opportunity before narrowing. |
+| Assumptions | Assumption (child of Solution) | Tag with risk level: HIGH / MEDIUM / LOW. |
+| Experiments | Experiment (linked to an Assumption) | Must have a written kill condition before moving to RUNNING. |
+| Build items | Tracked externally (Linear / Jira); Roadmap Item in Compass shows the horizon | RoadmapItem links back to the validated Solution. |
+
+### Status Workflows
+
+**Opportunities:**
+```
+EXPLORING → VALIDATING → PRIORITIZED → ACTIVE → ARCHIVED
+```
+
+- **EXPLORING:** Signal exists but fewer than 2 independent sources. Do not add solutions yet.
+- **VALIDATING:** Actively gathering evidence. At least 1 strong signal logged.
+- **PRIORITIZED:** Evidence bar met: 2+ independent sources, customer-voice framing, linked to active KR.
+- **ACTIVE:** Team is exploring solutions or running experiments.
+- **ARCHIVED:** Invalidated or deprioritized. Keep it -- a killed branch is a learning.
+
+**Solutions:**
+```
+IDEA → VALIDATED → IN_DELIVERY → SHIPPED | KILLED
+```
+
+**Experiments:**
+```
+DESIGNING → RUNNING → COMPLETE | KILLED
+```
+
+The kill condition must be written before moving to RUNNING. `conclude_experiment` (PROCEED / KILL / ITERATE) auto-updates the linked Assumption status -- do not manually set assumption status.
+
+### OKR Setup
+
+Create one OKR Cycle per planning period. Each Objective can have multiple Key Results. Key Results serve as the desired outcome anchors for opportunities.
+
+```
+create_okr_cycle(workspaceId, name, startDate, endDate)  → cycleId
+create_objective(workspaceId, cycleId, title)             → objectiveId
+add_key_result(objectiveId, title, target, unit)          → keyResultId
+log_checkin(keyResultId, value, note)                     -- update progress
+```
+
+### Roadmap
+
+The Compass roadmap is a NOW / NEXT / LATER kanban. Items are created by promoting a validated Solution (`promote_to_roadmap`) or creating them directly (`add_to_roadmap`). Each item can link to a Solution, Opportunity, Key Result, Experiment, or Squad.
+
+Engineering delivery lives in Linear or Jira. The Compass roadmap reflects product strategy; the delivery tracker reflects sprint execution. Reference the Compass RoadmapItem ID in the Linear/Jira epic description to maintain the link.
+
+### Signal Layer
+
+Compass has two paths for signals:
+
+**High-frequency raw capture (recommended: Obsidian-first):**
+Raw interview notes, support ticket reviews, and individual quotes are best captured in Obsidian (low friction, no commit). After synthesis, log the structured finding as a Compass FeedbackItem and link it to the relevant Opportunity.
+
+**Direct FeedbackItem logging:**
+For public-facing signals (portal submissions, NPS), Compass captures them natively at `/portal/{org}/{ws}/feedback`. Use `list_feedback` to review and link to Opportunities.
+
+The rule: FeedbackItems in Compass are the team-visible signal record. Raw notes in Obsidian are the personal capture layer. Never skip the link from FeedbackItem to Opportunity -- an unlinked signal doesn't contribute to the OST evidence count.
+
+### MCP API for Agents
+
+Compass exposes a Streamable HTTP MCP endpoint at `https://compass.rbcodelabs.com/api/mcp`. Agents use it to read the full product snapshot and update state inline during sessions. See the `compass-workflow` skill for the complete tool catalog and session protocol.
+
+### Automation Notes
+
+Unlike JPD, Compass has no native automation engine. Use Claude (via MCP) as the automation layer:
+
+- **Weekly snapshot:** call `get_workspace_summary` + `list_opportunities` + `list_experiments("RUNNING")` at the start of each week to generate a health check.
+- **Orphaned solutions:** after any session, verify all ACTIVE opportunities have at least one non-KILLED solution.
+- **Stale DESIGNING experiments:** flag any experiment in DESIGNING status for more than one session -- the kill condition was never written.
+- **OKR check-ins:** call `log_checkin` for each active KR at the cadence the team agrees on (weekly is the default).
+
+---
+
+## 4. Linear + Obsidian
 
 Linear handles all work tracking. Obsidian holds the discovery artifacts because Linear has no native discovery layer. The boundary is equally clear: Linear owns issues and statuses, Obsidian owns the OST tree structure and signal ledger.
 
@@ -208,7 +296,7 @@ Never create a Linear opportunity issue before you have at least one verbatim qu
 
 ---
 
-## 4. Linear + Obsidian + Repo Bridges (Solo → Team)
+## 5. Linear + Obsidian + Repo Bridges (Solo → Team)
 
 An extension of the Linear + Obsidian stack that solves its core limitation: Obsidian is a single-user system. A co-founder, early engineer, or future PM can't open your vault. This pattern uses a git repository as the shared, team-accessible canonical store for structured product docs, while keeping Obsidian as the primary editing interface via bidirectional vault bridges.
 
@@ -312,7 +400,7 @@ The workflow: capture raw signals in `Discovery/` in Obsidian. After synthesis, 
 
 ### Linear Integration
 
-Same as the base Linear + Obsidian stack (section 3), with one change: the OST source of truth lives in the repo's `product/ost.md`, not in an Obsidian-only file. This means team members can read and propose changes to the OST tree structure via PR, not just Rick.
+Same as the base Linear + Obsidian stack (section 4), with one change: the OST source of truth lives in the repo's `product/ost.md`, not in an Obsidian-only file. This means team members can read and propose changes to the OST tree structure via PR, not just Rick.
 
 Follow the same signal-to-opportunity handoff protocol:
 
@@ -324,7 +412,7 @@ Follow the same signal-to-opportunity handoff protocol:
 
 ---
 
-## 5. Markdown Only
+## 6. Markdown Only
 
 For teams with no dedicated PM tool, or individuals bootstrapping a discovery practice. Everything lives in markdown files. The tradeoff: no automation, no status workflows, no linking infrastructure. The compensation: a weekly 10-minute manual review.
 
@@ -377,7 +465,7 @@ The whole review should take under 15 minutes. If it takes longer, the tree is t
 
 ---
 
-## 6. Cross-Tool Principles
+## 7. Cross-Tool Principles
 
 These apply regardless of tool stack.
 
