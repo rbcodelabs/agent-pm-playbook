@@ -3,8 +3,8 @@
 > An agent-first approach to product management rooted in continuous discovery, empowered teams, and Opportunity Solution Trees.
 
 **Influences:** Marty Cagan (SVPG), Teresa Torres (Continuous Discovery Habits)
-**Tooling:** Jira Product Discovery (work) · Linear (personal)
-**Last updated:** 2026-05-08
+**Tooling:** Compass (native discovery + roadmap) · Jira Product Discovery (work) · Linear (personal)
+**Last updated:** 2026-06-26
 **See also:** [[Agentic PM — Agent Capability Framework]] — what skills agents need to develop to do this work well
 
 ---

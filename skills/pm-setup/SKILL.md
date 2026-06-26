@@ -45,19 +45,40 @@ Then ask where each type of artifact should go:
 
 If they say Obsidian or a similar structured system, ask for the vault root path and a product folder (vault-relative path). Derive the sub-paths automatically from those two values. If they say a general filesystem, ask for a base directory and derive sub-paths from that.
 
-### 2. Issue Tracker
+### 2. Discovery + Roadmap Tool
 
-Ask: "What tool do you use for issues, epics, or user stories?" (e.g. Linear, Jira, GitHub Issues, none)
+Ask: "Do you use Compass for discovery and roadmap, or a separate tool?" (e.g. Compass, Jira Product Discovery, none)
+
+**If they say Compass:**
+- Ask for the org slug and workspace slug (visible in the Compass URL: `/{orgSlug}/{workspaceSlug}/discovery`)
+- Ask where their Compass MCP API key is stored (env var name, 1Password record, etc.)
+- Note that Compass natively handles opportunities, solutions, assumptions, experiments, OKR cycles, and roadmap -- no Obsidian scaffolding is needed for those layers.
+- Still scaffold `product/discovery/Signal Ledger.md` for raw signal capture (Compass FeedbackItems are the structured layer; Obsidian is the raw capture layer).
+- Add a `## Compass` section to `pm-config.md` with the org slug, workspace slug, API key location, and URL.
+
+**If they say Jira Product Discovery or similar:**
+- Proceed with the JPD layer mapping from the [[PM Tool Integration Guide]].
+- Scaffold the full `product/discovery/` folder structure below.
+
+**If they say none / unsure:**
+- Recommend Compass for new setups (it's the native tool for this workflow).
+- If they prefer to start with markdown only, scaffold the full folder structure.
+
+### 3. Issue Tracker
+
+Ask: "What tool do you use for engineering issues, epics, or user stories?" (e.g. Linear, Jira, GitHub Issues, none)
+
+Note: if they use Compass, this is separate from discovery -- Compass does not replace the engineering backlog.
 
 If they name a tool, ask:
 - Any team or project identifiers to know? (e.g. a Linear team key, a Jira project key)
 - What are the workflow states you use? (or confirm defaults like Backlog → In Progress → In Review → Done)
 
-### 3. Product Context
+### 4. Product Context
 
 Ask: "What product or project is this configuration for? Give me the product name and one sentence describing what it does and for whom."
 
-### 4. OKR Configuration
+### 5. OKR Configuration
 
 Ask: "What OKR cycle are we setting up? (e.g. Q3 2026, H2 2026)"
 
@@ -190,6 +211,18 @@ After scaffolding, write `pm-config.md` in the current directory using this temp
 - **Solutions folder:** [Path to solutions/]
 - **Experiments folder:** [Path to experiments/]
 - **Roadmap folder:** [Path to roadmap/items/]
+
+---
+
+## Discovery Tool
+
+- **Tool:** [Compass | Jira Product Discovery | none]
+- **Compass org slug:** [orgSlug, if using Compass]
+- **Compass workspace slug:** [workspaceSlug, if using Compass]
+- **Compass API key:** [env var or secrets manager location]
+- **Compass URL:** [https://compass-ruby-theta.vercel.app/{orgSlug}/{workspaceSlug}/discovery]
+
+_(Omit Compass fields if not using Compass. Omit the Discovery Paths section below if using Compass -- opportunities, solutions, and experiments live natively in Compass.)_
 
 ---
 
