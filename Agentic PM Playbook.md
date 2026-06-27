@@ -200,6 +200,8 @@ Each OST layer has a corresponding agent workflow. The pattern is always:
 
 ## 4. Tooling Playbook
 
+> For full setup details, OST layer mappings, and MCP API notes for each tool, see [[PM Tool Integration Guide]].
+
 ### Jira Product Discovery (Work)
 
 | OST Layer | JPD Construct | Notes |

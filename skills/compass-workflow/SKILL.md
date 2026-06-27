@@ -294,6 +294,7 @@ If `pm-config.md` has no Compass section, ask the user for:
 ## See Also
 
 - [Compass URL and Data Model](https://compass.rbcodelabs.com)
-- [PM Tool Integration Guide -- Compass section](../../PM Tool Integration Guide.md)
-- [OST Workflow skill](../ost-workflow/SKILL.md)
-- [OKR Workflow skill](../okr-workflow/SKILL.md)
+- [[PM Tool Integration Guide]] — full Compass OST mapping, signal layer guidance, and MCP notes
+- [[Agentic PM Playbook]] — the discovery workflow this skill supports
+- [[ost-workflow/SKILL|OST Workflow skill]] — opportunity tree operations
+- [[okr-workflow/SKILL|OKR Workflow skill]] — OKR cycle management
