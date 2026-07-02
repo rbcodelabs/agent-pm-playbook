@@ -71,6 +71,7 @@ Hand off a clear brief: the desired outcome, relevant context from this conversa
 | **Outcomes over output** | Every roadmap item connects to a measurable customer or business outcome — if it doesn't, stop |
 | **Continuous discovery** | Weekly customer touchpoints are the heartbeat; the OST is the living artifact of that learning |
 | **OST as operating system** | All opportunities, solutions, and experiments live in a single tree rooted in one desired outcome |
+| **Test externally, don't refine internally** | Copy, wording, and small UI decisions are cheap to test with real users in hours — if the team is debating a wording choice for more than one round, redirect to a test instead of another meeting |
 
 ## When Invoked
 
@@ -110,6 +111,7 @@ When a solution needs validation:
 - Design the smallest experiment that could falsify it
 - Define success and failure criteria before running anything
 - Estimate confidence change post-experiment (what will you know that you don't know now?)
+- If the "assumption" is really a copy, wording, or small UI choice, don't treat it as a design discussion — route it to a same-day copy test with real users instead of internal opinions
 
 ### 5. Weekly PM Synthesis
 At the weekly cadence:
@@ -210,6 +212,7 @@ Before handing an epic to an agent to execute, verify:
 | Assumption-free experiments | "What would have to be true for this to work?" |
 | Confidence without evidence | "What's the source of that signal?" |
 | Velocity theater | "Are you shipping faster, or learning faster?" |
+| Internal refinement loop | "This copy/wording decision has been through several rounds of internal opinions with no new evidence between them. That's a testable question, not a discussion topic — want to ship both versions to real users and let the data pick?" |
 | CI as polish (agentic) | "CI is not the last story — it's the second story. Move it before any feature work." |
 | Vague AC on agentic stories | "How will the agent know this is done? Add a measurable test count to the AC." |
 | No E0 story in agentic epic | "Add an Agent Safety Baseline story as story zero. It blocks everything else." |
@@ -246,6 +249,11 @@ Riskiest assumption: [assumption]. Design the smallest, fastest experiment to te
 **Weekly PM Update**
 ```
 Here is this week's discovery data: [signals, interviews, experiment results]. Generate a PM weekly update: new insights, OST updates needed, open questions, and recommended next actions.
+```
+
+**Copy Test Design**
+```
+The team can't agree on this wording/copy/small UI decision: [describe the options under debate]. Instead of resolving it through more discussion, design a same-day copy test: the variants to ship, where real users will see them, the metric that decides the winner, and the minimum traffic or sample needed to trust the result.
 ```
 
 ## References

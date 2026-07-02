@@ -38,9 +38,25 @@ The investment ceiling is as important as the evidence threshold. You do not put
 
 ## Experiment Types
 
-Testing is the stage teams understand the least, because "run an experiment" usually gets interpreted as "build a feature and measure it." That is the most expensive experiment type. There are four cheaper options that come first.
+Testing is the stage teams understand the least, because "run an experiment" usually gets interpreted as "build a feature and measure it." That is the most expensive experiment type. There are five cheaper options that come first.
 
 Listed from cheapest to most expensive. Always use the cheapest experiment that can answer the question.
+
+---
+
+### 0. Copy & Micro-Content Test
+
+**What it is:** The cheapest possible test. You are not validating a solution — you are choosing between two or three concrete wordings, labels, or small UI elements (a headline, a CTA button, an email subject line, an error message, an empty-state illustration). This rung exists because teams routinely treat these decisions as internal debates instead of testable questions.
+
+**What it answers:** Which version of this specific piece of content or element performs better with real users — not whether the underlying feature or flow has value. That question is already settled; this is refinement, not discovery.
+
+**How it works:** Ship the variants to real users with the least ceremony possible. Options in order of preference: (a) a live split on existing traffic if the surface already has volume — no new infrastructure, just swap the string behind a simple randomizer; (b) a five-second preference test with 5-10 real (not internal) users — show each variant, ask which is clearer or more compelling, and why; (c) sequential rollout — ship variant A for a few days, then variant B, and compare the metric that matters (click-through, signup completion, reply rate). Do not convene a meeting. Do not collect internal opinions from the team, design, or leadership as the deciding input — those are inputs to generating candidate variants, never to picking the winner.
+
+**Example:** The team can't agree whether the onboarding CTA should read "Get Started" or "Start Free Trial." Instead of a 30-minute debate, split live traffic 50/50 for three days and measure click-through to the next step.
+
+**Investment:** Hours to a day. No engineering beyond a string swap or a simple randomizer. No recruiting pipeline — real users you already have, not a research panel.
+
+**Watch out for:** This rung is not a substitute for the assumption ladder below. If the disagreement is really about whether the feature itself should exist, or what the feature should do, that is a demand or value assumption — use a fake door or concierge test instead. Copy tests answer "which wording wins," not "does anyone want this."
 
 ---
 
@@ -194,6 +210,10 @@ Engineers who want to build are not wrong — they want to do their jobs well an
 **When the team says "we've been testing forever":**
 
 > "Have we written the kill condition yet? Once we agree on what failure looks like, we run the test, read the result, and we're done. The test doesn't end when we feel good — it ends when the condition is met. What should the kill condition be?"
+
+**When the team can't agree on copy, wording, or a small UI element:**
+
+> "This has turned into an internal debate about which version we like best. That's a question real users can answer faster than we can argue about it. Let's ship both to a small slice of traffic for a day or two and let the data pick — that's cheaper than the meeting time we're spending on it now."
 
 ---
 

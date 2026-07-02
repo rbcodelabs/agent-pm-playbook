@@ -138,6 +138,7 @@ specific question. Never recommend a more expensive test than the question deman
 
 | Type | Answers | Cost | When to use |
 |---|---|---|---|
+| **Copy & micro-content test** | Which wording, headline, or small UI element performs better? | Hours to 1 day, no engineering | Resolving a copy/content decision — always prefer this over internal debate |
 | **Fake door** | Is there demand? Will users try to use this? | 1-3 days, no engineering | Validating demand before any build |
 | **Concierge** | Does the solution actually work for real users? | 1-2 weeks, no engineering | Validating core value hypothesis manually |
 | **Prototype test** | Does the interaction design work? Can users complete the task? | 1 week build, 1 week test | Validating UX before engineering |
@@ -147,6 +148,10 @@ specific question. Never recommend a more expensive test than the question deman
 Match the experiment to the riskiest assumption. If the assumption is about
 demand, a fake door answers it. If the assumption is about usability, a prototype
 test answers it. Never run an A/B test on a question a concierge could answer.
+If the open question is wording, a headline, or a small UI element — not whether
+the feature has value — use a copy test. If a team is stuck in a multi-round
+internal debate about a wording choice, that is a signal a cheap test was skipped,
+not a signal that more discussion is needed.
 
 ---
 
@@ -259,6 +264,13 @@ When the team is pushing to build because they are tired of testing:
 > building, how much do we rework? If the answer is significant, the test is
 > worth the time. If the answer is small, that is a reasonable case for accepting
 > the risk and moving."
+
+When the team is stuck debating copy, wording, or a small UI element internally:
+
+> "This isn't a discovery question — it's a copy test. Ship both versions to a
+> slice of real traffic for a day instead of spending another meeting on it.
+> That's cheaper than the internal debate and the answer will be more reliable
+> than anyone's opinion."
 
 Do not moralize. Surface the tradeoff clearly and let the PM decide.
 

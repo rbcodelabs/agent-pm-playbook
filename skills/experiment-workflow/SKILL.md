@@ -25,6 +25,10 @@ retrieval:
     - experiment results
     - experiment health
     - discovery experiment
+    - copy test
+    - content test
+    - microcopy test
+    - preference test
   intents:
     - design an experiment
     - test this assumption
@@ -54,6 +58,8 @@ retrieval:
     - experiment result
     - zombie experiment
     - riskiest assumption
+    - copy variant
+    - internal refinement
 chainTo:
   - pattern: "validated|solution.*passes|proceed.*roadmap|move.*roadmap|build this|ready to build"
     targetSkill: investment-gate
@@ -109,7 +115,7 @@ title: "[Title — describe the test, not the hypothesis]"
 status: Designing
 parent_solution: SOL-[NNN]
 parent_opportunity: OPP-[NNN]
-experiment_type: fake-door | concierge | prototype | ab-test | staged-rollout | user-interview
+experiment_type: copy-test | fake-door | concierge | prototype | ab-test | staged-rollout | user-interview
 assumption: "[The exact assumption being tested — one sentence, falsifiable]"
 success_condition: "[Specific measurable result that means proceed]"
 kill_condition: "[Specific measurable result that means stop]"
@@ -201,6 +207,7 @@ Never recommend a more expensive experiment than the assumption demands.
 
 | Assumption type | Recommended type | Reasoning |
 |---|---|---|
+| Content — which wording, headline, or small UI element performs better? | copy-test | Not a discovery question — resolve it with real users same-day, not internal debate |
 | Demand — will anyone want this? | fake-door | Tests demand without building anything |
 | Demand — will they pay or commit? | fake-door or concierge | Fake door for intent signal; concierge if commitment matters |
 | Behavior — will they change what they do? | concierge | Real behavior is observable when you deliver manually |
@@ -210,9 +217,18 @@ Never recommend a more expensive experiment than the assumption demands.
 
 **Experiment type reference:**
 
+**copy-test** — The cheapest and fastest type. Used when the open question is
+which wording, headline, CTA, or small UI element performs better — not whether
+the underlying feature has value. Ship 2-3 variants to real users with minimal
+ceremony: a live split on existing traffic, a five-to-ten-person preference test,
+or a short sequential rollout. Takes hours to a day. This is the default
+recommendation whenever a team is debating copy internally instead of testing it —
+see the anti-pattern below.
+
 **user-interview** — Conversation-based. Tests whether the problem and proposed
-solution resonate conceptually. Cheapest possible test. Use for early assumption
-testing before any prototype or fake door. Not a substitute for behavioral evidence.
+solution resonate conceptually. Cheapest possible test of demand or desirability.
+Use for early assumption testing before any prototype or fake door. Not a
+substitute for behavioral evidence.
 
 **fake-door** — Create the UI or CTA for the feature without building the feature
 itself. Clicking through triggers a "coming soon" or waitlist capture. Measures
@@ -442,6 +458,7 @@ Call these out when you see them — do not let them pass without comment.
 | Friends and family sample | "Testing with [team/founders/early advocates] will return a biased signal. They want this to succeed. Who is the most skeptical customer segment? Test with them." |
 | Skipping straight to a/b test | "An A/B test requires existing traffic, instrumentation, and a baseline. Those resources are only worth spending if the core assumption is already validated. What would a fake door or concierge test tell us first?" |
 | "We'll know it when we see it" success definition | "That is not a condition — it is a description of rationalization in progress. What specific number, rate, or behavior would make you confident enough to proceed?" |
+| Internal refinement loop on copy | "This has gone through several rounds of internal opinions with no new evidence between them. That's a sign this is a testable question, not a discussion topic — a copy test with real users would resolve it in a day. Want me to set one up?" |
 
 ---
 
