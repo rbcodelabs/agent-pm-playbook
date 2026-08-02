@@ -3,9 +3,10 @@ name: compass-resolver
 description: >
   Autonomous job that finds the single highest-priority unclaimed item in Compass
   (Roadmap NOW horizon first, falling back to a well-defined NEXT item promoted into NOW,
-  falling back to the top-voted untriaged feedback item), implements a real fix in the
-  compass repo end to end (tests, typecheck, build), opens a PR, watches the preview
-  deploy, and updates Compass so the same item is never picked up twice. Use when running
+  falling back to the top-voted untriaged feedback item), records a Solution Plan and a
+  Compass task breakdown for the work, implements a real fix in the compass repo end to
+  end (tests, typecheck, build), opens a PR, watches the preview deploy, and updates
+  Compass so the same item is never picked up twice. Use when running
   the scheduled Compass Auto-Resolver cron job, or manually to pull and ship the next
   top-priority item right now.
 ---
@@ -61,6 +62,12 @@ This is a substantial, extended autonomous task. Use `TaskCreate` for each requi
 below plus a final "end-to-end verification" item; work one at a time; mark items
 `completed` only after observing the result (not assuming it). See the user's global
 Task Procedure rules — they apply in full here since this runs unattended.
+
+Note there are **two task layers** and they serve different audiences: your internal
+`TaskCreate` list tracks *this run's* execution for the harness, while the **Compass
+tasks** you create in Step 4 (`create_task`) are the durable, team-visible breakdown of
+the work on the Compass board. Keep them roughly in sync as you work, but the Compass
+tasks are the ones that outlive the run.
 
 ---
 
@@ -154,22 +161,43 @@ Use the `worktree-bootstrap` skill (or `EnterWorktree`) to create an isolated wo
 Embedding the item's short UUID in the branch name is what makes the Step 2 GitHub
 cross-check reliable later.
 
-## Step 4 — Investigate and implement
+## Step 4 — Plan, then investigate and implement
 
 1. Read the item's full context: `get_opportunity` (if linked) for description, customer
-   segment, and existing solutions/assumptions; any linked feedback via
-   `get_feedback_item` for the original report/repro details.
+   segment, and existing solutions/assumptions — **note the `solutionId` of the solution
+   this roadmap item implements**; any linked feedback via `get_feedback_item` for the
+   original report/repro details.
 2. Actually read the relevant source before editing — grep/Explore the codebase, don't
    guess file locations. Compass conventions: server actions in `<section>/actions.ts`,
    Prisma via `getPrisma()` from `lib/db.ts` (never import `PrismaClient` directly), MCP
    tool handlers extracted into `lib/` for testability.
-3. Follow **TDD**: write a failing test first (`__tests__/` for unit/integration), then
+3. **Record the plan and task breakdown in Compass** — the team-facing mirror of your
+   internal `TaskCreate` list, not a replacement for it:
+   - **Solution Plan.** Once you've read enough to commit to an approach, and the item has
+     a linked solution (from 4.1), call `add_solution_plan(solutionId, ...)` with a concise
+     plan: the approach, the files/subsystems you'll touch, the test you'll add, and any
+     migration. This becomes the pinned "current plan" on the Solution; a fresh
+     `add_solution_plan` supersedes any prior one. **Do NOT call `approve_solution_plan`** —
+     approval is a human gate, exactly like merge (guardrail #2).
+   - **Compass tasks.** Break the work into `create_task` items (one per meaningful unit —
+     e.g. "write failing test", "implement fix", "update MCP docs"), each with a sensible
+     `priority`; for a multi-part item use `parentTaskId` for an Epic→subtask shape. Link
+     each to the work via `link_task` (`linkedType: "ROADMAP_ITEM"`, and `"SOLUTION"` when
+     present). If the roadmap item has a squad, `assign_squad` the tasks to match.
+   - Keep the Compass tasks in lockstep with actual progress: `move_task_status` each
+     `TODO → IN_PROGRESS` as you start it, then to `IN_REVIEW` once the PR is open (Step 6).
+     Leave the final `DONE` transition to a human on merge — same principle as never
+     self-merging.
+   - **No linked solution** (bare execution NOW item — see Edge cases): skip the solution
+     plan, but still `create_task` at least one roadmap-linked task so the work is visible
+     on the board.
+4. Follow **TDD**: write a failing test first (`__tests__/` for unit/integration), then
    the minimal fix, then confirm green. Use the `test-first` skill if useful.
-4. If the fix needs a schema change: use `dsql-migrate` / `dsql-schema` skills — Aurora
+5. If the fix needs a schema change: use `dsql-migrate` / `dsql-schema` skills — Aurora
    DSQL has no autoincrement/enum/FK support, no `@updatedAt` triggers, indexes are async.
    Any Prisma schema change requires `prisma db push` against dev, confirmed successful,
    before opening the PR.
-5. Keep the change scoped to the one item. Resist drive-by refactors — they slow review
+6. Keep the change scoped to the one item. Resist drive-by refactors — they slow review
    and widen blast radius.
 
 ## Step 5 — Verify before opening the PR
@@ -189,6 +217,9 @@ tools need unit tests in `__tests__/` and a docs update in `docs/content/09-mcp-
      "Migration required" section (script path, when to run it, one-line rollback).
    - Reference the Compass roadmap item ID and, if applicable, the originating feedback ID
      in the PR body for traceability.
+3. Move the Compass task(s) created in Step 4 to `IN_REVIEW` via `move_task_status` now
+   that the PR is open. Do NOT move them to `DONE` — that's the human's call on merge, same
+   as the PR itself.
 
 ## Step 7 — Watch the deploy and smoke-test (standing approval, no need to ask)
 
@@ -216,6 +247,8 @@ End every run with a short report:
 - What changed (files, approach) and why. For a `NEXT-promoted` run: which item passed the
   well-defined checklist and why, plus which NEXT items (if any) were passed over and why
   they didn't qualify.
+- Compass artifacts recorded: whether a Solution Plan was added, and the Compass task IDs
+  created with their current statuses.
 - Verification results actually observed (test/build/tsc, E2E if run).
 - PR URL, preview URL, smoke-test result.
 - Anything skipped and why (ambiguous scope, needs a secret, needs a product decision).

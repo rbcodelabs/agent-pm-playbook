@@ -3,8 +3,8 @@ name: compass-feedback-triage
 description: >
   Processes all OPEN feedback items in the Compass workspace and takes real product
   actions on each: dedup/link to an existing opportunity, create a new opportunity with
-  a proposed solution and a testable assumption, promote high-vote items to the roadmap,
-  or close noise. Keeps the OPEN feedback queue empty and every signal represented in the
+  a proposed solution, a first-pass solution plan, and a testable assumption, promote
+  high-vote items to the roadmap, or close noise. Keeps the OPEN feedback queue empty and every signal represented in the
   OST. Use for the scheduled Compass Feedback Triage cron job, or manually whenever
   customer feedback has piled up. This is the "intake" half of the Compass automation
   loop — pair with the `compass-resolver` skill (the "implementation" half) which acts on
@@ -51,7 +51,12 @@ d. Act:
      "Customer feedback: [original title]. [description summary]. [submitter if
      available]. Feedback ID: [id]."; status `EXPLORING`; link to the most relevant OKR
      key result if one fits.
-   - `add_solution` with a concrete proposed solution.
+   - `add_solution` with a concrete proposed solution. **Capture the returned `solutionId`.**
+   - `add_solution_plan(solutionId, ...)` with a lightweight first-pass approach (1-3
+     sentences: the likely implementation direction plus the riskiest unknown). This is
+     intake, not a committed design — a starting hypothesis the `compass-resolver` skill
+     (or a human) supersedes with a real plan later via a fresh `add_solution_plan`. Do
+     NOT approve it (`approve_solution_plan` is a human gate).
    - `add_assumption` with the highest-risk testable assumption (`riskLevel: "HIGH"`).
    - `link_feedback_to_opportunity` to connect the original feedback to the new opportunity.
    - If `voteCount >= 3`: `promote_to_roadmap(solutionId, horizon: "NEXT")` — leave NOW
@@ -72,7 +77,8 @@ closing — the goal is an empty OPEN queue with every real signal represented i
 After processing all items, report:
 - Total items processed.
 - Items linked to existing opportunities (list them).
-- New opportunities created (list them with titles, and NEXT-horizon promotions).
+- New opportunities created (list them with titles, each with a first-pass solution plan
+  attached, and NEXT-horizon promotions).
 - Items closed as noise (list them).
 - Any items skipped or that errored.
 
