@@ -38,7 +38,11 @@ c. Reason about it:
      looks wrong — bugs can go straight to the roadmap via `promote_feedback_to_roadmap`;
      ideas follow the Opportunity → Solution discovery flow.)
    - **Dedup:** does it closely match an existing opportunity?
-   - **Urgency:** `voteCount >= 3`, or the description reads urgent/blocking?
+   - **Urgency:** weigh `voteCount` as one signal among several, never as a gate. A high
+     vote count is meaningful demand evidence, but a single well-argued blocking or severe
+     report can outweigh several lukewarm upvotes, and low votes on a brand-new item often
+     just mean nobody has seen it yet. Judge urgency on the whole picture: vote count,
+     severity, how clearly actionable it is, and OKR relevance.
 d. Act:
 
    **Matches an existing opportunity:**
@@ -59,9 +63,14 @@ d. Act:
      NOT approve it (`approve_solution_plan` is a human gate).
    - `add_assumption` with the highest-risk testable assumption (`riskLevel: "HIGH"`).
    - `link_feedback_to_opportunity` to connect the original feedback to the new opportunity.
-   - If `voteCount >= 3`: `promote_to_roadmap(solutionId, horizon: "NEXT")` — leave NOW
-     alone; NOW is reserved for items a human or the `compass-resolver` skill has
-     deliberately promoted, so triage doesn't flood the top of the kanban unsupervised.
+   - Promote to the roadmap when the signal warrants it: `promote_to_roadmap(solutionId,
+     horizon: "NEXT")`. Decide this on the full picture — vote count is one input alongside
+     severity, how clearly actionable the item is, and OKR fit — not a fixed vote
+     threshold. A clearly-actionable, on-strategy item with few votes can still merit NEXT;
+     a vague high-vote item may not. When it doesn't warrant promotion yet, leave it as an
+     `EXPLORING` opportunity off the roadmap. Either way leave NOW alone; NOW is reserved
+     for items a human or the `compass-resolver` skill has deliberately promoted, so triage
+     doesn't flood the top of the kanban unsupervised.
    - `update_feedback_status(feedbackId, status: "PLANNED", note: "New opportunity
      created: [opportunity title]")`.
 
