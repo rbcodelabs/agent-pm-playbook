@@ -101,8 +101,16 @@ conventions -- `COMPASS_MCP_API_KEY`, endpoint
    Call out any item whose status changed this week if you have a prior
    week's report to diff against (Step 5 explains how); otherwise just show
    current state and note "first report -- no prior snapshot to diff."
-3. `list_opportunities` -- note any created or status-changed in the window
-   (compare `updatedAt`/`createdAt` against the window start).
+3. `list_opportunities` -- report the current list grouped by status.
+   `list_opportunities` does not currently return `createdAt`/`updatedAt`
+   fields in its response, so per-item timestamp diffing against the window
+   isn't possible from that call alone -- don't guess at what changed. If you
+   have a prior week's report to diff against (Step 5), compare the two
+   opportunity lists directly (new IDs, changed status, removed IDs) instead
+   of relying on timestamps. If precise per-item change history is needed and
+   no prior snapshot exists, fall back to `get_opportunity` for specific IDs
+   flagged as worth investigating rather than fabricating a "changed this
+   week" claim.
 4. If an active OKR cycle exists: `get_okr_cycle` for the active cycle ID from
    the workspace summary -- report each KR's current value vs. target and the
    date of its last check-in. Flag any KR with no check-in in 14+ days as
