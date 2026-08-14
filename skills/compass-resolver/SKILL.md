@@ -29,6 +29,45 @@ workspace's behavior into this file.
 **Repo:** `/Users/rickbowman/projects/compass`
 **Compass org/workspace:** `rbcodelabs` / `compass`
 
+## Scheduling — the cron and its empty-queue gate (per workspace)
+
+Each workspace runs this skill via its own daily `CronCreate` job named
+`<Workspace> Auto-Resolver` (`cwd` = the workspace's repo path; the prompt passes the org
+slug, workspace slug, and repo path). **Every resolver cron MUST carry a deterministic
+`gateCommand`** — without it the cron fires a full model turn every day just to discover an
+empty pipeline and report "queue empty", which is pure wasted tokens. The gate is a shell
+pre-check: exit `0` fires the run, any clean non-zero exit skips the cycle entirely (no
+thread, no LLM turn).
+
+The gate mirrors the Step 1 eligibility tiers below: **fire if the NOW roadmap has any
+item, OR the NEXT roadmap has any item, OR there is any OPEN feedback; skip only when all
+three are empty.** Set `gateFailOpen: true` (a network/auth blip should fire the run, not
+silently stall the resolver) and `gateTimeoutSeconds: 90`. It queries the Compass MCP HTTP
+endpoint with `$COMPASS_MCP_API_KEY` (already injected into the cron's shell env). Replace
+`<WORKSPACE_ID>` with the target workspace's UUID:
+
+```bash
+WS=<WORKSPACE_ID>; U=https://compass.rbcodelabs.com/api/mcp
+c(){ curl -s -X POST "$U" -H "Authorization: Bearer $COMPASS_MCP_API_KEY" -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" --max-time 25 -d "$1" | sed 's/^data: //' | grep -E '^\{' | jq -r '.result.content[0].text // empty' 2>/dev/null; }
+now=$(c '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"list_roadmap_items","arguments":{"workspaceId":"'$WS'","horizon":"NOW"}}}');  echo "$now"  | grep -q 'No active roadmap items found' || exit 0
+next=$(c '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"list_roadmap_items","arguments":{"workspaceId":"'$WS'","horizon":"NEXT"}}}'); echo "$next" | grep -q 'No active roadmap items found' || exit 0
+fb=$(c '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"list_feedback","arguments":{"workspaceId":"'$WS'","status":"OPEN"}}}');       echo "$fb"   | grep -q 'No feedback found' || exit 0
+exit 1
+```
+
+Notes:
+- The sibling `compass-feedback-triage` cron uses the same gate pattern but checks only the
+  single `list_feedback` / `OPEN` call (`No feedback found` → `exit 1`). Keep both gated.
+- The gate is intentionally conservative: it still fires when NOW/NEXT items exist even if
+  every one is already claimed (`🤖`) or shelved (`⚠️`), because reliably parsing those
+  emoji title markers in `bash` is fragile. That yields at most one near-no-op run in the
+  rare all-claimed state; the common genuinely-empty steady state — where nearly all the
+  waste was — is skipped cleanly. Don't try to out-clever this in the gate; the skill's
+  Step 1 filter handles claimed/shelved items correctly once the run is inside the model.
+- When onboarding a new workspace's resolver cron, add this gate at creation time — it is
+  not optional. Verify both branches before trusting it: run the command against the live
+  workspace (all-empty → `exit 1`), and against a workspace that has NOW items (→ `exit 0`).
+
 ## Non-negotiable guardrails
 
 1. **One item per run.** Ship exactly one PR, or zero if nothing is eligible. Never batch

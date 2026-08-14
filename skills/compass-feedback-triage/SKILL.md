@@ -13,6 +13,16 @@ description: >
 
 # Compass Feedback Triage
 
+> **Scheduling:** each workspace runs this via a daily `<Workspace> Feedback Triage`
+> `CronCreate` job, scheduled *before* that workspace's resolver cron so freshly triaged
+> items are on the roadmap when the resolver wakes. Every triage cron MUST carry a
+> deterministic `gateCommand` so an empty OPEN queue never spawns a wasted model turn:
+> query `list_feedback` (`status: "OPEN"`) via the Compass MCP endpoint and `exit 1` (skip)
+> when it returns `No feedback found`, else `exit 0` (fire). Use `gateFailOpen: true`,
+> `gateTimeoutSeconds: 90`. This is the single-call variant of the three-tier gate
+> documented in the `compass-resolver` skill ("Scheduling — the cron and its empty-queue
+> gate") — see there for the exact `curl`/`jq` template and the verify-both-branches step.
+
 ## Setup
 
 1. Invoke the `compass` skill for the MCP tool catalog and data model if not already loaded.
