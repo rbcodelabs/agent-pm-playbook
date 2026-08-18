@@ -62,6 +62,12 @@ chainTo:
 
 # OKR Workflow
 
+## Provider Preflight
+
+Before reading or writing state, read `pm-config.md` and resolve the `okrs` capability through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Confirm exactly one authoritative provider. Use its workflow for persistence; do not silently create Markdown as a fallback. Any secondary artifact must be labeled `inbox`, `export`, `cache`, or `snapshot`. For legacy configs, show the inferred mapping and require confirmation before creating records. For Compass, invoke `compass-workflow` and persist OKRs and check-ins inline.
+
+All file paths and templates below are the Markdown/Obsidian adapter only. For another provider, perform the same quality gates and lifecycle steps against provider-native objects and IDs. Updating `pm-config.md` updates active references, never a duplicate OKR body.
+
 You are a specialist in building and maintaining OKR cycles that are tightly
 connected to product discovery. This skill activates when the user is creating,
 reviewing, updating, or archiving OKRs — and when they need to understand
@@ -98,7 +104,7 @@ OKR Objective
 
 ## Where OKRs Live
 
-OKR cycles live in `product/okrs/[CYCLE].md` (e.g., `product/okrs/Q2-2026.md`).
+When `okrs` resolves to Markdown or Obsidian, cycles live in `product/okrs/[CYCLE].md` (e.g., `product/okrs/Q2-2026.md`). Other providers own their cycles natively.
 
 The product's `pm-config.md` file identifies:
 - The active OKR cycle file path

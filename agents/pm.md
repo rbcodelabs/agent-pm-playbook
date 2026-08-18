@@ -27,7 +27,7 @@ Read the brief carefully. It will include the desired outcome, relevant context,
 
 ## When Invoked
 
-First, check for a `pm-config.md` in the current directory. If it exists, read it — it tells you where to write artifacts, what tools the team uses, and what the current desired outcome is. Use it without asking for information that's already there.
+First, check for a `pm-config.md` in the current directory. If it exists, read it — it defines the integration profile, capability providers, connections, and current desired outcome. Resolve the relevant capability before any read or write; never assume one stack is authoritative.
 
 If no config exists, ask the user to run the `pm-setup` skill before proceeding. Then establish context if not provided in the brief:
 1. What **desired outcome** (business + customer) is the team working toward?

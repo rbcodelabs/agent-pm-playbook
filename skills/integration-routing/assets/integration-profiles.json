@@ -1,0 +1,62 @@
+{
+  "$schema": "./integration-profiles.schema.json",
+  "version": 1,
+  "profiles": {
+    "compass-full": {
+      "description": "Compass is the product system of record, including Tasks for delivery.",
+      "providers": {
+        "vision": "compass_docs",
+        "research_capture": "compass_research",
+        "insights": "compass_feedback",
+        "okrs": "compass_okrs",
+        "ost": "compass_discovery",
+        "experiments": "compass_experiments",
+        "roadmap": "compass_roadmap",
+        "delivery": "compass_tasks",
+        "reporting_archive": "compass_docs"
+      }
+    },
+    "compass-obsidian-linear": {
+      "description": "Obsidian owns narrative and raw research, Compass owns structured product state, and Linear owns delivery.",
+      "providers": {
+        "vision": "obsidian",
+        "research_capture": "obsidian",
+        "insights": "compass_feedback",
+        "okrs": "compass_okrs",
+        "ost": "compass_discovery",
+        "experiments": "compass_experiments",
+        "roadmap": "compass_roadmap",
+        "delivery": "linear",
+        "reporting_archive": "obsidian"
+      }
+    },
+    "markdown-linear": {
+      "description": "Markdown owns product knowledge and discovery; Linear owns delivery.",
+      "providers": {
+        "vision": "markdown",
+        "research_capture": "markdown",
+        "insights": "markdown",
+        "okrs": "markdown",
+        "ost": "markdown",
+        "experiments": "markdown",
+        "roadmap": "markdown",
+        "delivery": "linear",
+        "reporting_archive": "markdown"
+      }
+    },
+    "jpd-jira": {
+      "description": "Jira Product Discovery owns product discovery and Jira owns delivery.",
+      "providers": {
+        "vision": "jpd",
+        "research_capture": "jpd_insights",
+        "insights": "jpd_insights",
+        "okrs": "jpd_goals",
+        "ost": "jpd",
+        "experiments": "jpd_tests",
+        "roadmap": "jpd",
+        "delivery": "jira",
+        "reporting_archive": "jpd"
+      }
+    }
+  }
+}

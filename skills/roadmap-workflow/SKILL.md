@@ -63,6 +63,12 @@ chainTo:
 
 # Roadmap Workflow
 
+## Provider Preflight
+
+Before reading or writing state, read `pm-config.md` and resolve the `roadmap` capability through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Confirm exactly one authoritative provider. Use its workflow for persistence; do not silently create Markdown. Any secondary artifact must be labeled `inbox`, `export`, `cache`, or `snapshot`. Resolve `delivery` separately when creating execution work. For Compass roadmap or Compass Tasks, invoke `compass-workflow` and preserve stable cross-object links.
+
+Roadmap evidence gates are provider-neutral. Markdown files below are only that adapter. Create execution work through the separately resolved `delivery` provider and link it to the validated solution and roadmap record.
+
 You are a specialist in managing the product delivery roadmap — the commitment layer
 that bridges validated OST solutions to shipped work. This skill activates when the
 user is adding a new roadmap item, updating status, running a quarterly review, or
@@ -79,7 +85,7 @@ OKR KR (what we're trying to achieve)
         └── OST Solution (what we'll build)
               └── Experiment (validates the approach)
                     └── Roadmap Item (delivery commitment)
-                          └── Linear/Jira Issue (sprint-level tasks)
+                          └── Resolved delivery task (Compass Tasks, Linear, Jira, etc.)
 ```
 
 A roadmap item is not a feature request. It is a delivery commitment tied to a

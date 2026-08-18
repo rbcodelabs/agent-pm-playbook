@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agentic PM integration profiles",
+  "type": "object",
+  "required": ["version", "profiles"],
+  "properties": {
+    "version": { "const": 1 },
+    "profiles": {
+      "type": "object",
+      "required": ["compass-full", "compass-obsidian-linear", "markdown-linear", "jpd-jira"],
+      "additionalProperties": { "$ref": "#/$defs/profile" }
+    }
+  },
+  "$defs": {
+    "profile": {
+      "type": "object",
+      "required": ["description", "providers"],
+      "properties": {
+        "description": { "type": "string", "minLength": 1 },
+        "providers": {
+          "type": "object",
+          "required": ["vision", "research_capture", "insights", "okrs", "ost", "experiments", "roadmap", "delivery", "reporting_archive"],
+          "additionalProperties": false,
+          "properties": {
+            "vision": { "type": "string", "minLength": 1 },
+            "research_capture": { "type": "string", "minLength": 1 },
+            "insights": { "type": "string", "minLength": 1 },
+            "okrs": { "type": "string", "minLength": 1 },
+            "ost": { "type": "string", "minLength": 1 },
+            "experiments": { "type": "string", "minLength": 1 },
+            "roadmap": { "type": "string", "minLength": 1 },
+            "delivery": { "type": "string", "minLength": 1 },
+            "reporting_archive": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    }
+  }
+}

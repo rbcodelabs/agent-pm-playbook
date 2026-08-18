@@ -56,6 +56,18 @@ Compass is a native OST platform: it owns opportunities, solutions, assumptions,
 experiments, OKRs, roadmap, feedback, and docs in one tool with an MCP API for
 agentic access.
 
+Compass may also own vision, raw research, synthesized insights, and engineering
+delivery through Compass Docs, research/feedback records, and Compass Tasks. It owns only the
+capabilities resolved to a Compass provider in `pm-config.md`; never assume that
+every Compass-connected product uses the full stack.
+
+## Provider Preflight
+
+Read `pm-config.md`, resolve the requested capability using the named profile and
+overrides, and verify it resolves to a Compass provider before writing. Exactly
+one authoritative provider must own the capability. A secondary Obsidian or
+Markdown artifact must be labeled `inbox`, `export`, `cache`, or `snapshot`.
+
 ## Core Rule
 
 **Update Compass inline as work progresses -- never batch at the end of a session.**
@@ -135,7 +147,7 @@ IDEA → VALIDATED → IN_DELIVERY → SHIPPED | KILLED
 |---|---|
 | **IDEA** | Hypothesis named; assumptions not yet mapped. |
 | **VALIDATED** | Riskiest assumption passed its experiment. Cleared for build. |
-| **IN_DELIVERY** | Active engineering work in the delivery tracker (Linear, Jira). |
+| **IN_DELIVERY** | Active engineering work in the resolved delivery provider (Compass Tasks, Linear, Jira, etc.). |
 | **SHIPPED** | In production. |
 | **KILLED** | Assumption failed the test. Archive with reason. |
 
@@ -241,6 +253,19 @@ conclude_experiment(experimentId, "PROCEED")
 promote_to_roadmap(solutionId, workspaceId, "NOW")
 ```
 
+### Docs, research, insights, and delivery
+
+When routing resolves to `compass_docs`, store vision and durable narratives in
+Compass Docs. When it resolves to `compass_research`, store raw research notes or
+references in Compass's research surface. `compass_feedback` owns granular,
+linkable insights. `compass_tasks` owns engineering delivery tasks and their
+status; link each task back to its roadmap item and validated solution.
+
+Use the actual tools exposed by the connected Compass MCP server. Discover the
+tool catalog rather than inventing method names. If the installed Compass version
+does not expose a required operation, report that capability as blocked; do not
+silently redirect the write to Markdown or an external issue tracker.
+
 ### OKR check-in
 ```
 list_okr_cycles(workspaceId)
@@ -274,7 +299,8 @@ update_opportunity_status(opportunityId, "VALIDATING")
 
 ## Project-Specific Configuration
 
-Each project's `pm-config.md` should include a Compass section:
+Each project that resolves at least one capability to Compass should include a
+Compass connection section plus the integration routing table:
 
 ```markdown
 ## Compass
@@ -288,6 +314,8 @@ Each project's `pm-config.md` should include a Compass section:
 If `pm-config.md` has no Compass section, ask the user for:
 1. The org slug and workspace slug (visible in the Compass URL)
 2. Where their MCP API key is stored
+
+Never store the key value in `pm-config.md`.
 
 ---
 

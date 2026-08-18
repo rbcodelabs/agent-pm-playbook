@@ -40,10 +40,10 @@ If you get "unknown skill" or "unknown agent" errors, re-run `./setup.sh --force
 **First-time config:** run this in a Claude Code session inside your product's folder:
 
 ```
-Run the pm-setup skill to configure my notes system, issue tracker, and current desired outcome.
+Run the pm-setup skill to select an integration profile, configure provider routing, and set my current desired outcome.
 ```
 
-This writes a `pm-config.md` that every PM agent and skill reads automatically. Do it once per project.
+This writes a `pm-config.md` routing manifest that every PM agent and skill reads automatically. Choose `compass-full`, `compass-obsidian-linear`, `markdown-linear`, or `jpd-jira`, then override individual capabilities if needed. Product state stays in its resolved provider.
 
 ---
 
@@ -68,7 +68,7 @@ The curriculum teaches the operating model first (why), then the tools (how). It
 
 ## Setting up your workspace
 
-If you want Obsidian + Claude Threads as your notes home (recommended for sustained use):
+If your selected profile uses Obsidian + Claude Threads:
 
 → **[PM Workspace Setup guide](guides/pm-workspace-setup.md)** — one-command vault installer, adding your Anthropic API key, connecting JIRA or Linear, and Vault Bridges (~30 min)
 
@@ -99,13 +99,14 @@ Delegate explicitly or let Claude route automatically:
 
 ## Skills
 
-Eleven skills installed by `setup.sh`:
+Skills installed by `setup.sh` include:
 
 **PM skills**
 
 | Skill | What it does |
 |---|---|
-| `pm-setup` | One-time config — writes `pm-config.md` for your project |
+| `integration-routing` | Resolves capability providers and validates named profiles/overrides |
+| `pm-setup` | Configures profiles, capability providers, connections, and provider-aware scaffolding |
 | `pm-coach` | Thinking partner for discovery, OST review, experiment design |
 | `ost-workflow` | Build, extend, and health-check an Opportunity Solution Tree |
 | `pm-signal-synthesis` | Turn interviews, tickets, and reviews into OST-ready clusters |
@@ -130,7 +131,8 @@ Eleven skills installed by `setup.sh`:
 - **[Progressive Investment Framework](Progressive%20Investment%20Framework.md)** — the five-stage evidence ladder
 - **[Discovery Health Metrics](Discovery%20Health%20Metrics.md)** — four diagnostic categories and flag thresholds
 - **[Signal Ledger](Signal%20Ledger.md)** — the synthesis artifact format
-- **[PM Tool Integration Guide](PM%20Tool%20Integration%20Guide.md)** — Linear, Jira, JPD, and Markdown-only setup
+- **[Capability Provider Contract](skills/integration-routing/SKILL.md)** — routing invariants, capabilities, and migration behavior
+- **[PM Tool Integration Guide](PM%20Tool%20Integration%20Guide.md)** — Compass, Obsidian, Linear, JPD, Jira, and hybrid profiles
 - **[Success Metrics guide](guides/success-metrics.md)** — how to know the operating model is actually working at 30/60/90 days
 - **[Troubleshooting](training/troubleshooting.md)** — common friction across all modules
 

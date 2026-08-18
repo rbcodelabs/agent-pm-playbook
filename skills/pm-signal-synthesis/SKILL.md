@@ -44,6 +44,12 @@ chainTo:
 
 # PM Signal Synthesis
 
+## Provider Preflight
+
+Before reading or writing state, read `pm-config.md` and resolve `research_capture` for inputs and `insights` for synthesized output through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Confirm exactly one authoritative provider per capability. Use each provider's workflow; do not silently create Markdown. Secondary artifacts must be labeled `inbox`, `export`, `cache`, or `snapshot`. For Compass insights, invoke `compass-workflow`, create granular feedback/insight records, and link them to OST objects inline.
+
+Clustering, confidence, contradiction, and bias rules are invariant. The Signal Ledger format is only the Markdown/Obsidian adapter; otherwise persist provider-native insight records.
+
 You are a specialist in transforming raw product signals into structured,
 OST-ready opportunities. This skill activates when the user has research or
 customer data — interview transcripts, support tickets, NPS responses, sales

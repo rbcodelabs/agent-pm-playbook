@@ -9,7 +9,9 @@
 
 ## 1. The Tool-Agnostic Model
 
-Regardless of which tools you use, the OST requires a home for six distinct layers. If any layer lacks a clear, single home, it will fragment across Slack messages, personal notes, and outdated docs — and the tree becomes unreliable within weeks.
+Regardless of which tools you use, the product system requires a home for each capability. `pm-config.md` selects a named profile and optional per-capability overrides using the canonical [integration-routing contract](skills/integration-routing/SKILL.md). If any capability lacks a clear, single home, state fragments and becomes unreliable.
+
+The required capability keys are `vision`, `research_capture`, `insights`, `okrs`, `ost`, `experiments`, `roadmap`, `delivery`, and `reporting_archive`. Named profiles are starting points, not stack mandates: `compass-full`, `compass-obsidian-linear`, `markdown-linear`, and `jpd-jira`.
 
 | OST Layer | What it is | "Done" means |
 |---|---|---|
@@ -134,22 +136,22 @@ If your JPD uses a single generic Ideas type, use the `opportunity` / `solution`
 
 ## 3. Compass
 
-Compass is a native discovery platform purpose-built for this workflow. It owns all six OST layers directly -- OKRs, opportunities, solutions, assumptions, experiments, roadmap, and customer feedback are all first-class objects with status progressions, mutual links, and an MCP API for agentic access. Unlike JPD+Jira or Linear+Obsidian, there is no split between a discovery tool and a delivery tracker: everything lives in one place.
+Compass can be the complete product operating system. In the `compass-full` profile it owns vision and product documents, research capture, synthesized insights, OKRs, OST objects, experiments, roadmap, and delivery through Compass Tasks. Hybrid profiles may assign only some of those capabilities to Compass.
 
 **Production URL:** https://compass.rbcodelabs.com
-**Delivery work (engineering tasks):** tracked separately in Linear or Jira -- Compass does not replace the engineering backlog.
+**Delivery work:** Compass Tasks in `compass-full`; Linear or Jira only when the `delivery` capability resolves there.
 
 ### Layer Mapping
 
 | OST Layer | Compass Construct | Notes |
 |---|---|---|
 | Desired Outcome | Key Result (connected to an Objective in an active OKR Cycle) | One KR = one desired outcome. Link every opportunity to a KR. |
-| Signals | FeedbackItem + linked Opportunities | Log signals as Feedback; link to the Opportunity they support. High-frequency raw capture can stay in Obsidian. |
+| Signals | Research + FeedbackItem + linked Opportunities | Compass can own both raw research and structured insight; a hybrid profile may route raw capture elsewhere. |
 | Opportunities | Opportunity | Customer-voice framing; link to a KR on creation. |
 | Solutions | Solution (child of Opportunity) | Add 3+ per opportunity before narrowing. |
 | Assumptions | Assumption (child of Solution) | Tag with risk level: HIGH / MEDIUM / LOW. |
 | Experiments | Experiment (linked to an Assumption) | Must have a written kill condition before moving to RUNNING. |
-| Build items | Tracked externally (Linear / Jira); Roadmap Item in Compass shows the horizon | RoadmapItem links back to the validated Solution. |
+| Build items | Compass Tasks or configured external tracker | Resolve `delivery` separately and link tasks to the RoadmapItem and validated Solution. |
 
 ### Status Workflows
 
@@ -191,19 +193,19 @@ log_checkin(keyResultId, value, note)                     -- update progress
 
 The Compass roadmap is a NOW / NEXT / LATER kanban. Items are created by promoting a validated Solution (`promote_to_roadmap`) or creating them directly (`add_to_roadmap`). Each item can link to a Solution, Opportunity, Key Result, Experiment, or Squad.
 
-Engineering delivery lives in Linear or Jira. The Compass roadmap reflects product strategy; the delivery tracker reflects sprint execution. Reference the Compass RoadmapItem ID in the Linear/Jira epic description to maintain the link.
+Delivery lives in the provider resolved for `delivery`. With Compass Tasks, keep execution and strategy linked natively. With Linear or Jira, reference the Compass RoadmapItem and Solution IDs in the external epic or issue.
 
 ### Signal Layer
 
 Compass has two paths for signals:
 
-**High-frequency raw capture (recommended: Obsidian-first):**
-Raw interview notes, support ticket reviews, and individual quotes are best captured in Obsidian (low friction, no commit). After synthesis, log the structured finding as a Compass FeedbackItem and link it to the relevant Opportunity.
+**Raw research capture:**
+With `compass-full`, capture interview notes, support reviews, and quotes in Compass research/docs. A hybrid profile can instead route `research_capture` to Obsidian; that is a configuration choice, not a universal recommendation.
 
 **Direct FeedbackItem logging:**
 For public-facing signals (portal submissions, NPS), Compass captures them natively at `/portal/{org}/{ws}/feedback`. Use `list_feedback` to review and link to Opportunities.
 
-The rule: FeedbackItems in Compass are the team-visible signal record. Raw notes in Obsidian are the personal capture layer. Never skip the link from FeedbackItem to Opportunity -- an unlinked signal doesn't contribute to the OST evidence count.
+The rule: write to the resolved authoritative provider and link synthesized insights to Opportunities. Any secondary copy must be labeled as an inbox, export, cache, or snapshot.
 
 ### MCP API for Agents
 

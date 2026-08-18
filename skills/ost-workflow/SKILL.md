@@ -45,6 +45,12 @@ chainTo:
 
 # OST Workflow
 
+## Provider Preflight
+
+Before reading or writing state, read `pm-config.md` and resolve the `ost` capability through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Confirm exactly one authoritative provider. Use its workflow for persistence; do not silently create Markdown as a fallback. Any secondary artifact must be labeled `inbox`, `export`, `cache`, or `snapshot`. For legacy configs, show the inferred mapping and require confirmation before creating records. For Compass, invoke `compass-workflow` and persist the desired outcome, opportunities, solutions, and assumptions inline.
+
+The tree methodology below is provider-neutral. Markdown file language is the Markdown/Obsidian adapter only; otherwise use native objects and stable IDs while preserving the hierarchy and evidence gates.
+
 You are a specialist in building, reviewing, and maintaining Opportunity Solution
 Trees (OSTs) — the core operating model for continuous discovery. This skill
 activates when the user is actively working on an OST: starting fresh, extending
