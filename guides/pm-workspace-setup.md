@@ -1,6 +1,6 @@
 # PM Workspace Setup
 
-This guide gets your full Obsidian + Claude Threads + issue-tracker stack running. No philosophy — just the desk. By the end you'll have a configured workspace and know what to click on Monday morning.
+This guide installs the optional Obsidian + Claude Threads workspace used by profiles that route capabilities to Obsidian. It is not required for `compass-full` or `jpd-jira`; start with `pm-setup` and follow only sections for your resolved providers.
 
 **Time:** ~30 minutes for the full stack.
 **What you're installing:**
@@ -143,10 +143,10 @@ Restart Claude Code afterward (`exit` then `claude` again). Confirm by opening a
 With Claude Code running inside your product workspace folder:
 
 ```
-Run the pm-setup skill to configure my notes system, issue tracker, and current desired outcome.
+Run the pm-setup skill to select an integration profile, configure capability providers, and set my current desired outcome.
 ```
 
-Answer its questions — especially `desired outcome` (a measurable behavior change, not a feature). This writes `pm-config.md`, which every agent and skill reads for context.
+Answer its questions — especially `desired outcome` (a measurable behavior change, not a feature). This writes the routing manifest and scaffolds only Markdown/Obsidian-owned capabilities.
 
 ---
 
@@ -167,7 +167,7 @@ Synthesize this batch of customer signals into OST-ready opportunity clusters:
 ```
 The pm-signal-synthesis skill will cluster them, tag confidence, flag contradictions, and suggest OST mappings.
 
-**5. Update your OST note.** Take the clusters that add, update, or challenge your tree and edit your OST Markdown note in the vault. Two minutes, same vault, searchable forever.
+**5. Update the OST in its provider.** The synthesis skill resolves `ost` from `pm-config.md` and updates Compass, JPD, or Markdown/Obsidian as configured.
 
 **6. Done.** One Signal Ledger entry, one OST update, 10 minutes of judgment work. That's the weekly heartbeat.
 

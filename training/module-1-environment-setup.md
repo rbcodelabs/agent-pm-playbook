@@ -41,7 +41,7 @@ By the end of this module you will be able to:
 
 ## Concept reading
 
-The one idea worth holding: **`pm-config.md` is the spine.** Every PM skill and agent reads it to learn your notes system, your issue tracker (or that you have none), and your *current desired outcome*. If a skill ever behaves like it doesn't know your context, the first thing to check is whether `pm-config.md` exists and is current. You generate it once per project with `pm-setup`.
+The one idea worth holding: **`pm-config.md` is the routing spine.** Every PM skill resolves each capability to exactly one authoritative provider, plus the current desired outcome. The manifest does not duplicate provider state. You generate or migrate it with `pm-setup`.
 
 **Go deeper:** [README](../README.md) for the project overview, [PM Tool Integration Guide](../PM%20Tool%20Integration%20Guide.md) for tracker-specific setup (Linear, Jira, JPD, or Markdown-only), and [How to Use the Agents](../How%20to%20Use%20the%20Agents.md) for what each agent does.
 
@@ -97,14 +97,14 @@ claude                # this opens a Claude Code session in the current director
 In the session, invoke the setup skill:
 
 ```
-Run the pm-setup skill to configure my notes system, issue tracker, and current desired outcome.
+Run the pm-setup skill to select an integration profile, configure capability providers, and set my current desired outcome.
 ```
 
 Answer its questions. Two notes:
-- For **issue tracker**, "none — I track work in plain notes/Markdown" is a valid answer. Don't invent a tool you don't use.
+- Pick the profile closest to your real stack: full Compass, Compass/Obsidian/Linear, Markdown/Linear, or JPD/Jira. Per-capability overrides handle exceptions.
 - For **current desired outcome**, give the measurable behavior change you're managing toward (Module 0 standard), **not** a feature. This is the single most important field — everything downstream inherits it.
 
-**Verify:** a `pm-config.md` now exists in your workspace folder, and its fields match what you entered.
+**Verify:** `pm-config.md` names a profile and resolves all nine capabilities to exactly one provider. Confirm it created only folders owned by Markdown/Obsidian capabilities; `compass-full` creates no product-state folder tree.
 
 #### Step 3 — Wake up the PM coach
 

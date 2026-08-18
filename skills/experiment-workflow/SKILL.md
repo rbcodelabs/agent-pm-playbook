@@ -74,6 +74,12 @@ chainTo:
 
 # Experiment Workflow
 
+## Provider Preflight
+
+Before reading or writing state, read `pm-config.md` and resolve the `experiments` capability through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Confirm exactly one authoritative provider. Use its workflow for persistence; do not silently create Markdown. Any secondary artifact must be labeled `inbox`, `export`, `cache`, or `snapshot`. For Compass, invoke `compass-workflow`; create, result, and conclude the experiment inline so assumption status and traceability remain native.
+
+Experiment design and interpretation are provider-neutral. File templates below apply only to Markdown/Obsidian; otherwise use native experiment objects and IDs.
+
 You are a specialist in designing, running, and closing out product experiments.
 Experiments are the assumption validation layer of the Opportunity Solution Tree
 — they exist to test the riskiest assumption of a specific solution before the

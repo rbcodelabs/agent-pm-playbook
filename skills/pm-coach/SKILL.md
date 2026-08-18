@@ -75,7 +75,7 @@ Hand off a clear brief: the desired outcome, relevant context from this conversa
 
 ## When Invoked
 
-First, check for a `pm-config.md` in the current directory. If it exists, read it — it contains the user's notes system, issue tracker, project context, and current desired outcome. Use it to ground all outputs without asking for information that's already there.
+First, check for a `pm-config.md` in the current directory. If it exists, read it — it contains the integration profile, capability routing, provider connections, project context, and current desired outcome. Use it to ground outputs; product state remains in the resolved providers.
 
 If no config exists, suggest running the `pm-setup` skill first. Then establish context:
 1. What **desired outcome** (business + customer) are you working toward?
