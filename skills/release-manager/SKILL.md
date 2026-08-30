@@ -318,6 +318,14 @@ text in the homepage body.
 
 If smoke test fails: surface the result, don't declare success.
 
+### Reconcile linked PM delivery state
+
+For every merged PR carrying a stable roadmap or Task ID, invoke
+`delivery-completion-watcher` after production verification. The release manager supplies
+merge/check/deployment evidence but does not independently infer Compass lifecycle changes.
+Blocking smoke failures stop completion. Non-blocking quality findings are routed to one
+linked Feedback record according to `delivery_completion_policy`.
+
 ---
 
 ## Step 9B — Plugin / Desktop App: Build + Release

@@ -1,0 +1,39 @@
+{
+  "$schema": "./workflow-profiles.schema.json",
+  "version": 1,
+  "profiles": {
+    "compass-native-review": {
+      "description": "Compass Tasks provide the review queue, Solution Plan approvals capture the pilot decision, Compass Docs hold supporting artifacts, and Geode runs and notifies.",
+      "providers": {
+        "automation_runtime": "geode",
+        "review_requests": "compass_tasks",
+        "decision_records": "compass_solution_plan_status",
+        "notifications": "geode",
+        "prototype_artifacts": "compass_docs",
+        "product_analytics": "manual_input"
+      }
+    },
+    "geode-obsidian-review": {
+      "description": "Geode runs scheduled flows and notifications; Obsidian holds review requests and decision receipts; repository previews hold prototypes.",
+      "providers": {
+        "automation_runtime": "geode",
+        "review_requests": "obsidian",
+        "decision_records": "obsidian",
+        "notifications": "geode",
+        "prototype_artifacts": "repository_preview",
+        "product_analytics": "manual_input"
+      }
+    },
+    "local-markdown-review": {
+      "description": "A local scheduled-agent runtime uses Markdown review files, local notifications, repository previews, and manually supplied analytics.",
+      "providers": {
+        "automation_runtime": "scheduled_agent",
+        "review_requests": "markdown",
+        "decision_records": "markdown",
+        "notifications": "local_digest",
+        "prototype_artifacts": "repository_preview",
+        "product_analytics": "manual_analytics"
+      }
+    }
+  }
+}

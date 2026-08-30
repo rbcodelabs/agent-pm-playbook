@@ -253,6 +253,7 @@ Issues:
 | Triage new signals against OST | 10 min | Bulk clustering prompt |
 | Update OST (Obsidian + tool) | 10 min | Draft updated OST narrative |
 | Check active experiments — any results? | 5 min | — |
+| Review roadmap capacity | 5 min | Keep validation in Later; propose ranked Next changes with displacement |
 
 ### Bi-Weekly (60 min)
 
@@ -273,6 +274,10 @@ Issues:
 - Outcome reset or reconfirmation
 - Full OST retrospective: what would we prune if starting fresh?
 - New OST kickoff for next cycle
+
+For the end-to-end automation design—including asynchronous human review, early-idea
+prototype packets, decision routing, and the boundary between roadmap recommendation and
+autonomous delivery—see [[Scheduled Product Operating System]].
 
 ---
 

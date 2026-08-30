@@ -1,7 +1,8 @@
 ---
 name: roadmap-workflow
 description: >-
-  Manage the product roadmap — add validated solutions as delivery commitments,
+  Manage the product roadmap — preserve candidates in Later, admit validated and
+  capacity-ranked solutions to Next, create delivery commitments in Now,
   move items between horizons, run quarterly reviews, and generate stakeholder
   updates. Every roadmap item must trace back to a validated OST solution and an
   OKR KR. Use when the user is adding items to the roadmap, updating status,
@@ -67,7 +68,10 @@ chainTo:
 
 Before reading or writing state, read `pm-config.md` and resolve the `roadmap` capability through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Confirm exactly one authoritative provider. Use its workflow for persistence; do not silently create Markdown. Any secondary artifact must be labeled `inbox`, `export`, `cache`, or `snapshot`. Resolve `delivery` separately when creating execution work. For Compass roadmap or Compass Tasks, invoke `compass-workflow` and preserve stable cross-object links.
 
-Roadmap evidence gates are provider-neutral. Markdown files below are only that adapter. Create execution work through the separately resolved `delivery` provider and link it to the validated solution and roadmap record.
+Roadmap evidence and capacity gates are provider-neutral. Read `portfolio_policy` from
+`pm-config.md` before recommending or applying a horizon change. Markdown files below are
+only that adapter. Create execution work through the separately resolved `delivery`
+provider and link it to the validated solution and roadmap record.
 
 You are a specialist in managing the product delivery roadmap — the commitment layer
 that bridges validated OST solutions to shipped work. This skill activates when the
@@ -76,20 +80,22 @@ generating a stakeholder roadmap communication.
 
 ## Where the Roadmap Sits
 
-The roadmap is the delivery layer. Nothing reaches the roadmap without passing
-through discovery and validation first:
+The roadmap separates preserved possibilities from delivery commitments. `LATER` may hold
+a deduplicated candidate while discovery and validation continue. `NEXT` and `NOW` are the
+delivery queue and require validation first:
 
 ```
 OKR KR (what we're trying to achieve)
   └── OST Opportunity (why users need it)
         └── OST Solution (what we'll build)
               └── Experiment (validates the approach)
-                    └── Roadmap Item (delivery commitment)
+                    └── Roadmap Item (`NEXT`/`NOW` delivery commitment)
                           └── Resolved delivery task (Compass Tasks, Linear, Jira, etc.)
 ```
 
-A roadmap item is not a feature request. It is a delivery commitment tied to a
-validated customer need and a measurable business outcome.
+A roadmap item is not a feature request. `LATER` preserves a possibility without promising
+delivery. `NEXT` means validated, ordered, and admitted within configured capacity. `NOW`
+means delivery capacity is committed.
 
 ## File Structure
 
@@ -107,16 +113,16 @@ last_updated: YYYY-MM-DD
 
 # Roadmap — [Product Name]
 
-> A delivery commitment, not a wishlist. Every item here links to a validated solution in the OST.
+> A governed portfolio, not a wishlist. Later preserves reviewed candidates; Next and Now require validated solutions.
 
 ## Now (This Quarter)
 [Active items being built — owner, target date, Linear/Jira link]
 
-## Next (Next Quarter)
-[Committed items not yet started]
+## Next (Capacity-limited delivery queue)
+[Validated, explicitly ranked items admitted within the configured limit]
 
-## Later (Backlog — not committed)
-[Explored items with validated solutions but no delivery date]
+## Later (Preserved candidates — not committed)
+[Deduplicated possibilities, including candidates still gathering validation evidence]
 
 ## Shipped
 [Completed items — link to release, date shipped]
@@ -169,7 +175,8 @@ reducing the need to manually check [X]."]
 
 ## Procedure 1 — Adding a Roadmap Item
 
-Trigger: a validated solution is ready for delivery commitment.
+Trigger: a reviewed candidate deserves preservation in `LATER`, or a validated solution is
+ready for capacity-ranked delivery admission.
 
 ### Step 1: Verify the parent solution
 
@@ -181,13 +188,11 @@ commitment:
 3. Check whether a linked experiment has status "Validated".
 
 **If the solution status is not "Validated":**
-- If the user wants to commit it to "Now": refuse. Say: "Adding an unvalidated
-  solution to Now creates delivery risk — the team may build the wrong thing.
-  Run the experiment first, then commit. I can switch to experiment-workflow to
-  help design one."
-- If the user wants to add it to "Later" or "Next": proceed with a visible
-  warning in the roadmap item: "Risk: No validated experiment. Validate before
-  promoting to Now."
+- If the requested horizon is `NEXT` or `NOW`, refuse the promotion and switch to the
+  validation workflow. Implementation clarity, strategic fit, and low experiment cost do
+  not substitute for evidence.
+- `LATER` is allowed only as a deduplicated portfolio candidate. Create validation work
+  separately and leave the horizon unchanged when that work is approved.
 
 ### Step 2: Assign a roadmap ID
 
@@ -198,7 +203,8 @@ If no items exist, start at RM-001.
 
 Ask for anything not already known:
 
-- **Horizon:** Now, Next, or Later?
+- **Horizon:** `LATER` for preservation, `NEXT` for a validated capacity-ranked queue slot,
+  or `NOW` for a delivery commitment?
 - **Target date:** Specific date for "Now" items. Approximate quarter for "Next".
   Optional for "Later".
 - **OKR KRs:** Which key results does this delivery item move? Check
@@ -283,12 +289,18 @@ When the user wants to remove an item from the roadmap without shipping it:
 
 Moving an item between horizons (Later to Next, Next to Now):
 
-1. Update `status` in the item's frontmatter.
-2. For promotion to "Now": verify a `target_date` exists. If not, ask for one.
-   Also re-check that the parent solution is Validated. If it isn't, surface
-   the risk before proceeding.
-3. Move the item in `roadmap-summary.md` to the correct horizon section.
-4. Set `last_updated` to today.
+1. Re-read the full ordered horizon and `portfolio_policy`; never evaluate the candidate
+   in isolation.
+2. For `LATER → NEXT`, require a `Validated` parent solution and compare the candidate
+   against every existing `NEXT` item. The human review must name the exact target rank.
+   When `next_limit` is full, it must also name every item displaced to `LATER`. Missing
+   capacity or ordering data means no promotion.
+3. For `NEXT → NOW`, require an available `now_limit` slot, target date, delivery owner,
+   dependency readiness, and a current execution-collision preflight. If full, the review
+   must name the displaced or completed item. This is a separate `NOW` commitment decision.
+4. Apply only the exact approved queue mutation, update the summary, and record before/after
+   counts, ranks, displaced IDs, decision ID, and an idempotency receipt.
+5. Validation approval by itself never runs this procedure; the item remains in `LATER`.
 
 ## Procedure 3 — Quarterly Roadmap Review
 
@@ -325,12 +337,16 @@ where the solution status is not "Validated". These are the highest-risk items
 on the roadmap.
 
 **Gate 5: Now items count vs. team capacity**
-Ask the user: "How many people are on the delivery team?" If the number of "Now"
-items seems implausible for the team size and quarter length, surface it:
-"You have N items in Now for a team of M — that's a risk. Which items are truly
-committed vs. aspirational?"
+Read `now_limit` and current capacity from `pm-config.md` and the resolved delivery
+provider. If either is unavailable, block new `NOW` admission. If `NOW` exceeds the limit,
+surface the exact excess and require a displacement or completion decision.
 
-**Gate 6: Stale Later items**
+**Gate 6: Next queue capacity and validation**
+Flag every `NEXT` item whose parent Solution is not `Validated`, whose exact rank is
+unknown, or that exceeds `next_limit`. Recommend returning unvalidated items to `LATER`.
+New admissions to a full queue must identify the displaced item; never append silently.
+
+**Gate 7: Stale Later items**
 Flag any "Later" item where `created` is more than 6 months ago. These are
 candidates for a decision: kill it, promote it, or document why it's still valid.
 Stale Later items are roadmap debt.
@@ -368,7 +384,32 @@ Output a structured review:
 [Prioritized list of actions to improve roadmap health]
 ```
 
-## Procedure 4 — Roadmap Narrative for Stakeholders
+## Procedure 4 — Scheduled Roadmap Steward
+
+Run this as the recurring portfolio decision flow. It prepares reviews; it does not grow
+the roadmap because a candidate sounds promising.
+
+1. Resolve `roadmap`, `ost`, `experiments`, `okrs`, `delivery`, `review_requests`, and
+   `decision_records`, then read `portfolio_policy`.
+2. Inventory the complete ordered `NOW`, `NEXT`, and `LATER` horizons; active validation
+   work; delivery work; agent runs; branches; and pull requests. Record a collision
+   fingerprint and before-counts.
+3. For each unvalidated candidate worth investigating, recommend `VALIDATE_IN_LATER` and
+   create a validation-authorization review. Approval dispatches the prototype or
+   experiment-design task without changing its horizon.
+4. For each `VALIDATED` candidate, compare it with every `NEXT` item. Recommend
+   `ADMIT_TO_NEXT_AT_RANK` only when the queue is below `next_limit`; otherwise recommend
+   `REPLACE_NEXT_ITEM` with named displacement IDs. Missing capacity or rank data means
+   `KEEP_LATER`.
+5. Recommend `COMMIT_TO_NOW` only through the separate commitment gate with an available
+   `now_limit` slot, owner, dependencies, dates, and current collision check.
+6. Reconcile open reviews without applying partial responses. On finalization, re-read the
+   queue fingerprint, apply only the exact approved mutation, record an idempotent receipt,
+   and dispatch the next eligible flow.
+7. End cleanly when no material evidence, capacity, ordering, or status changed. Do not
+   create a recurring review about an unchanged queue.
+
+## Procedure 5 — Roadmap Narrative for Stakeholders
 
 Generate a stakeholder-facing roadmap update. This is not a feature list — it is
 a story about why the team is building what it's building.
@@ -415,10 +456,11 @@ Check these before confirming any roadmap action:
 | Gate | Check | Action if failed |
 |------|-------|-----------------|
 | OST parent | Every item has a `parent_solution` | Refuse to add without one, or flag as orphaned |
-| Solution validated | Parent solution status is "Validated" | Block Now commitment; warn for Next/Later |
+| Solution validated | Parent solution is `Validated` before `NEXT` or `NOW` | Keep unvalidated candidates in `LATER`; dispatch validation separately |
 | Now target date | Every Now item has a `target_date` | Ask for one before adding to Now |
 | OKR connection | Every item links to at least one KR | Ask which KR this is expected to move |
-| Now count | Now items are plausible given team size | Surface if count seems unrealistic |
+| Next capacity | Ordered `NEXT` count is within `next_limit` | Require exact rank and named displacement before admission |
+| Now capacity | `NOW` count is within `now_limit` and capacity data is current | Block admission until a slot, owner, and capacity evidence exist |
 | Release notes | Shipped items have populated Release Notes | Refuse to mark Shipped without them |
 | Kill reason | Killed items have a documented reason | Refuse to kill without a reason |
 
@@ -434,7 +476,9 @@ Check these before confirming any roadmap action:
 | Adding to Now without checking OKR alignment | Team may ship something that doesn't move the needle | Cross-reference OKRs before committing |
 | Killing items without documenting why | Same mistake will be made again | Require a Kill Reason section every time |
 | Roadmap with more Now items than the team can ship | Creates a culture of missed commitments | Trim Now to what's truly committed; move the rest to Next |
-| Treating the roadmap as a backlog | Backlogs are unranked ideas; roadmaps are ranked commitments | If it has no target date and no validated parent, it belongs in the OST, not here |
+| Using Next as a validation queue | Makes unvalidated ideas look delivery-ready and hides overload | Keep the item in Later; create a separate validation task |
+| Appending to a full Next queue | Avoids the real tradeoff and grows an unbounded wishlist | Name the rank and item displaced to Later |
+| Treating the roadmap as a backlog | Unfiltered ideas obscure preserved candidates and delivery commitments | Keep only explicitly admitted, deduplicated candidates in Later; leave raw ideas in the OST |
 
 ## References
 

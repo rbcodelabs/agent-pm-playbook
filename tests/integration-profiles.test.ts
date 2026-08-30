@@ -94,7 +94,7 @@ test("Compass guidance covers full-stack and hybrid ownership", () => {
 test("installed skills have self-contained routing resources", () => {
   const setup = readFileSync("setup.sh", "utf8");
   assert.match(setup, /for skill_dir in "\$REPO_DIR\/skills"\/\*\//);
-  for (const path of ["skills/integration-routing/SKILL.md", "skills/integration-routing/assets/integration-profiles.json", "skills/integration-routing/assets/integration-profiles.schema.json", "skills/integration-routing/assets/pm-config-template.md", "skills/integration-routing/scripts/validate-integration-profiles.ts"]) assert.doesNotThrow(() => readFileSync(path));
+  for (const path of ["skills/integration-routing/SKILL.md", "skills/integration-routing/assets/integration-profiles.json", "skills/integration-routing/assets/integration-profiles.schema.json", "skills/integration-routing/assets/workflow-profiles.json", "skills/integration-routing/assets/workflow-profiles.schema.json", "skills/integration-routing/assets/pm-config-template.md", "skills/integration-routing/scripts/validate-integration-profiles.ts", "skills/integration-routing/scripts/validate-workflow-profiles.ts"]) assert.doesNotThrow(() => readFileSync(path));
   for (const path of ["skills/pm-setup/SKILL.md", "skills/okr-workflow/SKILL.md", "skills/ost-workflow/SKILL.md", "skills/pm-signal-synthesis/SKILL.md", "skills/experiment-workflow/SKILL.md", "skills/roadmap-workflow/SKILL.md", "skills/status-report-workflow/SKILL.md"]) {
     const contents = readFileSync(path, "utf8");
     assert.doesNotMatch(contents, /(?:\.\.\/\.\.\/)?(?:generated|docs|config)\//, path);
@@ -118,4 +118,5 @@ test("pm-setup uses installed routing validation without locating the repository
   assert.doesNotMatch(setup, /npm run validate/);
   assert.match(setup, /integration-routing/);
   assert.match(setup, /validate-integration-profiles\.ts/);
+  assert.match(setup, /validate-workflow-profiles\.ts/);
 });

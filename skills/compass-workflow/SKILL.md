@@ -176,9 +176,15 @@ DESIGNING → RUNNING → COMPLETE | KILLED
 NOW → NEXT → LATER
 ```
 
-- **NOW:** Committed delivery; work is active or starting this cycle.
-- **NEXT:** Validated and queued; starting within 1-2 cycles.
-- **LATER:** Directionally correct; not scheduled.
+- **NOW:** Committed delivery within configured capacity; work is active or starting this cycle.
+- **NEXT:** Validated, explicitly ranked, and admitted within `portfolio_policy.next_limit`;
+  starting within 1-2 cycles.
+- **LATER:** Preserved candidate; not scheduled. Validation may run while it remains here.
+
+Approving validation never changes a roadmap horizon. Before `LATER → NEXT`, re-read the
+complete ordered queue and `portfolio_policy`; require a `VALIDATED` Solution, an exact
+rank, and named displacement when the queue is full. Missing capacity or ordering data
+means keep `LATER`. `NEXT → NOW` requires a separate commitment decision.
 
 ---
 
@@ -204,7 +210,9 @@ NOW → NEXT → LATER
   - Compass auto-updates the linked assumption to VALIDATED or INVALIDATED
 
 **When a solution is validated:**
-- Call `add_to_roadmap` or `promote_to_roadmap` to move it to NOW/NEXT/LATER
+- Keep or create its deduplicated `LATER` candidate. A separate capacity-ranked roadmap
+  admission review is required before `NEXT`; a separate commitment review is required
+  before `NOW`.
 - Update the solution status to IN_DELIVERY when engineering starts
 
 **When adding new discovery items:**

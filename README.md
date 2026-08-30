@@ -10,6 +10,8 @@ It ships three things:
 
 Built on Teresa Torres's Continuous Discovery Habits and Marty Cagan's outcome-driven thinking.
 
+→ **[Scheduled Product Operating System](Scheduled%20Product%20Operating%20System.md)** — working design for turning the full playbook into asynchronous scheduled and event-driven workflows, including human-review packets, early-idea prototypes, decision routing, and safe automation gates.
+
 ---
 
 ## Quick start
@@ -107,6 +109,8 @@ Skills installed by `setup.sh` include:
 |---|---|
 | `integration-routing` | Resolves capability providers and validates named profiles/overrides |
 | `pm-setup` | Configures profiles, capability providers, connections, and provider-aware scaffolding |
+| `human-review-workflow` | Routes asynchronous product decisions, records responses, and safely resumes flows |
+| `delivery-completion-watcher` | Reconciles merged PRs and verified production delivery back into product, roadmap, and capacity state |
 | `pm-coach` | Thinking partner for discovery, OST review, experiment design |
 | `ost-workflow` | Build, extend, and health-check an Opportunity Solution Tree |
 | `pm-signal-synthesis` | Turn interviews, tickets, and reviews into OST-ready clusters |

@@ -1,25 +1,20 @@
 ---
 name: compass-resolver
 description: >
-  Autonomous job that finds the single highest-priority unclaimed item in Compass
-  (Roadmap NOW horizon first, falling back to a well-defined NEXT item promoted into NOW,
-  falling back to the top-voted untriaged feedback item), records a Solution Plan and a
-  Compass task breakdown for the work, implements a real fix in the compass repo end to
-  end (tests, typecheck, build), opens a PR, watches the preview deploy, and updates
-  Compass so the same item is never picked up twice. Use when running
-  the scheduled Compass Auto-Resolver cron job, or manually to pull and ship the next
-  top-priority item right now.
+  Autonomous delivery job that finds the highest-priority unclaimed Compass Roadmap NOW
+  item with recorded investment and commitment approval, records a Solution Plan and task
+  breakdown, implements one real fix end to end, opens a PR, watches the preview deploy,
+  and updates Compass so work is never duplicated. It never promotes NEXT items or raw
+  feedback. Use for the scheduled Compass Delivery Resolver or to implement the next
+  already-approved NOW item.
 ---
 
-# Compass Auto-Resolver
+# Compass Delivery Resolver
 
-Turns the top item in the Compass pipeline into a real, reviewable PR — no human has to
-manually assign the work. This is the "implementation" half of the loop; the
-`compass-feedback-triage` skill is the "intake" half (OPEN feedback → opportunities →
-roadmap). Run triage first if it hasn't run recently — this skill only *acts* on items
-that are already prioritized (roadmap NOW), clearly well-defined (NEXT, backfilled into
-NOW by this skill), or clearly high-signal (voted feedback); it does not do intake
-triage itself.
+Turns the top approved `NOW` item into a real, reviewable PR without requiring manual
+assignment. Discovery intake, opportunity focus, solution selection, experiments,
+investment gating, and roadmap commitment happen upstream. This skill does not infer
+approval from clarity, votes, or roadmap position alone.
 
 Note: this skill file is shared across every Compass workspace's resolver cron (Compass,
 Helio, HipTrip, Golden Wealth, FamilyLedger, ...). The org slug, workspace slug, and repo
@@ -32,17 +27,17 @@ workspace's behavior into this file.
 ## Scheduling — the cron and its empty-queue gate (per workspace)
 
 Each workspace runs this skill via its own daily `CronCreate` job named
-`<Workspace> Auto-Resolver` (`cwd` = the workspace's repo path; the prompt passes the org
+`<Workspace> Delivery Resolver` (`cwd` = the workspace's repo path; the prompt passes the org
 slug, workspace slug, and repo path). **Every resolver cron MUST carry a deterministic
 `gateCommand`** — without it the cron fires a full model turn every day just to discover an
 empty pipeline and report "queue empty", which is pure wasted tokens. The gate is a shell
 pre-check: exit `0` fires the run, any clean non-zero exit skips the cycle entirely (no
 thread, no LLM turn).
 
-The gate mirrors the Step 1 eligibility tiers below: **fire if the NOW roadmap has any
-item, OR the NEXT roadmap has any item, OR there is any OPEN feedback; skip only when all
-three are empty.** Set `gateFailOpen: true` (a network/auth blip should fire the run, not
-silently stall the resolver) and `gateTimeoutSeconds: 90`. It queries the Compass MCP HTTP
+The shell gate fires when the `NOW` roadmap has any item and skips when it is empty. The
+model-level eligibility filter still verifies approval and claim state. Set
+`gateFailOpen: true` (a network/auth blip should fire the run, not silently stall the
+resolver) and `gateTimeoutSeconds: 90`. It queries the Compass MCP HTTP
 endpoint with `$COMPASS_MCP_API_KEY` (already injected into the cron's shell env). Replace
 `<WORKSPACE_ID>` with the target workspace's UUID:
 
@@ -50,18 +45,17 @@ endpoint with `$COMPASS_MCP_API_KEY` (already injected into the cron's shell env
 WS=<WORKSPACE_ID>; U=https://compass.rbcodelabs.com/api/mcp
 c(){ curl -s -X POST "$U" -H "Authorization: Bearer $COMPASS_MCP_API_KEY" -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" --max-time 25 -d "$1" | sed 's/^data: //' | grep -E '^\{' | jq -r '.result.content[0].text // empty' 2>/dev/null; }
 now=$(c '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"list_roadmap_items","arguments":{"workspaceId":"'$WS'","horizon":"NOW"}}}');  echo "$now"  | grep -q 'No active roadmap items found' || exit 0
-next=$(c '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"list_roadmap_items","arguments":{"workspaceId":"'$WS'","horizon":"NEXT"}}}'); echo "$next" | grep -q 'No active roadmap items found' || exit 0
-fb=$(c '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"list_feedback","arguments":{"workspaceId":"'$WS'","status":"OPEN"}}}');       echo "$fb"   | grep -q 'No feedback found' || exit 0
 exit 1
 ```
 
 Notes:
-- The sibling `compass-feedback-triage` cron uses the same gate pattern but checks only the
-  single `list_feedback` / `OPEN` call (`No feedback found` → `exit 1`). Keep both gated.
-- The gate is intentionally conservative: it still fires when NOW/NEXT items exist even if
-  every one is already claimed (`🤖`) or shelved (`⚠️`), because reliably parsing those
-  emoji title markers in `bash` is fragile. That yields at most one near-no-op run in the
-  rare all-claimed state; the common genuinely-empty steady state — where nearly all the
+- The sibling `compass-feedback-triage` cron uses a separate gate that checks only
+  `list_feedback` / `OPEN`. The two flows do not feed directly into one another.
+- The gate is intentionally conservative: it still fires when NOW items exist even if
+  every one is already claimed (`🤖`), shelved (`⚠️`), or missing approval because parsing
+  cross-provider decision records and status markers in `bash` is fragile. That yields at
+  most one near-no-op run in the rare all-claimed state; the common genuinely-empty steady
+  state — where nearly all the
   waste was — is skipped cleanly. Don't try to out-clever this in the gate; the skill's
   Step 1 filter handles claimed/shelved items correctly once the run is inside the model.
 - When onboarding a new workspace's resolver cron, add this gate at creation time — it is
@@ -110,12 +104,15 @@ tasks are the ones that outlive the run.
 
 ---
 
-## Step 1 — Resolve workspace and pick the target item
+## Step 1 — Resolve routing, workspace, and target item
 
-1. Invoke the `compass` skill for the MCP tool catalog and data model if not already loaded.
-2. `list_workspaces(orgSlug: "rbcodelabs")` → get the `Compass` workspace's `workspaceId`.
-3. `list_roadmap_items(workspaceId, horizon: "NOW")`.
-4. **Eligibility filter**, in list order (list order = kanban priority order, top = highest):
+1. Read `pm-config.md`. Resolve `roadmap`, `ost`, and `delivery` plus the workflow
+   `decision_records` capability. Load `integration-routing` and the configured decision
+   adapter. A contract-v1 config or unavailable decision provider blocks delivery.
+2. Invoke the `compass` skill for the MCP tool catalog and data model if not already loaded.
+3. `list_workspaces(orgSlug: "rbcodelabs")` → get the target workspace's `workspaceId`.
+4. `list_roadmap_items(workspaceId, horizon: "NOW")`.
+5. **Eligibility filter**, in list order (list order = kanban priority order, top = highest):
    - Skip any item whose `title` already starts with `🤖` (claimed — see Step 2) or `⚠️`
      (previously attempted and skipped as unsuitable — see Edge cases). Both mean a
      previous run already made a final call on this item; don't re-litigate it silently
@@ -123,49 +120,17 @@ tasks are the ones that outlive the run.
    - For items with a linked `Opportunity`, call `get_opportunity(opportunityId)` and
      skip if its status is already `ACTIVE` (another run/human already claimed it) or if
      any of its solutions is `IN_DELIVERY` / `SHIPPED`.
+   - Verify the linked solution is `VALIDATED`. Implementation clarity is not validation.
+   - Query the configured decision-record provider for an applied Building-investment and
+     `NOW`-commitment decision covering this roadmap item and current source version. An
+     explicit standing policy may substitute only when it names this action class, risk
+     ceiling, and rollback path.
+   - Skip items with missing, stale, pending, or rejected approval. Report them as upstream
+     workflow gaps; do not create or assume the approval here.
    - The **first surviving item in list order is the target.**
-5. **NEXT-promotion tier** — only if Step 4 yields zero eligible NOW items. Backfills NOW
-   from the NEXT horizon instead of leaving it empty, without flooding NOW unsupervised:
-   - `list_roadmap_items(workspaceId, horizon: "NEXT")`, walk it top to bottom (list order
-     = kanban priority order, same as Step 4).
-   - Skip any item whose title already starts with `🤖` or `⬆️` (already claimed or
-     already promoted by a prior run). For items with a linked `Opportunity`, skip if its
-     status is `ACTIVE` or any solution is `IN_DELIVERY`/`SHIPPED` — same check as Step 4.
-   - **Well-defined checklist** — for each surviving item (in order), promote the first
-     one where ALL of these are true; otherwise move to the next item:
-     - Title + description alone specify the current-wrong-behavior and the correct-
-       behavior, with one reasonable implementation approach — not "audit X" or
-       "redesign Y".
-     - Scoped to a single subsystem/file area, not multi-system.
-     - Does NOT require provisioning, rotating, or handling a live secret or credential
-       (e.g. "Rotate all production secrets" never qualifies — leave it in NEXT for a
-       human).
-     - Does NOT require a product/UX decision among multiple valid designs (e.g. a vague
-       discoverability or IA item — leave it in NEXT).
-     - Is code work, not a documentation/design/strategy deliverable.
-   - If an item passes: `update_roadmap_item(itemId, horizon: "NOW", title: "⬆️ " +
-     originalTitle)`. The `⬆️` marker means "promoted, not yet claimed" — distinct from
-     the `🤖` claim marker in Step 2. **Do not proceed to Step 2 or beyond in this run.**
-     This tier only promotes; it does not implement. Skip straight to Step 9 and report
-     the promotion (source tier: `NEXT-promoted`) so a human sees what's about to be
-     picked up. The *next* scheduled resolver run will find this item via the normal
-     Step 4 NOW eligibility filter (its `⬆️` title doesn't match the `🤖` skip pattern)
-     and claim/implement it exactly like any human-curated NOW item — see the marker
-     note in Step 2 for how the rename is handled then.
-   - If nothing in NEXT clears the checklist, fall through to the feedback fallback tier
-     (Step 6).
-6. **Feedback fallback tier** — only if Steps 4 and 5 yield zero eligible items:
-   - `list_feedback(workspaceId, status: "OPEN")` and, if empty, also check `status: "PLANNED"`
-     items whose linked opportunity is still `EXPLORING`/`VALIDATING` with no roadmap item yet.
-   - Rank by `voteCount` descending. Take the top one as the target-to-promote.
-   - If it's typed `BUG`: `promote_feedback_to_roadmap(feedbackId, horizon: "NOW")` directly.
-   - If it's typed `IDEA` and has no linked opportunity yet: create one (`create_opportunity`
-     → `add_solution` → `add_assumption` with the riskiest testable assumption), then
-     `promote_to_roadmap(solutionId, horizon: "NOW")`, then `link_feedback_to_opportunity`.
-   - Re-fetch the new roadmap item's ID and continue at Step 2 as if it came from Step 4.
-   - If **all three tiers are empty** (no NOW items, no promotable NEXT item, no OPEN/PLANNED
-     feedback with signal): do nothing. Report "queue empty, no action taken" and end the
-     run. Do not invent work.
+6. If no eligible approved item remains, do nothing. Report `queue empty or awaiting
+   upstream approval` with the skipped item IDs and missing gate. Do not inspect `NEXT`,
+   inspect raw feedback, promote anything, or invent work.
 
 ## Step 2 — Claim it before writing any code
 
@@ -179,10 +144,7 @@ description field. Use only fields you already have and can set outright:
    duplicate. Fix the Compass claim marker instead (title prefix + opportunity status) and
    move to the next eligible item.
 2. Rename the roadmap item using the **exact title you already fetched**, prefixed:
-   `update_roadmap_item(itemId, title: "🤖 " + originalTitle)`. If the fetched title already
-   starts with `⬆️ ` (this item was promoted from NEXT by a prior Step 1.5 run — see Step 1
-   tier 5), strip that marker first so the final title is `"🤖 " + originalTitle` without a
-   leftover `⬆️`, not a double-marked title.
+   `update_roadmap_item(itemId, title: "🤖 " + originalTitle)`.
 3. If the item has a linked opportunity: `update_opportunity_status(opportunityId, status: "ACTIVE")`.
 4. These two calls ARE the claim. They must both succeed before you write a single line of
    code. If either fails, stop and report — do not proceed silently.
@@ -212,12 +174,14 @@ cross-check reliable later.
    tool handlers extracted into `lib/` for testability.
 3. **Record the plan and task breakdown in Compass** — the team-facing mirror of your
    internal `TaskCreate` list, not a replacement for it:
-   - **Solution Plan.** Once you've read enough to commit to an approach, and the item has
-     a linked solution (from 4.1), call `add_solution_plan(solutionId, ...)` with a concise
-     plan: the approach, the files/subsystems you'll touch, the test you'll add, and any
-     migration. This becomes the pinned "current plan" on the Solution; a fresh
-     `add_solution_plan` supersedes any prior one. **Do NOT call `approve_solution_plan`** —
-     approval is a human gate, exactly like merge (guardrail #2).
+   - **Solution Plan.** If a current approved plan already covers the implementation, use
+     it. Otherwise call `add_solution_plan(solutionId, ...)` with the approach, affected
+     subsystems, tests, migration, alternatives, and tradeoffs. Invoke
+     `human-review-workflow` with gate type `design-direction`, persist the review request,
+     and end `AWAITING_DECISION` before writing code. **Do NOT call
+     `approve_solution_plan`**; the decision router applies that continuation after human
+     approval. The next resolver run may proceed only when the approval record covers the
+     current plan version.
    - **Compass tasks.** Break the work into `create_task` items (one per meaningful unit —
      e.g. "write failing test", "implement fix", "update MCP docs"), each with a sensible
      `priority`; for a multi-part item use `parentTaskId` for an Epic→subtask shape. Link
@@ -259,6 +223,11 @@ tools need unit tests in `__tests__/` and a docs update in `docs/content/09-mcp-
 3. Move the Compass task(s) created in Step 4 to `IN_REVIEW` via `move_task_status` now
    that the PR is open. Do NOT move them to `DONE` — that's the human's call on merge, same
    as the PR itself.
+4. Write reciprocal delivery linkage to every covered Compass Task using `update_task`:
+   PR URL/number, repository, head branch, current commit, Roadmap Item ID, Solution ID,
+   and all covered Task IDs. Add the same stable IDs to the PR body. If a linked Solution
+   exists, add one Solution discussion comment with the PR URL and linkage receipt. Title
+   matching is not a durable link.
 
 ## Step 7 — Watch the deploy and smoke-test (standing approval, no need to ask)
 
@@ -267,59 +236,37 @@ the Vercel preview deploy, smoke-test the affected flow, note the preview URL in
 Only interrupt/flag to the user if something is actually broken (failed deploy, route
 errors, migration needed) — otherwise this is silent, expected background work.
 
-## Step 8 — Update Compass with the outcome
+## Step 8 — Hand off completion
 
-- Append the PR URL to the roadmap item title is already done (Step 2); no further title
-  change needed.
-- If a new opportunity/solution was created in the fallback tier, leave status `ACTIVE`
-  (already set in Step 2) — do not move it to `ARCHIVED`; that's for after merge+ship,
-  which is a human/future-run decision, not this run's.
-- If the run pulled from the feedback fallback tier, the feedback item is already
-  `PLANNED` (via `link_feedback_to_opportunity`/`promote_feedback_to_roadmap`) — no
-  further status change needed.
+Invoke or dispatch `delivery-completion-watcher` with the PR and linked Compass IDs. The
+resolver leaves Tasks `IN_REVIEW`, the Roadmap Item in `NOW`, and the Solution in
+`IN_DELIVERY`; only a later observed human merge plus verified production behavior may
+advance them. A preview deployment is evidence for review, not permission to mark shipped.
 
 ## Step 9 — Report and notify
 
 End every run with a short report:
-- Item picked (title, ID, source tier: `NOW` / `NEXT-promoted` / `feedback-fallback`), or
-  "queue empty."
-- What changed (files, approach) and why. For a `NEXT-promoted` run: which item passed the
-  well-defined checklist and why, plus which NEXT items (if any) were passed over and why
-  they didn't qualify.
+- Item picked (title and ID from approved `NOW`), `AWAITING_DECISION`, or "queue empty or
+  awaiting upstream approval."
+- Approval record IDs and source-version checks.
+- What changed (files, approach) and why.
 - Compass artifacts recorded: whether a Solution Plan was added, and the Compass task IDs
   created with their current statuses.
 - Verification results actually observed (test/build/tsc, E2E if run).
 - PR URL, preview URL, smoke-test result.
 - Anything skipped and why (ambiguous scope, needs a secret, needs a product decision).
 
-**Notification is Compass itself plus a vault note — there is no separate push
-notification for this skill.** Compass's roadmap board is the primary signal (item sitting
-in NOW with a `⬆️` or `🤖` marker tells you exactly what state it's in at a glance). On top
-of that, for any run that *did* something (PR opened, item promoted, or an item explicitly
-skipped with a reason) — but NOT for a pure "queue empty, zero action" no-op — also apply
-the user's standing Obsidian Daily Note Rule:
-
-1. Write a short outcome note to
-   `~/Documents/Personal/Products/Compass/Runs/<workspace-slug>-YYYY-MM-DD-resolver.md`
-   (use the actual run date; if a note already exists at that path for today from an
-   earlier run this same day, append to it rather than overwriting). Content: item
-   title/ID, source tier, outcome (promoted-only / PR opened / skipped-with-reason), and
-   any PR/preview links.
-2. Add a wikilink to that note under today's daily note
-   (`~/Documents/Personal/Daily/YYYY-MM-DD.md`) in its `## Claude Sessions` section
-   (create the section, or the whole daily note from the weekday template, if missing) —
-   e.g. `- [[Products/Compass/Runs/golden-wealth-2026-07-21-resolver|Compass Resolver —
-   Golden Wealth: promoted "Fix layout width mismatch" to NOW]]`.
-
-This is how a `NEXT-promoted` run gets surfaced to a human before the following day's run
-implements it — there is no approval gate beyond this visibility; if the promotion looks
-wrong, pull the item back to NEXT (or reject the eventual PR) before/after the next run.
+Write run outcomes to the resolved `reporting_archive` provider. If a design decision is
+needed, `human-review-workflow` owns the request and notification through configured
+providers. Do not hardcode an Obsidian vault, daily-note path, or notification channel.
+Pure no-op runs create neither a report nor a notification unless automation-health policy
+requires one.
 
 ## Edge cases
 
-- **Roadmap NOW item has no linked opportunity** (e.g. "Marketing Site" — a pure
-  execution task, not tied to the OST): still eligible. Skip the opportunity-status claim
-  in Step 2 (nothing to update) and rely on the title-prefix marker alone.
+- **Roadmap NOW item has no linked opportunity or validated solution:** not ordinarily
+  eligible. It may proceed only under an explicit standing execution policy that covers
+  the action class, risk, and rollback path; otherwise report the missing upstream gate.
 - **Ambiguous or too-large item** (e.g. spans multiple files/systems, unclear acceptance
   criteria): do not force it into one PR. Either scope down to the smallest real slice of
   the item and say so explicitly in the report, or skip per guardrail #3.
@@ -327,13 +274,6 @@ wrong, pull the item back to NEXT (or reject the eventual PR) before/after the n
   pattern to follow): skip per guardrail #3 rather than guessing — flag it in the report
   as needing human input, and apply the `⚠️` marker (not `🤖`) so a human or a future
   `EnterPlanMode` session can pick it up properly, and future runs don't re-attempt it.
-- **A `⬆️`-marked NOW item turns out to be unsuitable on the next run** (e.g. deeper
-  investigation in Step 4 reveals it's actually ambiguous or touches a secret): this is
-  expected — the well-defined checklist in Step 1 tier 5 is a lightweight pre-filter, not
-  a guarantee. Treat it exactly like any other NOW item that fails guardrail #3: skip it,
-  report why, and relabel it `⚠️` (replacing the `⬆️`) rather than silently demoting it
-  back to NEXT — a human should make that call on where it belongs.
 - **Two resolver runs for different workspaces race on the same day**: not a conflict —
-  each workspace has its own `workspaceId` and its own roadmap/feedback data, so tiers are
-  evaluated independently per workspace. The shared vault note path is namespaced by
-  `<workspace-slug>` for the same reason.
+  each workspace has its own `workspaceId`, roadmap, and routed decision records. Claims
+  and idempotency keys are evaluated independently per workspace.

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agentic PM workflow profiles",
+  "type": "object",
+  "required": ["version", "profiles"],
+  "properties": {
+    "version": { "const": 1 },
+    "profiles": {
+      "type": "object",
+      "required": ["compass-native-review", "geode-obsidian-review", "local-markdown-review"],
+      "additionalProperties": { "$ref": "#/$defs/profile" }
+    }
+  },
+  "$defs": {
+    "profile": {
+      "type": "object",
+      "required": ["description", "providers"],
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string", "minLength": 1 },
+        "providers": {
+          "type": "object",
+          "required": ["automation_runtime", "review_requests", "decision_records", "notifications", "prototype_artifacts", "product_analytics"],
+          "additionalProperties": false,
+          "properties": {
+            "automation_runtime": { "type": "string", "minLength": 1 },
+            "review_requests": { "type": "string", "minLength": 1 },
+            "decision_records": { "type": "string", "minLength": 1 },
+            "notifications": { "type": "string", "minLength": 1 },
+            "prototype_artifacts": { "type": "string", "minLength": 1 },
+            "product_analytics": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    }
+  }
+}
