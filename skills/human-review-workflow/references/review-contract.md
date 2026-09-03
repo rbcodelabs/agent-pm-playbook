@@ -1,7 +1,17 @@
 # Review Request Contract
 
-Use this contract for every provider. Provider-native fields may differ, but adapters must
-preserve these semantics.
+Provider-native fields may differ. Every provider preserves stable identity, source
+context, immutable response history, and human authorship. The full application contract
+below applies only to action-capable adapters.
+
+## Tracking-only providers
+
+A tracking-only provider needs a stable request/idempotency key, linked source identity,
+question and context, pending/decided state, allowed outcomes, reviewer/rationale, and
+immutable revision identity. Every outcome maps to `NO_ACTION`; application status,
+continuation dispatch, and `mark_applied` are intentionally absent. A later workflow may
+use the recorded judgment as context, but must rely on its own pre-existing authority and
+validation before any mutation.
 
 ## Required request fields
 

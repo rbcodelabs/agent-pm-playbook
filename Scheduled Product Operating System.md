@@ -16,7 +16,7 @@ Implemented in the playbook repository:
 - provider-neutral `human-review-workflow` with durable create, apply, digest, stale-source,
   and idempotency rules;
 - Obsidian/Markdown review-request adapter contract and packet template;
-- Compass no-schema Task review adapter with explicit finalization and receipts;
+- Compass Decisions adapter for tracking-only requests and immutable human responses;
 - capacity policy plus separate validation, `NEXT` admission, and `NOW` commitment gates;
 - Compass feedback triage narrowed to evidence intake and review routing;
 - Compass delivery resolver narrowed to approved `NOW` work;
@@ -28,7 +28,7 @@ Still to implement against live systems:
 
 - concrete Geode scheduling, dispatch, and notification adapter calls;
 - a running decision-router watcher rather than skill-level procedure alone;
-- first-class native review and immutable decision objects beyond the Compass no-schema pilot;
+- action-capable adapters for teams that explicitly need transactional continuations;
 - prototype generation/publishing adapters;
 - analytics adapters and the adoption/outcome watcher;
 - remaining scheduled flows in Sections 8 and 11.
@@ -75,8 +75,12 @@ When a workflow reaches a human gate, it must:
 1. Persist everything it has completed to the authoritative provider.
 2. Create a durable review request with a stable ID.
 3. Put a compact review packet in the configured `review_requests` provider.
+   When that provider is `compass_decisions`, use the resolved decision provider for the
+   request and immutable response. The result is tracking-only: it does not expand the
+   workflow's pre-existing authority or automatically apply any action.
 4. Notify the reviewer with a direct link to that packet.
-5. Record the exact continuation action that each decision would authorize.
+5. For tracking-only providers, record `NO_ACTION`; for action-capable providers, record
+   the exact continuation each response authorizes.
 6. End the current run successfully with status `AWAITING_DECISION`.
 
 A separate **decision router** detects the completed review through its provider adapter,
@@ -232,8 +236,8 @@ capabilities, not brands.
 
 | Adapter | Minimum operations |
 |---|---|
-| Review requests | `create`, `get`, `list_pending`, `update_response`, `mark_applied`, `deep_link` |
-| Decision records | `record`, `get_by_review`, `verify_not_applied` |
+| Review requests | All adapters: `create`, `get`, `list_pending`, `deep_link`; action-capable adapters may add `update_response`, `mark_applied` |
+| Decision records | Tracking-only: `get_by_review`; action-capable adapters may add `record`, `verify_not_applied` |
 | Notifications | `send_request`, `send_reminder`, `send_digest`, `send_escalation` |
 | Prototype artifacts | `publish`, `version`, `deep_link`, `archive` |
 | Automation runtime | `schedule`, `dispatch`, `gate`, `retry`, `get_run_status` |
@@ -449,7 +453,7 @@ approvals without applying them. A parent `updatedAt` is not a sufficient versio
 because child creation may not update it. Downstream mutation begins only after an explicit
 finalization event.
 
-For the no-schema Compass pilot, no new control is required: `IN_REVIEW` means the reviewer
+For the legacy no-schema Compass pilot, no new control is required: `IN_REVIEW` means the reviewer
 is still editing, and the human transition to `DONE` is the explicit finalization event.
 The resolver applies a `DONE` Product Review Task only when it has no application receipt;
 successful retries are no-ops, and failures move the Task to `BLOCKED`.

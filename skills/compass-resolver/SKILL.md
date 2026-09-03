@@ -107,8 +107,12 @@ tasks are the ones that outlive the run.
 ## Step 1 — Resolve routing, workspace, and target item
 
 1. Read `pm-config.md`. Resolve `roadmap`, `ost`, and `delivery` plus the workflow
-   `decision_records` capability. Load `integration-routing` and the configured decision
+   `decision_records` capability. Load `integration-routing` and the configured decision provider's
    adapter. A contract-v1 config or unavailable decision provider blocks delivery.
+   When implementation direction is genuinely ambiguous, create a request through the
+   configured human-decision provider and stop `AWAITING_DECISION`. Its outcome does not
+   grant delivery, merge, or deployment authority; the resolver continues only within its
+   pre-existing authority after rechecking the normal eligibility gates.
 2. Invoke the `compass` skill for the MCP tool catalog and data model if not already loaded.
 3. `list_workspaces(orgSlug: "rbcodelabs")` → get the target workspace's `workspaceId`.
 4. `list_roadmap_items(workspaceId, horizon: "NOW")`.
@@ -121,12 +125,11 @@ tasks are the ones that outlive the run.
      skip if its status is already `ACTIVE` (another run/human already claimed it) or if
      any of its solutions is `IN_DELIVERY` / `SHIPPED`.
    - Verify the linked solution is `VALIDATED`. Implementation clarity is not validation.
-   - Query the configured decision-record provider for an applied Building-investment and
-     `NOW`-commitment decision covering this roadmap item and current source version. An
-     explicit standing policy may substitute only when it names this action class, risk
-     ceiling, and rollback path.
-   - Skip items with missing, stale, pending, or rejected approval. Report them as upstream
-     workflow gaps; do not create or assume the approval here.
+   - Confirm the item is already in `NOW` and that the current run has explicit delivery
+     authority under the configured standing policy or a direct human instruction. A
+     generic tracked decision is context, not an executable authorization.
+   - Skip items with missing or ambiguous authority. Report them as upstream workflow gaps;
+     do not create or assume permission here.
    - The **first surviving item in list order is the target.**
 6. If no eligible approved item remains, do nothing. Report `queue empty or awaiting
    upstream approval` with the skipped item IDs and missing gate. Do not inspect `NEXT`,
@@ -179,9 +182,9 @@ cross-check reliable later.
      subsystems, tests, migration, alternatives, and tradeoffs. Invoke
      `human-review-workflow` with gate type `design-direction`, persist the review request,
      and end `AWAITING_DECISION` before writing code. **Do NOT call
-     `approve_solution_plan`**; the decision router applies that continuation after human
-     approval. The next resolver run may proceed only when the approval record covers the
-     current plan version.
+     `approve_solution_plan`** as a side effect of the decision. The next resolver run may
+     read the exact tracked outcome, then proceed only if its pre-existing delivery authority
+     independently permits implementation of the current plan version.
    - **Compass tasks.** Break the work into `create_task` items (one per meaningful unit —
      e.g. "write failing test", "implement fix", "update MCP docs"), each with a sensible
      `priority`; for a multi-part item use `parentTaskId` for an Epic→subtask shape. Link

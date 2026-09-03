@@ -20,6 +20,11 @@ Read `pm-config.md` and resolve `roadmap`, `ost`, `delivery`, `insights`,
 `delivery_completion_policy`. Missing production verification or launch policy blocks a
 shipped claim; it never defaults to success.
 
+Route any ambiguous release classification or lifecycle judgment through the resolved decision provider
+and stop for the human response. A tracking-only outcome does not grant merge, deployment,
+rollback, or state-mutation authority; this watcher retains its existing authority boundary
+and may only reconcile independently observed events.
+
 Use `scripts/decide-completion.ts` after collecting the source snapshot. The script makes
 the state decision deterministic; provider adapters perform the returned actions.
 

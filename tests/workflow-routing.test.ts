@@ -106,30 +106,45 @@ test("human review skill is provider-neutral and ends unattended runs", () => {
   assert.ok(existsSync("skills/human-review-workflow/references/compass-native-pilot.md"));
 });
 
-test("Compass-native pilot uses Tasks for review without pretending Plan status is a generic decision record", () => {
+test("Compass-native review resolves both decision capabilities to tracking-only Compass decisions", () => {
   const profiles = loadWorkflowProfiles("skills/integration-routing/assets/workflow-profiles.json");
   const providers = profiles.profiles["compass-native-review"].providers;
-  assert.equal(providers.review_requests, "compass_tasks");
-  assert.equal(providers.decision_records, "compass_solution_plan_status");
-  const adapter = readFileSync("skills/human-review-workflow/references/compass-native-pilot.md", "utf8");
-  assert.match(adapter, /concept-direction selection, portfolio admission,\s*validation authorization, or exact `NEXT` admission/is);
-  assert.match(adapter, /does not satisfy the immutable\s+generic decision-record contract/is);
-  assert.match(adapter, /Do not update\s+it to `VALIDATED`, promote it to the roadmap, create delivery\s+tasks, or write code/is);
-  assert.match(adapter, /execution collision/i);
-  assert.match(adapter, /automation_runtime/);
-  assert.match(adapter, /ALREADY_IN_PROGRESS/);
-  assert.match(adapter, /selection_mode: single/);
-  assert.match(adapter, /selection_mode: multiple/);
-  assert.match(adapter, /horizon to `LATER`/);
-  assert.match(adapter, /validation_design/);
-  assert.match(adapter, /Leave the linked Roadmap Item in `LATER`/);
-  assert.match(adapter, /the proposed after-count does not exceed `next_limit`/);
-  assert.match(adapter, /make no additive promotion/);
-  assert.match(adapter, /Reconcile an open review/);
-  assert.match(adapter, /whole parent Opportunity/);
-  assert.match(adapter, /apply nothing/i);
-  assert.match(adapter, /`IN_REVIEW` means open for edits and `DONE` means finalized/);
-  assert.match(adapter, /`DONE` without an application receipt/);
+  assert.equal(providers.review_requests, "compass_decisions");
+  assert.equal(providers.decision_records, "compass_decisions");
+  const adapter = readFileSync("skills/human-review-workflow/references/compass-decisions-adapter.md", "utf8");
+  for (const tool of ["request_decision", "list_decisions", "get_decision"]) assert.match(adapter, new RegExp(`\\b${tool}\\b`));
+  assert.match(adapter, /Approve.*Request changes.*Reject/is);
+  assert.match(adapter, /NO_ACTION/);
+  assert.match(adapter, /AWAITING_DECISION/);
+  assert.match(adapter, /only.*human.*admin.*decide/is);
+  assert.match(adapter, /does not expand.*authority/is);
+  assert.match(adapter, /current revision/is);
+  assert.match(adapter, /preserve.*history/is);
+  assert.doesNotMatch(adapter, /NOW|signed[ -]policy|capacity/i);
+});
+
+test("tracking-only decisions stop for a human and never auto-apply approval", () => {
+  const review = readFileSync("skills/human-review-workflow/SKILL.md", "utf8");
+  assert.match(review, /tracking-only/i);
+  assert.match(review, /create or reuse.*request/is);
+  assert.match(review, /return `AWAITING_DECISION`.*end/is);
+  assert.match(review, /approval.*does not.*auto/i);
+  assert.match(review, /pre-existing authority/i);
+  assert.match(review, /action-capable/i);
+});
+
+test("affected scheduled workflows route judgment without widening execution authority", () => {
+  for (const path of [
+    "skills/roadmap-workflow/SKILL.md",
+    "skills/compass-feedback-triage/SKILL.md",
+    "skills/compass-resolver/SKILL.md",
+    "skills/delivery-completion-watcher/SKILL.md",
+    "Scheduled Product Operating System.md",
+  ]) {
+    const contents = readFileSync(path, "utf8");
+    assert.match(contents, /configured (?:human-)?decision provider|resolved decision provider/i, path);
+    assert.match(contents, /does not (?:expand|grant).*authority|existing authority boundary|pre-existing authority/i, path);
+  }
 });
 
 test("review contract requires stale-decision and duplicate-application protection", () => {
@@ -175,7 +190,7 @@ test("Compass intake and delivery no longer bypass human investment gates", () =
   assert.match(triage, /Intake does not add a solution, solution plan, assumption, or\s+roadmap item/is);
   assert.match(triage, /human-review-workflow/);
   assert.match(resolver, /It never promotes NEXT items or raw\s+feedback/is);
-  assert.match(resolver, /applied Building-investment and\s+`NOW`-commitment decision/is);
+  assert.match(resolver, /generic tracked decision is context, not an executable authorization/is);
   assert.doesNotMatch(resolver, /NEXT-promotion tier/);
   assert.doesNotMatch(resolver, /Feedback fallback tier/);
 });

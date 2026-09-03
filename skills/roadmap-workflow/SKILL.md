@@ -68,6 +68,12 @@ chainTo:
 
 Before reading or writing state, read `pm-config.md` and resolve the `roadmap` capability through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Confirm exactly one authoritative provider. Use its workflow for persistence; do not silently create Markdown. Any secondary artifact must be labeled `inbox`, `export`, `cache`, or `snapshot`. Resolve `delivery` separately when creating execution work. For Compass roadmap or Compass Tasks, invoke `compass-workflow` and preserve stable cross-object links.
 
+When prioritization, displacement, scope, or another ambiguous judgment needs a human,
+resolve `review_requests` and `decision_records` and route it through the configured decision provider.
+A tracking-only decision records the call but does not grant execution authority
+or mutate the roadmap; apply a roadmap change only under the workflow's existing authority
+boundary and after its normal validations.
+
 Roadmap evidence and capacity gates are provider-neutral. Read `portfolio_policy` from
 `pm-config.md` before recommending or applying a horizon change. Markdown files below are
 only that adapter. Create execution work through the separately resolved `delivery`

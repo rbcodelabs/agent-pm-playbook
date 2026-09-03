@@ -62,6 +62,8 @@ description: >-
 - Overrides replace a profile default for one capability without changing the named profile.
 - Notification fallbacks must be explicit because notification channels do not own product state.
 - Product and workflow profiles resolve independently; do not invent combined profiles for every tool combination.
+- A workflow provider declares whether decisions are tracking-only or action-capable.
+  Tracking-only decisions record human judgment but never mutate product or delivery state.
 - Validation authorization leaves roadmap candidates in `LATER`. `NEXT` is a validated,
   ranked, capacity-limited queue and `NOW` is a separately approved commitment.
 

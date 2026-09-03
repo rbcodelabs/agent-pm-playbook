@@ -109,7 +109,7 @@ Skills installed by `setup.sh` include:
 |---|---|
 | `integration-routing` | Resolves capability providers and validates named profiles/overrides |
 | `pm-setup` | Configures profiles, capability providers, connections, and provider-aware scaffolding |
-| `human-review-workflow` | Routes asynchronous product decisions, records responses, and safely resumes flows |
+| `human-review-workflow` | Routes asynchronous product decisions, including tracking-only Compass Decisions that stop for human judgment without auto-applying actions |
 | `delivery-completion-watcher` | Reconciles merged PRs and verified production delivery back into product, roadmap, and capacity state |
 | `pm-coach` | Thinking partner for discovery, OST review, experiment design |
 | `ost-workflow` | Build, extend, and health-check an Opportunity Solution Tree |

@@ -29,13 +29,13 @@ product state lives.
 
 ## compass-native-review
 
-For the no-schema concept-review pilot, Compass Tasks is the review inbox. The flow creates
-an `IN_REVIEW` Task linked to one Opportunity and two or three candidate Solutions. Each
-Solution has a PENDING Plan; approving exactly one Plan selects the direction. The router
-checks source versions, records a pilot receipt as a Solution comment, starts assumption
-mapping/experiment design, and moves the review Task to DONE. It never promotes the
-Solution or starts delivery. Because Plan status is not an immutable generic decision
-record, this profile is limited to the pilot until native review models exist.
+Compass Decisions is the tracking-only review inbox and immutable decision history. The
+flow calls `request_decision`, ends `AWAITING_DECISION`, and later reads the exact request
+and current revision with `get_decision`. Approval records human judgment but does not
+automatically mutate product state or expand the agent's authority.
+
+The older Task/Solution Plan flow remains an explicitly legacy compatibility adapter for
+existing installations. New `compass-native-review` configurations do not route to it.
 
 ## geode-obsidian-review
 
