@@ -156,7 +156,18 @@ test("affected scheduled workflows route judgment without widening execution aut
   assert.match(roadmap, /only an action-capable adapter.*apply/is);
   const operatingSystem = readFileSync("Scheduled Product Operating System.md", "utf8");
   assert.match(operatingSystem, /tracking-only.*records and reports.*never starts/is);
+  assert.match(operatingSystem, /tracking-only reviews.*NO_ACTION.*stop/is);
+  assert.match(operatingSystem, /only action-capable reviews.*selection_mode/is);
   assert.doesNotMatch(operatingSystem, /same continuation semantics/i);
+});
+
+test("roadmap promotion never treats a tracking-only approval as mutation authority", () => {
+  const roadmap = readFileSync("skills/roadmap-workflow/SKILL.md", "utf8");
+  const promotion = roadmap.split("### Promoting an item")[1]?.split("## Procedure 3")[0] ?? "";
+  assert.match(promotion, /tracking-only.*context only/is);
+  assert.match(promotion, /cannot trigger.*queue mutation/is);
+  assert.match(promotion, /action-capable adapter|separately established authority/i);
+  assert.match(promotion, /re-read.*validation/is);
 });
 
 test("Compass request recovery uses the persisted idempotency key, never list discovery", () => {

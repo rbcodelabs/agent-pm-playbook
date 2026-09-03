@@ -304,8 +304,12 @@ Moving an item between horizons (Later to Next, Next to Now):
 3. For `NEXT → NOW`, require an available `now_limit` slot, target date, delivery owner,
    dependency readiness, and a current execution-collision preflight. If full, the review
    must name the displaced or completed item. This is a separate `NOW` commitment decision.
-4. Apply only the exact approved queue mutation, update the summary, and record before/after
-   counts, ranks, displaced IDs, decision ID, and an idempotency receipt.
+4. A tracking-only decision is context only and cannot trigger an approved queue mutation.
+   Mutation requires either an explicitly action-capable adapter or separately established
+   authority for this exact change. In either case, re-read the horizon and repeat every
+   current validation immediately before applying the exact mutation. Then update the summary
+   and record before/after counts, ranks, displaced IDs, authority evidence, and an idempotency
+   receipt.
 5. Validation approval by itself never runs this procedure; the item remains in `LATER`.
 
 ## Procedure 3 — Quarterly Roadmap Review

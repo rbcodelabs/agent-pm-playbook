@@ -447,19 +447,23 @@ Low-risk, reversible maintenance can be pre-authorized by policy. The policy mus
 allowed action, scope, risk ceiling, and rollback path; the agent may not infer standing
 approval merely because similar work was previously approved.
 
-Every review declares `selection_mode: single | multiple`. Single-select gates choose one
-mutually exclusive continuation. Multi-select gates accept any subset and apply each
-approved continuation idempotently. Approval to preserve an idea creates or reuses a
-`LATER` roadmap candidate; it never silently means `NEXT`, `NOW`, or permission to build.
-Approval to validate likewise leaves the candidate in `LATER`. `NEXT` means validated and
-capacity-ranked, not merely interesting or inexpensive to test.
+Tracking-only reviews record and report `NO_ACTION`, then stop. They do not require
+application-oriented selection or continuation fields. Only action-capable reviews declare
+`selection_mode: single | multiple`: single-select gates choose one mutually exclusive
+continuation, while multi-select gates accept a subset and apply each approved continuation
+idempotently under existing authority. Only an action-capable adapter may create or reuse a
+`LATER` roadmap candidate as that declared effect. It never silently means `NEXT`, `NOW`, or
+permission to build. Validation continuation likewise leaves the candidate in `LATER`.
+Approval to validate likewise leaves the candidate in `LATER` for action-capable adapters.
+`NEXT` means validated and capacity-ranked, not merely interesting or inexpensive to test.
 
-Reviews also separate **responding** from **finalizing**. While a review is open, the review
-steward re-reads the complete parent object and all child options, discussions, and Plans;
-it incorporates comments, links newly added options, revises packets, and preserves
-approvals without applying them. A parent `updatedAt` is not a sufficient version check
-because child creation may not update it. Downstream mutation begins only after an explicit
-finalization event.
+Action-capable reviews also separate **responding** from **finalizing**. While one is open,
+the review steward re-reads the complete parent object and all child options, discussions,
+and Plans; it incorporates comments, links newly added options, revises packets, and
+preserves approvals without applying them. A parent `updatedAt` is not a sufficient version
+check because child creation may not update it. For an action-capable adapter, downstream
+mutation begins only after an explicit finalization event and a current authority check.
+Tracking-only reviews never enter this application path.
 
 For the legacy no-schema Compass pilot, no new control is required: `IN_REVIEW` means the reviewer
 is still editing, and the human transition to `DONE` is the explicit finalization event.
