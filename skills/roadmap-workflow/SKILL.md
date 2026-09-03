@@ -401,17 +401,19 @@ the roadmap because a candidate sounds promising.
    work; delivery work; agent runs; branches; and pull requests. Record a collision
    fingerprint and before-counts.
 3. For each unvalidated candidate worth investigating, recommend `VALIDATE_IN_LATER` and
-   create a validation-authorization review. Approval dispatches the prototype or
-   experiment-design task without changing its horizon.
+   create a validation-authorization review. A tracking-only provider never dispatches the
+   prototype or experiment-design task after approval; read and report it, then stop. Only
+   an action-capable adapter may dispatch that continuation under existing authority.
 4. For each `VALIDATED` candidate, compare it with every `NEXT` item. Recommend
    `ADMIT_TO_NEXT_AT_RANK` only when the queue is below `next_limit`; otherwise recommend
    `REPLACE_NEXT_ITEM` with named displacement IDs. Missing capacity or rank data means
    `KEEP_LATER`.
 5. Recommend `COMMIT_TO_NOW` only through the separate commitment gate with an available
    `now_limit` slot, owner, dependencies, dates, and current collision check.
-6. Reconcile open reviews without applying partial responses. On finalization, re-read the
-   queue fingerprint, apply only the exact approved mutation, record an idempotent receipt,
-   and dispatch the next eligible flow.
+6. Reconcile open reviews without applying partial responses. With a tracking-only provider,
+   read and report the final outcome and stop without mutation. Only an action-capable adapter
+   may re-read the queue fingerprint, apply the exact approved mutation, record an idempotent
+   receipt, and dispatch the next eligible flow under existing authority.
 7. End cleanly when no material evidence, capacity, ordering, or status changed. Do not
    create a recurring review about an unchanged queue.
 

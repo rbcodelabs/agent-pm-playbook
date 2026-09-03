@@ -131,6 +131,12 @@ test("tracking-only decisions stop for a human and never auto-apply approval", (
   assert.match(review, /approval.*does not.*auto/i);
   assert.match(review, /pre-existing authority/i);
   assert.match(review, /action-capable/i);
+  for (const mode of ["Concept Direction", "Portfolio Admission", "Validation Authorization", "`NEXT` Admission"]) {
+    const section = review.split(`— ${mode} Review`)[1]?.split(/\n## /)[0] ?? "";
+    assert.match(section, /tracking-only/i, mode);
+    assert.match(section, /stop/i, mode);
+    assert.match(section, /action-capable/i, mode);
+  }
 });
 
 test("affected scheduled workflows route judgment without widening execution authority", () => {
@@ -145,6 +151,28 @@ test("affected scheduled workflows route judgment without widening execution aut
     assert.match(contents, /configured (?:human-)?decision provider|resolved decision provider/i, path);
     assert.match(contents, /does not (?:expand|grant).*authority|existing authority boundary|pre-existing authority/i, path);
   }
+  const roadmap = readFileSync("skills/roadmap-workflow/SKILL.md", "utf8");
+  assert.match(roadmap, /tracking-only.*never dispatches/is);
+  assert.match(roadmap, /only an action-capable adapter.*apply/is);
+  const operatingSystem = readFileSync("Scheduled Product Operating System.md", "utf8");
+  assert.match(operatingSystem, /tracking-only.*records and reports.*never starts/is);
+  assert.doesNotMatch(operatingSystem, /same continuation semantics/i);
+});
+
+test("Compass request recovery uses the persisted idempotency key, never list discovery", () => {
+  const adapter = readFileSync("skills/human-review-workflow/references/compass-decisions-adapter.md", "utf8");
+  assert.match(adapter, /persist.*request ID/is);
+  assert.match(adapter, /uncertain create response.*retry `request_decision`.*same.*idempotency/is);
+  assert.match(adapter, /`list_decisions`.*never.*exact.*recover/is);
+  assert.doesNotMatch(adapter, /use `list_decisions`.*reuse/is);
+});
+
+test("review contract keeps application fields out of tracking-only packets", () => {
+  const contract = readFileSync("skills/human-review-workflow/references/review-contract.md", "utf8");
+  assert.match(contract, /Minimal tracking-only packet/);
+  assert.match(contract, /must not include.*application_status.*continuation_run_id.*applied_at/is);
+  assert.match(contract, /Action-capable request fields/);
+  assert.match(contract, /Action-capable decision record/);
 });
 
 test("review contract requires stale-decision and duplicate-application protection", () => {

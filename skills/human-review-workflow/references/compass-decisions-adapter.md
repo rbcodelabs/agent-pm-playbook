@@ -23,10 +23,13 @@ When a run reaches a genuine human judgment:
 
 1. Build a clear question and concise context, link the closest supported Compass subject,
    and persist one UUID idempotency key for the workflow, subject, and source version.
-2. Use `list_decisions` and the run's stored request identity to reuse the existing pending
-   request when possible; otherwise call `request_decision` once.
-3. Re-read the exact request with `get_decision` and store its request ID and current
-   revision identity in run state.
+2. Call `request_decision` with that persisted key and persist the returned request ID.
+   After an uncertain create response, retry `request_decision` with the same persisted
+   UUID idempotency key; Compass returns the
+   original request. Persist its request ID before doing anything else.
+3. Re-read the exact request with `get_decision` and store its current revision identity in
+   run state. `list_decisions` is for discovering and filtering a queue; never treat it as
+   exact request recovery for a created request.
 4. Notify through the resolved notification provider, including the Compass deep link when
    available.
 5. Return `AWAITING_DECISION` and stop the run.

@@ -83,9 +83,11 @@ When a workflow reaches a human gate, it must:
    the exact continuation each response authorizes.
 6. End the current run successfully with status `AWAITING_DECISION`.
 
-A separate **decision router** detects the completed review through its provider adapter,
-validates that its source state has not changed, records the decision, and starts the next
-workflow step. The original run is never resumed from memory.
+A separate **decision router** detects the completed review through its provider adapter
+and validates the exact request and revision. A tracking-only provider records and reports
+the outcome but never starts the next workflow step. Only an action-capable adapter
+may apply and dispatch a declared continuation under the workflow's existing authority.
+The original run is never resumed from memory.
 
 This separation prevents four common failures:
 
@@ -245,7 +247,8 @@ capabilities, not brands.
 
 Examples of valid review-request adapters include Obsidian notes, Compass-native review
 objects, Jira/JPD approval issues, Linear issues, or another configured task system. Every
-adapter must preserve the same review contract and continuation semantics.
+adapter preserves stable identity and immutable human response history. Tracking-only
+adapters use `NO_ACTION`; continuation semantics apply only to action-capable adapters.
 
 ### Obsidian adapter example
 
@@ -295,9 +298,10 @@ continuation:
   reject: archive-proposed-solutions
 ```
 
-The decision router must reject or reissue a decision when `source_version` no longer
-matches. It must be idempotent: applying the same review twice produces no duplicate
-objects or transitions.
+For action-capable adapters, the decision router must reject or reissue a decision when
+`source_version` no longer matches and applying the same review twice must produce no
+duplicate objects or transitions. A tracking-only router reads the exact current revision,
+reports the outcome, and stops without applying anything.
 
 ## 5. Review Packet Design
 
@@ -417,6 +421,10 @@ its Opportunity or Solutions as exploratory. In that case, reconcile and link th
 work instead of manufacturing a duplicate decision request. Record the checked sources
 and timestamp so scheduled runs can distinguish a real decision from stale product state.
 
+The final column below is a proposed continuation, not an effect of every decision. A
+tracking-only provider records `NO_ACTION` and stops; only an action-capable adapter may
+perform the listed continuation under independently established authority.
+
 | Gate | Agent prepares | Human decides | Continuation |
 |---|---|---|---|
 | Outcome selection | 3–5 outcome candidates, metric quality check, prior-cycle evidence | Which outcome to pursue or reconfirm | Create/update desired outcome and KR links |
@@ -469,7 +477,7 @@ All flows below first resolve their required product and workflow capabilities f
 |---|---|---|
 | Signal capture | New transcript, feedback item, support export, review, or sales note | Attributed raw signal in the resolved provider |
 | Interview synthesis | Transcript arrival | Needs, quotes, intensity, contradictions, OST mappings |
-| Decision router | Review request changes to `decided` | Validated state transition and next workflow dispatch |
+| Decision router | Review request changes to `decided` | Tracking-only: validated outcome report and stop; action-capable: validated transition and dispatch under existing authority |
 | Experiment result collector | Result source updates or experiment end date arrives | Raw results and threshold comparison |
 | Delivery completion watcher | PR, CI, preview, production deployment, or merge changes state | Reconcile linked Tasks, launch/shipped state, Solution state, receipts, smoke findings, and capacity event |
 | Adoption watcher | Feature exposure or metric event becomes available | Early adoption and safety assessment |
@@ -530,7 +538,9 @@ The roadmap steward makes two separate recommendations and never collapses them:
 
 1. **Validation recommendation.** For an interesting but unvalidated candidate, keep or
    create the deduplicated `LATER` item and propose the cheapest evidence-gathering work.
-   Approval dispatches a prototype or experiment only; it does not change the horizon.
+   With a tracking-only provider, approval is reported and never dispatches a prototype or
+   experiment. Only an action-capable adapter may dispatch validation under existing authority,
+   and it does not change the horizon.
 2. **Delivery-queue admission.** Consider a candidate for `NEXT` only after the linked
    Solution is `VALIDATED` and the evidence, active-KR connection, dependencies, and owner
    are current. Compare it with every existing `NEXT` item, not with an abstract quality

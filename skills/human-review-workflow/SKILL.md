@@ -149,26 +149,43 @@ meaningfully different directions:
 
 Each direction includes a customer before/after, prototype or storyboard, scope, outcome
 connection, evidence, riskiest assumption, cheapest test, relative delivery shape, and
-tradeoff. The allowed response selects a direction for assumption mapping and experiment
-design. It does not validate the solution, add it to `NOW`, or authorize code.
+tradeoff. For an action-capable adapter, the allowed response may select a direction for
+assumption mapping and experiment design under existing authority. It does not validate
+the solution, add it to `NOW`, or authorize code.
+
+With `compass_decisions` or another tracking-only provider, construct or reuse the request,
+later read and report the exact outcome, and stop; never start assumption mapping, an
+experiment, or another workflow. Only an explicitly action-capable adapter may apply the
+declared experiment-design continuation under its existing authority.
 
 ## Mode 6 — Portfolio Admission Review
 
 Use when several non-exclusive ideas may each deserve preservation on the roadmap. Set
 `selection_mode: multiple` and `approved_effect: roadmap_candidate`. The reviewer may
-approve any subset. For every approved option, create or reuse one linked roadmap item in
-`LATER`; do not infer priority from approval and do not move anything to `NEXT` or `NOW`.
+approve any subset. Only an action-capable adapter may create or reuse one linked roadmap
+item in `LATER` for each approved option; do not infer priority from approval and do not
+move anything to `NEXT` or `NOW`.
 A later roadmap review ranks admitted candidates using evidence, outcome alignment,
 dependencies, and capacity.
+
+With `compass_decisions` or another tracking-only provider, construct or reuse the request,
+later read and report the exact outcome, and stop; never create or move a `LATER` item or
+start another workflow. Only an explicitly action-capable adapter may apply the declared
+candidate-admission continuation under its existing authority.
 
 ## Mode 7 — Validation Authorization Review
 
 Use when a preserved candidate is worth testing but its linked Solution is not yet
 validated. The packet contains the prototype or experiment method, target reviewer or
 participant, riskiest assumption, learning question, success threshold, kill condition,
-cost, and timebox. Approval dispatches only that validation work. Create or reuse the
-candidate in `LATER` and leave it there; validation approval never means `NEXT`, `NOW`, or
-delivery priority.
+cost, and timebox. Only an action-capable adapter may dispatch that validation work and
+create or reuse the candidate in `LATER`; it leaves the candidate there. Validation
+approval never means `NEXT`, `NOW`, or delivery priority.
+
+With `compass_decisions` or another tracking-only provider, construct or reuse the request,
+later read and report the exact outcome, and stop; never create a `LATER` item, dispatch
+validation, or start another workflow. Only an explicitly action-capable adapter may apply
+the declared validation continuation under its existing authority.
 
 ## Mode 8 — `NEXT` Admission Review
 
@@ -176,9 +193,14 @@ Use only after the linked Solution is `VALIDATED`. Re-read the complete ordered 
 queue and `portfolio_policy`. Compare the candidate against every queued item, state the
 exact target rank, and show before/after counts. If `next_limit` is full, the recommended
 action must name every item displaced to `LATER`; an additive approval is invalid. Missing
-capacity, rank, or validation evidence produces `KEEP_LATER`, not a promotion. Approval
-applies only the exact queue mutation and creates no delivery tasks. `NEXT → NOW` remains
-a separate commitment gate.
+capacity, rank, or validation evidence produces `KEEP_LATER`, not a promotion. Only an
+action-capable adapter may apply the exact approved queue mutation, and it creates no
+delivery tasks. `NEXT → NOW` remains a separate commitment gate.
+
+With `compass_decisions` or another tracking-only provider, construct or reuse the request,
+later read and report the exact outcome, and stop; never mutate `NEXT`, displace an item,
+mark a decision applied, or start another workflow. Only an explicitly action-capable
+adapter may apply the declared queue continuation under its existing authority.
 
 ## Completion Evidence
 
@@ -188,6 +210,7 @@ Report:
 - review and decision IDs;
 - source IDs and version check;
 - notification result;
-- applied continuation or explicit no-op;
+- for tracking-only providers, the reported outcome and explicit `NO_ACTION`; for
+  action-capable providers, the applied continuation or explicit no-op;
 - resulting object/run IDs;
 - any missing capability or retryable error.
