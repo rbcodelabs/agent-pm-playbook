@@ -138,6 +138,11 @@ If your JPD uses a single generic Ideas type, use the `opportunity` / `solution`
 
 Compass can be the complete product operating system. In the `compass-full` profile it owns vision and product documents, research capture, synthesized insights, OKRs, OST objects, experiments, roadmap, and delivery through Compass Tasks. Hybrid profiles may assign only some of those capabilities to Compass.
 
+With the `compass-native-review` workflow profile, both `review_requests` and
+`decision_records` resolve to `compass_decisions`. Agents use `request_decision`,
+`list_decisions`, and `get_decision`; only human admins decide in Compass. These decisions
+are tracking-only and never automatically mutate linked product or delivery state.
+
 **Production URL:** https://compass.rbcodelabs.com
 **Delivery work:** Compass Tasks in `compass-full`; Linear or Jira only when the `delivery` capability resolves there.
 

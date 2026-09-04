@@ -1,7 +1,8 @@
 ---
 name: human-review-workflow
 description: >-
-  Create, route, and apply asynchronous human-review requests for product decisions.
+  Create and route asynchronous human-review requests, then read or apply decisions
+  according to the configured provider's mode.
   Use when an unattended PM flow reaches an approval or direction gate, when a reviewer
   responds to a pending packet, or when pending decisions need a digest. Do not use for
   ordinary status reports or approvals already handled synchronously in the active session.
@@ -9,9 +10,10 @@ description: >-
 
 # Human Review Workflow
 
-Turn a blocking question into a durable asynchronous handoff. An unattended run creates a
-review request, notifies the reviewer, records `AWAITING_DECISION`, and ends. A later run
-applies the response from persisted state; it never resumes from conversation memory.
+Turn a blocking question into a durable asynchronous handoff. An unattended run must
+create or reuse a request, notify the reviewer, record `AWAITING_DECISION`, and end. A
+later run reads the response from persisted state; it never resumes from conversation
+memory.
 
 ## Capability Preflight
 
@@ -29,26 +31,31 @@ Verify exactly one provider per state-owning capability. Do not silently use Mar
 Obsidian, or a different notification channel. Contract-v1 configs must be upgraded or
 explicitly completed before this skill writes workflow state.
 
-Load only the adapter reference selected by routing. For `obsidian` or `markdown` review
+Load only the adapter reference selected by routing. For `compass_decisions`, read
+[references/compass-decisions-adapter.md](references/compass-decisions-adapter.md). This is
+a tracking-only adapter. For `obsidian` or `markdown` review
 requests, read [references/obsidian-adapter.md](references/obsidian-adapter.md). Other
-providers must implement the operation contract below before use. For the no-schema
+providers must declare whether they are tracking-only or action-capable and implement the
+matching operation contract below before use. For the legacy no-schema
 Compass pilot (`compass_tasks` + `compass_solution_plan_status`), read
 [references/compass-native-pilot.md](references/compass-native-pilot.md); it supports
 concept-direction selection, portfolio admission to `LATER`, validation authorization in
 `LATER`, and exact capacity-aware `NEXT` admission. It must not be generalized to `NOW`,
 release, security, billing, or destructive gates.
 
-## Provider Operations
+## Provider Modes and Operations
 
-The resolved adapters must support:
+All providers support durable create/read/list operations. Tracking-only providers stop
+there; they must not pretend to implement `mark_applied` or automated continuations.
+Action-capable legacy adapters additionally implement application and dispatch operations.
 
-| Capability | Required operations |
-|---|---|
-| `review_requests` | `create`, `get`, `list_pending`, `update_response`, `mark_applied`, `deep_link` |
-| `decision_records` | `record`, `get_by_review`, `verify_not_applied` |
-| `notifications` | `send_request`, `send_reminder`, `send_digest`, `send_escalation` |
-| `automation_runtime` | `dispatch`, `retry`, `get_run_status` |
-| `prototype_artifacts` | `publish`, `version`, `deep_link`, `archive` |
+| Capability | Tracking-only | Action-capable |
+|---|---|---|
+| `review_requests` | `create`, `get`, `list_pending`, `deep_link` | tracking operations plus `update_response`, `mark_applied` |
+| `decision_records` | `get_by_review` | tracking operations plus `record`, `verify_not_applied` |
+| `notifications` | `send_request`, `send_reminder`, `send_digest`, `send_escalation` | same |
+| `automation_runtime` | run state; no continuation dispatch required | `dispatch`, `retry`, `get_run_status` |
+| `prototype_artifacts` | `publish`, `version`, `deep_link`, `archive` | same |
 
 If an adapter cannot perform a required operation, stop with a configuration error before
 changing product state.
@@ -64,17 +71,21 @@ Use when a product workflow reaches a human gate.
    plus `updatedAt` values or deterministic content hashes.
 2. **Check for an existing request.** The idempotency key is product + gate type + source
    IDs + source version. Reuse the existing pending request instead of creating a duplicate.
-3. **Build the packet.** Include one decision, why it is needed now, the recommendation,
-   two or three real options, minimum supporting evidence, uncertainty, and the exact
-   continuation authorized by every response. Include `revise`, `defer`, and `reject`
-   unless the gate contract explicitly excludes one. Declare `selection_mode` as `single`
-   or `multiple`; never infer exclusivity from the number of options.
+3. **Build the packet for the provider mode.** Include one decision, why it is needed now,
+   the recommendation, minimum supporting evidence, and uncertainty.
+   - For a tracking-only provider, use its fixed outcomes and map every outcome to
+     `NO_ACTION`. Do not invent a continuation field the provider does not support.
+   - For an action-capable provider, include two or three real options and the exact
+     continuation authorized by every response. Include `revise`, `defer`, and `reject`
+     unless the gate contract explicitly excludes one. Declare `selection_mode` as
+     `single` or `multiple`; never infer exclusivity from the number of options.
 4. **Attach decision aids.** If routed `prototype_artifacts` is available, publish the
    lowest-fidelity artifact that makes the decision inspectable and store its stable
    versioned link. Absence of this optional provider may reduce fidelity; it may not reroute
    the artifact or skip required evidence.
 5. **Persist first.** Create the request through the configured adapter and re-read it to
-   verify the source IDs, version, choices, and continuation map.
+   verify the source IDs, version, and choices. For action-capable providers, also verify
+   the continuation map.
 6. **Notify second.** Send the direct link, recommendation, due date, and one-sentence
    decision through the configured notification adapter.
 7. **End the run.** Return `AWAITING_DECISION` with the review ID and direct link. Do not
@@ -83,9 +94,19 @@ Use when a product workflow reaches a human gate.
 Silence never means approval. On expiry, preserve product state and mark the review
 `expired` or `deferred` according to configured policy.
 
-## Mode 2 — Apply a Decision
+## Mode 2 — Read a Tracking-only Decision
 
-Use when the decision router detects a response.
+Use when a tracking-only provider has a human response. Read the exact request and current
+revision from persisted state. If it remains pending, return `AWAITING_DECISION` and end.
+If decided, report the immutable outcome and rationale. Approval does not auto-apply a
+continuation or trigger any automatic action. It does not grant roadmap, merge, deploy,
+destructive, or any other new authority. A subsequent workflow may act only inside its
+pre-existing authority and must perform its ordinary validation immediately before acting.
+
+## Mode 3 — Apply a Decision with an Action-capable Adapter
+
+Use only when the configured adapter explicitly declares action-capable semantics and the
+decision router detects a response.
 
 1. Read the request from `review_requests`; do not trust notification text as the decision.
 2. Validate that the response is one allowed value and includes any note required for
@@ -106,7 +127,7 @@ Use when the decision router detects a response.
 If step 6 fails, leave the decision record `pending` with the error and retry through the
 configured runtime. A retry reuses the same decision and idempotency keys.
 
-## Mode 3 — Notify and Digest
+## Mode 4 — Notify and Digest
 
 Use a scheduled notifier to inspect pending requests without changing their decisions.
 
@@ -117,7 +138,7 @@ Use a scheduled notifier to inspect pending requests without changing their deci
 - Do not generate a model turn when there are no eligible notifications.
 - Never expose credentials or private source content beyond the configured audience.
 
-## Mode 4 — Concept Direction Review
+## Mode 5 — Concept Direction Review
 
 For early ideas, the decision is: **Which direction should we test?** Prepare three
 meaningfully different directions:
@@ -128,36 +149,58 @@ meaningfully different directions:
 
 Each direction includes a customer before/after, prototype or storyboard, scope, outcome
 connection, evidence, riskiest assumption, cheapest test, relative delivery shape, and
-tradeoff. The allowed response selects a direction for assumption mapping and experiment
-design. It does not validate the solution, add it to `NOW`, or authorize code.
+tradeoff. For an action-capable adapter, the allowed response may select a direction for
+assumption mapping and experiment design under existing authority. It does not validate
+the solution, add it to `NOW`, or authorize code.
 
-## Mode 5 — Portfolio Admission Review
+With `compass_decisions` or another tracking-only provider, construct or reuse the request,
+later read and report the exact outcome, and stop; never start assumption mapping, an
+experiment, or another workflow. Only an explicitly action-capable adapter may apply the
+declared experiment-design continuation under its existing authority.
+
+## Mode 6 — Portfolio Admission Review
 
 Use when several non-exclusive ideas may each deserve preservation on the roadmap. Set
 `selection_mode: multiple` and `approved_effect: roadmap_candidate`. The reviewer may
-approve any subset. For every approved option, create or reuse one linked roadmap item in
-`LATER`; do not infer priority from approval and do not move anything to `NEXT` or `NOW`.
+approve any subset. Only an action-capable adapter may create or reuse one linked roadmap
+item in `LATER` for each approved option; do not infer priority from approval and do not
+move anything to `NEXT` or `NOW`.
 A later roadmap review ranks admitted candidates using evidence, outcome alignment,
 dependencies, and capacity.
 
-## Mode 6 — Validation Authorization Review
+With `compass_decisions` or another tracking-only provider, construct or reuse the request,
+later read and report the exact outcome, and stop; never create or move a `LATER` item or
+start another workflow. Only an explicitly action-capable adapter may apply the declared
+candidate-admission continuation under its existing authority.
+
+## Mode 7 — Validation Authorization Review
 
 Use when a preserved candidate is worth testing but its linked Solution is not yet
 validated. The packet contains the prototype or experiment method, target reviewer or
 participant, riskiest assumption, learning question, success threshold, kill condition,
-cost, and timebox. Approval dispatches only that validation work. Create or reuse the
-candidate in `LATER` and leave it there; validation approval never means `NEXT`, `NOW`, or
-delivery priority.
+cost, and timebox. Only an action-capable adapter may dispatch that validation work and
+create or reuse the candidate in `LATER`; it leaves the candidate there. Validation
+approval never means `NEXT`, `NOW`, or delivery priority.
 
-## Mode 7 — `NEXT` Admission Review
+With `compass_decisions` or another tracking-only provider, construct or reuse the request,
+later read and report the exact outcome, and stop; never create a `LATER` item, dispatch
+validation, or start another workflow. Only an explicitly action-capable adapter may apply
+the declared validation continuation under its existing authority.
+
+## Mode 8 — `NEXT` Admission Review
 
 Use only after the linked Solution is `VALIDATED`. Re-read the complete ordered `NEXT`
 queue and `portfolio_policy`. Compare the candidate against every queued item, state the
 exact target rank, and show before/after counts. If `next_limit` is full, the recommended
 action must name every item displaced to `LATER`; an additive approval is invalid. Missing
-capacity, rank, or validation evidence produces `KEEP_LATER`, not a promotion. Approval
-applies only the exact queue mutation and creates no delivery tasks. `NEXT → NOW` remains
-a separate commitment gate.
+capacity, rank, or validation evidence produces `KEEP_LATER`, not a promotion. Only an
+action-capable adapter may apply the exact approved queue mutation, and it creates no
+delivery tasks. `NEXT → NOW` remains a separate commitment gate.
+
+With `compass_decisions` or another tracking-only provider, construct or reuse the request,
+later read and report the exact outcome, and stop; never mutate `NEXT`, displace an item,
+mark a decision applied, or start another workflow. Only an explicitly action-capable
+adapter may apply the declared queue continuation under its existing authority.
 
 ## Completion Evidence
 
@@ -167,6 +210,7 @@ Report:
 - review and decision IDs;
 - source IDs and version check;
 - notification result;
-- applied continuation or explicit no-op;
+- for tracking-only providers, the reported outcome and explicit `NO_ACTION`; for
+  action-capable providers, the applied continuation or explicit no-op;
 - resulting object/run IDs;
 - any missing capability or retryable error.

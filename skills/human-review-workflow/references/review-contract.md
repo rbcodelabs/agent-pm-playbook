@@ -1,9 +1,37 @@
 # Review Request Contract
 
-Use this contract for every provider. Provider-native fields may differ, but adapters must
-preserve these semantics.
+Provider-native fields may differ. Every provider preserves stable identity, source
+context, immutable response history, and human authorship. The full application contract
+below applies only to action-capable adapters.
 
-## Required request fields
+## Minimal tracking-only packet
+
+A tracking-only provider needs a stable request/idempotency key, linked source identity,
+question and context, pending/decided state, allowed outcomes, reviewer/rationale, and
+immutable revision identity. Every outcome maps to `NO_ACTION`; application status,
+continuation dispatch, and `mark_applied` are intentionally absent. A later workflow may
+use the recorded judgment as context, but must rely on its own pre-existing authority and
+validation before any mutation.
+
+```yaml
+request_id: <provider request UUID>
+idempotency_key: <persisted UUID>
+source_ids: { subject_type: ROADMAP_ITEM, subject_id: "..." }
+source_version: "updatedAt value or content hash captured in context"
+question: Should we proceed with this direction?
+context: <evidence, recommendation, uncertainty, and source version>
+status: pending # pending | decided
+allowed_decisions: [APPROVE, REQUEST_CHANGES, REJECT]
+decision: ""
+rationale: ""
+reviewer: ""
+current_revision_id: ""
+```
+
+Tracking-only packets must not include `application_status`, `continuation_run_id`,
+`applied_at`, mutable result IDs, or provider operations that imply application.
+
+## Action-capable request fields
 
 ```yaml
 review_id: REV-YYYYMMDD-NNN
@@ -46,7 +74,7 @@ notification:
   escalation_sent_at: ""
 ```
 
-## Packet body
+## Action-capable packet body
 
 Render these sections in the provider's native format:
 
@@ -59,7 +87,7 @@ Render these sections in the provider's native format:
 7. What each response authorizes
 8. Response control or exact response syntax
 
-## Validation invariants
+## Action-capable validation invariants
 
 - `review_id` and `idempotency_key` are stable and unique.
 - Every source object has a stable provider ID.
@@ -90,7 +118,7 @@ Render these sections in the provider's native format:
 - A portfolio-admission continuation creates or reuses one roadmap candidate per approved
   option and records every resulting ID; applying it twice creates no duplicates.
 
-## Decision record
+## Action-capable decision record
 
 Decision records are immutable. Corrections create a superseding record.
 

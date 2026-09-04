@@ -3,11 +3,11 @@
   "version": 1,
   "profiles": {
     "compass-native-review": {
-      "description": "Compass Tasks provide the review queue, Solution Plan approvals capture the pilot decision, Compass Docs hold supporting artifacts, and Geode runs and notifies.",
+      "description": "Compass Decisions provide tracking-only review requests and immutable decision history, Compass Docs hold supporting artifacts, and Geode runs and notifies.",
       "providers": {
         "automation_runtime": "geode",
-        "review_requests": "compass_tasks",
-        "decision_records": "compass_solution_plan_status",
+        "review_requests": "compass_decisions",
+        "decision_records": "compass_decisions",
         "notifications": "geode",
         "prototype_artifacts": "compass_docs",
         "product_analytics": "manual_input"
