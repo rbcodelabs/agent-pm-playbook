@@ -35,6 +35,21 @@ Run it anyway.
 
 ---
 
+## Step 0 — Enter native Plan mode
+
+If an `EnterPlanMode` tool is available, call it immediately before inspecting
+repository files or taking any other task action.
+
+Native Plan mode is mandatory when the requested deliverable is a plan,
+technical design, specification, implementation approach, or investigation
+intended to lead to a code change. This skill's read-only instructions do not
+substitute for entering native Plan mode; use both.
+
+If `EnterPlanMode` is unavailable, state that briefly and continue with this
+manual read-only design workflow.
+
+---
+
 ## Step 1 — Load context
 
 Before proposing anything, read:
@@ -59,6 +74,19 @@ Questions not worth asking:
 - Questions answered by the codebase itself
 - Questions the user already answered in the brief
 - Questions that only matter after the approach is chosen
+
+### Use a prototype when the decision is visual
+
+For a meaningful UI change, when the unresolved risk is primarily layout,
+information hierarchy, grouping, or interaction behavior, prefer a lightweight
+reviewable prototype before implementation. An in-conversation HTML artifact or small
+interactive mockup can give the user something concrete to react to while the
+design is still cheap to change.
+
+Use the prototype to resolve a specific product decision, not as open-ended
+polish work. Keep it outside production source, stop iterating once the relevant
+decision is made, and carry the approved behavior into the implementation spec.
+Skip this step when the UI change is trivial or the interaction is already clear.
 
 ---
 
