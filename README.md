@@ -126,6 +126,7 @@ Skills installed by `setup.sh` include:
 | `design-before-code` | Pre-implementation design gate — explore context, propose approaches, get approval before any code |
 | `test-first` | TDD iron law — RED test required before any production code, with rationalization counters |
 | `verify-done` | Verification gate — run the command, read the output, cite evidence before claiming done |
+| `architecture-review` | Read-only two-pass audit — architectural risk against the roadmap, then maintainability and code health |
 
 ---
 
