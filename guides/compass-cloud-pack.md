@@ -35,4 +35,4 @@ npm test
 npm run validate
 ```
 
-The repository tests enforce the manifest layout, declared-file closure, size limits, cloud-safe language, and reporting behavior. Compass's own validator remains the authoritative installation check.
+The repository's structural tests enforce the manifest layout, exact skill set and defaults, declared-file closure, size limits, reporting behavior, and selected known-incompatible instruction patterns. They are defense in depth, not a complete security scanner. Compass's own validator remains the authoritative installation check and must also pass before release.

@@ -28,12 +28,28 @@ function filesBelow(path: string): string[] {
 
 test("Compass cloud pack follows the v1 manifest and file contract", () => {
   const value = manifest();
+  const expectedSkills = [
+    "agentic-pm",
+    "compass-workflow",
+    "experiment-workflow",
+    "integration-routing",
+    "investment-gate",
+    "okr-workflow",
+    "ost-workflow",
+    "pm-coach",
+    "pm-signal-synthesis",
+    "roadmap-workflow",
+    "status-report-workflow",
+  ];
   assert.equal(value.schemaVersion, 1);
   assert.equal(value.id, "agentic-pm-compass");
   assert.match(value.version, /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/);
   assert.ok(value.sdkCompatibility.length > 0);
   assert.deepEqual(value.requiredHostCapabilities, ["compass.product_state"]);
   assert.ok(value.skills.length > 0 && value.skills.length <= 20);
+  assert.deepEqual(value.skills.map((skill) => skill.id).sort(), expectedSkills);
+  assert.equal(new Set(value.skills.map((skill) => skill.id)).size, expectedSkills.length);
+  assert.ok(value.skills.every((skill) => skill.enabledByDefault === true));
 
   const declared = new Set([manifestPath]);
   for (const skill of value.skills) {
@@ -47,6 +63,16 @@ test("Compass cloud pack follows the v1 manifest and file contract", () => {
   assert.deepEqual(filesBelow(packRoot).sort(), [...declared].sort());
   assert.ok(filesBelow(packRoot).reduce((total, path) => total + statSync(path).size, 0) <= 1024 * 1024);
   for (const path of filesBelow(packRoot)) assert.ok(statSync(path).size <= 256 * 1024, path);
+});
+
+test("interpretation and health checks do not imply mutation authority", () => {
+  const experiment = readFileSync(join(packRoot, "skills/experiment-workflow/SKILL.md"), "utf8");
+  assert.match(experiment, /separate explicit user request to (?:persist|log|conclude)/i);
+  assert.match(experiment, /interpreting.*read-only/i);
+
+  const ost = readFileSync(join(packRoot, "skills/ost-workflow/SKILL.md"), "utf8");
+  assert.match(ost, /explicit user request before (?:archiving|changing).*status/i);
+  assert.match(ost, /health check.*read-only/i);
 });
 
 test("cloud skills rely only on host-owned Compass context and tools", () => {
