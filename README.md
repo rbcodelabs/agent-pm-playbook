@@ -13,8 +13,7 @@ Built on Teresa Torres's Continuous Discovery Habits and Marty Cagan's outcome-d
 **One approval to a tested PR:** the opt-in
 [Build Authorization workflow](skills/build-authorization/SKILL.md) combines build scope,
 design and capacity in one human decision. A standing project policy covers implementation
-and review fixes within that package; release remains separately authorized. See the
-[rollout record](guides/build-authorization-rollout.md) for activation and pilot status.
+and review fixes within that package; release remains separately authorized.
 
 → **[Scheduled Product Operating System](Scheduled%20Product%20Operating%20System.md)** — working design for turning the full playbook into asynchronous scheduled and event-driven workflows, including human-review packets, early-idea prototypes, decision routing, and safe automation gates.
 

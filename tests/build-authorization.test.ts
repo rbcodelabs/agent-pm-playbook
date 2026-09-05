@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process";
 import { evaluateAuthorization as evaluate } from "../skills/build-authorization/scripts/evaluate-authorization.ts";
 
 function ready() {
-  const identity = { projectId: "hiptrip", workspaceId: "workspace", repository: "rick/hiptrip" };
+  const identity = { projectId: "example-product", workspaceId: "example-workspace", repository: "example-org/example-product" };
   const buildCapacity = { roadmapItemId: "candidate", activeItemIdsBefore: [] as string[], capacityLimit: 1 };
   const liveCapacity = { roadmapItemId: "candidate", activeItemIds: [] as string[] };
   return {
@@ -150,7 +150,7 @@ test("matching execution resumes without charging its occupied slot again", () =
 });
 
 test("existing PR returns in-review without new actions", () => {
-  const s = resumed(); s.receipt!.prUrl = "https://github.com/rick/hiptrip/pull/1";
+  const s = resumed(); s.receipt!.prUrl = "https://github.com/example-org/example-product/pull/1";
   assert.equal(evaluate(s).state, "IN_REVIEW");
   assert.deepEqual(evaluate(s).actions, []);
 });
