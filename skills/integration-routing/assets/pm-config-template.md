@@ -123,6 +123,27 @@ portfolio_policy:
 If a required limit or capacity signal is unknown, scheduled stewards may prepare
 validation work in `LATER` but must not infer permission to add work to `NEXT` or `NOW`.
 
+## Build Authorization Policy (opt-in)
+
+```yaml
+build_authorization_policy:
+  enabled: false
+  version: build-authorization-v1
+  project_id: unresolved
+  workspace_id: unresolved
+  repository: unresolved
+  activated_at: unresolved
+  activation_authority: unresolved # exact human instruction/decision reference
+  receipt_store: unresolved # durable automation-runtime store, separate from decisions
+  serialized_executor: unresolved # verified single executor or conditional lease
+```
+
+Enable only under explicit human authorization after installed workflow, provider and
+runtime checks in `build-authorization`. Missing fields block execution. This standing
+policy permits a current approved build package through a tested PR, including its exact
+roadmap admission. It grants no merge or production authority. Existing decisions are
+not grandfathered. Package-specific limits and scope stay in the decision provider.
+
 ## Delivery Completion Policy
 
 ```yaml

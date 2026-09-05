@@ -14,6 +14,12 @@ required for Request changes and Reject and optional for Approve.
 
 ## Tracking-only contract
 
+An opted-in worker may use a purpose-bound build request as evidence under its separately
+established [build-authorization policy](../../build-authorization/SKILL.md). The worker
+verifies the exact immutable package and human revision and stores execution receipts in
+its runtime. This adapter still writes no application state and exposes no dispatch API.
+Ordinary decisions and historical approvals remain informational.
+
 Every option has continuation `NO_ACTION`. A recorded decision never mutates its linked
 entity, dispatches work, moves a roadmap item, merges or deploys code, or performs a
 destructive action. Approval is evidence of the human's call, not an executable grant and

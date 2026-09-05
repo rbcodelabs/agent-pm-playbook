@@ -8,6 +8,29 @@
 
 ## Implementation Status — 2026-08-29
 
+### Build authorization update — 2026-09-05
+
+The opt-in [build-authorization](skills/build-authorization/SKILL.md) path consolidates
+investment, design and NOW commitment into one purpose-bound human request. A separately
+authorized, serialized executor reads the tracking-only decision and carries that scope
+through a tested PR. NEXT is optional queue organization for this path. The separate-gate
+procedures elsewhere in this document remain the default for projects without the policy.
+
+Repository support includes the shared contract, deterministic snapshot evaluator and
+workflow routing. Live activation additionally requires verified installed skills,
+immutable package/decision provenance, durable runtime receipts and serialized execution.
+An empty-NOW scheduler filter must also consider newly approved packages awaiting admission.
+Do not describe a documented dispatch procedure as an installed runtime integration.
+
+Generic approvals still grant no authority. The new standing policy must be explicitly
+activated for each project and packages must be prepared and approved after activation.
+The executor records admission/claim/task/PR progress outside the immutable decision and
+resumes from it after failure. Material changes return a concise revised request. Revocation
+stops further work; merge and production operations remain independently authorized.
+
+Measure approval-to-start, approval-to-PR and duplicate approval requests per build. A pilot
+must produce a real tested PR from one human approval before expansion to other projects.
+
 Implemented in the playbook repository:
 
 - contract-v2 product/workflow routing shape and independently composable workflow profiles;

@@ -194,6 +194,12 @@ Agents can run at the same time when their work is independent. This is worth do
 
 ## The Team Workflow
 
+For an opted-in project, prepare one [build package](skills/build-authorization/SKILL.md)
+before asking for build approval. It includes the scope, approach, evidence, tests and
+capacity commitment. The engineer reuses that approved plan, and QA/reviewer fixes within
+scope remain authorized through a tested PR. Repeated investment, NEXT, NOW or design
+requests for the same package are unnecessary. Release approval remains separate.
+
 The agents are designed to hand off cleanly from one to the next:
 
 ```

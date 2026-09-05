@@ -17,6 +17,13 @@ memory.
 
 ## Capability Preflight
 
+For a request explicitly marked `build-authorization-v1`, load
+[build-authorization](../build-authorization/SKILL.md). That opt-in standing policy may
+authorize a separate worker to act after checking the current human response. It combines
+investment, design and commitment in one package. The decision adapter stays tracking-only;
+ordinary approvals below still have no automatic continuation. Without enabled policy,
+do not treat the package as execution authority.
+
 Read `pm-config.md` and load the installed [integration-routing skill](../integration-routing/SKILL.md).
 
 ```yaml
