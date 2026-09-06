@@ -1,7 +1,7 @@
 # Team Role Profile — Code Reviewer
 
 **Agent file:** `agents/reviewer.md`
-**Last updated:** 2026-05-14
+**Last updated:** 2026-09-06
 
 ---
 
@@ -24,6 +24,7 @@ specific, and honest without being harsh.
 | **Performance review** | Identifies N+1 patterns, unbounded queries, blocking operations |
 | **Maintainability review** | Flags unclear names, duplicated logic, missing documentation |
 | **Test coverage check** | Confirms key behaviors are verified by tests |
+| **Framework portability and privacy** | Reviews instructions, examples, fixtures, and PR text for private context and assumptions tied to one adopter |
 
 ---
 
@@ -45,6 +46,7 @@ Every review follows this format:
 
 ```
 ## Summary          — what changed and overall assessment
+## Review evidence  — commit/base, reviewer, scope, portability/privacy findings, checks
 ## 🚫 Blocking      — must fix before merge
 ## ⚠️ Advisory      — should consider; doesn't block
 ## ✅ Looks Good    — explicit positives (required)
@@ -52,6 +54,7 @@ Every review follows this format:
 ```
 
 Blocking items have severity criteria:
+- Private context leaks or hard-coded adopter assumptions introduced or relied upon by reusable framework changes
 - Security vulnerabilities
 - Data corruption or loss risk
 - Correctness bugs in core logic
@@ -74,10 +77,18 @@ Blocking items have severity criteria:
 ## Review Scope
 
 The Reviewer reads, in order:
+0. **Repository PR guidelines** — project-specific requirements for all subsequent checks
 1. **Changed files** — every modified file, in full, not just the diff
 2. **Adjacent files** — anything imported by or importing changed files
 3. **Tests** — existing and new tests for the changed code
 4. **Config / schema changes** — with particular attention to migration safety
+5. **PR title, description, and commits** — confirm the publication contains no private
+   operational context; a deletion in a later commit does not erase published history
+
+For framework changes, verify another team can follow the instructions with its own
+configuration. Examples and fixtures must be fictional; relevant public attribution,
+citations, and project URLs may remain with rationale. Record unrelated pre-existing
+findings separately and never claim independent review for author self-review.
 
 Never comments on a file not read in full context.
 
