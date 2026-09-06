@@ -1,12 +1,9 @@
 ---
 name: compass-resolver
 description: >
-  Autonomous delivery job that finds the highest-priority unclaimed Compass Roadmap NOW
-  item with recorded investment and commitment approval, records a Solution Plan and task
-  breakdown, implements one real fix end to end, opens a PR, watches the preview deploy,
-  and updates Compass so work is never duplicated. It never promotes NEXT items or raw
-  feedback. Use for the scheduled Compass Delivery Resolver or to implement the next
-  already-approved NOW item.
+  Implement one approved build through a tested PR and preview verification. Opted-in
+  projects use a bounded build package for admission and execution; other projects use
+  already-approved NOW work. Never infers approval from raw feedback or queue position.
 ---
 
 # Compass Delivery Resolver
@@ -15,6 +12,10 @@ Turns the top approved `NOW` item into a real, reviewable PR without requiring m
 assignment. Discovery intake, opportunity focus, solution selection, experiments,
 investment gating, and roadmap commitment happen upstream. This skill does not infer
 approval from clarity, votes, or roadmap position alone.
+
+With an enabled `build_authorization_policy`, the build-package route in Step 1 replaces
+the legacy NOW-only discovery, separate plan approval, title-prefix claims and skip rules.
+The common verification and release boundaries still apply.
 
 Note: this skill file is shared across every Compass workspace's resolver cron (Compass,
 Helio, HipTrip, Golden Wealth, FamilyLedger, ...). The org slug, workspace slug, and repo
@@ -34,7 +35,7 @@ empty pipeline and report "queue empty", which is pure wasted tokens. The gate i
 pre-check: exit `0` fires the run, any clean non-zero exit skips the cycle entirely (no
 thread, no LLM turn).
 
-The shell gate fires when the `NOW` roadmap has any item and skips when it is empty. The
+For the legacy path, the shell gate fires when the `NOW` roadmap has any item and skips when it is empty. The
 model-level eligibility filter still verifies approval and claim state. Set
 `gateFailOpen: true` (a network/auth blip should fire the run, not silently stall the
 resolver) and `gateTimeoutSeconds: 90`. It queries the Compass MCP HTTP
@@ -80,8 +81,9 @@ Notes:
 4. **Never touch secrets directly.** If the fix requires a new/rotated secret, stop and
    report — do not guess values or write them to code/env files. Follow CLAUDE.md's
    secret-handling rules (1Password + `vercel env`) or use `request_secret`.
-5. **No silent duplicate work.** Always run the claim-check in Step 2 before writing any
-   code. If in doubt whether something is already claimed, treat it as claimed and skip it.
+5. **No silent duplicate work.** Use the build contract's serialized durable claim for
+   opted-in packages, or the legacy Step 2 check for other work, before writing code.
+   If ownership is uncertain, stop and reconcile; never duplicate an existing execution.
 6. **Two failures means change strategy.** If the same fix approach fails twice (test
    still red, build still broken), stop, re-read the actual error, form a new hypothesis.
    Do not attempt a third variation of the same broken approach.
@@ -105,6 +107,21 @@ tasks are the ones that outlive the run.
 ---
 
 ## Step 1 — Resolve routing, workspace, and target item
+
+**Opted-in build path takes precedence over Steps 1–4's legacy approval and claim rules.**
+If `build_authorization_policy.enabled` is true, invoke
+[build-authorization](../build-authorization/SKILL.md). Discover approved packages as well
+as existing NOW work; the package may authorize exact LATER-to-NOW admission. Run its
+evaluator before mutations, use durable runtime receipts and serialized claims, and resume
+the same execution despite its own ACTIVE/IN_DELIVERY/title markers. Reuse the approved
+plan without another design request. Then perform implementation and verification below
+within package limits. Never fall through to the legacy path when opted-in validation
+fails. Disabled/absent policy retains the existing eligibility and direct-instruction path.
+
+The opt-in scheduler gate must check pending approved packages and unfinished receipts,
+not just NOW count. A tracking-only decision itself does not grant authority; execution
+uses the verified standing policy. The shell gate is only a wake-up filter, never an
+authorization check or a lock.
 
 1. Read `pm-config.md`. Resolve `roadmap`, `ost`, and `delivery` plus the workflow
    `decision_records` capability. Load `integration-routing` and the configured decision provider's

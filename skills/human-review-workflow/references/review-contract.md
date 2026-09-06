@@ -6,6 +6,11 @@ below applies only to action-capable adapters.
 
 ## Minimal tracking-only packet
 
+Build packages use the additional purpose, exact canonical scope digest, policy version
+and limits defined in [build-authorization](../../build-authorization/SKILL.md). These are
+immutable decision context, not provider continuation fields. Execution receipts belong
+to the separately authorized runtime, never to this tracking-only packet.
+
 A tracking-only provider needs a stable request/idempotency key, linked source identity,
 question and context, pending/decided state, allowed outcomes, reviewer/rationale, and
 immutable revision identity. Every outcome maps to `NO_ACTION`; application status,

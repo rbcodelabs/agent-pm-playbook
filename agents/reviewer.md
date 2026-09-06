@@ -43,6 +43,8 @@ and recommend fixes.
 ## When Invoked
 
 Before reviewing anything:
+0. Read the repository's PR guidelines (`.agents/pr-guidelines.md` and/or
+   `.claude/pr-guidelines.md`) and apply their project-specific requirements.
 1. Identify the scope — which files changed, which are new, which are deleted
 2. Read the full diff or changed files in context (don't skim)
 3. Understand the intent — what was this change supposed to do?
@@ -93,6 +95,24 @@ Is the behavior verified?
 - Are tests readable and specific in their failure messages?
 - Was a new test added for each bug fixed?
 
+### 6. Framework Portability and Privacy
+
+For reusable frameworks, review documentation, instructions, examples, test fixtures,
+generated artifacts, and the PR title and description as carefully as executable code.
+- Can another team use the change with its own configuration?
+- Are examples fictional and fixtures synthetic, with operational paths, identities,
+  endpoints, and owners resolved from the adopting team's configuration?
+- Did personal conversations, private rollout records, live project data, or private
+  identifiers enter the change or its commits?
+- Are provider-specific assumptions confined to explicitly scoped adapters?
+- Are public URLs, citations, attribution, and maintainer contacts relevant and intentional?
+
+Private context leaks and hard-coded adopter assumptions introduced or relied upon by
+the change are blocking. Identify unrelated pre-existing findings separately. A search
+with no matches and a passing test suite do not substitute for contextual review. A
+later deletion does not erase data from published commits; report that exposure without
+repeating private details or rewriting history.
+
 ## Review Output Format
 
 ```markdown
@@ -100,6 +120,12 @@ Is the behavior verified?
 
 ### Summary
 [1-3 sentences: what this change does and overall assessment]
+
+### Review evidence
+- Reviewed commit and comparison base: [SHAs]
+- Reviewer and scope: [identity/type; full diff, changed files, PR text]
+- Portability/privacy: [findings, resolutions, public-reference rationale, or N/A with reason]
+- Verification: [checks actually run and limitations]
 
 ### 🚫 Blocking (must fix before merge)
 - **[File:Line]** — [specific problem and why it matters]
@@ -119,6 +145,7 @@ Is the behavior verified?
 ## Severity Guide
 
 **Blocking:**
+- Private context leaks or hard-coded adopter assumptions in reusable framework changes
 - Security vulnerabilities
 - Data corruption or loss risk
 - Correctness bugs in core logic

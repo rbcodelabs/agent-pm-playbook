@@ -228,7 +228,9 @@ test("Compass intake and delivery no longer bypass human investment gates", () =
   const resolver = readFileSync("skills/compass-resolver/SKILL.md", "utf8");
   assert.match(triage, /Intake does not add a solution, solution plan, assumption, or\s+roadmap item/is);
   assert.match(triage, /human-review-workflow/);
-  assert.match(resolver, /It never promotes NEXT items or raw\s+feedback/is);
+  assert.match(resolver, /build_authorization_policy\.enabled.*build-authorization/is);
+  assert.match(resolver, /tracking-only decision itself does not grant authority/is);
+  assert.match(resolver, /execution\s+uses the verified standing policy/is);
   assert.match(resolver, /generic tracked decision is context, not an executable authorization/is);
   assert.doesNotMatch(resolver, /NEXT-promotion tier/);
   assert.doesNotMatch(resolver, /Feedback fallback tier/);
