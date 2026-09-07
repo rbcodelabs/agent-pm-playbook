@@ -1,6 +1,16 @@
 {
+  "version": 1,
   "id": "malformed-config",
   "description": "Unknown capabilities fail validation rather than entering the provider map.",
+  "prompt": {
+    "system": "Apply the supplied integration-routing skill and return only JSON matching the output contract.",
+    "user": "Resolve compass-full with provider override wiki=markdown. Report the validation outcome."
+  },
+  "execution": { "mode": "constrained-run-v1", "maxTurns": 1, "maxTokens": 500, "timeoutSeconds": 30, "tools": [], "skills": [], "filesystem": "none" },
+  "outputContract": {
+    "type": "object", "additionalProperties": false, "required": ["status", "errors"],
+    "properties": { "status": { "const": "error" }, "errors": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } } }
+  },
   "grader": "deep-equal",
   "expected": { "status": "error", "errors": ["Unknown capability: wiki"] }
 }

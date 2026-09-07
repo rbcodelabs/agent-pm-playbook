@@ -1,6 +1,16 @@
 {
+  "version": 1,
   "id": "exact-one-provider",
   "description": "Each requested capability has one scalar authoritative provider.",
+  "prompt": {
+    "system": "Apply the supplied integration-routing skill and return only JSON matching the output contract.",
+    "user": "Resolve vision and delivery for the compass-full profile. Return exactly one provider string for each requested capability."
+  },
+  "execution": { "mode": "constrained-run-v1", "maxTurns": 1, "maxTokens": 500, "timeoutSeconds": 30, "tools": [], "skills": [], "filesystem": "none" },
+  "outputContract": {
+    "type": "object", "additionalProperties": false, "required": ["vision", "delivery"],
+    "properties": { "vision": { "type": "string", "minLength": 1 }, "delivery": { "type": "string", "minLength": 1 } }
+  },
   "grader": "exact-provider-map",
   "expected": { "vision": "compass_docs", "delivery": "compass_tasks" }
 }

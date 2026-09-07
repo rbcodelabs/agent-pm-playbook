@@ -1,6 +1,31 @@
 {
+  "version": 1,
   "id": "source-of-truth-preservation",
   "description": "A secondary Markdown representation remains an export.",
+  "prompt": {
+    "system": "Apply the supplied integration-routing skill and return only JSON matching the output contract.",
+    "user": "Vision is authoritative in compass_docs and also exported to Markdown. Identify authority and representation role."
+  },
+  "execution": { "mode": "constrained-run-v1", "maxTurns": 1, "maxTokens": 500, "timeoutSeconds": 30, "tools": [], "skills": [], "filesystem": "none" },
+  "outputContract": {
+    "type": "object", "additionalProperties": false, "required": ["authoritativeProvider", "representations"],
+    "properties": {
+      "authoritativeProvider": { "type": "string", "minLength": 1 },
+      "representations": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["provider", "role"],
+          "properties": {
+            "provider": { "type": "string" },
+            "role": { "enum": ["inbox", "export", "cache", "snapshot"] }
+          }
+        }
+      }
+    }
+  },
   "grader": "deep-equal",
   "expected": { "authoritativeProvider": "compass_docs", "representations": [{ "provider": "markdown", "role": "export" }] }
 }
