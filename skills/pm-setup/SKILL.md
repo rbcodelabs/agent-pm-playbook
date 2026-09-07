@@ -62,6 +62,12 @@ When Markdown owns OKRs, OST, experiments, or roadmap, initialize the correspond
 
 ## Write and validate
 
+For an authorized build-policy migration, follow `build-authorization` and add the opt-in
+section from the template. Record the exact human activation instruction and verify
+provider history, durable receipts and serialized execution before setting `enabled: true`.
+Unknown runtime capabilities leave it disabled with a named blocker. Migration never
+approves existing NOW items. Do not repeat questions already answered in the active task.
+
 Write `pm-config.md` from the installed `integration-routing/assets/pm-config-template.md`:
 
 - set contract version `2`, both named profiles, both override maps, and both fully expanded resolved-provider tables;

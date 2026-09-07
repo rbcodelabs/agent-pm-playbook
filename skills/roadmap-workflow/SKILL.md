@@ -68,6 +68,12 @@ chainTo:
 
 Before reading or writing state, read `pm-config.md` and resolve the `roadmap` capability through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Confirm exactly one authoritative provider. Use its workflow for persistence; do not silently create Markdown. Any secondary artifact must be labeled `inbox`, `export`, `cache`, or `snapshot`. Resolve `delivery` separately when creating execution work. For Compass roadmap or Compass Tasks, invoke `compass-workflow` and preserve stable cross-object links.
 
+When prioritization, displacement, scope, or another ambiguous judgment needs a human,
+resolve `review_requests` and `decision_records` and route it through the configured decision provider.
+A tracking-only decision records the call but does not grant execution authority
+or mutate the roadmap; apply a roadmap change only under the workflow's existing authority
+boundary and after its normal validations.
+
 Roadmap evidence and capacity gates are provider-neutral. Read `portfolio_policy` from
 `pm-config.md` before recommending or applying a horizon change. Markdown files below are
 only that adapter. Create execution work through the separately resolved `delivery`
@@ -287,6 +293,12 @@ When the user wants to remove an item from the roadmap without shipping it:
 
 ### Promoting an item
 
+**Opted-in build path:** a verified `build-authorization-v1` package may commit directly
+from LATER or NEXT to NOW under the standing policy. Follow
+[build-authorization](../build-authorization/SKILL.md) for exact capacity/displacement,
+serialization and receipts. Do not add NEXT or NOW approval requests for the same scope.
+The separate gates below apply when this opt-in path is not being used.
+
 Moving an item between horizons (Later to Next, Next to Now):
 
 1. Re-read the full ordered horizon and `portfolio_policy`; never evaluate the candidate
@@ -298,8 +310,12 @@ Moving an item between horizons (Later to Next, Next to Now):
 3. For `NEXT → NOW`, require an available `now_limit` slot, target date, delivery owner,
    dependency readiness, and a current execution-collision preflight. If full, the review
    must name the displaced or completed item. This is a separate `NOW` commitment decision.
-4. Apply only the exact approved queue mutation, update the summary, and record before/after
-   counts, ranks, displaced IDs, decision ID, and an idempotency receipt.
+4. A tracking-only decision is context only and cannot trigger an approved queue mutation.
+   Mutation requires either an explicitly action-capable adapter or separately established
+   authority for this exact change. In either case, re-read the horizon and repeat every
+   current validation immediately before applying the exact mutation. Then update the summary
+   and record before/after counts, ranks, displaced IDs, authority evidence, and an idempotency
+   receipt.
 5. Validation approval by itself never runs this procedure; the item remains in `LATER`.
 
 ## Procedure 3 — Quarterly Roadmap Review
@@ -386,6 +402,13 @@ Output a structured review:
 
 ## Procedure 4 — Scheduled Roadmap Steward
 
+For projects with enabled `build_authorization_policy`, use the build path first: prepare
+one complete package for the next eligible candidate, including design and exact capacity
+commitment. Reuse its pending request; after approval, dispatch the serialized executor
+under the standing policy. Report missing readiness with owner and next action. The
+legacy per-horizon review steps below apply to other work; do not run both paths for one
+package. The worker, not a tracking-only adapter, owns mutations and execution receipts.
+
 Run this as the recurring portfolio decision flow. It prepares reviews; it does not grow
 the roadmap because a candidate sounds promising.
 
@@ -395,17 +418,19 @@ the roadmap because a candidate sounds promising.
    work; delivery work; agent runs; branches; and pull requests. Record a collision
    fingerprint and before-counts.
 3. For each unvalidated candidate worth investigating, recommend `VALIDATE_IN_LATER` and
-   create a validation-authorization review. Approval dispatches the prototype or
-   experiment-design task without changing its horizon.
+   create a validation-authorization review. A tracking-only provider never dispatches the
+   prototype or experiment-design task after approval; read and report it, then stop. Only
+   an action-capable adapter may dispatch that continuation under existing authority.
 4. For each `VALIDATED` candidate, compare it with every `NEXT` item. Recommend
    `ADMIT_TO_NEXT_AT_RANK` only when the queue is below `next_limit`; otherwise recommend
    `REPLACE_NEXT_ITEM` with named displacement IDs. Missing capacity or rank data means
    `KEEP_LATER`.
 5. Recommend `COMMIT_TO_NOW` only through the separate commitment gate with an available
    `now_limit` slot, owner, dependencies, dates, and current collision check.
-6. Reconcile open reviews without applying partial responses. On finalization, re-read the
-   queue fingerprint, apply only the exact approved mutation, record an idempotent receipt,
-   and dispatch the next eligible flow.
+6. Reconcile open reviews without applying partial responses. With a tracking-only provider,
+   read and report the final outcome and stop without mutation. Only an action-capable adapter
+   may re-read the queue fingerprint, apply the exact approved mutation, record an idempotent
+   receipt, and dispatch the next eligible flow under existing authority.
 7. End cleanly when no material evidence, capacity, ordering, or status changed. Do not
    create a recurring review about an unchanged queue.
 
@@ -483,7 +508,7 @@ Check these before confirming any roadmap action:
 ## References
 
 - [Full Playbook — OST as Operating System](../../Agentic%20PM%20Playbook.md)
-- [OKR Layer](../../Agent%20Skills/OKR%20Layer.md)
-- [Experiment Validation Gate](../../Agent%20Skills/Experiment%20Validation%20Gate.md)
-- [Roadmap as Commitment Layer](../../Agent%20Skills/Roadmap%20Commitment%20Layer.md)
-- [Stakeholder Communication](../../Agent%20Skills/Stakeholder%20Communication.md)
+- [OKR Workflow](../okr-workflow/SKILL.md)
+- [Experiment Workflow](../experiment-workflow/SKILL.md)
+- [Build Authorization](../build-authorization/SKILL.md)
+- [Stakeholder Status Reports](../status-report-workflow/SKILL.md)

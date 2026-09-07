@@ -10,6 +10,11 @@ It ships three things:
 
 Built on Teresa Torres's Continuous Discovery Habits and Marty Cagan's outcome-driven thinking.
 
+**One approval to a tested PR:** the opt-in
+[Build Authorization workflow](skills/build-authorization/SKILL.md) combines build scope,
+design and capacity in one human decision. A standing project policy covers implementation
+and review fixes within that package; release remains separately authorized.
+
 → **[Scheduled Product Operating System](Scheduled%20Product%20Operating%20System.md)** — working design for turning the full playbook into asynchronous scheduled and event-driven workflows, including human-review packets, early-idea prototypes, decision routing, and safe automation gates.
 
 ---
@@ -109,7 +114,7 @@ Skills installed by `setup.sh` include:
 |---|---|
 | `integration-routing` | Resolves capability providers and validates named profiles/overrides |
 | `pm-setup` | Configures profiles, capability providers, connections, and provider-aware scaffolding |
-| `human-review-workflow` | Routes asynchronous product decisions, records responses, and safely resumes flows |
+| `human-review-workflow` | Routes asynchronous product decisions, including tracking-only Compass Decisions that stop for human judgment without auto-applying actions |
 | `delivery-completion-watcher` | Reconciles merged PRs and verified production delivery back into product, roadmap, and capacity state |
 | `pm-coach` | Thinking partner for discovery, OST review, experiment design |
 | `ost-workflow` | Build, extend, and health-check an Opportunity Solution Tree |

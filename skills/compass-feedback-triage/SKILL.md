@@ -25,6 +25,9 @@ description: >
 1. Read `pm-config.md`. Resolve `insights` and `ost` to Compass and resolve
    `review_requests`, `decision_records`, and `notifications` before creating a review.
    Follow `integration-routing`; do not assume Obsidian or Geode.
+   Route ambiguous focus, investment, and scope judgment through the configured decision provider.
+   A recorded decision does not expand this intake workflow's existing authority
+   boundary or turn feedback into implementation permission.
 2. Invoke the `compass` skill for the MCP tool catalog and data model if not already loaded.
 3. `list_workspaces(orgSlug: "rbcodelabs")` → get the workspaceId for the workspace named
    "Compass" (slug `compass`).
