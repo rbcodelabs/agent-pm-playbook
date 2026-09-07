@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "agentic-pm-compass",
+  "displayName": "Agentic PM for Compass",
+  "version": "1.0.0",
+  "sdkCompatibility": ">=0.3.224 <0.4.0",
+  "skills": [
+    { "id": "agentic-pm", "path": "skills/agentic-pm/SKILL.md", "enabledByDefault": true },
+    { "id": "compass-workflow", "path": "skills/compass-workflow/SKILL.md", "enabledByDefault": true },
+    { "id": "integration-routing", "path": "skills/integration-routing/SKILL.md", "enabledByDefault": true },
+    { "id": "investment-gate", "path": "skills/investment-gate/SKILL.md", "enabledByDefault": true },
+    { "id": "experiment-workflow", "path": "skills/experiment-workflow/SKILL.md", "enabledByDefault": true },
+    { "id": "okr-workflow", "path": "skills/okr-workflow/SKILL.md", "enabledByDefault": true },
+    { "id": "ost-workflow", "path": "skills/ost-workflow/SKILL.md", "enabledByDefault": true },
+    { "id": "pm-coach", "path": "skills/pm-coach/SKILL.md", "enabledByDefault": true },
+    { "id": "pm-signal-synthesis", "path": "skills/pm-signal-synthesis/SKILL.md", "enabledByDefault": true },
+    { "id": "roadmap-workflow", "path": "skills/roadmap-workflow/SKILL.md", "enabledByDefault": true },
+    { "id": "status-report-workflow", "path": "skills/status-report-workflow/SKILL.md", "enabledByDefault": true }
+  ],
+  "requiredHostCapabilities": ["compass.product_state"],
+  "systemPromptAppendix": "Use the host-injected active workspace and only host-provided Compass MCP tools. Treat Compass as the sole persistence layer. Never seek another provider or workspace."
+}

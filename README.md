@@ -17,6 +17,8 @@ and review fixes within that package; release remains separately authorized.
 
 → **[Scheduled Product Operating System](Scheduled%20Product%20Operating%20System.md)** — working design for turning the full playbook into asynchronous scheduled and event-driven workflows, including human-review packets, early-idea prototypes, decision routing, and safe automation gates.
 
+→ **[Compass cloud capability pack](guides/compass-cloud-pack.md)** — a declarative, skills-only edition for Compass's in-app agent.
+
 ---
 
 ## Quick start
@@ -51,6 +53,16 @@ Run the pm-setup skill to select an integration profile, configure provider rout
 ```
 
 This writes a `pm-config.md` routing manifest that every PM agent and skill reads automatically. Choose `compass-full`, `compass-obsidian-linear`, `markdown-linear`, or `jpd-jira`, then override individual capabilities if needed. Product state stays in its resolved provider.
+
+### Install in Compass
+
+The cloud edition lives at `packs/compass/`. A Compass workspace administrator installs an immutable tuple:
+
+- Public repository: `https://github.com/rbcodelabs/agent-pm-playbook`
+- Commit: an exact 40-character commit SHA
+- Pack path: `packs/compass`
+
+Installing another commit creates another immutable version that can be selected for an upgrade or rollback. See the [cloud pack guide](guides/compass-cloud-pack.md) for its security and compatibility contract.
 
 ---
 
