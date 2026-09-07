@@ -91,6 +91,19 @@ test("contract-v2 template exposes both independent routing layers", () => {
   assert.match(template, /capacity_change_dispatch: roadmap_steward/);
 });
 
+test("Obsidian routing uses runtime-resolved vault-relative paths", () => {
+  const routing = readFileSync("skills/integration-routing/SKILL.md", "utf8");
+  const template = readFileSync("skills/integration-routing/assets/pm-config-template.md", "utf8");
+
+  assert.match(routing, /runtime-provided vault root/i);
+  assert.match(routing, /vault-relative/i);
+  assert.match(routing, /scheduled prompts/i);
+  assert.match(template, /current runtime-configured vault/i);
+  assert.match(template, /vault-relative/i);
+  assert.doesNotMatch(template, /\*\*Root:\*\*/);
+  assert.doesNotMatch(template, /~\/Documents|\/Users\//);
+});
+
 test("human review skill is provider-neutral and ends unattended runs", () => {
   const skillPath = "skills/human-review-workflow/SKILL.md";
   const contents = readFileSync(skillPath, "utf8");

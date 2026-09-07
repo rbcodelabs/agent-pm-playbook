@@ -75,8 +75,8 @@ only human admins decide, and no outcome automatically applies another action.
 
 ### Obsidian / Markdown
 
-- **Root:** [if used]
-- **Product folder:** [if used]
+- **Vault:** current runtime-configured vault [if used]
+- **Product folder:** [vault-relative path, if used]
 - **Role:** [authoritative capabilities or explicitly labeled inbox/export/cache/snapshot]
 
 ### Linear / Jira / JPD
@@ -162,7 +162,10 @@ authority and never permits preview success to substitute for production verific
 
 ## Provider-owned paths
 
-<!-- Include only paths actually owned by filesystem/Obsidian/Markdown capabilities. Do not add placeholder paths for Compass/JPD-owned state. -->
+<!-- Include only paths actually owned by filesystem/Obsidian/Markdown capabilities. Obsidian
+paths must be vault-relative and are resolved against the runtime-provided vault root; never
+store host-specific absolute or home-relative vault locations here. Do not add placeholder
+paths for Compass/JPD-owned state. -->
 
 - [capability]: [path]
 
