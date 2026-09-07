@@ -37,6 +37,12 @@ Run it anyway.
 
 ## Step 0 — Enter native Plan mode
 
+First check for an already approved design in the active instruction or a verified
+[build package](../build-authorization/SKILL.md). When it covers the current scope and
+approach, this gate is satisfied: record the reference and hand off to implementation.
+Do not enter Plan mode or ask for the same approval again. Use the remaining design
+workflow only for missing design or a material change requiring a revised package.
+
 If an `EnterPlanMode` tool is available, call it immediately before inspecting
 repository files or taking any other task action.
 

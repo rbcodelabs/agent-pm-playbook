@@ -10,6 +10,11 @@ It ships three things:
 
 Built on Teresa Torres's Continuous Discovery Habits and Marty Cagan's outcome-driven thinking.
 
+**One approval to a tested PR:** the opt-in
+[Build Authorization workflow](skills/build-authorization/SKILL.md) combines build scope,
+design and capacity in one human decision. A standing project policy covers implementation
+and review fixes within that package; release remains separately authorized.
+
 → **[Scheduled Product Operating System](Scheduled%20Product%20Operating%20System.md)** — working design for turning the full playbook into asynchronous scheduled and event-driven workflows, including human-review packets, early-idea prototypes, decision routing, and safe automation gates.
 
 → **[Compass cloud capability pack](guides/compass-cloud-pack.md)** — a declarative, skills-only edition for Compass's in-app agent.
@@ -138,6 +143,7 @@ Skills installed by `setup.sh` include:
 | `design-before-code` | Pre-implementation design gate — explore context, propose approaches, get approval before any code |
 | `test-first` | TDD iron law — RED test required before any production code, with rationalization counters |
 | `verify-done` | Verification gate — run the command, read the output, cite evidence before claiming done |
+| `architecture-review` | Read-only two-pass audit — architectural risk against the roadmap, then maintainability and code health |
 
 ---
 

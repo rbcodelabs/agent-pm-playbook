@@ -293,6 +293,12 @@ When the user wants to remove an item from the roadmap without shipping it:
 
 ### Promoting an item
 
+**Opted-in build path:** a verified `build-authorization-v1` package may commit directly
+from LATER or NEXT to NOW under the standing policy. Follow
+[build-authorization](../build-authorization/SKILL.md) for exact capacity/displacement,
+serialization and receipts. Do not add NEXT or NOW approval requests for the same scope.
+The separate gates below apply when this opt-in path is not being used.
+
 Moving an item between horizons (Later to Next, Next to Now):
 
 1. Re-read the full ordered horizon and `portfolio_policy`; never evaluate the candidate
@@ -396,6 +402,13 @@ Output a structured review:
 
 ## Procedure 4 — Scheduled Roadmap Steward
 
+For projects with enabled `build_authorization_policy`, use the build path first: prepare
+one complete package for the next eligible candidate, including design and exact capacity
+commitment. Reuse its pending request; after approval, dispatch the serialized executor
+under the standing policy. Report missing readiness with owner and next action. The
+legacy per-horizon review steps below apply to other work; do not run both paths for one
+package. The worker, not a tracking-only adapter, owns mutations and execution receipts.
+
 Run this as the recurring portfolio decision flow. It prepares reviews; it does not grow
 the roadmap because a candidate sounds promising.
 
@@ -495,7 +508,7 @@ Check these before confirming any roadmap action:
 ## References
 
 - [Full Playbook — OST as Operating System](../../Agentic%20PM%20Playbook.md)
-- [OKR Layer](../../Agent%20Skills/OKR%20Layer.md)
-- [Experiment Validation Gate](../../Agent%20Skills/Experiment%20Validation%20Gate.md)
-- [Roadmap as Commitment Layer](../../Agent%20Skills/Roadmap%20Commitment%20Layer.md)
-- [Stakeholder Communication](../../Agent%20Skills/Stakeholder%20Communication.md)
+- [OKR Workflow](../okr-workflow/SKILL.md)
+- [Experiment Workflow](../experiment-workflow/SKILL.md)
+- [Build Authorization](../build-authorization/SKILL.md)
+- [Stakeholder Status Reports](../status-report-workflow/SKILL.md)
