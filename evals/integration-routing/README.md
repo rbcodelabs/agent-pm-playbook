@@ -16,6 +16,6 @@ The holdout boundary is enforced by the WikiSkill evaluation runner, not by file
 
 ## Acceptance
 
-A candidate is accepted for human review only when it beats the pinned baseline by at least the manifest's aggregate margin and does not regress a baseline-passing critical fixture. Acceptance never mutates or activates the canonical skill.
+A candidate is accepted for human review only when it beats the pinned baseline by at least the manifest's aggregate margin and passes every critical fixture. Acceptance never mutates or activates the canonical skill.
 
-The evidence record binds the candidate result and artifact, every fixture, PURPOSE, canonical skill revision/hash, and complete contract. After changing any pinned input, update its SHA-256 deliberately; `npm run validate` rejects stale hashes and path escapes.
+The evidence record binds the candidate result and artifact, every fixture, PURPOSE, canonical skill revision/hash, and complete contract. Validation also proves that the pinned revision exists in Git and that the canonical skill at that revision has the pinned hash. Outside a Git checkout it reports provenance as `unavailable` instead of claiming verification. After changing any pinned input, update its SHA-256 deliberately; `npm run validate` rejects stale hashes and path escapes.

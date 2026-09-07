@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, relative, resolve, sep } from "node:path";
 import { isDeepStrictEqual } from "node:util";
@@ -8,7 +9,7 @@ type JsonObject = Record<string, unknown>;
 type Schema = JsonObject;
 type FixtureManifest = { id: string; path: string; hash: string; visibility: "public" | "holdout"; critical: boolean; weight: number };
 type ResultSetManifest = { path: string; hash: string; artifactPath: string; artifactHash: string };
-type Manifest = {
+export type Manifest = {
   $schema: string;
   version: number;
   skillId: string;
@@ -36,6 +37,7 @@ export type EvaluationContract = {
   resultSets: Record<string, ResultSet>;
   candidateArtifacts: Record<string, string>;
   purposeText: string;
+  sourceRevisionVerification: "verified" | "unavailable" | "invalid";
   integrity: { fixtures: Record<string, string>; resultSets: Record<string, string>; artifacts: Record<string, string>; purpose: string };
 };
 
@@ -58,6 +60,20 @@ function stableJson(value: unknown): string {
 function containedPath(base: string, path: string): boolean {
   const rel = relative(resolve(base), resolve(path));
   return rel === "" || (!rel.startsWith(`..${sep}`) && rel !== ".." && !rel.startsWith(sep));
+}
+
+export function verifyPinnedSourceRevision(repositoryRoot: string, manifest: Manifest): { status: "verified" | "unavailable" | "invalid"; errors: string[] } {
+  const inside = spawnSync("git", ["-C", repositoryRoot, "rev-parse", "--is-inside-work-tree"], { encoding: "utf8" });
+  if (inside.error || inside.status !== 0 || inside.stdout.trim() !== "true") return { status: "unavailable", errors: [] };
+  const commit = spawnSync("git", ["-C", repositoryRoot, "cat-file", "-e", `${manifest.source.revision}^{commit}`], { encoding: "utf8" });
+  if (commit.status !== 0) return { status: "invalid", errors: ["source revision does not exist in Git"] };
+  const sourcePath = resolve(resolve(repositoryRoot, "evals/integration-routing"), manifest.source.path);
+  if (!containedPath(repositoryRoot, sourcePath)) return { status: "invalid", errors: ["source path escapes repository root"] };
+  const gitPath = relative(repositoryRoot, sourcePath).split(sep).join("/");
+  const source = spawnSync("git", ["-C", repositoryRoot, "show", `${manifest.source.revision}:${gitPath}`], { encoding: "utf8", maxBuffer: 2_000_000 });
+  if (source.status !== 0) return { status: "invalid", errors: ["source file is unavailable at pinned revision"] };
+  if (sha256(source.stdout) !== manifest.source.hash) return { status: "invalid", errors: ["source file hash at pinned revision does not match manifest"] };
+  return { status: "verified", errors: [] };
 }
 
 function resolveSchemaRef(root: Schema, reference: string): Schema | undefined {
@@ -119,7 +135,18 @@ export function validateJsonSchema(schema: Schema, value: unknown): string[] {
 
 export function loadEvaluationContract(rootPath: string): EvaluationContract {
   const root = resolve(rootPath);
-  const manifest = readJson<Manifest>(resolve(root, "manifest.json"));
+  const schema = readJson<Schema>(resolve(root, "manifest.schema.json"));
+  let rawManifest: unknown;
+  try {
+    rawManifest = JSON.parse(readFileSync(resolve(root, "manifest.json"), "utf8"));
+  } catch (error) {
+    throw new Error(`Invalid evaluation manifest:\n$: invalid JSON (${error instanceof Error ? error.message : String(error)})`);
+  }
+  const schemaErrors = validateJsonSchema(schema, rawManifest);
+  if (schemaErrors.length) throw new Error(`Invalid evaluation manifest:\n${schemaErrors.join("\n")}`);
+  const manifest = rawManifest as Manifest;
+  const repositoryRoot = resolve(root, "../..");
+  const revisionVerification = verifyPinnedSourceRevision(repositoryRoot, manifest);
   const fixtures: Record<string, Fixture> = {};
   for (const entry of manifest.fixtures) {
     const path = resolve(root, entry.path);
@@ -135,12 +162,12 @@ export function loadEvaluationContract(rootPath: string): EvaluationContract {
     resultSets[name] = readJson<ResultSet>(resultPath);
     candidateArtifacts[name] = readFileSync(artifactPath, "utf8");
   }
-  const repositoryRoot = resolve(root, "../..");
   const purposePath = resolve(root, manifest.source.purposePath);
   if (!containedPath(repositoryRoot, purposePath)) throw new Error("purpose path escapes repository root");
   const purposeText = readFileSync(purposePath, "utf8");
   return {
     root, manifest, fixtures, resultSets, candidateArtifacts, purposeText,
+    sourceRevisionVerification: revisionVerification.status,
     integrity: {
       fixtures: Object.fromEntries(Object.entries(fixtures).map(([id, fixture]) => [id, sha256(stableJson(fixture))])),
       resultSets: Object.fromEntries(Object.entries(resultSets).map(([name, result]) => [name, sha256(stableJson(result))])),
@@ -192,6 +219,9 @@ export function validateEvaluationContract(contract: EvaluationContract, rootPat
   errors.push(...validateJsonSchema(schema, contract.manifest));
   const repositoryRoot = resolve(root, "../..");
   const { manifest } = contract;
+  const revisionVerification = verifyPinnedSourceRevision(repositoryRoot, manifest);
+  contract.sourceRevisionVerification = revisionVerification.status;
+  errors.push(...revisionVerification.errors);
   const sourcePath = resolve(root, manifest.source.path);
   const purposePath = resolve(root, manifest.source.purposePath);
   if (!containedPath(repositoryRoot, sourcePath)) errors.push("source path escapes repository root");
@@ -300,6 +330,9 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     const contract = loadEvaluationContract(root);
     const errors = validateEvaluationContract(contract, root);
     if (errors.length) { console.error(errors.join("\n")); process.exitCode = 1; }
-    else console.log(`Validated ${contract.manifest.fixtures.length} executable WikiSkill fixtures for ${contract.manifest.skillId}.`);
+    else {
+      console.log(`Validated ${contract.manifest.fixtures.length} executable WikiSkill fixtures for ${contract.manifest.skillId}.`);
+      console.log(`Source revision verification: ${contract.sourceRevisionVerification}.`);
+    }
   } catch (error) { console.error(error instanceof Error ? error.message : String(error)); process.exitCode = 1; }
 }

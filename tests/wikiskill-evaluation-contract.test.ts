@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
 
 import {
@@ -10,6 +12,7 @@ import {
   loadEvaluationContract,
   validateJsonSchema,
   validateEvaluationContract,
+  verifyPinnedSourceRevision,
 } from "../evals/integration-routing/scripts/validate-evaluation-contract.ts";
 
 const root = "evals/integration-routing";
@@ -22,6 +25,7 @@ test("WikiSkill evaluation metadata stays separate from the generated skill mani
 
 test("the evaluation contract and every declared fixture are valid", () => {
   const contract = loadEvaluationContract(root);
+  assert.equal(contract.sourceRevisionVerification, "verified");
   assert.deepEqual(validateEvaluationContract(contract, root), []);
   assert.deepEqual(
     contract.manifest.fixtures.map((fixture) => fixture.id),
@@ -33,6 +37,35 @@ test("the evaluation contract and every declared fixture are valid", () => {
       "malformed-config",
     ],
   );
+});
+
+test("loader validates raw manifest before traversing missing or malformed fields", () => {
+  const directory = mkdtempSync(join(tmpdir(), "wikiskill-manifest-"));
+  try {
+    cpSync(`${root}/manifest.schema.json`, join(directory, "manifest.schema.json"));
+    for (const invalid of [
+      { $schema: "./manifest.schema.json", version: 1 },
+      { ...JSON.parse(readFileSync(`${root}/manifest.json`, "utf8")), fixtures: "not-an-array" },
+    ]) {
+      writeFileSync(join(directory, "manifest.json"), JSON.stringify(invalid));
+      assert.throws(
+        () => loadEvaluationContract(directory),
+        (error: unknown) => error instanceof Error && error.message.startsWith("Invalid evaluation manifest:\n$") && !/map is not a function|undefined/.test(error.message),
+      );
+    }
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test("source revision verification is explicitly unavailable outside Git", () => {
+  const directory = mkdtempSync(join(tmpdir(), "wikiskill-no-git-"));
+  try {
+    const contract = loadEvaluationContract(root);
+    assert.equal(verifyPinnedSourceRevision(directory, contract.manifest).status, "unavailable");
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
 });
 
 test("baseline and candidate grading is deterministic and hash-addressed", () => {
