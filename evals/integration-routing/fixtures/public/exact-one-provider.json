@@ -1,0 +1,6 @@
+{
+  "id": "exact-one-provider",
+  "description": "Each requested capability has one scalar authoritative provider.",
+  "grader": "exact-provider-map",
+  "expected": { "vision": "compass_docs", "delivery": "compass_tasks" }
+}

@@ -1,0 +1,6 @@
+{
+  "id": "no-silent-fallback",
+  "description": "An unavailable provider blocks rather than silently selecting Markdown.",
+  "grader": "deep-equal",
+  "expected": { "status": "blocked", "requestedProvider": "compass_tasks", "fallback": null }
+}

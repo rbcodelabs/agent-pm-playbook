@@ -1,0 +1,6 @@
+{
+  "id": "malformed-config",
+  "description": "Unknown capabilities fail validation rather than entering the provider map.",
+  "grader": "deep-equal",
+  "expected": { "status": "error", "errors": ["Unknown capability: wiki"] }
+}

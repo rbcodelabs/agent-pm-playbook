@@ -147,6 +147,16 @@ Skills installed by `setup.sh` include:
 
 ---
 
+## WikiSkill evaluation pilot
+
+The [`integration-routing` evaluation contract](evals/integration-routing/manifest.json) provides versioned public and holdout fixtures, deterministic graders, candidate acceptance thresholds, and source-skill provenance for the Geode WikiSkill pilot. Its [purpose contract](skills/integration-routing/PURPOSE.md) records the skill's intent and invariants.
+
+Evaluation is deliberately separate from provider resolution and from [`generated/skill-manifest.json`](generated/skill-manifest.json). A passing candidate produces review evidence only; it never activates, edits, merges, or releases a canonical skill without separate human approval.
+
+Run `npm test` and `npm run validate` after changing the routing skill, purpose contract, fixtures, graders, or source hash.
+
+---
+
 ## Reference docs
 
 - **[Agentic PM Playbook](Agentic%20PM%20Playbook.md)** — full framework: OST operating system, cadences, prompt library, quality gates

@@ -1,0 +1,6 @@
+{
+  "id": "source-of-truth-preservation",
+  "description": "A secondary Markdown representation remains an export.",
+  "grader": "deep-equal",
+  "expected": { "authoritativeProvider": "compass_docs", "representations": [{ "provider": "markdown", "role": "export" }] }
+}

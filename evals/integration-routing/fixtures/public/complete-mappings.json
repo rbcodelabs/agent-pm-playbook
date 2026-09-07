@@ -1,0 +1,9 @@
+{
+  "id": "complete-mappings",
+  "description": "A resolved contract contains all product and workflow capabilities.",
+  "grader": "complete-capability-maps",
+  "expected": {
+    "product": ["vision", "research_capture", "insights", "okrs", "ost", "experiments", "roadmap", "delivery", "reporting_archive"],
+    "workflow": ["automation_runtime", "review_requests", "decision_records", "notifications", "prototype_artifacts", "product_analytics"]
+  }
+}

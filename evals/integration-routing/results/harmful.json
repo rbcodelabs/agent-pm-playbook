@@ -1,0 +1,10 @@
+{
+  "exact-one-provider": { "vision": "compass_docs", "delivery": "compass_tasks" },
+  "complete-mappings": {
+    "product": { "vision":"p", "research_capture":"p", "insights":"p", "okrs":"p", "ost":"p", "experiments":"p", "roadmap":"p", "delivery":"p", "reporting_archive":"p" },
+    "workflow": { "automation_runtime":"w", "review_requests":"w", "decision_records":"w", "notifications":"w", "prototype_artifacts":"w", "product_analytics":"w" }
+  },
+  "no-silent-fallback": { "status": "ok", "requestedProvider": "compass_tasks", "fallback": "markdown" },
+  "source-of-truth-preservation": { "authoritativeProvider": "compass_docs", "representations": [{ "provider": "markdown", "role": "export" }] },
+  "malformed-config": { "status": "ok", "errors": [] }
+}
