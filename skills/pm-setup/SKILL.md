@@ -90,3 +90,13 @@ node <skill-directory>/scripts/validate-workflow-profiles.ts <skill-directory>/a
 This works from the user's product workspace without locating the playbook repository or requiring `npm`. Then audit the generated config: nine product capabilities, six workflow capabilities, exactly one provider for every state-owning capability, no credentials, no contradictory paths, no implicit notification fallback, and no unlabeled secondary copy.
 
 Report the config location, profile, overrides, resolved routing, created paths, and provider-native objects created. Suggest the next domain skill based on the user's goal.
+
+## Install playbook automation
+
+When asked to install or consolidate the playbook's scheduled jobs, load
+[scheduled-product-operations](../scheduled-product-operations/SKILL.md) after routing is
+configured. It installs one recurring product job that checks every area on every run,
+builds one checklist, and executes safe actionable work. Use the requested frequency and
+timezone; ask only for missing preferences. Do not translate human cadences into separate
+cron jobs or time-based exclusions. Configuration setup alone does not install automation.
+Existing live schedules follow the skill's explicit replacement procedure.

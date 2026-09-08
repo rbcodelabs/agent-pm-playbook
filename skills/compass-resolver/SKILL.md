@@ -17,51 +17,17 @@ With an enabled `build_authorization_policy`, the build-package route in Step 1 
 the legacy NOW-only discovery, separate plan approval, title-prefix claims and skip rules.
 The common verification and release boundaries still apply.
 
-Note: this skill file is shared across every Compass workspace's resolver cron (Compass,
-Helio, HipTrip, Golden Wealth, FamilyLedger, ...). The org slug, workspace slug, and repo
-path are passed in via the invocation's ARGUMENTS/prompt — do not hardcode a single
-workspace's behavior into this file.
+## Scheduling and scope
 
-**Repo:** `/Users/rickbowman/projects/compass`
-**Compass org/workspace:** `rbcodelabs` / `compass`
+Invoke this skill from the authorized-delivery item in
+[scheduled-product-operations](../scheduled-product-operations/SKILL.md), or manually.
+Do not install a separate resolver cron. Resolve the organization, workspace ID, endpoint
+and repository from `pm-config.md` and verified invocation context.
 
-## Scheduling — the cron and its empty-queue gate (per workspace)
-
-Each workspace runs this skill via its own daily `CronCreate` job named
-`<Workspace> Delivery Resolver` (`cwd` = the workspace's repo path; the prompt passes the org
-slug, workspace slug, and repo path). **Every resolver cron MUST carry a deterministic
-`gateCommand`** — without it the cron fires a full model turn every day just to discover an
-empty pipeline and report "queue empty", which is pure wasted tokens. The gate is a shell
-pre-check: exit `0` fires the run, any clean non-zero exit skips the cycle entirely (no
-thread, no LLM turn).
-
-For the legacy path, the shell gate fires when the `NOW` roadmap has any item and skips when it is empty. The
-model-level eligibility filter still verifies approval and claim state. Set
-`gateFailOpen: true` (a network/auth blip should fire the run, not silently stall the
-resolver) and `gateTimeoutSeconds: 90`. It queries the Compass MCP HTTP
-endpoint with `$COMPASS_MCP_API_KEY` (already injected into the cron's shell env). Replace
-`<WORKSPACE_ID>` with the target workspace's UUID:
-
-```bash
-WS=<WORKSPACE_ID>; U=https://compass.rbcodelabs.com/api/mcp
-c(){ curl -s -X POST "$U" -H "Authorization: Bearer $COMPASS_MCP_API_KEY" -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" --max-time 25 -d "$1" | sed 's/^data: //' | grep -E '^\{' | jq -r '.result.content[0].text // empty' 2>/dev/null; }
-now=$(c '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"list_roadmap_items","arguments":{"workspaceId":"'$WS'","horizon":"NOW"}}}');  echo "$now"  | grep -q 'No active roadmap items found' || exit 0
-exit 1
-```
-
-Notes:
-- The sibling `compass-feedback-triage` cron uses a separate gate that checks only
-  `list_feedback` / `OPEN`. The two flows do not feed directly into one another.
-- The gate is intentionally conservative: it still fires when NOW items exist even if
-  every one is already claimed (`🤖`), shelved (`⚠️`), or missing approval because parsing
-  cross-provider decision records and status markers in `bash` is fragile. That yields at
-  most one near-no-op run in the rare all-claimed state; the common genuinely-empty steady
-  state — where nearly all the
-  waste was — is skipped cleanly. Don't try to out-clever this in the gate; the skill's
-  Step 1 filter handles claimed/shelved items correctly once the run is inside the model.
-- When onboarding a new workspace's resolver cron, add this gate at creation time — it is
-  not optional. Verify both branches before trusting it: run the command against the live
-  workspace (all-empty → `exit 1`), and against a workspace that has NOW items (→ `exit 0`).
+Check eligibility inside the shared run. An empty NOW queue means no legacy delivery work,
+not an empty product-operations checklist. For opted-in projects, also inspect approved
+packages and unfinished receipts. Never put a delivery-only gate on the shared schedule.
+Preserve authorization, ownership, and one-PR limits below; return results to the checklist.
 
 ## Non-negotiable guardrails
 
@@ -87,9 +53,8 @@ Notes:
 6. **Two failures means change strategy.** If the same fix approach fails twice (test
    still red, build still broken), stop, re-read the actual error, form a new hypothesis.
    Do not attempt a third variation of the same broken approach.
-7. **Isolate in a worktree.** Never edit the primary checkout at
-   `/Users/rickbowman/projects/compass` directly — this session and Rick's own local
-   session may both be using it.
+7. **Isolate in a worktree.** Never edit the configured repository's primary checkout
+   directly — it may be shared with other active work.
 
 ## Standing task procedure
 
@@ -118,10 +83,10 @@ plan without another design request. Then perform implementation and verificatio
 within package limits. Never fall through to the legacy path when opted-in validation
 fails. Disabled/absent policy retains the existing eligibility and direct-instruction path.
 
-The opt-in scheduler gate must check pending approved packages and unfinished receipts,
+The opt-in delivery eligibility check must inspect pending approved packages and unfinished receipts,
 not just NOW count. A tracking-only decision itself does not grant authority; execution
-uses the verified standing policy. The shell gate is only a wake-up filter, never an
-authorization check or a lock.
+uses the verified standing policy. Eligibility inspection is not an authorization check
+or a lock.
 
 1. Read `pm-config.md`. Resolve `roadmap`, `ost`, and `delivery` plus the workflow
    `decision_records` capability. Load `integration-routing` and the configured decision provider's
@@ -131,7 +96,8 @@ authorization check or a lock.
    grant delivery, merge, or deployment authority; the resolver continues only within its
    pre-existing authority after rechecking the normal eligibility gates.
 2. Invoke the `compass` skill for the MCP tool catalog and data model if not already loaded.
-3. `list_workspaces(orgSlug: "rbcodelabs")` → get the target workspace's `workspaceId`.
+3. Use the configured organization and workspace ID; if discovery is required, call
+   `list_workspaces` for that organization and match the configured workspace.
 4. `list_roadmap_items(workspaceId, horizon: "NOW")`.
 5. **Eligibility filter**, in list order (list order = kanban priority order, top = highest):
    - Skip any item whose `title` already starts with `🤖` (claimed — see Step 2) or `⚠️`
@@ -172,7 +138,7 @@ description field. Use only fields you already have and can set outright:
 ## Step 3 — Isolate work in a fresh worktree
 
 Use the `worktree-bootstrap` skill (or `EnterWorktree`) to create an isolated worktree off
-`main` — do not edit `/Users/rickbowman/projects/compass` directly. Branch naming per
+the configured default branch — do not edit the primary checkout directly. Branch naming per
 `.claude/pr-guidelines.md`:
 
 - `fix/<slug>-<first8ofUUID>` for bugs
@@ -189,9 +155,8 @@ cross-check reliable later.
    this roadmap item implements**; any linked feedback via `get_feedback_item` for the
    original report/repro details.
 2. Actually read the relevant source before editing — grep/Explore the codebase, don't
-   guess file locations. Compass conventions: server actions in `<section>/actions.ts`,
-   Prisma via `getPrisma()` from `lib/db.ts` (never import `PrismaClient` directly), MCP
-   tool handlers extracted into `lib/` for testability.
+   guess file locations. Follow the target repository's architecture and conventions;
+   using Compass for delivery tracking does not imply a particular application stack.
 3. **Record the plan and task breakdown in Compass** — the team-facing mirror of your
    internal `TaskCreate` list, not a replacement for it:
    - **Solution Plan.** If a current approved plan already covers the implementation, use
@@ -216,20 +181,16 @@ cross-check reliable later.
      on the board.
 4. Follow **TDD**: write a failing test first (`__tests__/` for unit/integration), then
    the minimal fix, then confirm green. Use the `test-first` skill if useful.
-5. If the fix needs a schema change: use `dsql-migrate` / `dsql-schema` skills — Aurora
-   DSQL has no autoincrement/enum/FK support, no `@updatedAt` triggers, indexes are async.
-   Any Prisma schema change requires `prisma db push` against dev, confirmed successful,
-   before opening the PR.
+5. If the fix needs a schema change, follow the target repository's database migration
+   workflow and verify against its configured development environment before opening the PR.
 6. Keep the change scoped to the one item. Resist drive-by refactors — they slow review
    and widen blast radius.
 
 ## Step 5 — Verify before opening the PR
 
-Run the full `.claude/pr-guidelines.md` checklist (or invoke the `pr-checklist` skill):
-`pnpm test`, `pnpm tsc --noEmit`, `pnpm build`, and E2E screenshots/functional suites if
-the change touches a covered journey. All must be observed green — not assumed. New MCP
-tools need unit tests in `__tests__/` and a docs update in `docs/content/09-mcp-api.md`
-(plus flag if `~/.claude/skills/compass/SKILL.md` needs a matching update).
+Run the target repository's PR checklist and applicable test, type, build, and E2E checks.
+Observe results and update the relevant documentation. Resolve commands and paths from
+that repository rather than assuming a package manager or framework.
 
 ## Step 6 — Push and open the PR
 
@@ -249,12 +210,11 @@ tools need unit tests in `__tests__/` and a docs update in `docs/content/09-mcp-
    exists, add one Solution discussion comment with the PR URL and linkage receipt. Title
    matching is not a durable link.
 
-## Step 7 — Watch the deploy and smoke-test (standing approval, no need to ask)
+## Step 7 — Verify the preview when configured
 
-Per the `vercel-tools` skill and the user's standing PR-deploy-monitoring rule: wait for
-the Vercel preview deploy, smoke-test the affected flow, note the preview URL in the PR.
-Only interrupt/flag to the user if something is actually broken (failed deploy, route
-errors, migration needed) — otherwise this is silent, expected background work.
+When the repository has an authorized preview workflow, wait for that preview, smoke-test
+the affected flow, and note its URL in the PR. Use the configured provider's workflow;
+do not infer deployment authority or require a particular hosting platform.
 
 ## Step 8 — Hand off completion
 

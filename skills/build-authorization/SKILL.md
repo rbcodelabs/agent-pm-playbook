@@ -142,10 +142,12 @@ not an invitation to repeatedly ask for the same approval.
 ## Installation and pilot
 
 Install this skill, its evaluator and all referring workflows together. Verify actual
-installed file contents and scheduled prompt paths before enabling execution. An empty-NOW
-gate alone is insufficient: it must also allow a newly approved build package awaiting
-admission. Use one serialized scheduled executor with durable receipts; a separate generic
-decision router must not also apply the same package.
+installed file contents and scheduled prompt paths before enabling execution. The
+[product-operations run](../scheduled-product-operations/SKILL.md) checks newly approved
+packages awaiting admission and unfinished receipts even when NOW is empty. Invoke one
+serialized executor with durable receipts from that run; no separate executor cron is
+required. A generic decision router must not also apply the same package, and a delivery
+queue gate must never suppress inspection of other product areas.
 
 Migrate one project first. Repair only verified links; draft one complete eligible package.
 Do not change validation status to satisfy the pilot. If no candidate is ready, record the

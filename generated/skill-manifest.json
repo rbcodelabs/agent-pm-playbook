@@ -2,6 +2,14 @@
   "generatedAt": "2026-05-15T00:00:00.000Z",
   "version": 2,
   "skills": {
+    "scheduled-product-operations": {
+      "summary": "Install or run one recurring product-operations checklist that checks every area and executes safe actionable work on every run",
+      "bodyPath": "skills/scheduled-product-operations/SKILL.md",
+      "retrieval": {
+        "aliases": ["schedule playbook", "consolidate playbook cron jobs", "product operations"],
+        "intents": ["install the playbook scheduled jobs", "check and triage all product operations"]
+      }
+    },
     "agentic-pm": {
       "priority": 3,
       "summary": "AI-augmented PM coaching: OSTs, continuous discovery, experiment design, and weekly synthesis workflows grounded in the Agentic PM Playbook",
