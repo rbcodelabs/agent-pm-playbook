@@ -136,13 +136,17 @@ configured runtime. A retry reuses the same decision and idempotency keys.
 
 ## Mode 4 — Notify and Digest
 
-Use a scheduled notifier to inspect pending requests without changing their decisions.
+Inspect pending requests from the decisions-and-notifications item in
+[scheduled-product-operations](../scheduled-product-operations/SKILL.md), or on an existing
+review event. No separate notifier cron is required. In a shared run, `AWAITING_DECISION`
+ends this item; the parent continues independent checklist work.
 
 - Send the creation notification once.
 - Send at most one due-date reminder.
 - Put overdue low- and medium-risk requests into the configured digest.
 - Escalate an overdue high-risk request once through the configured escalation target.
-- Do not generate a model turn when there are no eligible notifications.
+- If there are no eligible notifications, return no work to the shared checklist;
+  standalone event invocations may skip an empty event without a model turn.
 - Never expose credentials or private source content beyond the configured audience.
 
 ## Mode 5 — Concept Direction Review

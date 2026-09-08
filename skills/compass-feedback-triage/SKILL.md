@@ -5,20 +5,16 @@ description: >
   actions on each: dedup/link to an existing opportunity, create an EXPLORING opportunity,
   route evidence-backed focus decisions for human review, or close noise. Keeps the OPEN
   feedback queue empty without turning a single signal into an autonomous build commitment.
-  Use for the scheduled Compass Feedback Triage job or manually when feedback has piled up.
+  Use from the product-operations checklist or manually when feedback has piled up.
 ---
 
 # Compass Feedback Triage
 
-> **Scheduling:** each workspace runs this via a daily `<Workspace> Feedback Triage`
-> `CronCreate` job. Schedule it before synthesis and opportunity-review flows; delivery is
-> independent and acts only on already-approved `NOW` work. Every triage cron MUST carry a
-> deterministic `gateCommand` so an empty OPEN queue never spawns a wasted model turn:
-> query `list_feedback` (`status: "OPEN"`) via the Compass MCP endpoint and `exit 1` (skip)
-> when it returns `No feedback found`, else `exit 0` (fire). Use `gateFailOpen: true`,
-> `gateTimeoutSeconds: 90`. Use the same MCP `curl`/`jq` call shape documented in the
-> `compass-resolver` scheduling section, substituting the single feedback query, and verify
-> both the empty and non-empty branches.
+> **Scheduling:** invoke this skill from the feedback-and-research item in
+> [scheduled-product-operations](../scheduled-product-operations/SKILL.md).
+> Do not install a separate feedback cron. Inspect the OPEN queue inside the shared run;
+> when empty, return that result to the checklist so other areas are still checked.
+> Intake and delivery keep their existing authorization boundaries.
 
 ## Setup
 
@@ -29,8 +25,9 @@ description: >
    A recorded decision does not expand this intake workflow's existing authority
    boundary or turn feedback into implementation permission.
 2. Invoke the `compass` skill for the MCP tool catalog and data model if not already loaded.
-3. `list_workspaces(orgSlug: "rbcodelabs")` → get the workspaceId for the workspace named
-   "Compass" (slug `compass`).
+3. Resolve the organization and workspace ID from the configured Compass connection.
+   If discovery is needed, list workspaces for that organization and match the configured
+   workspace; never select an unrelated workspace by name or list position.
 
 ## Processing loop
 
