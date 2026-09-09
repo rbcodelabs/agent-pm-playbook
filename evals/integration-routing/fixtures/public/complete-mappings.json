@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "id": "complete-mappings",
+  "description": "A resolved contract contains all product and workflow capabilities.",
+  "prompt": {
+    "system": "Apply the supplied integration-routing skill and return only JSON matching the output contract.",
+    "user": "Resolve every product capability for compass-full and every workflow capability for geode-obsidian-review."
+  },
+  "execution": { "mode": "constrained-run-v1", "maxTurns": 1, "maxTokens": 1200, "timeoutSeconds": 30, "tools": [], "skills": [], "filesystem": "none" },
+  "outputContract": {
+    "type": "object", "additionalProperties": false, "required": ["product", "workflow"],
+    "properties": {
+      "product": {
+        "type": "object", "additionalProperties": false,
+        "required": ["vision", "research_capture", "insights", "okrs", "ost", "experiments", "roadmap", "delivery", "reporting_archive"],
+        "properties": {
+          "vision": { "type": "string", "minLength": 1 }, "research_capture": { "type": "string", "minLength": 1 }, "insights": { "type": "string", "minLength": 1 },
+          "okrs": { "type": "string", "minLength": 1 }, "ost": { "type": "string", "minLength": 1 }, "experiments": { "type": "string", "minLength": 1 },
+          "roadmap": { "type": "string", "minLength": 1 }, "delivery": { "type": "string", "minLength": 1 }, "reporting_archive": { "type": "string", "minLength": 1 }
+        }
+      },
+      "workflow": {
+        "type": "object", "additionalProperties": false,
+        "required": ["automation_runtime", "review_requests", "decision_records", "notifications", "prototype_artifacts", "product_analytics"],
+        "properties": {
+          "automation_runtime": { "type": "string", "minLength": 1 }, "review_requests": { "type": "string", "minLength": 1 }, "decision_records": { "type": "string", "minLength": 1 },
+          "notifications": { "type": "string", "minLength": 1 }, "prototype_artifacts": { "type": "string", "minLength": 1 }, "product_analytics": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  },
+  "grader": "complete-capability-maps",
+  "expected": {
+    "product": ["vision", "research_capture", "insights", "okrs", "ost", "experiments", "roadmap", "delivery", "reporting_archive"],
+    "workflow": ["automation_runtime", "review_requests", "decision_records", "notifications", "prototype_artifacts", "product_analytics"]
+  }
+}

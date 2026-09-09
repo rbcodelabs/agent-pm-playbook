@@ -1,0 +1,21 @@
+{
+  "$schema": "./manifest.schema.json",
+  "version": 1,
+  "skillId": "integration-routing",
+  "source": { "path": "../../skills/integration-routing/SKILL.md", "hash": "ec31fa1a38c67422778bec3a77f06cb7a2eec95bc1b6106baffef8b106cd33d0", "revision": "3a49c3fba7fe9b6dbde5cac7b1ef9d7c5133e6b9", "purposePath": "../../skills/integration-routing/PURPOSE.md", "purposeHash": "c71f8d3791ecd4e79d07b9f8dbee5ed5171110753f0fe641494192820990d492" },
+  "budgets": { "maxCandidateTokens": 12000, "maxEvaluationSeconds": 120 },
+  "thresholds": { "minimumAggregateImprovement": 0.15, "requireNoCriticalRegression": true },
+  "fixtures": [
+    { "id": "exact-one-provider", "path": "fixtures/public/exact-one-provider.json", "hash": "825207e4aa5358fa1b5cf4547e2947931dd6c42c9d6663a601ced40a51cb778b", "visibility": "public", "critical": true, "weight": 1 },
+    { "id": "complete-mappings", "path": "fixtures/public/complete-mappings.json", "hash": "a6deeb7d73e23ea2f63b548f110f566384e7b58d4e893095503215107c5476aa", "visibility": "public", "critical": true, "weight": 1 },
+    { "id": "no-silent-fallback", "path": "fixtures/holdout/no-silent-fallback.json", "hash": "b7428788dbfa116ff65afc208e66e7a0aa26c594eca46df19fa23409066ede10", "visibility": "holdout", "critical": true, "weight": 1 },
+    { "id": "source-of-truth-preservation", "path": "fixtures/holdout/source-of-truth-preservation.json", "hash": "80710a41f4fa577595cc0262bf47893120f75d2db70804e195c1d4cf71c1db1f", "visibility": "holdout", "critical": true, "weight": 1 },
+    { "id": "malformed-config", "path": "fixtures/public/malformed-config.json", "hash": "5f542246c7078dbd84198f57cc4f91ef4e521af4f22cad6c272f276a7f3a56cf", "visibility": "public", "critical": true, "weight": 1 }
+  ],
+  "resultSets": {
+    "baseline": { "path": "results/baseline.json", "hash": "82c2df3cd7ef4837efc0915bdae6905af1529165fda2eee372d8e22e1c36ea6b", "artifactPath": "candidates/baseline.md", "artifactHash": "1423bd9f14882124ff56659259bb3a58b94995f781f5ed4e66b3e46e72dec49f" },
+    "beneficial": { "path": "results/beneficial.json", "hash": "87417e5f858f6fd0c8dd8e45d5bf0f684eddb27818913cc4159dfda98c857bf9", "artifactPath": "candidates/beneficial.md", "artifactHash": "bc180b3a7010df1842e47bec396133d4188b8d897ccb19b1c75a3f96bdf351f1" },
+    "harmful": { "path": "results/harmful.json", "hash": "9c9e222672d213d49b417629f267408cc8dec79529c28218788b2c51aafb8a19", "artifactPath": "candidates/harmful.md", "artifactHash": "ad863086f5dfc4ad161f9e14a97c3fd0482bd0bb686d29d1864d45a6fe5d218d" },
+    "no-op": { "path": "results/no-op.json", "hash": "82c2df3cd7ef4837efc0915bdae6905af1529165fda2eee372d8e22e1c36ea6b", "artifactPath": "candidates/no-op.md", "artifactHash": "d1ca99515d4eafd193a1aa259c83bef3329b870625c89a65b4cb7653605e35f7" }
+  }
+}
