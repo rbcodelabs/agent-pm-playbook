@@ -81,18 +81,45 @@ Questions not worth asking:
 - Questions the user already answered in the brief
 - Questions that only matter after the approach is chosen
 
-### Use a prototype when the decision is visual
+### Use Design mode for visual work
 
-For a meaningful UI change, when the unresolved risk is primarily layout,
-information hierarchy, grouping, or interaction behavior, prefer a lightweight
-reviewable prototype before implementation. An in-conversation HTML artifact or small
-interactive mockup can give the user something concrete to react to while the
-design is still cheap to change.
+For a new screen, substantial UI change, or unresolved layout, hierarchy, grouping,
+or interaction decision, create or revise a reviewable visual prototype before
+production implementation. In Geode Agent Threads, use `/design <brief>` for this
+step. Reuse an approved artifact when it already covers the current scope; trivial
+copy or styling fixes with a clear expected result do not need a new prototype.
 
-Use the prototype to resolve a specific product decision, not as open-ended
-polish work. Keep it outside production source, stop iterating once the relevant
-decision is made, and carry the approved behavior into the implementation spec.
-Skip this step when the UI change is trivial or the interaction is already clear.
+Technical planning uses native Plan mode. Creating the visual artifact requires
+file writes, so finish the read-only planning turn and resolve any pending Plan
+approval before starting the design turn. Approval to create a prototype authorizes
+that artifact work only; production implementation still follows the approved spec.
+
+Geode invocation and lifecycle:
+
+- Submit `/design <brief>` in the current thread's composer to create its first
+  artifact or revise the existing one. It can be introduced midway through an
+  existing conversation; a new thread is unnecessary. Prefer a settled turn so
+  the design brief does not compete with work already in progress.
+- Bare `/design` reopens an existing preview without requesting edits. From the
+  Agents List or Agent Board, a brief is required to start a new design thread.
+- Use an exposed native design action if the host provides one. Otherwise give
+  the user the exact composer command to submit. A literal slash command sent
+  through a generic thread-message tool does not invoke the host command handler;
+  do not claim Design mode started without an artifact and preview.
+- Design artifacts require a desktop vault with local filesystem access. When
+  Geode Design mode is unavailable, state the limitation and use the configured
+  prototype provider or another supported reviewable mockup workflow. Do not make
+  Geode a requirement for other hosts.
+
+Include the user task, relevant existing design patterns, target viewports, and
+the decision to resolve in the brief. Keep the prototype outside production
+source and follow the host's artifact contract: local HTML, external CSS and
+JavaScript, and local assets, without package installs, servers, or network APIs.
+Use realistic synthetic content, check responsive layouts and relevant interaction
+states, and present the preview for review. Stop iterating once the visual decision
+is approved. Record an identifiable artifact revision or screenshot and the
+approved behavior in the implementation spec; prototype approval and visual QA
+do not replace production tests or verification in the actual application.
 
 ---
 
@@ -129,6 +156,7 @@ Once the approach is approved, write a brief spec before coding:
 **Approach:** [chosen approach in one sentence]
 **Files affected:** [list of files that will change]
 **Key decisions:** [any choices baked into this approach]
+**Visual reference:** [approved artifact revision/screenshots and behavior, or why not applicable]
 **Riskiest assumption:** [what must be true for this to work]
 **Out of scope:** [things explicitly not included]
 **Done when:** [specific, observable criteria — what can be verified]
@@ -141,7 +169,7 @@ Save this as a comment in the conversation or as a note if the feature is large 
 ## Handoff
 
 After approval, hand off to the implementation workflow:
-- Invoke the `engineer` agent with the spec and file list
+- Invoke the `engineer` agent with the spec, file list, and approved visual reference when applicable
 - The engineer uses `test-first` for all new logic
 - The engineer uses `verify-done` before reporting completion
 
