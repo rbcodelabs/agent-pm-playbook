@@ -85,8 +85,9 @@ Questions not worth asking:
 
 For a new screen, substantial UI change, or unresolved layout, hierarchy, grouping,
 or interaction decision, create or revise a reviewable visual prototype before
-production implementation. In Geode Agent Threads, use `/design <brief>` for this
-step. Reuse an approved artifact when it already covers the current scope; trivial
+production implementation. In Geode Agent Threads, call `EnterDesignMode({ brief })`
+when available, or use `/design <brief>` in the composer. Reuse an approved artifact
+when it already covers the current scope; trivial
 copy or styling fixes with a clear expected result do not need a new prototype.
 
 Technical planning uses native Plan mode. Creating the visual artifact requires
@@ -102,7 +103,11 @@ Geode invocation and lifecycle:
   the design brief does not compete with work already in progress.
 - Bare `/design` reopens an existing preview without requesting edits. From the
   Agents List or Agent Board, a brief is required to start a new design thread.
-- Use an exposed native design action if the host provides one. Otherwise give
+- Prefer the `EnterDesignMode` tool when exposed. It creates or reuses the calling
+  thread's artifact, opens its preview, and returns paths and design instructions
+  for the agent to continue in the same turn. It requires a nonblank brief and
+  normal write permission; resolve Plan mode before calling it. Inspect its preview
+  outcome rather than assuming the preview opened. If unavailable, give
   the user the exact composer command to submit. A literal slash command sent
   through a generic thread-message tool does not invoke the host command handler;
   do not claim Design mode started without an artifact and preview.

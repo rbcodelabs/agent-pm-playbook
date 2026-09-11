@@ -42,8 +42,8 @@ Before writing any code:
 For visual work (new screens, substantial UI changes, or unresolved layout and
 interaction decisions), follow the visual prototype step in
 [`design-before-code`](../skills/design-before-code/SKILL.md#use-design-mode-for-visual-work).
-In Geode Agent Threads, use `/design <brief>` and carry the approved artifact
-reference into implementation. If no native design action is exposed to the agent,
+In Geode Agent Threads, call `EnterDesignMode({ brief })` when available and carry
+the approved artifact reference into implementation. If the tool is unavailable,
 ask the orchestrator to arrange composer submission; generic thread messages do
 not activate slash commands. Reuse an approved visual design covering the scope;
 trivial fixes with a clear expected result do not need another prototype. Other
