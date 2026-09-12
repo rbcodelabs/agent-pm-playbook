@@ -268,6 +268,56 @@ test("roadmap stewardship separates validation from capacity-ranked delivery adm
   assert.match(compass, /Missing capacity or ordering data\s+means keep `LATER`/is);
 });
 
+test("Compass's native decision receipt is the primary Mode 4 reconciliation signal", () => {
+  // apply_recorded_decision (Compass PR #202) opened receipt-writing to service actors while
+  // deciding remains human-only. Reconciliation must prefer that native receipt over the
+  // product-state derivation that PR #18 originally treated as authoritative.
+  const adapter = readFileSync("skills/human-review-workflow/references/compass-decisions-adapter.md", "utf8");
+  assert.match(adapter, /apply_recorded_decision\(decisionId\)/);
+  assert.match(adapter, /Idempotent, verified/i);
+  assert.match(adapter, /No side effects, verified/i);
+  assert.match(adapter, /\*\*primary\*\*/);
+  assert.match(adapter, /does not by itself imply a pending mutation/i);
+  // The decision-record-ID vs request-ID gotcha: passing the wrong ID must be documented
+  // explicitly, because the resulting error mimics the old permission-denied message.
+  assert.match(adapter, /get_decision\(workspaceId, requestId\)\.decisions\[0\]\.id/);
+  assert.match(adapter, /decisionRecord\s+not found or access denied/i);
+  // decidedAt, not the request's createdAt, is the age signal.
+  assert.match(adapter, /decisions\[0\]\.decidedAt.*for a decision's age/i);
+  assert.match(adapter, /never the request's `createdAt`/i);
+  assert.doesNotMatch(adapter, /NOW|signed[ -]policy|capacity/i);
+
+  const review = readFileSync("skills/human-review-workflow/SKILL.md", "utf8");
+  assert.match(review, /native decision-application receipt/i);
+  assert.match(review, /native signal first/i);
+  assert.match(review, /Already reflected — no mutation required/);
+  assert.match(review, /A question directed at the agent, not at product state/);
+  assert.match(review, /decisions\[0\]\.decidedAt/);
+  assert.match(review, /never the originating request's creation\s*\n?\s*timestamp/i);
+
+  const ops = readFileSync("skills/scheduled-product-operations/SKILL.md", "utf8");
+  assert.match(ops, /apply_recorded_decision/);
+  assert.match(ops, /decided timestamp/i);
+  assert.match(ops, /list_research_studies/);
+  assert.match(ops, /unverifiable from this seat/i);
+});
+
+test("experiment workflow reaches for NOT_PURSUED instead of KILL or an open-ended Designing state", () => {
+  const experiments = readFileSync("skills/experiment-workflow/SKILL.md", "utf8");
+  assert.match(experiments, /\*\*Not Pursued:\*\*/);
+  assert.match(experiments, /never `KILL`/);
+  assert.match(experiments, /`NOT_PURSUED` leaves the linked Assumption\s*\n?\s*`UNTESTED`/);
+  assert.match(experiments, /`KILL` would incorrectly set it `INVALIDATED`/);
+  assert.match(experiments, /A\s*\n?\s*`reason` is required/);
+  assert.match(experiments, /status: Not Pursued/);
+  assert.match(experiments, /Not Pursued result/);
+
+  const compass = readFileSync("skills/compass-workflow/SKILL.md", "utf8");
+  assert.match(compass, /NOT_PURSUED/);
+  assert.match(compass, /Own terminal status, distinct from KILLED/);
+  assert.match(compass, /reason.*is required for NOT_PURSUED/is);
+});
+
 test("Compass intake and delivery no longer bypass human investment gates", () => {
   const triage = readFileSync("skills/compass-feedback-triage/SKILL.md", "utf8");
   const resolver = readFileSync("skills/compass-resolver/SKILL.md", "utf8");

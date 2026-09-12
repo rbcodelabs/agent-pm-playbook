@@ -98,6 +98,20 @@ healthy when nothing is awaiting the reviewer **and** no already-answered decisi
 unreflected. The same caution applies wherever answering, resolving, or closing an item
 moves it out of the default filter: verify what the query excludes before reporting `healthy`.
 
+For `compass_decisions`, establish "unreflected" primarily from the provider's native
+decision-application receipt (`apply_recorded_decision`) per the
+[adapter reference](../human-review-workflow/references/compass-decisions-adapter.md); treat
+product-state comparison as the corroborating cross-check, and compute a decision's age from
+its own decided timestamp — never the originating request's creation timestamp, which can
+diverge by days. A `DECIDED` outcome does not by itself imply pending work: some decisions
+affirm the current state, and some pose a question to the agent rather than instruct a
+mutation; both close with a receipt and no follow-up item.
+
+Agent identities still cannot call `list_research_studies` (verified blocked as of
+2026-09-12), unlike `list_decisions`, which does work for agents. Treat an empty or
+unavailable research-study inventory as unverifiable from this seat, never as evidence that
+no transcripts remain unprocessed — mark that sub-check `blocked`, not `healthy`.
+
 ## Triage and execute
 
 - Inspect every row first so a lengthy delivery task cannot hide other areas. Rank findings

@@ -67,6 +67,13 @@ Action-capable legacy adapters additionally implement application and dispatch o
 If an adapter cannot perform a required operation, stop with a configuration error before
 changing product state.
 
+Some tracking-only providers additionally expose a native decision-application receipt (for
+example `compass_decisions`' `apply_recorded_decision`; see its adapter reference). That
+receipt lets a service actor record that a decision has been actioned without granting
+continuation authority — it does not reclassify the provider as action-capable, and it never
+substitutes for the human decision itself. Treat it as the primary signal for Mode 4
+reconciliation wherever the provider supports it.
+
 `list_decided` is required, not optional. A tracking-only provider has no `mark_applied`,
 so answering a request silently removes it from the pending queue without recording that
 anything was done about it. A run that enumerates only pending requests can therefore never
@@ -173,13 +180,28 @@ that loop, because nothing else will: the request has already left the pending q
    run is rarely the run that created the request, so it holds no persisted request ID and
    cannot rely on `get` alone. Enumeration is queue discovery and does not replace exact
    request recovery, which still uses the persisted idempotency key or request ID.
-2. **Check for an existing handled receipt.** Reconciliation is keyed by request ID plus the
-   decided revision identity. A receipt from an earlier revision does not close a later one.
-3. **Compare the outcome against authoritative product state.** Tracking-only providers write
-   no application state, so "handled" is never a field on the request; it is evidence. Read
-   the resolved provider for the objects the decision concerns and determine whether the
-   outcome is already reflected.
+2. **Check for an existing handled receipt — native signal first.** Where the provider
+   exposes a native decision-application receipt (`compass_decisions`' `apply_recorded_decision`),
+   that receipt is the primary "already handled" signal: check it before anything else. Where
+   no native receipt capability exists, fall back to a durable receipt this workflow recorded
+   in `automation_runtime`. Either way, reconciliation is keyed by request ID plus the decided
+   revision identity — a receipt from an earlier revision does not close a later one.
+3. **Compare the outcome against authoritative product state — corroboration, not the primary
+   signal, once a native receipt exists.** Read the resolved provider for the objects the
+   decision concerns and determine whether the outcome is already reflected. This comparison
+   stays essential even with a native receipt: it is how a run classifies decisions whose
+   implication is not a simple state change (an answer owed to the reviewer, or an affirmation
+   that current state already is the decided outcome). For a provider with no native receipt
+   operation, this comparison remains the primary signal.
 4. **Classify each unreflected decision.**
+   - *Already reflected — no mutation required* — the decided outcome affirms the current
+     state rather than instructing a change (for example, approving that a solution "remain"
+     at its current stage). Write the handled receipt; do not create a follow-up item merely
+     because a decision record exists.
+   - *A question directed at the agent, not at product state* — the rationale is a question
+     the reviewer is asking the agent (for example, "do we have mocks yet?"), not an
+     instruction to mutate anything. Post the answer through the appropriate channel, then
+     write the handled receipt.
    - *Mechanically closable under existing authority* — perform the ordinary action, then
      write the handled receipt. The decision supplies the human judgment; the authority must
      already exist independently. Re-validate immediately before acting.
@@ -194,8 +216,11 @@ that loop, because nothing else will: the request has already left the pending q
    - *Deliberately not actioned* — record that with a reason and a handled receipt so it stops
      reappearing. An outcome may legitimately be informational.
 5. **Report every decided request that remains unreflected**, oldest first, with its age since
-   the decision. Age is the signal that this loop is failing; a growing backlog of answered
-   decisions means the reviewer is spending judgment that the system is discarding.
+   the decision. Compute that age from the decision's own decided timestamp (for
+   `compass_decisions`, `decisions[0].decidedAt`) — never the originating request's creation
+   timestamp; the two can diverge by days and conflating them manufactures false urgency. Age
+   is the signal that this loop is failing; a growing backlog of answered decisions means the
+   reviewer is spending judgment that the system is discarding.
 
 Reconciliation never expands authority. An approval still authorizes nothing by itself; this
 mode only guarantees the answer is seen, acted on where already permitted, or made visible as
@@ -277,6 +302,8 @@ Report:
 - for tracking-only providers, the reported outcome and explicit `NO_ACTION`; for
   action-capable providers, the applied continuation or explicit no-op;
 - for every decided request reconciled under Mode 4: its classification, the handled receipt
-  or the tracked follow-up work item created, and the age of any decision still unreflected;
+  (native provider receipt where available, else the runtime receipt) or the tracked
+  follow-up work item created, and the age of any decision still unreflected, computed from
+  the decision's own decided timestamp;
 - resulting object/run IDs;
 - any missing capability or retryable error.
