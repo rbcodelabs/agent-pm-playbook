@@ -58,7 +58,7 @@ Action-capable legacy adapters additionally implement application and dispatch o
 
 | Capability | Tracking-only | Action-capable |
 |---|---|---|
-| `review_requests` | `create`, `get`, `list_pending`, `deep_link` | tracking operations plus `update_response`, `mark_applied` |
+| `review_requests` | `create`, `get`, `list_pending`, `list_decided`, `deep_link` | tracking operations plus `update_response`, `mark_applied` |
 | `decision_records` | `get_by_review` | tracking operations plus `record`, `verify_not_applied` |
 | `notifications` | `send_request`, `send_reminder`, `send_digest`, `send_escalation` | same |
 | `automation_runtime` | run state; no continuation dispatch required | `dispatch`, `retry`, `get_run_status` |
@@ -66,6 +66,19 @@ Action-capable legacy adapters additionally implement application and dispatch o
 
 If an adapter cannot perform a required operation, stop with a configuration error before
 changing product state.
+
+Some tracking-only providers additionally expose a native decision-application receipt (for
+example `compass_decisions`' `apply_recorded_decision`; see its adapter reference). That
+receipt lets a service actor record that a decision has been actioned without granting
+continuation authority — it does not reclassify the provider as action-capable, and it never
+substitutes for the human decision itself. Treat it as the primary signal for Mode 4
+reconciliation wherever the provider supports it.
+
+`list_decided` is required, not optional. A tracking-only provider has no `mark_applied`,
+so answering a request silently removes it from the pending queue without recording that
+anything was done about it. A run that enumerates only pending requests can therefore never
+observe a decision the reviewer already made, and answered judgment accumulates unread for
+as long as that run repeats. Treat a decided request as open work until Mode 4 reconciles it.
 
 Read [references/review-contract.md](references/review-contract.md) whenever creating,
 validating, applying, expiring, or superseding a review.
@@ -110,6 +123,11 @@ continuation or trigger any automatic action. It does not grant roadmap, merge, 
 destructive, or any other new authority. A subsequent workflow may act only inside its
 pre-existing authority and must perform its ordinary validation immediately before acting.
 
+Reporting an outcome does not complete it. Hand every decided request to Mode 4
+reconciliation so it is acted on, converted into tracked work, or explicitly recorded as not
+actioned. A decision that is only ever read and restated is indistinguishable, to the
+reviewer, from one that was ignored.
+
 ## Mode 3 — Apply a Decision with an Action-capable Adapter
 
 Use only when the configured adapter explicitly declares action-capable semantics and the
@@ -134,12 +152,15 @@ decision router detects a response.
 If step 6 fails, leave the decision record `pending` with the error and retry through the
 configured runtime. A retry reuses the same decision and idempotency keys.
 
-## Mode 4 — Notify and Digest
+## Mode 4 — Notify, Digest, and Reconcile Decided Work
 
-Inspect pending requests from the decisions-and-notifications item in
+Inspect pending **and decided** requests from the decisions-and-notifications item in
 [scheduled-product-operations](../scheduled-product-operations/SKILL.md), or on an existing
 review event. No separate notifier cron is required. In a shared run, `AWAITING_DECISION`
-ends this item; the parent continues independent checklist work.
+ends the item for a request that is still pending; the parent continues independent
+checklist work, including reconciliation of requests that were already decided.
+
+### Notify pending requests
 
 - Send the creation notification once.
 - Send at most one due-date reminder.
@@ -148,6 +169,63 @@ ends this item; the parent continues independent checklist work.
 - If there are no eligible notifications, return no work to the shared checklist;
   standalone event invocations may skip an empty event without a model turn.
 - Never expose credentials or private source content beyond the configured audience.
+
+### Reconcile decided requests
+
+A decision is not finished when the reviewer answers it. It is finished when the answer has
+visibly changed something or has been explicitly recorded as declined. Every run must close
+that loop, because nothing else will: the request has already left the pending queue.
+
+1. **Enumerate, do not remember.** Call `list_decided` for the configured scope. A scheduled
+   run is rarely the run that created the request, so it holds no persisted request ID and
+   cannot rely on `get` alone. Enumeration is queue discovery and does not replace exact
+   request recovery, which still uses the persisted idempotency key or request ID.
+2. **Check for an existing handled receipt — native signal first.** Where the provider
+   exposes a native decision-application receipt (`compass_decisions`' `apply_recorded_decision`),
+   that receipt is the primary "already handled" signal: check it before anything else. Where
+   no native receipt capability exists, fall back to a durable receipt this workflow recorded
+   in `automation_runtime`. Either way, reconciliation is keyed by request ID plus the decided
+   revision identity — a receipt from an earlier revision does not close a later one.
+3. **Compare the outcome against authoritative product state — corroboration, not the primary
+   signal, once a native receipt exists.** Read the resolved provider for the objects the
+   decision concerns and determine whether the outcome is already reflected. This comparison
+   stays essential even with a native receipt: it is how a run classifies decisions whose
+   implication is not a simple state change (an answer owed to the reviewer, or an affirmation
+   that current state already is the decided outcome). For a provider with no native receipt
+   operation, this comparison remains the primary signal.
+4. **Classify each unreflected decision.**
+   - *Already reflected — no mutation required* — the decided outcome affirms the current
+     state rather than instructing a change (for example, approving that a solution "remain"
+     at its current stage). Write the handled receipt; do not create a follow-up item merely
+     because a decision record exists.
+   - *A question directed at the agent, not at product state* — the rationale is a question
+     the reviewer is asking the agent (for example, "do we have mocks yet?"), not an
+     instruction to mutate anything. Post the answer through the appropriate channel, then
+     write the handled receipt.
+   - *Mechanically closable under existing authority* — perform the ordinary action, then
+     write the handled receipt. The decision supplies the human judgment; the authority must
+     already exist independently. Re-validate immediately before acting.
+   - *Requires work beyond this run's authority, or carries rationale that is not a
+     mechanical instruction* — create or reuse one tracked follow-up work item in the
+     resolved delivery provider, linked to the request, and record it on the checklist.
+     Reviewer rationale is frequently prose describing intent across several objects. Convert
+     it into visible work; never silently interpret it into mutations, and never discard it.
+   - *Blocked on a missing capability* — record the specific missing operation or tool and
+     surface it. Do not approximate the outcome with a different operation whose side effects
+     the reviewer did not agree to.
+   - *Deliberately not actioned* — record that with a reason and a handled receipt so it stops
+     reappearing. An outcome may legitimately be informational.
+5. **Report every decided request that remains unreflected**, oldest first, with its age since
+   the decision. Compute that age from the decision's own decided timestamp (for
+   `compass_decisions`, `decisions[0].decidedAt`) — never the originating request's creation
+   timestamp; the two can diverge by days and conflating them manufactures false urgency. Age
+   is the signal that this loop is failing; a growing backlog of answered decisions means the
+   reviewer is spending judgment that the system is discarding.
+
+Reconciliation never expands authority. An approval still authorizes nothing by itself; this
+mode only guarantees the answer is seen, acted on where already permitted, or made visible as
+outstanding work. `Request changes` and `Reject` require reconciliation exactly as `Approve`
+does — a reviewer who asked for changes is owed the same follow-through as one who agreed.
 
 ## Mode 5 — Concept Direction Review
 
@@ -223,5 +301,9 @@ Report:
 - notification result;
 - for tracking-only providers, the reported outcome and explicit `NO_ACTION`; for
   action-capable providers, the applied continuation or explicit no-op;
+- for every decided request reconciled under Mode 4: its classification, the handled receipt
+  (native provider receipt where available, else the runtime receipt) or the tracked
+  follow-up work item created, and the age of any decision still unreflected, computed from
+  the decision's own decided timestamp;
 - resulting object/run IDs;
 - any missing capability or retryable error.

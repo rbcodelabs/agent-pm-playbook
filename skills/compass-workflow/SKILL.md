@@ -161,7 +161,7 @@ instead. When an experiment concludes, Compass auto-updates the linked assumptio
 
 ### Experiments
 ```
-DESIGNING → RUNNING → COMPLETE | KILLED
+DESIGNING → RUNNING → COMPLETE | KILLED | NOT_PURSUED
 ```
 
 | Status | When to apply |
@@ -170,6 +170,7 @@ DESIGNING → RUNNING → COMPLETE | KILLED
 | **RUNNING** | Kill condition is written and approved; test is live. Never start RUNNING without a kill condition. |
 | **COMPLETE** | Experiment finished; result logged; conclusion (PROCEED/KILL/ITERATE) recorded. |
 | **KILLED** | Abandoned mid-run. Log reason before killing. |
+| **NOT_PURSUED** | A human decided not to run this experiment at all — opportunity cost, timing, or reprioritization, not a failed test. Own terminal status, distinct from KILLED. Leaves the linked Assumption `UNTESTED`; a `reason` is required. |
 
 ### Roadmap Horizons
 ```
@@ -206,8 +207,11 @@ means keep `LATER`. `NEXT → NOW` requires a separate commitment decision.
 
 **When an experiment concludes:**
 - Call `log_experiment_result` with the observation note and any metric/value
-- Call `conclude_experiment` with PROCEED, KILL, or ITERATE + rationale
-  - Compass auto-updates the linked assumption to VALIDATED or INVALIDATED
+- Call `conclude_experiment` with PROCEED, KILL, ITERATE, or NOT_PURSUED + rationale
+  (`reason` is required for NOT_PURSUED)
+  - Compass auto-updates the linked assumption to VALIDATED or INVALIDATED; NOT_PURSUED
+    leaves it UNTESTED — never tested is not the same as disproven, so do not use KILL for a
+    deliberately shelved experiment just to close it out
 
 **When a solution is validated:**
 - Keep or create its deduplicated `LATER` candidate. A separate capacity-ranked roadmap
@@ -227,8 +231,12 @@ means keep `LATER`. `NEXT → NOW` requires a separate commitment decision.
 - If any opportunity is EXPLORING with no KR link, ask the user which KR it connects to
 - Check for orphaned solutions: `list_opportunities` and confirm all ACTIVE opportunities
   have at least one non-KILLED solution
-- Leave no experiment in DESIGNING for more than one session -- it means the kill condition
-  was never written. Flag it explicitly.
+- Leave no experiment in DESIGNING for more than one session -- it usually means the kill
+  condition was never written. Flag it explicitly. The exception is an experiment a human has
+  explicitly decided to hold, evidenced by a recorded decision (via
+  `human-review-workflow`) rather than silence -- close that one out with
+  `conclude_experiment(experimentId, "NOT_PURSUED", reason)` instead of leaving it open
+  indefinitely or flagging a missing kill condition that was never the actual issue.
 
 ---
 
