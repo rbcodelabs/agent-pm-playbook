@@ -83,7 +83,7 @@ blocks reads/writes for the affected capability until resolved.
 | Authorized delivery | Approval evidence, eligible commitments/packages, active claims, branches, PRs, unfinished execution receipts | [compass-resolver](../compass-resolver/SKILL.md) for Compass delivery; otherwise the configured delivery workflow; no inferred permission from queue position |
 | Completion and adoption | PR/CI/deployment changes, stale review tasks, launch work, exposure, adoption, safety and outcome evidence | [delivery-completion-watcher](../delivery-completion-watcher/SKILL.md); resolved analytics for adoption; review scale/iterate/stop choices |
 | Outcomes and OKRs | Metric freshness, KR coverage, outcome drift, cycle boundaries, discovery health, calibration and retrospective needs | [okr-workflow](../okr-workflow/SKILL.md), [pm-coach](../pm-coach/SKILL.md); reconfirm/reset outcomes through human review |
-| Decisions and notifications | Pending and responded reviews, source revisions, unhandled decisions, due reminders and escalations | [human-review-workflow](../human-review-workflow/SKILL.md), including its notification deduplication rules |
+| Decisions and notifications | Pending reviews, **every decided review whose outcome is not yet reflected in product state**, source revisions, due reminders and escalations | [human-review-workflow](../human-review-workflow/SKILL.md) Mode 4, including its reconciliation rules and notification deduplication |
 | Reporting | Material changes since the last draft, reporting commitments, missing evidence and decision digest needs | [status-report-workflow](../status-report-workflow/SKILL.md); draft/reuse evidence-linked updates for review |
 | Automation health | Failed sources/runs, unavailable credentials or adapters, stale locks, duplicate claims, partial writes, policy review needs | Runtime diagnostics and reconciliation under existing authority; never clear an uncertain claim or rotate credentials automatically |
 
@@ -91,6 +91,12 @@ Use statuses `checking`, `healthy`, `actionable`, `completed`, `awaiting decisio
 `blocked`, `failed`, and `unfinished`. Each row records checked sources/time, findings,
 next action, and artifact/request/run links. Multiple findings can have different statuses;
 retain unresolved findings even when another finding in the same area is completed.
+
+An empty queue is only `healthy` when the query that produced it covers everything the row
+claims. A decisions row is not healthy because no review is awaiting the reviewer; it is
+healthy when nothing is awaiting the reviewer **and** no already-answered decision is still
+unreflected. The same caution applies wherever answering, resolving, or closing an item
+moves it out of the default filter: verify what the query excludes before reporting `healthy`.
 
 ## Triage and execute
 

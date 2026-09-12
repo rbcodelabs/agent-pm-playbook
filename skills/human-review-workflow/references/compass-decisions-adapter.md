@@ -46,6 +46,33 @@ the outcome and immutable revision identity in the run report. Continue only whe
 next action is independently permitted by the run's pre-existing authority. Approval does
 not auto-apply anything.
 
+## Reconciling decided requests
+
+`list_decisions(workspaceId, state: "PENDING")` answers "what is waiting on the reviewer?"
+It cannot answer "what has the reviewer already answered that nobody has acted on?" —
+deciding a request removes it from that result. A scheduled run that queries only `PENDING`
+will report an empty queue while answered decisions accumulate indefinitely.
+
+Implement `list_decided` as `list_decisions(workspaceId, state: "DECIDED")`, and run it on
+every scheduled pass, not only when a specific request is being followed up:
+
+- This is queue discovery, which the adapter permits. It does not weaken the rule above:
+  recovering a request this run created still uses the persisted idempotency key or request
+  ID, never a list result.
+- Page the query. `pageSize` is capped, and an unfiltered workspace-wide list of full
+  decision packets is large enough to exceed a tool-result limit outright. Narrow with
+  `state`, `subjectType`, or `outcome`, page through results, and read individual packets
+  with `get_decision` only for the requests being reconciled.
+- Reconcile against `currentRevision`. Compass decisions are revisioned, and a decision
+  recorded against a superseded revision is not a current answer.
+- Reconcile `REQUEST_CHANGES` and `REJECT`, not just `APPROVE`. Rationale is mandatory on
+  those two outcomes, so they carry the most reviewer intent and the greatest loss if
+  dropped. That rationale is often prose spanning several objects; it becomes a tracked work
+  item, never an agent's own interpretation applied directly to product state.
+- Because this adapter writes no application state, "already handled" must be established
+  from authoritative product state plus the run's own durable receipt in `automation_runtime`.
+  Never infer it from the decision record, which looks identical before and after the work.
+
 For Request changes, use the Compass UI's revised-request flow or create a new request with
 a new idempotency key. Always use the explicit request identity and current revision when
 checking a response. Never overwrite, reinterpret, or discard prior revisions; preserve

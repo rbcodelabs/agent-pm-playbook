@@ -136,6 +136,38 @@ test("Compass-native review resolves both decision capabilities to tracking-only
   assert.doesNotMatch(adapter, /NOW|signed[ -]policy|capacity/i);
 });
 
+test("a decided review stays open work until it is reconciled", () => {
+  const review = readFileSync("skills/human-review-workflow/SKILL.md", "utf8");
+  // A tracking-only provider has no mark_applied, so answering a request drops it out of
+  // the pending queue with no record that anything was done. Enumerating decided requests
+  // must therefore be a required capability, not an optional convenience.
+  assert.match(review, /`list_decided`/);
+  assert.match(review, /`list_decided` is required, not optional/i);
+  // Mode 4 is the only mode the scheduled checklist routes its decisions area to, so the
+  // reconciliation sweep has to live there rather than in a mode nothing invokes.
+  assert.match(review, /##\s*Mode 4[^\n]*Reconcile/i);
+  assert.match(review, /###\s*Reconcile decided requests/i);
+  assert.match(review, /enumerate, do not remember/i);
+  // Reviewer intent must become visible work, never an agent's own interpretation.
+  assert.match(review, /tracked follow-up work item/i);
+  assert.match(review, /never silently interpret it into mutations/i);
+  // Reconciliation is a visibility guarantee, not a grant of authority.
+  assert.match(review, /Reconciliation never expands authority/i);
+  // Changes-requested and rejected outcomes carry the most intent and must not be dropped.
+  assert.match(review, /`Request changes` and `Reject` require reconciliation/i);
+
+  const ops = readFileSync("skills/scheduled-product-operations/SKILL.md", "utf8");
+  assert.match(ops, /decided review whose outcome is not yet reflected/i);
+  assert.match(ops, /An empty queue is only `healthy` when the query that produced it covers/i);
+
+  const adapter = readFileSync("skills/human-review-workflow/references/compass-decisions-adapter.md", "utf8");
+  assert.match(adapter, /## Reconciling decided requests/);
+  assert.match(adapter, /state: "DECIDED"/);
+  // Queue discovery must not erode the existing rule that exact request recovery uses the
+  // persisted idempotency key rather than a list result.
+  assert.match(adapter, /never a list result/i);
+});
+
 test("tracking-only decisions stop for a human and never auto-apply approval", () => {
   const review = readFileSync("skills/human-review-workflow/SKILL.md", "utf8");
   assert.match(review, /tracking-only/i);
