@@ -73,8 +73,14 @@ mark it blocked or unfinished, never healthy. A missing optional capability rema
 visible limitation on its row and does not stop other areas. Invalid or ambiguous routing
 blocks reads/writes for the affected capability until resolved.
 
+Inspect the **assigned tasks** row first. It surfaces judgment calls a prior run parked
+for itself — open questions filed as tasks against the agent identity rather than pushed
+through the Decisions inbox. Picking those up before generating new findings keeps this
+run from piling fresh work on top of its own unresolved follow-ups.
+
 | Area | Inspect on every run | Work route when actionable |
 |---|---|---|
+| Assigned tasks | Every open task assigned to the current agent identity (`list_tasks` with `assignedToMe`/agent assignee filter) across configured task providers, excluding tasks already covered by the Authorized delivery or Decisions rows below | Resolve directly if mechanical and low-risk; otherwise route by subject to the matching domain skill (e.g. [okr-workflow](../okr-workflow/SKILL.md), [experiment-workflow](../experiment-workflow/SKILL.md), [investment-gate](../investment-gate/SKILL.md)) or [human-review-workflow](../human-review-workflow/SKILL.md) when it poses a judgment call; update or close the task with the outcome so it does not resurface |
 | Feedback and research | New/open feedback, unprocessed transcripts, source attribution, unlinked evidence, contradictions | [pm-signal-synthesis](../pm-signal-synthesis/SKILL.md); [compass-feedback-triage](../compass-feedback-triage/SKILL.md) only when insights and OST resolve to Compass |
 | OST and opportunities | Weak, duplicate, stale, unmapped branches; evidence changes; focus and pruning candidates | [ost-workflow](../ost-workflow/SKILL.md), then human review for focus or consequential pruning |
 | Solutions and assumptions | Orphaned solutions, changed concept directions, untested assumptions, investment readiness | [investment-gate](../investment-gate/SKILL.md), [human-review-workflow](../human-review-workflow/SKILL.md) for concept/review packets |
