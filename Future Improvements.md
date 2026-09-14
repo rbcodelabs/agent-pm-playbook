@@ -63,6 +63,76 @@ Fully resolved by [[Progressive Investment Framework]]. The doc replaces the bin
 
 ---
 
+### 16. Test-Cost Economics Are Hardcoded to Human-Team Build Costs
+
+**Added:** 2026-09-13 · **Status:** Proposal — not yet doctrine
+**Area:** [[Progressive Investment Framework]], [[Test Minimalism]], `skills/investment-gate`, `skills/experiment-workflow`
+
+**Gap:** The Progressive Investment Framework is an arbitrage on a ratio — *cost of information* vs. *cost of building*. The principle is sound. But every rung of the experiment ladder is priced in **absolute human-team time units** rather than as a ratio to build cost, so the ladder is frozen at the prices that held when it was written:
+
+| Where | Hardcoded price |
+|---|---|
+| `Progressive Investment Framework.md:119` | A/B test — "2-4 weeks of engineering to build both versions... This is not a cheap test." |
+| `Progressive Investment Framework.md:15` | The founding trauma — "Six weeks of engineering later, nobody uses it." |
+| `investment-gate/SKILL.md:139-146` | Cost column: "1-3 days, no engineering" / "2-4 weeks engineering + run time" |
+| `Test Minimalism.md:28` | "A concierge test that fails represents one week of effort... A fully built A/B test that fails represents eight weeks of engineering." |
+
+Had these been written as ratios ("spend no more than ~15% of build cost to buy the answer"), the ladder would self-adjust as build cost fell. Being absolute, it cannot. With AI-assisted delivery the build term has collapsed by roughly an order of magnitude while **research cost has not moved at all** — recruiting, scheduling, moderating and synthesizing 5-8 sessions is human-time-bound and got no cheaper.
+
+The result is a partial inversion of the ladder. Rungs 2-3 (concierge, prototype) are pure human time. Rung 5 (real build) is the one that collapsed. A flagged, instrumented vertical slice can now cost *less* than the prototype study the playbook mandates before it — and yields strictly better signal, because it produces real behavior rather than test-environment behavior the docs already warn is unreliable (`Progressive Investment Framework.md:107`).
+
+**Why agents reproduce this reliably.** It is not drift — it is trained behavior with an eval attached:
+
+- `Test Minimalism.md:68` lists **"Building to test"** as a named failure mode: *"This is backwards. You test demand before you build, not after."*
+- `Test Minimalism.md:86` makes it an **evaluation criterion** — an agent scores as *skilled* for refusing a build-first test and redirecting to fake door/concierge/prototype.
+- `Test Minimalism.md:96` requires the agent to justify why it is not using the **next-lower rung** before any recommendation — a one-way ratchet downward.
+- `experiment-workflow/SKILL.md:251` — prototypes must use "Figma or equivalent, **not production code**."
+- `experiment-workflow/SKILL.md:256` — A/B is "a refinement tool, not a discovery tool," explicitly barred from testing demand or value. This is the specific rule that blocks *"ship the real slice to 5% and read the data."*
+
+So when the cheapest available test is "build it," the skill library forbids the agent from proposing it and rewards the refusal.
+
+**Note the playbook's own velocity argument now inverts.** `Test Minimalism.md:26` argues that learning velocity is the core performance variable — six experiments per quarter beats two. Re-run with current prices, that same argument favors building, because building is now often the fastest way to learn. The doc's logic is right; only its inputs are stale.
+
+**The internal contradiction.** `build-authorization` and `compass-resolver` already assume agent delivery through a tested PR under standing policy. The *delivery* layer has been repriced for AI economics; the *investment* layer still bills a build as "one focused team, time-boxed sprint" (`investment-gate/SKILL.md:85`). The two halves of the playbook disagree about what a build costs, and the gates enforce the stale number.
+
+**The correct principle is already in the corpus — but demoted.** Two places ask the right question:
+
+- `experiment-workflow/SKILL.md:200` — *"If this assumption is wrong, how much work do we have to throw away?"*
+- `investment-gate/SKILL.md:261-266` — *"If we are wrong about it after building, how much do we rework? ... If the answer is small, that is a reasonable case for accepting the risk and moving."*
+
+Both are cost-of-being-wrong reasoning. But the second is buried in **Pressure Handling** and framed as a *concession to a tired team*, not as a routing rule. The fix is therefore mostly **promotion, not invention**.
+
+**Proposed fix — re-key routing from build cost to cost-of-being-wrong.**
+
+> cost of being wrong = build cost + carrying cost + reversal cost
+
+AI collapsed the first term only. Carrying cost (permanent UX surface, support load, docs, edge cases, the mental-model tax on every future user) and reversal cost (data model, pricing, anything customers form habits around) are untouched. Route on the sum, which is the variable that still discriminates:
+
+| | **Low cost-of-wrong** (reversible, contained surface) | **High cost-of-wrong** (data model, pricing, core mental model) |
+|---|---|---|
+| **Low demand uncertainty**<br>*(tablestakes, parity, compliance)* | **Just build it.** No discovery gate. Scope/estimate gate only. | Skip demand discovery; keep technical and design de-risking. |
+| **High demand uncertainty**<br>*(novel concept)* | **Build the real slice behind a flag and instrument it.** The build *is* the cheapest test. ← *largest current waste* | **Current framework, unchanged.** Still correct. |
+
+Three of the four cells currently receive treatment designed for the fourth.
+
+**This subsumes the separate tablestakes/competitive-parity gap.** The playbook has no concept of tablestakes, parity, Kano-style basic-vs-delighter, or compliance-driven work (verified by search: zero hits across the corpus). The one prioritization aid that does exist — the Reach × Frequency × Importance vs. Risk scorecard at `Agentic PM Playbook.md:149` — *sizes* an opportunity but does not *classify* it by type, so it cannot route different work types to different evidence bars. Progressive Investment is therefore the only rigor engine and its entry conditions are uniform, so "every competitor has SSO and we lose enterprise deals without it" must still produce 2+ independent customer-voice sources to clear `Exploring → Validating`. Competitive and lost-deal evidence is not admissible as-is. The left column of the 2×2 fixes this without a second framework: tablestakes is simply the low-demand-uncertainty case, where *market-expectation evidence* substitutes for discovery interviews and the open question is scope and cost, not demand.
+
+**Per-file edits proposed:**
+
+1. **`Progressive Investment Framework.md`** — add a *Classify before you climb* section ahead of Experiment Types, carrying the 2×2. Restate ladder costs as **ratios to build cost**, keeping absolute figures as a worked example labelled with its assumed build cost. Add a sixth experiment type, **instrumented vertical slice** (real code, flagged, small cohort, kill condition intact), positioned by cost-of-wrong rather than by rung order.
+2. **`Agent Skills/Test Minimalism.md`** — split the `:68` failure mode in two: *building to avoid deciding* (still a failure) vs. *building because it is genuinely the cheapest falsification* (now legitimate when cost-of-wrong is low). Rewrite eval `:86` so a skilled agent is one that **prices both options**, rather than one that always redirects away from build. Amend the `:96` ratchet to "justify the rung against cost-of-being-wrong," not "always prefer the next-lower rung."
+3. **`skills/investment-gate/SKILL.md`** — add a cost-of-wrong column to the experiment table at `:139`. Promote the `:261-266` reasoning out of Pressure Handling into **Step 2** as a first-class routing question. Add the tablestakes path to `Exploring → Validating` admitting market-expectation evidence.
+4. **`skills/experiment-workflow/SKILL.md`** — add `instrumented-slice` to the `experiment_type` enum at `:124` and to the Step 3 mapping table. Narrow `:256` so A/B-as-refinement-only no longer blocks a flagged real slice used for discovery. Promote `:200` from a prompt aside into a required ranking input.
+
+**What deliberately does not change:** kill conditions before the test starts, one assumption per experiment, verbatim data in results, no moving goalposts. None of those are build-cost-dependent, and the cheap-build regime makes kill-condition discipline *more* load-bearing, not less — building faster mainly means accumulating unkilled surface faster. The bottom rung (copy/micro-content tests) also stays exactly as-is.
+
+**Open questions for review:**
+- Who assigns cost-of-wrong, and at what point? Self-assessed by the PM invites optimism bias toward "low, just build it."
+- Does the carrying-cost term need its own health metric in [[Discovery Health Metrics]] — e.g. shipped-surface-per-validated-outcome — to catch the failure mode this unlocks?
+- Should `build_authorization_policy` projects get the 2×2 automatically, given they have already repriced delivery?
+
+---
+
 ## 🟡 Medium Priority
 
 ### 4. Bi-Weekly and Monthly Cadence Agent Prompts
@@ -151,4 +221,4 @@ Fully resolved by [[Progressive Investment Framework]]. The doc replaces the bin
 
 ---
 
-*Last reviewed: 2026-05-15*
+*Last reviewed: 2026-09-13*
