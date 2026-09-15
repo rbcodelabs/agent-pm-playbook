@@ -37,6 +37,28 @@ test("all named workflow profiles are complete and valid", () => {
   }
 });
 
+test("Compass-native prototypes use first-class versioned artifacts", () => {
+  const profiles = loadWorkflowProfiles("skills/integration-routing/assets/workflow-profiles.json");
+  const profile = profiles.profiles["compass-native-review"];
+  assert.equal(profile.providers.prototype_artifacts, "compass_artifacts");
+  assert.match(profile.description, /Compass Artifacts hold versioned prototypes/i);
+
+  const compass = readFileSync("skills/compass-workflow/SKILL.md", "utf8");
+  assert.match(compass, /When `prototype_artifacts` resolves to `compass_artifacts`/);
+  for (const tool of [
+    "create_artifact",
+    "update_artifact",
+    "get_artifact",
+    "list_artifacts",
+    "link_artifact_to_solution",
+    "link_artifact_to_decision",
+    "archive_artifact",
+  ]) {
+    assert.match(compass, new RegExp(`\\b${tool}\\b`));
+  }
+  assert.match(compass, /Do not substitute a Compass Doc/i);
+});
+
 test("workflow profile validation rejects missing profiles and capabilities", () => {
   const invalid = {
     version: 1,
