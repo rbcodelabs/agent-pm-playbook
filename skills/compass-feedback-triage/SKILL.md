@@ -76,6 +76,12 @@ d. Act:
    - Leave it `EXPLORING`. Intake does not add a solution, solution plan, assumption, or
      roadmap item from a single new signal. The next synthesis pass may add corroborating
      evidence and earn an opportunity-focus review.
+     **Scope note:** this restriction is specific to a single fresh signal with no evidence
+     bar met yet — it is not a general ban on authoring solutions. A different workflow
+     (weekly OST caretaker, OKR health review, or a scheduled audit) finding an
+     already-established, evidence-backed opportunity or KR with zero solutions should
+     generate candidates immediately; that is coverage-gap remediation, not intake, and
+     this line does not apply to it.
    - For a bug, use direct roadmap promotion only when an explicit standing policy in
      `pm-config.md` covers its severity, scope, and rollback path. Otherwise route an
      expedited bug-investment review through `human-review-workflow`.

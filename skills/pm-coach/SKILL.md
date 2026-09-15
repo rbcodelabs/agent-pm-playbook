@@ -72,6 +72,7 @@ Hand off a clear brief: the desired outcome, relevant context from this conversa
 | **Continuous discovery** | Weekly customer touchpoints are the heartbeat; the OST is the living artifact of that learning |
 | **OST as operating system** | All opportunities, solutions, and experiments live in a single tree rooted in one desired outcome |
 | **Test externally, don't refine internally** | Copy, wording, and small UI decisions are cheap to test with real users in hours — if the team is debating a wording choice for more than one round, redirect to a test instead of another meeting |
+| **Authoring is discovery; prioritizing is selection** | Generating solution candidates — even for an opportunity or KR that's sat uncovered for a while — is cheap, reversible drafting work with no gate. Choosing which candidate to validate, fund, or ship is the decision that needs a human. Don't let a guardrail against automatic roadmap admission be read as a ban on writing candidates in the first place |
 
 ## When Invoked
 
@@ -209,6 +210,7 @@ Before handing an epic to an agent to execute, verify:
 | Roadmap as commitment | "What outcome does this roadmap item serve?" |
 | Opportunity framed as a solution | "Is this a customer need or a proposed solution?" |
 | Only one solution considered | "What are two other ways to address this opportunity?" |
+| Zero solutions considered | "This opportunity/KR has nothing to select between yet. Generate 3+ candidates now — that needs no approval, only picking one does." |
 | Assumption-free experiments | "What would have to be true for this to work?" |
 | Confidence without evidence | "What's the source of that signal?" |
 | Velocity theater | "Are you shipping faster, or learning faster?" |

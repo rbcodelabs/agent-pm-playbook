@@ -346,11 +346,26 @@ for direction, the system should turn a promising opportunity into reviewable al
 Run the concept loop when:
 
 - an opportunity meets the evidence bar and becomes `PRIORITIZED`;
-- a reviewer explicitly asks for solution exploration; or
-- new evidence materially changes an active solution set.
+- a reviewer explicitly asks for solution exploration;
+- new evidence materially changes an active solution set; or
+- a coverage-gap health check (weekly OST caretaker, OKR health review, or scheduled
+  audit) finds an opportunity, KR, or fixed cohort item with **zero** solutions. This is
+  the same preparation work as the first case — the opportunity already cleared its
+  evidence bar or the KR already exists; a coverage gap just means nobody generated
+  candidates yet. Treat it with the same urgency as a fresh `PRIORITIZED` transition, not
+  as backlog.
 
 Do not run it for a single weak signal. Weak ideas remain opportunities to validate, not
 features to visualize.
+
+**Generating these candidate directions never requires the human gate below.**
+Producing three concept directions — even for a coverage gap that has sat unnoticed for a
+week — is discovery preparation, exactly like the Agent-prepares column throughout Section
+7. It is authorship, not selection. The human gate exists for *choosing* a direction, not
+for permitting the agent to draft one. An agent that reads "no automatic NOW/NEXT
+admission" or "not a prioritization act" as license to leave a coverage gap unaddressed
+has misread the boundary — go generate the candidates, then open the review for the
+selection decision.
 
 ### Agent preparation
 
@@ -412,6 +427,16 @@ It does not validate the solution, add it to `NOW`, or authorize production code
 
 Human review is required where the decision changes direction, commits meaningful
 resources, or makes a consequential interpretation.
+
+**These gates govern selection, not authorship.** Every row's "Agent prepares" column —
+generating outcome candidates, drafting opportunity framings, writing solution concepts,
+naming assumptions — is discovery and drafting work the agent should do without waiting
+for permission, including when the reason it's doing so is closing a coverage gap found
+during an audit rather than a fresh evidence-bar transition. The gate applies to the
+"Human decides" column: which candidate to admit, which direction to fund, which item to
+commit. An agent that declines to draft candidates because a downstream admission is
+gated has confused the two columns — that confusion is exactly what leaves an opportunity
+or KR sitting at zero solutions instead of a reviewable set of alternatives.
 
 Before opening any gate, run an **execution-collision preflight** across every system
 declared in `pm-config.md`: product records, active automation/agent runs, delivery tasks,
@@ -521,9 +546,9 @@ delivery-provider events and backed by a daily stale-`IN_REVIEW` scan.
 | Flow | Purpose |
 |---|---|
 | Signal synthesis | Cluster passive feedback and update the signal ledger and evidence counts |
-| OST caretaker | Find weak, duplicate, stale, contradictory, and unmapped branches |
+| OST caretaker | Find weak, duplicate, stale, contradictory, and unmapped branches, **and every opportunity or fixed-cohort item with zero solutions — flag gap age, and generate candidates immediately rather than deferring** |
 | Opportunity recommender | Prepare comparative focus decisions when evidence changed materially |
-| Roadmap steward | Check `NOW/NEXT/LATER`, validation gates, capacity, and KR coverage |
+| Roadmap steward | Check `NOW/NEXT/LATER`, validation gates, capacity, and KR coverage, **including stale/wrong-objective KR links (roadmap items still wired to a KR from before a mid-cycle KR was created) and independent release-evidence reconciliation for solutions that may have shipped without their status updating** |
 | Outcome learner | Connect releases to adoption and outcome movement |
 | Decision digest | Present all pending decisions in priority order with direct links |
 | Stakeholder update | Draft the evidence-linked weekly narrative for review |
@@ -601,8 +626,12 @@ Keep autonomous capture, classification, deduplication, evidence linking, and ob
 closure. Change the roadmap behavior:
 
 - new actionable feedback may create an `EXPLORING` opportunity;
-- do not create solution plans for an opportunity that has not met the opportunity evidence
-  bar;
+- do not create **solution plans** (`add_solution_plan` — the implementation approach for a
+  solution already selected for delivery) for an opportunity that has not met the
+  opportunity evidence bar. This does not restrict creating **solutions** (`add_solution` —
+  candidate directions to choose between); authoring candidates is discovery prep and stays
+  allowed regardless of evidence-bar status. Don't let the similar names collapse two
+  different gates into one;
 - do not promote a solution to `NEXT` from intake alone;
 - when evidence becomes sufficient, create an opportunity-admission or focus review request;
 - bugs may follow a separate severity policy, but feature ideas follow the discovery gates.
@@ -672,7 +701,14 @@ The system is working when:
 - every shipped solution traces backward to an experiment, assumption, opportunity, and
   desired outcome;
 - every shipped solution is later assessed for adoption and outcome movement;
-- the system gets quieter when there is no work instead of generating empty status turns.
+- the system gets quieter when there is no work instead of generating empty status turns;
+- no opportunity, KR, or fixed-cohort item sits at zero solution coverage for more than a
+  week without a flagged review — a metric stuck at 0/N is a coverage defect until proven
+  otherwise, not a sign the team needs to try harder;
+- no roadmap item silently rolls up to a stale or wrong-objective KR, and no Objective
+  quietly ends up with zero roadmap items actually serving it;
+- no solution that has verifiably shipped still occupies `NOW` capacity because its status
+  was never reconciled — release verification is a routine check, not a one-off rescue.
 
 ## 13. Open Design Questions
 

@@ -65,6 +65,23 @@ Fully resolved by [[Progressive Investment Framework]]. The doc replaces the bin
 
 ## 🟡 Medium Priority
 
+### 16. Automated Fixed-Cohort Coverage Metric in Compass
+**Area:** `skills/okr-workflow`, `skills/compass-workflow`, Discovery Health Metrics
+**Gap:** This run (2026-09-14, see [[Runs/2026-09-14 - OST Coverage-Gap and Wiring-Drift Guardrails]]) added the *procedure* for checking fixed-cohort solution coverage (e.g., "N of 7 capability groups") by hand during a health review, but there's no computed metric or Compass query that surfaces it automatically. A scheduled audit still has to enumerate the cohort and count solutions manually every time.
+**Fix:** If Compass's MCP API grows a way to tag opportunities/KRs as members of a named cohort, add a `get_cohort_coverage`-style query and wire it into the weekly OST caretaker and OKR health review flows so the 0/N count is computed, not narrated. Deferred because it requires a Compass API capability that doesn't exist yet — the playbook can only specify the procedure, not the query, today.
+
+### 17. Automated Release-Evidence Reconciliation (beyond manual Gate 9 check)
+**Area:** `skills/delivery-completion-watcher`, `skills/roadmap-workflow`
+**Gap:** This run added Gate 9 (shipped-but-stale solution status) as a manual/procedural check the roadmap steward runs every cycle. The actual failure case was only caught by "a bespoke release-verification step" — i.e., someone manually cross-referenced a merged PR and version tag against Compass state. A truly routine fix would have the delivery-completion-watcher (or a new scheduled flow) periodically re-scan *all* NOW/IN_DELIVERY solutions against GitHub release/tag evidence independent of Task linkage, not just react to webhooks or a daily IN_REVIEW scan.
+**Fix:** Design a "release-evidence sweep" flow: for every Solution not yet SHIPPED whose linked roadmap item is NOW or IN_DELIVERY, search GitHub for merged PRs referencing the roadmap/solution ID regardless of whether the reciprocal Task link exists, and reconcile status. Deferred because it needs its own adapter contract and schedule (Section 8 already lists many flows still "to implement against live systems" per the doc's own status section) — this run scoped the procedure into the existing weekly Roadmap Steward instead of designing a new scheduled flow, to keep the edit targeted rather than adding new infrastructure.
+
+### 18. Formal "Add a KR Mid-Cycle" Workflow
+**Area:** `skills/okr-workflow`
+**Gap:** `okr-workflow` has a full "Workflow 1: Create a New OKR Cycle" but no equivalent workflow for adding a KR to an *already active* cycle. The real failure (roadmap items still wired to KR `10eefb86` after new SDK KRs were created mid-cycle) happened exactly at this seam — nothing in the skill prompts a reconciliation pass over existing roadmap items when a KR is added outside the normal cycle-creation flow.
+**Fix:** Add a short "Workflow 1b — Add a KR to an Existing Cycle" that, after creating the KR, explicitly triggers `roadmap-workflow`'s Gate 8 (stale/wrong-objective KR links) against every current NOW/NEXT item. Deferred rather than folded into this run's edits because it's a new workflow section (not a guardrail fix to existing text) and deserves its own review of where mid-cycle KR creation is currently documented, if anywhere, before writing the procedure.
+
+
+
 ### 4. Bi-Weekly and Monthly Cadence Agent Prompts
 **Area:** Playbook Section 5
 **Gap:** The weekly cadence (Section 5) has an "Agent assist?" column with specific prompt types noted. But the bi-weekly and monthly cadences have no equivalent — they describe activities but give no agent prompts. These are the reflection moments where agent-assisted synthesis could save the most time (OST pruning, outcome check, pattern summary), but practitioners are left without ready-to-use prompts.

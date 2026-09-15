@@ -41,8 +41,21 @@ Consistent synthesis sessions can still produce biased inputs if every session d
 | Source type diversity | In any 30-day window, at least 2 different source types. Interviews alone are not enough. | Single source type for 30+ days |
 | Active opportunity freshness | Every Prioritized or Active opportunity should have signals from the last 30 days | Any Active opportunity with no signals in 30+ days |
 | Unmapped signal rate | Signals that are still unmapped after 2 weeks should represent less than 30% of new entries | Rate above 30% after 2 weeks |
+| Solution coverage | Every Active or Prioritized opportunity has at least one non-killed solution | **Any** opportunity with zero solutions — flag immediately, don't batch it into the next review |
+| Coverage gap age | How long a zero-solution opportunity or KR/fixed-cohort item has persisted uncovered | Uncovered for more than 1 week |
+| Fixed-cohort coverage | For a KR tracking a fixed set of items (e.g., "N of M capability groups"), the fraction of the cohort with at least one owning solution | Any cohort stuck below its target fraction for more than one review cycle — this is the generalized form of "0/7 for a week and nobody noticed" |
 
 **On unmapped signals:** A high unmapped rate after two weeks usually means one of two things: the OST is missing branches that should exist, or synthesis outputs are not being connected to the tree. Either is a structural problem worth diagnosing before the next synthesis session.
+
+**On solution coverage and fixed-cohort coverage:** a metric that measures a fixed cohort
+(a capability checklist, a migration target list, anything framed as "N of M") can sit at
+0/M indefinitely if the underlying opportunities never got solutions authored against
+them — not because discovery stalled, but because nobody generated candidates to select
+from in the first place. This is silent: the KR just reads "flat," which looks identical
+to slow progress instead of blocked progress. Compute cohort coverage directly rather than
+inferring it from KR trend lines, and treat a persistent zero as a coverage defect to fix
+by generating candidates immediately — that step needs no prioritization sign-off, only
+selecting among the candidates does.
 
 ---
 
@@ -94,7 +107,7 @@ Run a discovery health check across these four areas. For each, report status (H
 
 1. Cadence: Are there any gaps longer than 2 weeks in the signal ledger? Has the OST been updated in the past week? What is the frequency of synthesis sessions over the past 30 days?
 
-2. Coverage: In the past 30 days, how many distinct customer segments appear in the ledger? How many distinct source types? Are there any Active or Prioritized opportunities with no signals in the past 30 days?
+2. Coverage: In the past 30 days, how many distinct customer segments appear in the ledger? How many distinct source types? Are there any Active or Prioritized opportunities with no signals in the past 30 days? Are there any opportunities, KRs, or fixed-cohort items (e.g., "N of M capability groups") with **zero** solutions, and if so, how long has that gap persisted?
 
 3. Evidence quality: Are there any Prioritized opportunities with fewer than 2 independent evidence sources? Are there signal clusters with no verbatim quotes? Are there Active opportunities with no linked experiment, or experiments that have been in Running status for more than 4 weeks?
 

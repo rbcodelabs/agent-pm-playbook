@@ -109,8 +109,19 @@ Don't let the user work multiple branches simultaneously — that's a red flag.
 ### Step 5 — Generate Solutions
 For the selected opportunity:
 - Generate at least 3 solution directions before evaluating any
-- Span the range from incremental to transformative
+- Span the range from incremental to transformative — meaningfully different
+  approaches, not cosmetic variations of the same idea
 - For each: how does this specifically address the parent opportunity?
+
+**Generating candidates is discovery, not prioritization.** Authoring solution
+directions — even 3, 5, or more of them — is cheap, reversible drafting work.
+It requires no human sign-off. What requires a human decision is *selecting*
+among them: which one gets built, tested, or admitted to the roadmap. Never
+read a guardrail against "automatic admission" or "no autonomous roadmap
+promotion" as a ban on writing solution candidates — those rules govern
+selection, not authorship. If a coverage-gap check below finds an opportunity
+or KR with zero solutions, generating candidates to close that gap is exactly
+this step, not an exception to it.
 
 ### Step 6 — Design Experiments
 For the selected solution:
@@ -131,8 +142,19 @@ Run these any time the user wants a review of an existing tree:
 | Focus | Is there a clear focus branch? | Team is actively exploring 3+ branches at once |
 | Experiment velocity | Are experiments actively running? | No experiments closed in the past 2 weeks |
 | Dead ideas | Are abandoned paths archived? | Abandoned solutions still shown as active |
+| Solution coverage | Does every active/prioritized opportunity have at least one non-killed solution? | Any opportunity with **zero** solutions — this is worse than "only one" and must be flagged separately |
+| Solution breadth | Are real alternatives being generated, not just one obvious answer? | Opportunity with exactly one solution ever considered |
+| Coverage gap age | How long has a zero-solution opportunity (or a KR-linked cohort item) sat uncovered? | Uncovered for more than 1 week — treat this as urgent, not routine backlog |
+
+A zero-solution opportunity is a dead end wearing an EXPLORING/ACTIVE/PRIORITIZED
+label: nothing can move until a candidate exists to select between. Flag it the
+same run it's found — do not defer it to "someday" backlog grooming. Closing this
+gap means generating candidates per Step 5 above; it does not require a
+prioritization decision to *start* generating them.
 
 If 3+ red flags are present, the tree needs a reset session before any new work.
+Any zero-solution opportunity or KR-cohort gap is a red flag on its own,
+regardless of how many others are present.
 
 ## Prioritizing Within the Tree
 
