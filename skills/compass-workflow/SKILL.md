@@ -229,8 +229,19 @@ means keep `LATER`. `NEXT → NOW` requires a separate commitment decision.
 
 - Verify every touched item has an accurate status
 - If any opportunity is EXPLORING with no KR link, ask the user which KR it connects to
-- Check for orphaned solutions: `list_opportunities` and confirm all ACTIVE opportunities
-  have at least one non-KILLED solution
+- **Check for zero-solution coverage, not just in this session's touched items:**
+  `list_opportunities` and confirm every ACTIVE or PRIORITIZED opportunity has at least
+  one non-KILLED solution -- across the whole workspace, not only what this session
+  happened to touch. A workspace-wide scheduled check (weekly audit, OKR health review)
+  must run this too; a per-session check alone will miss opportunities nobody happened
+  to open that week, which is exactly how a zero-solution gap survives silently for
+  weeks (0/N of a fixed KR cohort is the extreme version of this -- treat it as an
+  urgent finding, not routine hygiene).
+- If a gap is found, **generating candidate solutions to close it is expected discovery
+  work** -- `add_solution` requires no human approval to create. What requires approval
+  is *selecting* a candidate for validation or roadmap admission. Don't read "no
+  automatic NOW/NEXT admission" language elsewhere in this workflow as a reason to skip
+  authoring candidates -- it governs the later admission decision, not this one.
 - Leave no experiment in DESIGNING for more than one session -- it usually means the kill
   condition was never written. Flag it explicitly. The exception is an experiment a human has
   explicitly decided to hold, evidenced by a recorded decision (via
@@ -305,6 +316,8 @@ update_opportunity_status(opportunityId, "VALIDATING")
 |---|---|
 | Moving experiment to RUNNING without a kill condition | The kill condition is the gate. An experiment without one has no definition of done. |
 | Adding only one solution per opportunity | Commit to breadth before depth. Three minimum before eliminating any. |
+| Leaving an opportunity at zero solutions | Worse than "only one" -- nothing exists yet to select between, so the opportunity (and any KR it feeds) cannot move at all. Generate candidates immediately; this needs no approval to start. |
+| Treating "no automatic NOW/NEXT admission" as a ban on authoring | That guardrail governs the roadmap admission decision, not `add_solution`. Refusing to create candidates because prioritization is gated is a misread -- authoring is discovery, always allowed. |
 | Creating an opportunity with no KR link | Unlinked opportunities are feature requests in disguise. Always connect to a KR. |
 | Manually updating assumption status | Use `conclude_experiment` -- the API auto-updates the linked assumption. Manual edits break traceability. |
 | Batching Compass updates at session end | Status drifts during the session; the product snapshot becomes unreliable. |

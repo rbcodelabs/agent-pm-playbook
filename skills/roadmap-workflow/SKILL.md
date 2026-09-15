@@ -367,6 +367,28 @@ Flag any "Later" item where `created` is more than 6 months ago. These are
 candidates for a decision: kill it, promote it, or document why it's still valid.
 Stale Later items are roadmap debt.
 
+**Gate 8: Stale or wrong-objective KR links**
+Read the active OKR cycle file. For every `okr_krs` value on a Now/Next item,
+confirm the KR ID actually exists in the *current* active cycle and belongs to
+the Objective the item is understood to serve. Flag any item whose KR ID
+resolves to a closed cycle, a different Objective than intended, or doesn't
+resolve at all. This drifts silently whenever a new KR is created mid-cycle and
+existing roadmap items are never re-pointed — the item still looks "linked," it's
+just linked to the wrong thing. Left unnoticed, an entire Objective can end up
+with zero roadmap items actually rolling up to it while still appearing staffed.
+
+**Gate 9: Shipped-but-stale solution status**
+For every Now/Next item, independently check whether the linked Solution has
+already been released — a merged PR, a shipped version/tag, or production
+deployment evidence — regardless of what the Solution's status field currently
+says. Do not rely solely on an event-driven watcher having fired; treat this as
+a standing verification step every review, since a missed webhook, a broken
+Task link, or a KR-wiring gap (Gate 8) can all cause a shipped Solution to sit at
+`IDEA` or `VALIDATED` indefinitely. Flag any item whose real-world release
+evidence contradicts its recorded status, and call out the capacity cost
+explicitly: a finished item still occupying a `NOW` slot is scarce delivery
+capacity nobody can use.
+
 ### Step 3: KR coverage analysis
 
 Group all Now and Next items by their `okr_krs` values. For each KR:
@@ -376,6 +398,13 @@ Group all Now and Next items by their `okr_krs` values. For each KR:
 Surface KRs with no associated roadmap items: "This KR has no delivery work —
 either the roadmap isn't aligned to it, or it's being addressed in a way that
 isn't tracked here."
+
+Then roll this up one level: group by Objective (via each KR's parent). Surface
+any **Objective with zero roadmap items rolling up to it** even if individual
+roadmap items exist elsewhere in the pipeline — this is exactly the failure mode
+where items are still wired to a stale KR from before the Objective's KRs were
+created (see Gate 8). An Objective can look fully staffed in a status report
+while nothing on the roadmap actually serves it.
 
 ### Step 4: Report the findings
 
@@ -431,7 +460,14 @@ the roadmap because a candidate sounds promising.
    read and report the final outcome and stop without mutation. Only an action-capable adapter
    may re-read the queue fingerprint, apply the exact approved mutation, record an idempotent
    receipt, and dispatch the next eligible flow under existing authority.
-7. End cleanly when no material evidence, capacity, ordering, or status changed. Do not
+7. Run Gate 8 (stale/wrong-objective KR links) and Gate 9 (shipped-but-stale solution status)
+   every cycle, not only at the quarterly review — these drift silently between quarters and
+   the whole point of a scheduled steward is to catch that before it compounds. Gate 9 must
+   check release evidence directly (merged PRs, deploy tags, production state) rather than
+   assuming `delivery-completion-watcher` already reconciled it; that watcher can miss items
+   whose Task link broke or whose webhook never fired. Report every KR-coverage gap that has
+   persisted more than one cycle as its own line item, not folded into a general summary.
+8. End cleanly when no material evidence, capacity, ordering, or status changed. Do not
    create a recurring review about an unchanged queue.
 
 ## Procedure 5 — Roadmap Narrative for Stakeholders
@@ -488,6 +524,8 @@ Check these before confirming any roadmap action:
 | Now capacity | `NOW` count is within `now_limit` and capacity data is current | Block admission until a slot, owner, and capacity evidence exist |
 | Release notes | Shipped items have populated Release Notes | Refuse to mark Shipped without them |
 | Kill reason | Killed items have a documented reason | Refuse to kill without a reason |
+| KR link currency | Every `okr_krs` value resolves in the active cycle to the intended Objective | Re-point or escalate any item wired to a stale/wrong-objective KR before trusting its rollup |
+| Release currency | Now/Next items' Solution status matches independently-checked release evidence | Reconcile status (and free the capacity) before counting the slot as occupied |
 
 ## Anti-Patterns
 
@@ -504,6 +542,8 @@ Check these before confirming any roadmap action:
 | Using Next as a validation queue | Makes unvalidated ideas look delivery-ready and hides overload | Keep the item in Later; create a separate validation task |
 | Appending to a full Next queue | Avoids the real tradeoff and grows an unbounded wishlist | Name the rank and item displaced to Later |
 | Treating the roadmap as a backlog | Unfiltered ideas obscure preserved candidates and delivery commitments | Keep only explicitly admitted, deduplicated candidates in Later; leave raw ideas in the OST |
+| Roadmap items silently wired to a stale KR | A new KR created mid-cycle leaves old items pointed at a closed or unrelated KR — the Objective can end up with zero real coverage while looking staffed | Re-run the KR-link check (Gate 8) whenever a KR or cycle changes, not just at quarterly review |
+| Shipped work still occupying a Now slot | A Solution that verifiably released stays at IDEA/VALIDATED because the event-driven watcher never fired or the Task link broke | Independently verify release evidence every review (Gate 9); don't assume the watcher caught everything |
 
 ## References
 

@@ -264,8 +264,24 @@ For each KR that is at risk or off track:
 - Is there a connected OST desired outcome?
 - Are experiments actively running against that desired outcome?
 - Are there high-priority opportunities in the tree that have not been acted on?
+- **Solution coverage:** do the opportunities under this KR have any solutions at
+  all, or are they sitting as bare OPEN/EXPLORING items with nothing to select
+  between? A KR cannot move if there is no candidate path toward it — check this
+  before checking experiment velocity, since an experiment needs a solution to
+  test in the first place.
+- **Fixed-cohort coverage:** if this KR tracks a fixed set of items (e.g., "N of
+  M capability groups," "N of M migration targets"), compute coverage directly:
+  how many of the M items have at least one owning solution? A KR stuck at 0/M
+  or a low fraction for more than a week is very likely a coverage-gap problem,
+  not a discovery-effort problem — check coverage before assuming the team just
+  needs to work harder.
 
 A KR that is at risk with no active experiments is a discovery urgency — flag it.
+A KR whose opportunities have no solutions at all is a **coverage** urgency, and
+comes first: there is nothing yet to design an experiment around. Closing that
+gap means generating candidate solutions (see `ost-workflow` Step 5) — that is
+discovery prep work, not a roadmap or prioritization decision, and does not
+require the same sign-off as admitting a solution to `NEXT`/`NOW`.
 
 ### Step 4 — Deliver the health report
 
@@ -451,6 +467,16 @@ If the metric is primarily driven by external factors (macroeconomic conditions,
 competitor actions), it is a poor KR — the team cannot take directional action on
 it. Surface the dependency explicitly.
 
+**KR or fixed-cohort item with zero solution coverage**
+A KR (or an item within a KR's fixed cohort — e.g., one of N capability groups)
+that has an opportunity but no solution at all cannot move by definition: there
+is nothing to select between. This can persist silently for weeks because
+nothing "fails" loudly — the KR just sits at its baseline. Check solution
+coverage explicitly every check-in and health review, not just experiment
+status. If found, the correction is to generate candidate solutions immediately
+(discovery work, no gate required) — not to wait for a prioritization decision
+that has nothing to prioritize yet.
+
 ---
 
 ## Bridging OKRs to Discovery
@@ -460,8 +486,21 @@ roadmap items — it is to look at the OST for that KR and ask:
 
 1. Are the right opportunities in the tree? Is there new signal that should update
    the tree?
-2. Are experiments running? If not, why? Start one immediately.
-3. Are we working the highest-priority branch, or are we spreading effort?
+2. Do those opportunities have any solutions at all? If not, generate candidates
+   now — this is discovery preparation, not a roadmap decision, and needs no
+   sign-off to start.
+3. Are experiments running? If not, why? Start one immediately.
+4. Are we working the highest-priority branch, or are we spreading effort?
+
+**Also check the reverse direction.** A KR can look correctly connected in the
+OST while roadmap items meant to deliver against it actually point at a stale or
+unrelated KR — most often after a new KR was created mid-cycle and existing
+`NOW`/`NEXT` items were never re-pointed. Cross-reference `okr_krs` on active
+roadmap items against the current cycle file (see `roadmap-workflow`'s KR
+coverage and stale-link checks). An Objective with zero roadmap items rolling up
+to it can be masked entirely if the items are silently still wired to an old
+Objective's KR — the tree looks fine, the roadmap looks busy, and nothing is
+actually pointed at the outcome you're measuring.
 
 Use this as a handoff prompt when chaining to `ost-workflow`:
 
