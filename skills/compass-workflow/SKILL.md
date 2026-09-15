@@ -293,6 +293,22 @@ tool catalog rather than inventing method names. If the installed Compass versio
 does not expose a required operation, report that capability as blocked; do not
 silently redirect the write to Markdown or an external issue tracker.
 
+### Prototype artifacts
+
+When `prototype_artifacts` resolves to `compass_artifacts`, publish the prototype as a
+first-class Compass Artifact. Use `create_artifact` for the initial version,
+`update_artifact` for later revisions, `get_artifact` or `list_artifacts` to read it,
+and `archive_artifact` when it is no longer active. Link the stable artifact to its
+source product objects with `link_artifact_to_solution` and, when it is a decision aid,
+`link_artifact_to_decision`.
+
+For an HTML upload, provide one self-contained file so its styles, scripts, and assets
+survive outside the originating machine. Re-read the stored artifact after publishing
+and verify its revision metadata and intended links. Do not substitute a Compass Doc
+that describes the prototype or points to a machine-local path. Compass Docs remain the
+home for vision and durable narratives when the `vision` capability resolves to
+`compass_docs`.
+
 ### OKR check-in
 ```
 list_okr_cycles(workspaceId)

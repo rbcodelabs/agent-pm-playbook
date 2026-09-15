@@ -50,8 +50,9 @@ workflow_overrides: {}
 ```
 
 `compass-native-review` routes both review requests and immutable decision records to
-`compass_decisions`. Its decisions are tracking-only: agents may request and read them,
-only human admins decide, and no outcome automatically applies another action.
+`compass_decisions` and routes prototype artifacts to `compass_artifacts`. Its decisions
+are tracking-only: agents may request and read them, only human admins decide, and no
+outcome automatically applies another action.
 
 ### Resolved workflow providers
 

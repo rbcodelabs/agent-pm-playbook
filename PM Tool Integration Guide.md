@@ -142,6 +142,8 @@ With the `compass-native-review` workflow profile, both `review_requests` and
 `decision_records` resolve to `compass_decisions`. Agents use `request_decision`,
 `list_decisions`, and `get_decision`; only human admins decide in Compass. These decisions
 are tracking-only and never automatically mutate linked product or delivery state.
+`prototype_artifacts` resolves separately to `compass_artifacts`, where agents publish
+versioned prototypes and link them to Solutions and Decisions.
 
 **Production URL:** https://compass.rbcodelabs.com
 **Delivery work:** Compass Tasks in `compass-full`; Linear or Jira only when the `delivery` capability resolves there.
@@ -156,6 +158,7 @@ are tracking-only and never automatically mutate linked product or delivery stat
 | Solutions | Solution (child of Opportunity) | Add 3+ per opportunity before narrowing. |
 | Assumptions | Assumption (child of Solution) | Tag with risk level: HIGH / MEDIUM / LOW. |
 | Experiments | Experiment (linked to an Assumption) | Must have a written kill condition before moving to RUNNING. |
+| Prototypes | Artifact (linked to Solutions and Decisions) | Publish self-contained HTML as a versioned Artifact; use Docs for narrative context, not as a pointer to a machine-local prototype. |
 | Build items | Compass Tasks or configured external tracker | Resolve `delivery` separately and link tasks to the RoadmapItem and validated Solution. |
 
 ### Status Workflows
