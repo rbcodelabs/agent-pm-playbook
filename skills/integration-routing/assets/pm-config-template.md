@@ -98,12 +98,38 @@ only human admins decide, and no outcome automatically applies another action.
 
 ## Active Context
 
-- **OKR cycle:** [provider-native ID and label]
-- **Active objective:** [provider-native ID and title]
-- **Active KR:** [provider-native ID and metric]
+<!-- OMIT THIS SECTION ENTIRELY when the relevant capabilities resolve to a real provider
+(Compass, Jira, JPD, Linear). The provider already answers "which cycle is active"
+authoritatively and for free -- Compass `get_workspace_summary` returns `activeOkrCycle`.
+Caching that here adds no capability and exactly one staleness surface. Resolve it at read
+time instead. If a provider genuinely cannot express which KR or opportunity is the
+current focus, raise that as a gap against the provider rather than caching the answer
+here.
+
+INCLUDE this section ONLY for the Markdown/Obsidian adapter, where there is no provider to
+ask and a pointer file is the only index.
+
+When present: POINTERS ONLY. Record WHICH records are in focus -- never their values,
+progress, status, counts, composition, or any verification narrative. Titles are human
+labels for the IDs; the ID is the contract. Update this block when FOCUS changes, never
+when a value moves.
+
+WRONG -- a value, a count, a commit SHA, a freshness claim:
+  - **Active KR:** 721651b6 -- help-page parity: 2 of 176. Ledger regenerated `114f9de`;
+    count did not move. Re-verified against HEAD 5c79c09 on 2026-09-13.
+RIGHT -- a pointer:
+  - **Active KR:** 721651b6 -- Obsidian help-page parity requirements assessed
+
+A number here that disagrees with the provider is worse than no number: freshly-verified
+detail reads as authoritative long after it stops being true. Values, verification
+evidence and run narrative belong in the provider or in a run report. -->
+
+- **OKR cycle:** [Markdown adapter: path to the cycle file]
+- **Active objective:** [ID and title]
+- **Active KR:** [ID and title -- never its current or target value]
 - **Desired outcome:** [measurable customer behavior change]
-- **Focus opportunity:** [provider-native ID or none]
-- **Focus solution:** [provider-native ID or none]
+- **Focus opportunity:** [ID or none]
+- **Focus solution:** [ID or none]
 
 ## Portfolio Policy
 
