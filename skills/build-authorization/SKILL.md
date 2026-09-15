@@ -102,8 +102,12 @@ Return `AWAITING_DECISION` with one stable link; subsequent runs reuse that requ
    Current inventory is `activeItemIds` (with matching `activeCount`). A receipt records
    `appliedDisplacedItemIds` and `admissionApplied` after verified writes. These let the
    evaluator distinguish partial displacement, admission and unrelated queue changes.
-   It projects the final inventory by removing approved displacement IDs and adding the
-   candidate once; it does not require a spare slot before an approved replacement.
+   It projects the approved final state from the live inventory by removing named
+   displacement IDs that remain and adding the candidate once; it does not require a spare
+   slot before an approved replacement. Unrelated queue changes do not invalidate the
+   approval when that projection still fits the approved limit. A candidate that was active
+   in the approved snapshot or recorded as admitted must remain active, and a recorded
+   displacement must not reappear.
 6. Recheck capacity under serialization. For a new admission, apply only the named
    displacement and target rank, then move to NOW and record before/after counts. Direct
    LATER-to-NOW admission is allowed by this package; NEXT is optional queue organization.

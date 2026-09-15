@@ -38,6 +38,8 @@ const record = (v: unknown): v is Record<string, unknown> => typeof v === "objec
 const nonempty = (v: unknown): v is string => typeof v === "string" && v.trim().length > 0;
 const strings = (v: unknown): v is string[] => Array.isArray(v) && v.every(nonempty) && new Set(v).size === v.length;
 const sameIds = (a: string[], b: string[]): boolean => a.length === b.length && a.every(id => b.includes(id));
+const projectedInventory = (active: string[], displaced: string[], candidate: string): Set<string> =>
+  new Set([...active.filter(id => !displaced.includes(id)), candidate]);
 const number = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v) && v >= 0;
 const timestamp = (v: unknown): number => typeof v === "string" && /^\d{4}-\d\d-\d\dT.*(?:Z|[+-]\d\d:\d\d)$/.test(v) ? Date.parse(v) : NaN;
 const blocked = (reason: string): AuthorizationResult => ({ state: "BLOCKED", reason, actions: [] });
@@ -68,7 +70,7 @@ export function evaluateAuthorization(input: unknown): AuthorizationResult {
   const before = b.activeItemIdsBefore, active = c.activeItemIds, candidate = b.roadmapItemId;
   if (!nonempty(candidate) || c.roadmapItemId !== candidate || !strings(before) || !strings(active) || active.length !== c.activeCount || b.capacityLimit !== c.capacityLimit) return blocked("invalid or changed capacity inventory");
   if (expectedDisplacement.includes(candidate) || !expectedDisplacement.every(id => before.includes(id))) return blocked("approved displacement must be other items in the approved inventory");
-  const resulting = new Set([...before.filter(id => !expectedDisplacement.includes(id)), candidate]);
+  const approvedResulting = projectedInventory(before, expectedDisplacement, candidate);
   if (!number(b.maxHours) || b.maxHours <= 0 || !number(b.maxSpend) || !number(c.hoursUsed) || !number(c.spendUsed) || c.hoursUsed >= b.maxHours || c.spendUsed > b.maxSpend) return blocked("invalid or exhausted build limits");
   const d = input.decision;
   if (d === null) return { state: "AWAITING_DECISION", reason: "build request has no decision", actions: [] };
@@ -93,15 +95,17 @@ export function evaluateAuthorization(input: unknown): AuthorizationResult {
     if (r.workerId !== c.workerId && lease > now) return blocked("another worker holds the active execution lease");
     const applied = r.appliedDisplacedItemIds;
     if (!strings(applied) || !applied.every(id => expectedDisplacement.includes(id)) || typeof r.admissionApplied !== "boolean") return blocked("invalid recorded admission progress");
-    const expectedActive = new Set(before.filter(id => !applied.includes(id)));
     if (r.admissionApplied) {
       if (!sameIds(applied, expectedDisplacement)) return blocked("admission was recorded before displacement completed");
-      expectedActive.add(candidate);
+      if (!active.includes(candidate)) return blocked("the admitted roadmap item is no longer active");
     }
-    if (!sameIds([...expectedActive], active) || resulting.size > c.capacityLimit) return blocked("current capacity no longer matches the recorded admission progress");
+    if (applied.some(id => active.includes(id))) return blocked("a recorded displacement is active again");
+    if (before.includes(candidate) && !active.includes(candidate)) return blocked("the approved active roadmap item is no longer active");
+    if (approvedResulting.size > c.capacityLimit || projectedInventory(active, expectedDisplacement, candidate).size > c.capacityLimit) return blocked("current capacity cannot satisfy the approved admission");
     return { state: "RESUME", reason: "resume the recorded execution under the current authorization", actions: ["execution:RECLAIM_OR_RENEW", ...(!r.admissionApplied ? ["roadmap:RECONCILE_ADMISSION"] : []), "delivery:RESUME_TO_PR"] };
   }
-  if (!sameIds(before, active) || resulting.size > c.capacityLimit) return blocked("no delivery capacity available or approved inventory changed");
+  if (before.includes(candidate) && !active.includes(candidate)) return blocked("the approved active roadmap item is no longer active");
+  if (approvedResulting.size > c.capacityLimit || projectedInventory(active, expectedDisplacement, candidate).size > c.capacityLimit) return blocked("no delivery capacity available for the approved admission");
   return { state: "READY", reason: "current verified build approval satisfies the standing execution policy", actions: ["execution:CLAIM_AND_RECORD", "roadmap:ADMIT_NOW", "delivery:BUILD_TO_PR"] };
 }
 
