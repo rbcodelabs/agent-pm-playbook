@@ -103,6 +103,46 @@ test("already NOW candidate is not charged another slot without a receipt", () =
   assert.equal(evaluate(s).state, "READY");
 });
 
+test("unrelated NOW additions do not invalidate an approval when final capacity still fits", () => {
+  const s = ready();
+  s.package.activeItemIdsBefore = ["existing"];
+  s.package.capacityLimit = s.current.capacityLimit = 3;
+  s.current.activeItemIds = ["existing", "unrelated"];
+  s.current.activeCount = 2;
+  assert.equal(evaluate(s).state, "READY");
+});
+
+test("unrelated NOW removals do not invalidate an approval", () => {
+  const s = ready();
+  s.package.activeItemIdsBefore = ["existing"];
+  s.package.capacityLimit = s.current.capacityLimit = 2;
+  assert.equal(evaluate(s).state, "READY");
+});
+
+test("an approved displacement that is already applied does not require another approval", () => {
+  const s = ready();
+  s.package.activeItemIdsBefore = ["old"];
+  s.package.displacedItemIds = s.current.displacedItemIds = ["old"];
+  s.current.activeItemIds = ["candidate"];
+  s.current.activeCount = 1;
+  assert.equal(evaluate(s).state, "READY");
+});
+
+test("removing a candidate that was already NOW invalidates the approval", () => {
+  const s = ready();
+  s.package.activeItemIdsBefore = ["candidate"];
+  assert.equal(evaluate(s).state, "BLOCKED");
+});
+
+test("unrelated NOW additions still block when the approved final state exceeds capacity", () => {
+  const s = ready();
+  s.package.activeItemIdsBefore = ["existing"];
+  s.package.capacityLimit = s.current.capacityLimit = 2;
+  s.current.activeItemIds = ["existing", "unrelated"];
+  s.current.activeCount = 2;
+  assert.equal(evaluate(s).state, "BLOCKED");
+});
+
 test("occupied capacity requires approved displacement even with a matching execution claim", () => {
   const s = resumed();
   s.package.activeItemIdsBefore = s.current.activeItemIds = ["old"];
@@ -133,7 +173,7 @@ test("capacity rejects changed occupants, self-displacement, missing displaced i
   assert.equal(evaluate(limit).state, "BLOCKED");
 });
 
-test("receipt resumes partial displacement only with the exact recorded inventory", () => {
+test("receipt blocks unrelated occupancy when the approved final state would exceed capacity", () => {
   const s = resumed();
   s.package.activeItemIdsBefore = ["old"];
   s.package.displacedItemIds = s.current.displacedItemIds = ["old"];
@@ -147,6 +187,42 @@ test("receipt resumes partial displacement only with the exact recorded inventor
 
 test("matching execution resumes without charging its occupied slot again", () => {
   assert.equal(evaluate(resumed()).state, "RESUME");
+});
+
+test("matching execution resumes through unrelated NOW changes when final capacity still fits", () => {
+  const s = resumed();
+  s.package.capacityLimit = s.current.capacityLimit = 2;
+  s.current.activeItemIds = ["candidate", "unrelated"];
+  s.current.activeCount = 2;
+  assert.equal(evaluate(s).state, "RESUME");
+});
+
+test("matching execution reconciles an admission applied before its receipt update", () => {
+  const s = resumed();
+  s.package.activeItemIdsBefore = ["old"];
+  s.package.displacedItemIds = s.current.displacedItemIds = ["old"];
+  s.receipt!.admissionApplied = false;
+  s.current.activeItemIds = ["candidate"];
+  assert.equal(evaluate(s).state, "RESUME");
+  assert.ok(evaluate(s).actions.includes("roadmap:RECONCILE_ADMISSION"));
+});
+
+test("matching execution blocks when a recorded displacement becomes active again", () => {
+  const s = resumed();
+  s.package.activeItemIdsBefore = ["old"];
+  s.package.displacedItemIds = s.current.displacedItemIds = ["old"];
+  s.package.capacityLimit = s.current.capacityLimit = 2;
+  s.receipt!.appliedDisplacedItemIds = ["old"];
+  s.current.activeItemIds = ["candidate", "old"];
+  s.current.activeCount = 2;
+  assert.equal(evaluate(s).state, "BLOCKED");
+});
+
+test("recorded admission blocks when its candidate is no longer NOW", () => {
+  const s = resumed();
+  s.current.activeItemIds = [];
+  s.current.activeCount = 0;
+  assert.equal(evaluate(s).state, "BLOCKED");
 });
 
 test("existing PR returns in-review without new actions", () => {
