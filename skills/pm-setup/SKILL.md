@@ -27,7 +27,7 @@ Ask one section at a time:
 4. **Workflow profile:** when workflow automation is in scope, offer the profiles from `workflow-profiles.json`; explain that product and workflow profiles compose independently.
 5. **Workflow overrides:** ask whether automation runtime, review requests, decision records, notifications, prototype artifacts, or analytics needs a different provider.
 6. **Connections:** collect identifiers and credential *locations* only for providers actually resolved. Never place a secret in `pm-config.md`.
-7. **Context:** active cycle, objective, KR, desired outcome, focus opportunity, and focus solution. Store provider-native IDs when available.
+7. **Context:** only for the Markdown/Obsidian adapter — active cycle, objective, KR, desired outcome, focus opportunity, and focus solution, as IDs/paths. **Omit the `Active Context` section entirely for provider-backed configs**, which answer these at read time; writing it there creates a cache that goes stale and is read by nothing. Never store a KR's value, progress or status in this file regardless of adapter.
 8. **Portfolio policy:** collect positive `now_limit`, `next_limit`, and
    `concurrent_validation_limit` values plus whether full horizons require explicit
    displacement. Default the evidence, owner, and capacity guards to `true`; never infer

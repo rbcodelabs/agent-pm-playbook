@@ -68,6 +68,8 @@ Before reading or writing state, read `pm-config.md` and resolve the `okrs` capa
 
 All file paths and templates below are the Markdown/Obsidian adapter only. For another provider, perform the same quality gates and lifecycle steps against provider-native objects and IDs. Updating `pm-config.md` updates active references, never a duplicate OKR body.
 
+**Never write OKR values into `pm-config.md`.** That file is a routing manifest; it holds pointers, not state. Specifically, do not record a KR's current or target value, progress or percentage, cycle or objective status, counts of objectives/KRs, commit SHAs, "verified against" claims, or any run narrative — not even immediately after verifying them, and least of all then. Freshly-verified detail is the most dangerous thing to cache, because it reads as authoritative long after it stops being true. Values belong in the resolved provider; evidence and narrative belong in a run report under `reporting_archive`. For provider-backed configs the `Active Context` section should be **absent entirely** — the provider answers "which cycle is active" directly (e.g. Compass `get_workspace_summary` → `activeOkrCycle`), so caching it buys nothing and can go stale. Treat a populated `Active Context` in a provider-backed config as a defect to remove, not a field to refresh.
+
 You are a specialist in building and maintaining OKR cycles that are tightly
 connected to product discovery. This skill activates when the user is creating,
 reviewing, updating, or archiving OKRs — and when they need to understand
@@ -106,11 +108,12 @@ OKR Objective
 
 When `okrs` resolves to Markdown or Obsidian, cycles live in `product/okrs/[CYCLE].md` (e.g., `product/okrs/Q2-2026.md`). Other providers own their cycles natively.
 
-The product's `pm-config.md` file identifies:
-- The active OKR cycle file path
-- The currently active KR (the one the team is focused on moving right now)
+Check `pm-config.md` before any OKR work to resolve the `okrs` provider. How you then establish *which* cycle is active depends on that provider:
 
-Check `pm-config.md` before any OKR work to establish context.
+- **Provider-backed** (Compass, Jira, JPD, Linear) — ask the provider. Compass returns the active cycle from `get_workspace_summary` (`activeOkrCycle`), and `list_okr_cycles` gives the full set with status. `pm-config.md` should have **no** `Active Context` section at all in this case; if one exists, it is a stale cache to delete, not a source to read.
+- **Markdown/Obsidian adapter** — there is no provider to ask, so `pm-config.md` is the index. Its `Active Context` section identifies the active cycle file and the currently active KR (the one the team is focused on moving right now). Even here it holds pointers only, never values.
+
+If a provider cannot express which KR or opportunity is the current *focus* — a human judgment most tools have no field for — raise that as a gap against the provider. Do not reintroduce a Markdown cache to work around it.
 
 ---
 
@@ -184,11 +187,20 @@ For each KR, check whether a connected Desired Outcome already exists:
 - If no: chain to `ost-workflow` to create the Desired Outcome before finalizing
   the cycle file. A KR with no OST connection is directionally incomplete.
 
-### Step 5 — Update pm-config.md
+### Step 5 — Point active context at the new cycle
 
-Add the new cycle file path and set `active_okr_cycle` to the new cycle. If there
-is a previously active cycle, confirm with the user whether it should be archived
-first.
+**Provider-backed:** nothing to do in `pm-config.md`. Activating the cycle in the provider
+*is* the update — the provider is what every skill reads. Do not add an `Active Context`
+section to record it.
+
+**Markdown adapter only:** add the new cycle file path to `Active Context` and point it at
+the new cycle. Pointers only — no baselines, targets or status.
+
+Either way, if a previously active cycle exists, confirm with the user whether it should
+be archived first. Check whether your provider actually exposes a status transition before
+promising one: Compass's MCP surface is create/get/list only, with no `update_okr_cycle`
+or `archive_okr_cycle`, so archiving there is a manual UI step. Say so plainly rather than
+leaving a cycle silently stranded.
 
 ---
 
@@ -388,10 +400,17 @@ frontmatter, before Objective 1):
 
 Change `status: Active` to `status: Completed` in the cycle file frontmatter.
 
-### Step 4 — Update pm-config.md
+### Step 4 — Clear the active-context pointer
 
-Clear or update `active_okr_cycle` to reflect that this cycle is closed. If the
-next cycle already exists, point to it.
+**Provider-backed:** nothing to do in `pm-config.md`. Closing the cycle in the provider is
+the update.
+
+**Markdown adapter only:** clear the `Active Context` cycle pointer, or repoint it at the
+next cycle if one already exists.
+
+If the provider has no way to mark a cycle closed (see Step 5), record that the transition
+must be made by hand and surface it to the user. Do not report a cycle as archived when
+only the local pointer moved.
 
 ---
 
