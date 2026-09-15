@@ -91,6 +91,19 @@ test("contract-v2 template exposes both independent routing layers", () => {
   assert.match(template, /capacity_change_dispatch: roadmap_steward/);
 });
 
+test("Obsidian routing uses runtime-resolved vault-relative paths", () => {
+  const routing = readFileSync("skills/integration-routing/SKILL.md", "utf8");
+  const template = readFileSync("skills/integration-routing/assets/pm-config-template.md", "utf8");
+
+  assert.match(routing, /runtime-provided vault root/i);
+  assert.match(routing, /vault-relative/i);
+  assert.match(routing, /scheduled prompts/i);
+  assert.match(template, /current runtime-configured vault/i);
+  assert.match(template, /vault-relative/i);
+  assert.doesNotMatch(template, /\*\*Root:\*\*/);
+  assert.doesNotMatch(template, /~\/Documents|\/Users\//);
+});
+
 test("human review skill is provider-neutral and ends unattended runs", () => {
   const skillPath = "skills/human-review-workflow/SKILL.md";
   const contents = readFileSync(skillPath, "utf8");
@@ -121,6 +134,38 @@ test("Compass-native review resolves both decision capabilities to tracking-only
   assert.match(adapter, /current revision/is);
   assert.match(adapter, /preserve.*history/is);
   assert.doesNotMatch(adapter, /NOW|signed[ -]policy|capacity/i);
+});
+
+test("a decided review stays open work until it is reconciled", () => {
+  const review = readFileSync("skills/human-review-workflow/SKILL.md", "utf8");
+  // A tracking-only provider has no mark_applied, so answering a request drops it out of
+  // the pending queue with no record that anything was done. Enumerating decided requests
+  // must therefore be a required capability, not an optional convenience.
+  assert.match(review, /`list_decided`/);
+  assert.match(review, /`list_decided` is required, not optional/i);
+  // Mode 4 is the only mode the scheduled checklist routes its decisions area to, so the
+  // reconciliation sweep has to live there rather than in a mode nothing invokes.
+  assert.match(review, /##\s*Mode 4[^\n]*Reconcile/i);
+  assert.match(review, /###\s*Reconcile decided requests/i);
+  assert.match(review, /enumerate, do not remember/i);
+  // Reviewer intent must become visible work, never an agent's own interpretation.
+  assert.match(review, /tracked follow-up work item/i);
+  assert.match(review, /never silently interpret it into mutations/i);
+  // Reconciliation is a visibility guarantee, not a grant of authority.
+  assert.match(review, /Reconciliation never expands authority/i);
+  // Changes-requested and rejected outcomes carry the most intent and must not be dropped.
+  assert.match(review, /`Request changes` and `Reject` require reconciliation/i);
+
+  const ops = readFileSync("skills/scheduled-product-operations/SKILL.md", "utf8");
+  assert.match(ops, /decided review whose outcome is not yet reflected/i);
+  assert.match(ops, /An empty queue is only `healthy` when the query that produced it covers/i);
+
+  const adapter = readFileSync("skills/human-review-workflow/references/compass-decisions-adapter.md", "utf8");
+  assert.match(adapter, /## Reconciling decided requests/);
+  assert.match(adapter, /state: "DECIDED"/);
+  // Queue discovery must not erode the existing rule that exact request recovery uses the
+  // persisted idempotency key rather than a list result.
+  assert.match(adapter, /never a list result/i);
 });
 
 test("tracking-only decisions stop for a human and never auto-apply approval", () => {
@@ -223,12 +268,64 @@ test("roadmap stewardship separates validation from capacity-ranked delivery adm
   assert.match(compass, /Missing capacity or ordering data\s+means keep `LATER`/is);
 });
 
+test("Compass's native decision receipt is the primary Mode 4 reconciliation signal", () => {
+  // apply_recorded_decision (Compass PR #202) opened receipt-writing to service actors while
+  // deciding remains human-only. Reconciliation must prefer that native receipt over the
+  // product-state derivation that PR #18 originally treated as authoritative.
+  const adapter = readFileSync("skills/human-review-workflow/references/compass-decisions-adapter.md", "utf8");
+  assert.match(adapter, /apply_recorded_decision\(decisionId\)/);
+  assert.match(adapter, /Idempotent, verified/i);
+  assert.match(adapter, /No side effects, verified/i);
+  assert.match(adapter, /\*\*primary\*\*/);
+  assert.match(adapter, /does not by itself imply a pending mutation/i);
+  // The decision-record-ID vs request-ID gotcha: passing the wrong ID must be documented
+  // explicitly, because the resulting error mimics the old permission-denied message.
+  assert.match(adapter, /get_decision\(workspaceId, requestId\)\.decisions\[0\]\.id/);
+  assert.match(adapter, /decisionRecord\s+not found or access denied/i);
+  // decidedAt, not the request's createdAt, is the age signal.
+  assert.match(adapter, /decisions\[0\]\.decidedAt.*for a decision's age/i);
+  assert.match(adapter, /never the request's `createdAt`/i);
+  assert.doesNotMatch(adapter, /NOW|signed[ -]policy|capacity/i);
+
+  const review = readFileSync("skills/human-review-workflow/SKILL.md", "utf8");
+  assert.match(review, /native decision-application receipt/i);
+  assert.match(review, /native signal first/i);
+  assert.match(review, /Already reflected — no mutation required/);
+  assert.match(review, /A question directed at the agent, not at product state/);
+  assert.match(review, /decisions\[0\]\.decidedAt/);
+  assert.match(review, /never the originating request's creation\s*\n?\s*timestamp/i);
+
+  const ops = readFileSync("skills/scheduled-product-operations/SKILL.md", "utf8");
+  assert.match(ops, /apply_recorded_decision/);
+  assert.match(ops, /decided timestamp/i);
+  assert.match(ops, /list_research_studies/);
+  assert.match(ops, /unverifiable from this seat/i);
+});
+
+test("experiment workflow reaches for NOT_PURSUED instead of KILL or an open-ended Designing state", () => {
+  const experiments = readFileSync("skills/experiment-workflow/SKILL.md", "utf8");
+  assert.match(experiments, /\*\*Not Pursued:\*\*/);
+  assert.match(experiments, /never `KILL`/);
+  assert.match(experiments, /`NOT_PURSUED` leaves the linked Assumption\s*\n?\s*`UNTESTED`/);
+  assert.match(experiments, /`KILL` would incorrectly set it `INVALIDATED`/);
+  assert.match(experiments, /A\s*\n?\s*`reason` is required/);
+  assert.match(experiments, /status: Not Pursued/);
+  assert.match(experiments, /Not Pursued result/);
+
+  const compass = readFileSync("skills/compass-workflow/SKILL.md", "utf8");
+  assert.match(compass, /NOT_PURSUED/);
+  assert.match(compass, /Own terminal status, distinct from KILLED/);
+  assert.match(compass, /reason.*is required for NOT_PURSUED/is);
+});
+
 test("Compass intake and delivery no longer bypass human investment gates", () => {
   const triage = readFileSync("skills/compass-feedback-triage/SKILL.md", "utf8");
   const resolver = readFileSync("skills/compass-resolver/SKILL.md", "utf8");
   assert.match(triage, /Intake does not add a solution, solution plan, assumption, or\s+roadmap item/is);
   assert.match(triage, /human-review-workflow/);
-  assert.match(resolver, /It never promotes NEXT items or raw\s+feedback/is);
+  assert.match(resolver, /build_authorization_policy\.enabled.*build-authorization/is);
+  assert.match(resolver, /tracking-only decision itself does not grant authority/is);
+  assert.match(resolver, /execution\s+uses the verified standing policy/is);
   assert.match(resolver, /generic tracked decision is context, not an executable authorization/is);
   assert.doesNotMatch(resolver, /NEXT-promotion tier/);
   assert.doesNotMatch(resolver, /Feedback fallback tier/);

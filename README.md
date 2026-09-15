@@ -10,7 +10,14 @@ It ships three things:
 
 Built on Teresa Torres's Continuous Discovery Habits and Marty Cagan's outcome-driven thinking.
 
+**One approval to a tested PR:** the opt-in
+[Build Authorization workflow](skills/build-authorization/SKILL.md) combines build scope,
+design and capacity in one human decision. A standing project policy covers implementation
+and review fixes within that package; release remains separately authorized.
+
 → **[Scheduled Product Operating System](Scheduled%20Product%20Operating%20System.md)** — working design for turning the full playbook into asynchronous scheduled and event-driven workflows, including human-review packets, early-idea prototypes, decision routing, and safe automation gates.
+
+→ **[Compass cloud capability pack](guides/compass-cloud-pack.md)** — a declarative, skills-only edition for Compass's in-app agent.
 
 ---
 
@@ -46,6 +53,16 @@ Run the pm-setup skill to select an integration profile, configure provider rout
 ```
 
 This writes a `pm-config.md` routing manifest that every PM agent and skill reads automatically. Choose `compass-full`, `compass-obsidian-linear`, `markdown-linear`, or `jpd-jira`, then override individual capabilities if needed. Product state stays in its resolved provider.
+
+### Install in Compass
+
+The cloud edition lives at `packs/compass/`. A Compass workspace administrator installs an immutable tuple:
+
+- Public repository: `https://github.com/rbcodelabs/agent-pm-playbook`
+- Commit: an exact 40-character commit SHA
+- Pack path: `packs/compass`
+
+Installing another commit creates another immutable version that can be selected for an upgrade or rollback. See the [cloud pack guide](guides/compass-cloud-pack.md) for its security and compatibility contract.
 
 ---
 
@@ -99,6 +116,16 @@ Delegate explicitly or let Claude route automatically:
 
 ---
 
+## Recurring product operations
+
+Ask: “Install the playbook's product-operations job every weekday at 9 AM in my timezone.”
+After resolving your configuration and schedule, the
+[scheduled-product-operations skill](skills/scheduled-product-operations/SKILL.md) installs
+one job per product. Every run checks feedback, discovery, experiments, roadmap, delivery,
+outcomes, decisions, reporting, and automation health, then works through one checklist.
+Healthy areas remain visible; human decisions and unfinished work include direct links.
+Existing multiple-job installations can be consolidated through the same skill.
+
 ## Skills
 
 Skills installed by `setup.sh` include:
@@ -109,6 +136,7 @@ Skills installed by `setup.sh` include:
 |---|---|
 | `integration-routing` | Resolves capability providers and validates named profiles/overrides |
 | `pm-setup` | Configures profiles, capability providers, connections, and provider-aware scaffolding |
+| `scheduled-product-operations` | Installs one recurring job that checks every area, builds one checklist, and executes safe actionable work on every run |
 | `human-review-workflow` | Routes asynchronous product decisions, including tracking-only Compass Decisions that stop for human judgment without auto-applying actions |
 | `delivery-completion-watcher` | Reconciles merged PRs and verified production delivery back into product, roadmap, and capacity state |
 | `pm-coach` | Thinking partner for discovery, OST review, experiment design |
@@ -126,6 +154,7 @@ Skills installed by `setup.sh` include:
 | `design-before-code` | Pre-implementation design gate — explore context, propose approaches, get approval before any code |
 | `test-first` | TDD iron law — RED test required before any production code, with rationalization counters |
 | `verify-done` | Verification gate — run the command, read the output, cite evidence before claiming done |
+| `architecture-review` | Read-only two-pass audit — architectural risk against the roadmap, then maintainability and code health |
 
 ---
 

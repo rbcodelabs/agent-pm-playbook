@@ -363,6 +363,16 @@ parent OST to mark the solution as killed with a reason. Chain to `ost-workflow`
 the test was inconclusive due to design or sample issues. Design the next
 experiment iteration targeting the same assumption with a revised approach.
 
+**Not Pursued:** A human decided not to run this experiment at all — not because evidence
+disproved the assumption, but because of opportunity cost, timing, a blocked dependency, or
+reprioritization. This is different from Kill: Kill means the assumption failed a test; Not
+Pursued means no test happened, by deliberate choice. For Compass, call `conclude_experiment`
+with `NOT_PURSUED` — never `KILL`, and never leave the experiment sitting in `DESIGNING`
+indefinitely waiting for someone to notice. `NOT_PURSUED` leaves the linked Assumption
+`UNTESTED` (never tested is not disproven); `KILL` would incorrectly set it `INVALIDATED`. A
+`reason` is required and is stored as the durable rationale — capture the human's actual
+reasoning, not a placeholder.
+
 ### Step 4 — Update the file
 
 Fill in the Results section with:
@@ -370,11 +380,20 @@ Fill in the Results section with:
 - Interpretation (what the data means)
 - Next action
 
-Update frontmatter:
+For an experiment that actually ran, update frontmatter:
 - `status: Complete`
 - `result: Passed | Failed | Inconclusive`
 - `next_action: Proceed | Kill | Iterate`
 - `end_date: YYYY-MM-DD`
+
+For an experiment a human decided not to run at all, use the distinct Not Pursued state
+instead — never Complete/Kill (see Step 3 above):
+- `status: Not Pursued`
+- `result: Not Pursued`
+- `next_action: Not Pursued`
+- `end_date: YYYY-MM-DD`
+- Record the human's rationale in Learnings; it is the durable evidence for why this was
+  shelved instead of run or killed.
 
 Fill in the Learnings section with any insights worth keeping regardless of
 outcome. Failed experiments often produce the most useful learnings.
@@ -397,10 +416,17 @@ Read all files in `product/discovery/experiments/` with `status: Running` or
 | Solution with no experiment | Parent solution in Validating stage with no associated EXP file | Medium — no validation in flight |
 | Multiple running experiments on one solution | Two or more EXP files with same `parent_solution` and `status: Running` | Low — usually fine, note it |
 
+An experiment a human has deliberately shelved belongs in the terminal Not Pursued state
+(Compass: `conclude_experiment(..., "NOT_PURSUED")`), not indefinitely in Designing. Once
+recorded there it drops out of this table's Designing/Running scan and stops tripping the
+"Stuck in design" flag — do not leave a deliberately-shelved experiment sitting in Designing
+just to keep the flag from firing; record the decision instead.
+
 For each flag, report:
 1. Which experiment is affected
 2. What the flag is
-3. The recommended action (e.g., "log results now," "write kill condition before proceeding")
+3. The recommended action (e.g., "log results promptly," "write kill condition before
+   proceeding," or "record Not Pursued with the human's reason if this was a deliberate hold")
 
 Output format for health review:
 
@@ -483,6 +509,12 @@ solution for the same opportunity or re-evaluate the opportunity itself.
 **Iterate result:** Stay in this skill. Design the next experiment iteration
 targeting the same assumption with a revised approach. Note what the current
 experiment taught us about the design of the next one.
+
+**Not Pursued result:** Do not chain to `ost-workflow` as if the solution failed, and do not
+chain to `investment-gate` as if it passed. Record the decision and reason against the
+experiment — for Compass, `conclude_experiment(experimentId, "NOT_PURSUED", reason)` — and
+stop. The parent solution's fate is a separate, later decision, not an automatic consequence
+of choosing not to run this test.
 
 **Investment-gate question ("are we ready to build?"):** Chain to
 `investment-gate`. The experiment file and its result are the primary inputs to

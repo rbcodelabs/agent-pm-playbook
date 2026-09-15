@@ -12,6 +12,13 @@ description: >-
 
 ## Resolution algorithm
 
+For build execution, also resolve `build_authorization_policy` using the installed
+[build-authorization contract](../build-authorization/SKILL.md). It is opt-in standing
+authority, independent of provider mode. Missing/disabled policy preserves the legacy
+gates below; a verified approved package consolidates build admission and design approval.
+Expanded provider tables must agree with the profile plus overrides; stale tables are a
+configuration error, not an alternate source of routing truth.
+
 1. Read `pm-config.md` before any read or write.
 2. Load the named `integration_profile` from this skill's `assets/integration-profiles.json`.
 3. Apply `provider_overrides` by product capability.
@@ -25,6 +32,9 @@ description: >-
    success never implies shipped state.
 8. Read from and write to the resolved provider. Load its provider workflow or adapter when one exists.
 9. Never silently fall back to Markdown or another channel. If a provider is unavailable, report the blocked operation and use a configured fallback or an explicitly labeled `inbox`, `export`, `cache`, or `snapshot` only when the manifest permits it.
+10. Treat paths owned by an Obsidian provider as vault-relative. Resolve them against the
+    runtime-provided vault root; never persist or require a machine-specific vault path in
+    `pm-config.md`, scheduled prompts, or decision records.
 
 ## Capabilities
 
@@ -62,10 +72,14 @@ description: >-
 - Overrides replace a profile default for one capability without changing the named profile.
 - Notification fallbacks must be explicit because notification channels do not own product state.
 - Product and workflow profiles resolve independently; do not invent combined profiles for every tool combination.
+- Obsidian paths are portable provider identifiers, not host filesystem locations. Repository
+  working directories and executable paths are separate connection concerns.
 - A workflow provider declares whether decisions are tracking-only or action-capable.
   Tracking-only decisions record human judgment but never mutate product or delivery state.
 - Validation authorization leaves roadmap candidates in `LATER`. `NEXT` is a validated,
-  ranked, capacity-limited queue and `NOW` is a separately approved commitment.
+  ranked, capacity-limited queue. `NOW` commitment is approved either through the legacy
+  separate gate or as part of a current opted-in build package; generic validation never
+  supplies that approval.
 
 ## Backward compatibility
 

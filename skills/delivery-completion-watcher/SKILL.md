@@ -31,9 +31,11 @@ the state decision deterministic; provider adapters perform the returned actions
 ## Triggers and empty runs
 
 Run on pull-request, required-check, preview, production-deployment, or merge events. Also
-run a daily catch-up scan for delivery tasks left `IN_REVIEW`, so missed webhooks cannot
-leave stale state indefinitely. End without a model turn when no linked task changed and
-no task is older than `stale_in_review_after_hours`.
+inspect delivery tasks left `IN_REVIEW` on every
+[product-operations run](../scheduled-product-operations/SKILL.md), so missed webhooks
+cannot leave stale state indefinitely. When no linked task changed and no task is older
+than `stale_in_review_after_hours`, return no work for this item and continue the checklist.
+Standalone event triggers may skip an empty event without a model turn.
 
 ## Stable linkage
 

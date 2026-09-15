@@ -8,6 +8,43 @@
 
 ## Implementation Status — 2026-08-29
 
+### Unified operations run
+
+[Scheduled Product Operations](skills/scheduled-product-operations/SKILL.md) is the
+installation and run procedure for recurring playbook automation. Install one job per
+configured product at the requested frequency. Every run inspects all operating areas,
+builds one checklist, triages findings, and executes safe work through existing skills.
+No area waits for a daily, weekly, monthly, or quarterly inspection slot. Source changes,
+unresolved work, and actual deadlines determine actions; unchanged artifacts are reused.
+
+This is an agent instruction workflow using the adopting runtime's available tools, not
+a bundled scheduler service. Installing the skill does not install a live job. Missing
+runtime or domain adapters are visible blockers on the affected operations.
+
+### Build authorization update — 2026-09-05
+
+The opt-in [build-authorization](skills/build-authorization/SKILL.md) path consolidates
+investment, design and NOW commitment into one purpose-bound human request. A separately
+authorized, serialized executor reads the tracking-only decision and carries that scope
+through a tested PR. NEXT is optional queue organization for this path. The separate-gate
+procedures elsewhere in this document remain the default for projects without the policy.
+
+Repository support includes the shared contract, deterministic snapshot evaluator and
+workflow routing. Live activation additionally requires verified installed skills,
+immutable package/decision provenance, durable runtime receipts and serialized execution.
+Delivery eligibility must also consider newly approved packages awaiting admission.
+An empty-NOW filter must not gate the shared product-operations run.
+Do not describe a documented dispatch procedure as an installed runtime integration.
+
+Generic approvals still grant no authority. The new standing policy must be explicitly
+activated for each project and packages must be prepared and approved after activation.
+The executor records admission/claim/task/PR progress outside the immutable decision and
+resumes from it after failure. Material changes return a concise revised request. Revocation
+stops further work; merge and production operations remain independently authorized.
+
+Measure approval-to-start, approval-to-PR and duplicate approval requests per build. A pilot
+must produce a real tested PR from one human approval before expansion to other projects.
+
 Implemented in the playbook repository:
 
 - contract-v2 product/workflow routing shape and independently composable workflow profiles;
@@ -26,7 +63,7 @@ Implemented in the playbook repository:
 
 Still to implement against live systems:
 
-- concrete Geode scheduling, dispatch, and notification adapter calls;
+- verified live runtime installation, dispatch, and notification integrations;
 - a running decision-router watcher rather than skill-level procedure alone;
 - action-capable adapters for teams that explicitly need transactional continuations;
 - prototype generation/publishing adapters;
@@ -498,7 +535,10 @@ successful retries are no-ops, and failures move the Task to `BLOCKED`.
 ## 8. Scheduled and Event-Driven Flows
 
 All flows below first resolve their required product and workflow capabilities from
-`pm-config.md`. The table names responsibilities, not storage products.
+`pm-config.md`. These responsibilities share one recurring
+[product-operations checklist](skills/scheduled-product-operations/SKILL.md); every area
+is checked on every run. Existing event subscriptions can provide faster reactions;
+reconcile their work and receipts before acting to avoid duplicates.
 
 ### Event-driven flows
 
@@ -511,7 +551,7 @@ All flows below first resolve their required product and workflow capabilities f
 | Delivery completion watcher | PR, CI, preview, production deployment, or merge changes state | Reconcile linked Tasks, launch/shipped state, Solution state, receipts, smoke findings, and capacity event |
 | Adoption watcher | Feature exposure or metric event becomes available | Early adoption and safety assessment |
 
-### Daily flows
+### Operational checks — every run
 
 | Flow | Purpose |
 |---|---|
@@ -525,7 +565,7 @@ All flows below first resolve their required product and workflow capabilities f
 ### Delivery completion watcher
 
 This flow is implemented by `skills/delivery-completion-watcher`. It is triggered by
-delivery-provider events and backed by a daily stale-`IN_REVIEW` scan.
+delivery-provider events and backed by the shared run's stale-`IN_REVIEW` inspection.
 
 1. The delivery resolver writes reciprocal linkage when it opens a PR: PR URL, repository,
    branch, commit, Roadmap Item ID, Solution ID, and Task IDs in both Compass and the PR.
@@ -541,7 +581,7 @@ delivery-provider events and backed by a daily stale-`IN_REVIEW` scan.
 6. The idempotent completion receipt makes retries no-ops or resumptions of missing actions,
    never duplicate comments, feedback, or state transitions.
 
-### Weekly flows
+### Discovery and reporting checks — every run
 
 | Flow | Purpose |
 |---|---|
@@ -551,15 +591,15 @@ delivery-provider events and backed by a daily stale-`IN_REVIEW` scan.
 | Roadmap steward | Check `NOW/NEXT/LATER`, validation gates, capacity, and KR coverage, **including stale/wrong-objective KR links (roadmap items still wired to a KR from before a mid-cycle KR was created) and independent release-evidence reconciliation for solutions that may have shipped without their status updating** |
 | Outcome learner | Connect releases to adoption and outcome movement |
 | Decision digest | Present all pending decisions in priority order with direct links |
-| Stakeholder update | Draft the evidence-linked weekly narrative for review |
+| Stakeholder update | Inspect reporting commitments and material changes; prepare or update the evidence-linked draft for review |
 
-### Biweekly, monthly, and quarterly flows
+### Strategic health checks — every run
 
-| Cadence | Flows |
-|---|---|
-| Biweekly | OST pruning recommendations, opportunity reranking, solution/assumption audit |
-| Monthly | Outcome and OKR health, discovery-health metrics, roadmap alignment, calibration review |
-| Quarterly | Outcome reset/reconfirmation, full OST retrospective, capacity-aware roadmap review, automation-policy audit |
+Inspect pruning and reranking needs, solution/assumption health, outcomes and OKRs,
+discovery-health metrics, roadmap alignment, calibration, retrospective needs, and
+automation-policy health on every run. Actual cycle boundaries and agreed reporting
+deadlines inform what action is useful; they never exclude an area from inspection.
+Human weekly or quarterly rituals may remain, with preparation driven by current evidence.
 
 ### Roadmap steward admission algorithm
 
