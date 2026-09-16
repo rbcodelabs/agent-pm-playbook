@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "id": "no-silent-fallback",
+  "description": "An unavailable provider blocks rather than silently selecting Markdown.",
+  "prompt": {
+    "system": "Apply the supplied integration-routing skill and return only JSON matching the output contract.",
+    "user": "The resolved delivery provider compass_tasks is unavailable and no fallback is configured. Report the operation state."
+  },
+  "execution": { "mode": "constrained-run-v1", "maxTurns": 1, "maxTokens": 500, "timeoutSeconds": 30, "tools": [], "skills": [], "filesystem": "none" },
+  "outputContract": {
+    "type": "object", "additionalProperties": false, "required": ["status", "requestedProvider", "fallback"],
+    "properties": { "status": { "const": "blocked" }, "requestedProvider": { "type": "string", "minLength": 1 }, "fallback": { "type": "null" } }
+  },
+  "grader": "deep-equal",
+  "expected": { "status": "blocked", "requestedProvider": "compass_tasks", "fallback": null }
+}
