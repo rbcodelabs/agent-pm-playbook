@@ -2,6 +2,13 @@ import { readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
 type Identity = { projectId: string; workspaceId: string; repository: string };
+/**
+ * `digest` / `packageDigest` carry the DECISION PROVIDER's own revision fingerprint —
+ * the value it computed and stored immutably when the request revision was created.
+ * Do NOT feed a locally computed content hash here. The adapter reads the fingerprint
+ * from the provider and passes it through; this evaluator only checks that the package,
+ * the decision and any receipt all agree on the same one.
+ */
 export type AuthorizationSnapshot = {
   policy: Identity & { enabled: boolean; version: string; activatedAt: string };
   package: Identity & {

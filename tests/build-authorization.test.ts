@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { evaluateAuthorization as evaluate } from "../skills/build-authorization/scripts/evaluate-authorization.ts";
 
 function ready() {
@@ -262,4 +263,52 @@ test("approval snapshots require explicit receipt absence and strict boolean ver
   assert.equal(evaluate({ ...s, receipt: undefined }).state, "BLOCKED");
   assert.equal(evaluate({ ...s, decision: { ...s.decision, humanVerified: "true" } }).state, "BLOCKED");
   assert.equal(evaluate({ ...s, current: { ...s.current, serializedWorker: "true" } }).state, "BLOCKED");
+});
+
+test("risk tiering routes ordinary work away from build packages", () => {
+  const skill = readFileSync("skills/build-authorization/SKILL.md", "utf8");
+  const tiers = skill.split("## Which tier applies")[1]?.split("## Authority and provider boundary")[0] ?? "";
+  assert.ok(tiers.length > 0, "build-authorization must open with a tier gate");
+  // The cheap tiers must be explicit that they need neither a package nor a decision request.
+  assert.match(tiers, /standing_execution_policy/i);
+  assert.match(tiers, /approved Solution plan/i);
+  assert.match(tiers, /no package, no decision request/i);
+  // Tier 3 must enumerate the risk triggers that force full ceremony.
+  for (const trigger of [/schema/i, /migration/i, /auth/i, /secret|credential|billing/i, /untrusted|public/i, /destructive|irreversible/i]) {
+    assert.match(tiers, trigger);
+  }
+  // A plan edited after approval is not an approval.
+  assert.match(tiers, /unmodified since that approval|edited after approval is unapproved/i);
+  // Escalation, not silent completion, when a Tier 3 trigger appears late.
+  assert.match(tiers, /escalate/i);
+});
+
+test("package identity uses the provider's revision fingerprint, never a local hash", () => {
+  const skill = readFileSync("skills/build-authorization/SKILL.md", "utf8");
+  assert.match(skill, /decision revision \*?is\*? the package/i);
+  assert.match(skill, /do not compute a separate content hash/i);
+  assert.match(skill, /hand-rolled canonical-body hashing is forbidden/i);
+  assert.doesNotMatch(skill, /SHA-256/i);
+  assert.doesNotMatch(skill, /fixed key ordering/i);
+  // Verification re-reads the provider rather than recomputing locally.
+  assert.match(skill, /re-read the provider's current revision ID and fingerprint/i);
+  assert.doesNotMatch(skill, /recompute the digest/i);
+  // Observed-not-assumed, and the finality of a sent request, must both be stated.
+  assert.match(skill, /observed, never assumed/i);
+  assert.match(skill, /sent request is effectively final/i);
+  // The evaluator's digest fields must document that they carry provider values.
+  const evaluator = readFileSync("skills/build-authorization/scripts/evaluate-authorization.ts", "utf8");
+  assert.match(evaluator, /DECISION PROVIDER's own revision fingerprint/i);
+  assert.match(evaluator, /do NOT feed a locally computed content hash/i);
+});
+
+test("the resolver takes the cheapest tier and never demands a package for tier 2", () => {
+  const resolver = readFileSync("skills/compass-resolver/SKILL.md", "utf8");
+  assert.match(resolver, /classify the tier/i);
+  assert.match(resolver, /cheapest route/i);
+  assert.match(resolver, /Tier 2 work proceeds on a current\s+approved Solution plan with no package and no decision request/is);
+  assert.match(resolver, /only a Tier 3 trigger requires a\s+package/is);
+  // Plan approval remains a human act the agent must not self-serve.
+  assert.match(resolver, /Do NOT call\s+`approve_solution_plan`/is);
+  assert.match(resolver, /approved plan \*\*is\*\* the/i);
 });

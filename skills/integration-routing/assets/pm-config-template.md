@@ -137,6 +137,16 @@ build_authorization_policy:
   activation_authority: unresolved # exact human instruction/decision reference
   receipt_store: unresolved # durable automation-runtime store, separate from decisions
   serialized_executor: unresolved # verified single executor or conditional lease
+  # Tier 3 forces a full build package. Everything else routes to the cheaper tiers:
+  # Tier 1 = standing_execution_policy action classes; Tier 2 = a current approved
+  # Solution plan. See "Which tier applies" in build-authorization.
+  tier_3_triggers:
+    - schema_migration_or_backfill
+    - auth_permissions_or_tenancy
+    - secrets_billing_or_paid_resources
+    - public_or_untrusted_input_surface
+    - destructive_or_irreversible_data
+  plan_approval_authorizes_tier_2: true # an approved, unmodified Solution plan IS authorization
 ```
 
 Enable only under explicit human authorization after installed workflow, provider and
@@ -144,6 +154,14 @@ runtime checks in `build-authorization`. Missing fields block execution. This st
 policy permits a current approved build package through a tested PR, including its exact
 roadmap admission. It grants no merge or production authority. Existing decisions are
 not grandfathered. Package-specific limits and scope stay in the decision provider.
+
+**Packages are the exception, not the rule.** Only work that fires a `tier_3_triggers`
+entry needs one. Work matching a `standing_execution_policy` action class proceeds with no
+approval (Tier 1), and ordinary product work proceeds on a current approved Solution plan
+with no package and no second approval (Tier 2). Enabling this policy therefore does not
+route everything through package ceremony — it defines the narrow band where that ceremony
+is warranted. Do not compute a local content hash for a package: the decision provider's
+own immutable revision and fingerprint are the binding identity.
 
 ## Delivery Completion Policy
 

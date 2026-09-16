@@ -111,6 +111,12 @@ or a lock.
    - Confirm the item is already in `NOW` and that the current run has explicit delivery
      authority under the configured standing policy or a direct human instruction. A
      generic tracked decision is context, not an executable authorization.
+   - **Classify the tier** using [build-authorization](../build-authorization/SKILL.md)
+     "Which tier applies", and take the cheapest route that fits. Tier 1 work proceeds
+     under `standing_execution_policy` with no package. **Tier 2 work proceeds on a current
+     approved Solution plan with no package and no decision request** — verify the plan is
+     approved and unmodified since approval, then build. Only a Tier 3 trigger requires a
+     package. Record the chosen tier and its reason in the run report.
    - Skip items with missing or ambiguous authority. Report them as upstream workflow gaps;
      do not create or assume permission here.
    - The **first surviving item in list order is the target.**
@@ -164,9 +170,11 @@ cross-check reliable later.
      subsystems, tests, migration, alternatives, and tradeoffs. Invoke
      `human-review-workflow` with gate type `design-direction`, persist the review request,
      and end `AWAITING_DECISION` before writing code. **Do NOT call
-     `approve_solution_plan`** as a side effect of the decision. The next resolver run may
-     read the exact tracked outcome, then proceed only if its pre-existing delivery authority
-     independently permits implementation of the current plan version.
+     `approve_solution_plan`** as a side effect of the decision — plan approval is a human
+     act, exactly like merge. Once the human has approved it, that approved plan **is** the
+     Tier 2 build authorization: the next run verifies the plan is approved and unmodified
+     since approval, then implements it directly, with no package and no second approval.
+     Tier 3 work still needs a package on top of the approved plan.
    - **Compass tasks.** Break the work into `create_task` items (one per meaningful unit —
      e.g. "write failing test", "implement fix", "update MCP docs"), each with a sensible
      `priority`; for a multi-part item use `parentTaskId` for an Epic→subtask shape. Link
