@@ -11,6 +11,36 @@ It replaces repeated approvals only for projects opting into `build_authorizatio
 Absent or disabled policy preserves existing workflows. It never retrospectively converts
 old decisions or roadmap positions into approval.
 
+## Which tier applies — check this first
+
+**Most changes do not need a package.** Size the ceremony to the risk, then stop reading.
+
+| Tier | When | What authorizes it |
+|---|---|---|
+| **1 — Standing** | The change matches an allowed action class in the project's `standing_execution_policy` (dependency patch bump, copy/label text, test-only, lint/type-only, a low-risk runtime bug with a deterministic repro and a regression test). | The standing policy itself. **No package, no decision request.** |
+| **2 — Plan-approved** | Ordinary product work on a roadmap item whose linked Solution carries a **current human-approved plan**, and which fires no Tier 3 trigger. | The approved Solution plan **is** the build authorization. **No package, no decision request.** |
+| **3 — Package** | Any Tier 3 trigger fires. | A human-approved build package under the rest of this contract. |
+
+**Tier 3 triggers** — any single one forces Tier 3:
+
+- database schema, migration, or data backfill
+- authentication, authorization, permissions, or tenancy boundaries
+- secrets, credentials, billing, or newly provisioned paid resources
+- a public, unauthenticated, or otherwise untrusted input surface
+- destructive or irreversible data operations
+- anything the project policy lists under `tier_3_triggers`
+
+Record which tier you chose and why. Choosing Tier 1 or Tier 2 is a decision to write down,
+not a step to skip silently. When genuinely torn between two tiers, take the higher one
+once and say so — do not re-litigate the same change on every run.
+
+**Tier 2 requires the plan approval to be current.** The plan must be approved *and*
+unmodified since that approval: a plan edited after approval is unapproved again. Compare
+the plan's last-updated time against its approval time; that single comparison replaces the
+whole package-digest mechanism for Tier 2 work. Tier 2 never covers merge, deployment,
+production data, or any Tier 3 trigger. If a Tier 3 trigger surfaces mid-implementation,
+stop and escalate — do not finish under the lower tier.
+
 ## Authority and provider boundary
 
 Resolve providers through `integration-routing` and read the project policy. The policy
@@ -49,14 +79,30 @@ Inspect implementation context and existing work first. Prepare one package cont
   and extra paid resources require their own authority; identify merge-triggered deploys.
 
 Keep the request readable; identifiers and the machine snapshot can follow the summary.
-Hash the canonical package body (SHA-256, UTF-8, fixed key ordering). Exclude request ID,
-decision revision, execution receipts and approval timestamps to avoid circular hashing.
-Include plan content/version, scope, limits, capacity commitment and policy version.
-Runtime progress, branch commits, task status, and routine wording changes in unrelated
-records are not scope changes. Store the exact canonical body alongside its digest.
 
-Persist a UUID idempotency key before `request_decision`, with the package body and digest
-in context and the exact solution or roadmap subject. Re-read the resulting request ID.
+**The approved decision revision *is* the package. Do not compute a separate content hash.**
+The decision provider already stores every revision immutably and fingerprints it, and the
+package body lives in that revision's own context. Use the provider's revision ID and its
+computed fingerprint as the binding identity, and feed those values into the evaluator's
+`digest` / `packageDigest` fields. Hand-rolled canonical-body hashing is forbidden: it
+duplicates a guarantee the provider already makes, it adds an authoring step that scales
+with prose length rather than with risk, and a wrong value baked into an immutable record
+cannot be corrected afterwards. Runtime progress, branch commits, task status and routine
+wording changes in unrelated records are not scope changes.
+
+**Every value in the package must be observed, never assumed — especially timestamps.**
+Read the clock at the moment you record it; never infer it from a neighbouring event.
+Derive identifiers, inventory and limits from the provider and the project policy instead
+of retyping them. An assumed value that reaches an immutable revision is permanent.
+
+Persist a UUID idempotency key before `request_decision`, with the package body in context
+and the exact solution or roadmap subject. Re-read the resulting request ID, revision ID
+and fingerprint, and record all three together. **A sent request is effectively final:** the
+idempotency key binds to that request's content, so reusing it with changed content is
+rejected, and a `PENDING` request cannot be withdrawn or closed. Get the request right
+before sending it. If a sent request is wrong, ask the human for `Request changes` and
+issue a corrected revision through that path — never create a second request for the same
+package, and never edit a stored body out of step with the revision the human is reading.
 Show the human: "Approve this scope through a tested PR under policy [version]."
 Use the provider's normal Approve / Request changes / Reject controls. Every provider-side
 continuation remains `NO_ACTION`. Notify only through already-authorized channels.
@@ -71,7 +117,8 @@ Return `AWAITING_DECISION` with one stable link; subsequent runs reuse that requ
    blocks execution; no inference from an old Plan approval is permitted.
 2. Re-read policy, current scope/plan, validation evidence, dependencies, owner, ordered
    queue, active runs and matching PRs. Check expiry and revocation at every resume and
-   before any push or admission. Recompute the digest from authoritative package fields.
+   before any push or admission. Re-read the provider's current revision ID and fingerprint
+   and compare them to the values recorded at request time; do not recompute a local hash.
 3. Normalize the verified snapshot and run the installed evaluator:
 
    ```bash
