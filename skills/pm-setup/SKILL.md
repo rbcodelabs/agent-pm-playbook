@@ -64,9 +64,11 @@ When Markdown owns OKRs, OST, experiments, or roadmap, initialize the correspond
 
 For an authorized build-policy migration, follow `build-authorization` and add the opt-in
 section from the template. Record the exact human activation instruction and verify
-provider history, durable receipts and serialized execution before setting `enabled: true`.
-Unknown runtime capabilities leave it disabled with a named blocker. Migration never
-approves existing NOW items. Do not repeat questions already answered in the active task.
+provider history and decision-record support before setting `enabled: true` — claiming and
+admission reuse the project's existing roadmap/Task mechanics, so there is no separate
+runtime to install or verify. Unknown provider capabilities leave it disabled with a named
+blocker. Migration never approves existing NOW items. Do not repeat questions already
+answered in the active task.
 
 Write `pm-config.md` from the installed `integration-routing/assets/pm-config-template.md`:
 

@@ -295,8 +295,8 @@ When the user wants to remove an item from the roadmap without shipping it:
 
 **Opted-in build path:** a verified `build-authorization-v1` package may commit directly
 from LATER or NEXT to NOW under the standing policy. Follow
-[build-authorization](../build-authorization/SKILL.md) for exact capacity/displacement,
-serialization and receipts. Do not add NEXT or NOW approval requests for the same scope.
+[build-authorization](../build-authorization/SKILL.md) for exact capacity/displacement and
+the shared claim step. Do not add NEXT or NOW approval requests for the same scope.
 The separate gates below apply when this opt-in path is not being used.
 
 Moving an item between horizons (Later to Next, Next to Now):
@@ -433,10 +433,11 @@ Output a structured review:
 
 For projects with enabled `build_authorization_policy`, use the build path first: prepare
 one complete package for the next eligible candidate, including design and exact capacity
-commitment. Reuse its pending request; after approval, dispatch the serialized executor
-under the standing policy. Report missing readiness with owner and next action. The
-legacy per-horizon review steps below apply to other work; do not run both paths for one
-package. The worker, not a tracking-only adapter, owns mutations and execution receipts.
+commitment. Reuse its pending request; after approval, dispatch execution under the
+standing policy. Report missing readiness with owner and next action. The legacy
+per-horizon review steps below apply to other work; do not run both paths for one package.
+The agent executing the package, not a tracking-only adapter, owns the roadmap-admission
+and claim mutations.
 
 Run this as the recurring portfolio decision flow. It prepares reviews; it does not grow
 the roadmap because a candidate sounds promising.

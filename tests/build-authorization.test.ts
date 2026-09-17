@@ -1,33 +1,33 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { spawnSync } from "node:child_process";
 import { evaluateAuthorization as evaluate } from "../skills/build-authorization/scripts/evaluate-authorization.ts";
 
 function ready() {
-  const identity = { projectId: "example-product", workspaceId: "example-workspace", repository: "example-org/example-product" };
-  const buildCapacity = { roadmapItemId: "candidate", activeItemIdsBefore: [] as string[], capacityLimit: 1 };
-  const liveCapacity = { roadmapItemId: "candidate", activeItemIds: [] as string[] };
+  const identity = { projectId: "hiptrip", workspaceId: "workspace", repository: "rick/hiptrip" };
   return {
     policy: { ...identity, enabled: true, version: "1", activatedAt: "2026-09-01T00:00:00Z" },
-    package: { ...identity, ...buildCapacity, id: "build-1", purpose: "build-authorization-v1", digest: "sha256:abc", policyVersion: "1", requestId: "review-1", decisionRevision: "2", preparedAt: "2026-09-02T00:00:00Z", expiresAt: "2026-09-10T00:00:00Z", ownerId: "engineer", capacitySlot: "slot-1", displacedItemIds: [] as string[], maxHours: 8, maxSpend: 20 },
-    decision: { ...identity, purpose: "build-authorization-v1", requestId: "review-1", revision: "2", packageId: "build-1", packageDigest: "sha256:abc", outcome: "approved", humanVerified: true, decidedAt: "2026-09-03T00:00:00Z", revoked: false, superseded: false },
-    current: { ...identity, ...liveCapacity, now: "2026-09-05T00:00:00Z", packageDigest: "sha256:abc", ownerId: "engineer", capacitySlot: "slot-1", displacedItemIds: [] as string[], activeCount: 0, capacityLimit: 1, evidenceReady: true, designReady: true, dependenciesReady: true, durableStorage: true, serializedWorker: true, hoursUsed: 0, spendUsed: 0, workerId: "worker-1" },
-    receipt: null as null | Record<string, unknown>,
+    package: {
+      ...identity, id: "build-1", purpose: "build-authorization-v1", policyVersion: "1",
+      planDocId: "doc-1", planDocVersionId: "v1", roadmapItemId: "candidate",
+      displacedItemId: null as string | null, preparedAt: "2026-09-02T00:00:00Z", expiresAt: "2026-09-10T00:00:00Z",
+    },
+    decision: {
+      ...identity, purpose: "build-authorization-v1", packageId: "build-1", planDocVersionId: "v1",
+      outcome: "approved", humanVerified: true, decidedAt: "2026-09-03T00:00:00Z", revoked: false, superseded: false,
+    },
+    current: {
+      ...identity, now: "2026-09-05T00:00:00Z", planDocVersionId: "v1",
+      evidenceReady: true, designReady: true, dependenciesReady: true,
+      activeItemIds: [] as string[], capacityLimit: 1,
+    },
   };
-}
-
-function resumed() {
-  const s = ready();
-  s.current.activeCount = 1;
-  s.current.activeItemIds = ["candidate"];
-  s.receipt = { executionId: "execution-1", packageId: s.package.id, packageDigest: s.package.digest, requestId: s.package.requestId, decisionRevision: s.package.decisionRevision, projectId: s.package.projectId, workspaceId: s.package.workspaceId, repository: s.package.repository, workerId: "worker-1", leaseExpiresAt: "2026-09-06T00:00:00Z", prUrl: null, appliedDisplacedItemIds: [], admissionApplied: true };
-  return s;
 }
 
 test("one valid build approval is ready and never authorizes merge or production", () => {
   const result = evaluate(ready());
   assert.equal(result.state, "READY");
-  assert.ok(result.actions.includes("execution:CLAIM_AND_RECORD"));
+  assert.ok(result.actions.includes("delivery:CLAIM_AND_BUILD_TO_PR"));
+  assert.ok(result.actions.includes("roadmap:ADMIT_NOW"));
   assert.ok(result.actions.every((a: string) => !/merge|production/i.test(a)));
 });
 
@@ -44,11 +44,8 @@ const invalidCases: Array<[string, (s: ReturnType<typeof ready>) => void]> = [
   ["foreign workspace", s => { s.decision.workspaceId = "other"; }],
   ["foreign repository", s => { s.policy.repository = "other"; }],
   ["stale policy", s => { s.policy.version = "2"; }],
-  ["changed scope", s => { s.current.packageDigest = "sha256:changed"; }],
-  ["wrong decision request", s => { s.decision.requestId = "other"; }],
-  ["stale revision", s => { s.decision.revision = "1"; }],
-  ["wrong package", s => { s.decision.packageId = "other"; }],
-  ["wrong approved digest", s => { s.decision.packageDigest = "other"; }],
+  ["plan changed before the package was prepared for", s => { s.current.planDocVersionId = "v2"; }],
+  ["wrong decision package", s => { s.decision.packageId = "other"; }],
   ["generic approval", s => { s.decision.purpose = "investment"; }],
   ["unverified human", s => { s.decision.humanVerified = false; }],
   ["rejected decision", s => { s.decision.outcome = "rejected"; }],
@@ -64,21 +61,17 @@ const invalidCases: Array<[string, (s: ReturnType<typeof ready>) => void]> = [
   ["missing evidence", s => { s.current.evidenceReady = false; }],
   ["missing design", s => { s.current.designReady = false; }],
   ["dependencies blocked", s => { s.current.dependenciesReady = false; }],
-  ["wrong owner", s => { s.current.ownerId = "other"; }],
-  ["wrong slot", s => { s.current.capacitySlot = "other"; }],
-  ["unapproved displacement", s => { Object.assign(s.current, { displacedItemIds: ["other"] }); }],
-  ["full capacity", s => { s.current.activeCount = 1; }],
-  ["no durable storage", s => { s.current.durableStorage = false; }],
-  ["no serialized worker", s => { s.current.serializedWorker = false; }],
-  ["exhausted hours", s => { s.current.hoursUsed = 8; }],
-  ["exceeded spend", s => { s.current.spendUsed = 21; }],
+  ["approved plan version no longer matches", s => { s.decision.planDocVersionId = "v2"; }],
+  ["no delivery capacity without a named displacement", s => { s.current.activeItemIds = ["other"]; }],
+  ["named displacement not currently active", s => { s.package.displacedItemId = "old"; }],
   ["invalid capacity", s => { s.current.capacityLimit = NaN; }],
 ];
 for (const [name, mutate] of invalidCases) {
   test(`${name} blocks without actions`, () => {
     const s = ready(); mutate(s);
-    assert.equal(evaluate(s).state, "BLOCKED");
-    assert.deepEqual(evaluate(s).actions, []);
+    const result = evaluate(s);
+    assert.equal(result.state, "BLOCKED");
+    assert.deepEqual(result.actions, []);
   });
 }
 
@@ -88,178 +81,30 @@ test("malformed and missing snapshots fail closed without throwing", () => {
   }
 });
 
-test("exact approved displacement admits work into a full queue", () => {
+test("named displacement admits work into a full queue", () => {
   const s = ready();
-  s.package.activeItemIdsBefore = s.current.activeItemIds = ["old"];
-  s.package.displacedItemIds = s.current.displacedItemIds = ["old"];
-  s.current.activeCount = 1;
-  assert.equal(evaluate(s).state, "READY");
-});
-
-test("already NOW candidate is not charged another slot without a receipt", () => {
-  const s = ready();
-  s.package.activeItemIdsBefore = s.current.activeItemIds = ["candidate"];
-  s.current.activeCount = 1;
-  assert.equal(evaluate(s).state, "READY");
-});
-
-test("unrelated NOW additions do not invalidate an approval when final capacity still fits", () => {
-  const s = ready();
-  s.package.activeItemIdsBefore = ["existing"];
-  s.package.capacityLimit = s.current.capacityLimit = 3;
-  s.current.activeItemIds = ["existing", "unrelated"];
-  s.current.activeCount = 2;
-  assert.equal(evaluate(s).state, "READY");
-});
-
-test("unrelated NOW removals do not invalidate an approval", () => {
-  const s = ready();
-  s.package.activeItemIdsBefore = ["existing"];
-  s.package.capacityLimit = s.current.capacityLimit = 2;
-  assert.equal(evaluate(s).state, "READY");
-});
-
-test("an approved displacement that is already applied does not require another approval", () => {
-  const s = ready();
-  s.package.activeItemIdsBefore = ["old"];
-  s.package.displacedItemIds = s.current.displacedItemIds = ["old"];
-  s.current.activeItemIds = ["candidate"];
-  s.current.activeCount = 1;
-  assert.equal(evaluate(s).state, "READY");
-});
-
-test("removing a candidate that was already NOW invalidates the approval", () => {
-  const s = ready();
-  s.package.activeItemIdsBefore = ["candidate"];
-  assert.equal(evaluate(s).state, "BLOCKED");
-});
-
-test("unrelated NOW additions still block when the approved final state exceeds capacity", () => {
-  const s = ready();
-  s.package.activeItemIdsBefore = ["existing"];
-  s.package.capacityLimit = s.current.capacityLimit = 2;
-  s.current.activeItemIds = ["existing", "unrelated"];
-  s.current.activeCount = 2;
-  assert.equal(evaluate(s).state, "BLOCKED");
-});
-
-test("occupied capacity requires approved displacement even with a matching execution claim", () => {
-  const s = resumed();
-  s.package.activeItemIdsBefore = s.current.activeItemIds = ["old"];
-  s.receipt!.admissionApplied = false;
-  assert.equal(evaluate(s).state, "BLOCKED");
-  s.package.displacedItemIds = s.current.displacedItemIds = ["old"];
+  s.current.activeItemIds = ["old"];
+  s.package.displacedItemId = "old";
   const result = evaluate(s);
-  assert.equal(result.state, "RESUME");
-  assert.ok(result.actions.includes("roadmap:RECONCILE_ADMISSION"));
+  assert.equal(result.state, "READY");
+  assert.ok(result.actions.includes("roadmap:ADMIT_NOW"));
 });
 
-test("claimed execution can recover before admission without occupying a slot", () => {
-  const s = resumed();
-  s.receipt!.admissionApplied = false;
-  s.current.activeItemIds = []; s.current.activeCount = 0;
-  assert.equal(evaluate(s).state, "RESUME");
-});
-
-test("capacity rejects changed occupants, self-displacement, missing displaced items and changed limit", () => {
-  const changed = ready(); changed.current.activeItemIds = ["other"]; changed.current.activeCount = 1;
-  assert.equal(evaluate(changed).state, "BLOCKED");
-  const self = ready(); self.package.activeItemIdsBefore = self.current.activeItemIds = ["candidate"]; self.current.activeCount = 1;
-  self.package.displacedItemIds = self.current.displacedItemIds = ["candidate"];
-  assert.equal(evaluate(self).state, "BLOCKED");
-  const missing = ready(); missing.package.displacedItemIds = missing.current.displacedItemIds = ["absent"];
-  assert.equal(evaluate(missing).state, "BLOCKED");
-  const limit = ready(); limit.current.capacityLimit = 2;
-  assert.equal(evaluate(limit).state, "BLOCKED");
-});
-
-test("receipt blocks unrelated occupancy when the approved final state would exceed capacity", () => {
-  const s = resumed();
-  s.package.activeItemIdsBefore = ["old"];
-  s.package.displacedItemIds = s.current.displacedItemIds = ["old"];
-  s.receipt!.admissionApplied = false;
-  s.receipt!.appliedDisplacedItemIds = ["old"];
-  s.current.activeItemIds = []; s.current.activeCount = 0;
-  assert.equal(evaluate(s).state, "RESUME");
-  s.current.activeItemIds = ["unrelated"]; s.current.activeCount = 1;
-  assert.equal(evaluate(s).state, "BLOCKED");
-});
-
-test("matching execution resumes without charging its occupied slot again", () => {
-  assert.equal(evaluate(resumed()).state, "RESUME");
-});
-
-test("matching execution resumes through unrelated NOW changes when final capacity still fits", () => {
-  const s = resumed();
-  s.package.capacityLimit = s.current.capacityLimit = 2;
-  s.current.activeItemIds = ["candidate", "unrelated"];
-  s.current.activeCount = 2;
-  assert.equal(evaluate(s).state, "RESUME");
-});
-
-test("matching execution reconciles an admission applied before its receipt update", () => {
-  const s = resumed();
-  s.package.activeItemIdsBefore = ["old"];
-  s.package.displacedItemIds = s.current.displacedItemIds = ["old"];
-  s.receipt!.admissionApplied = false;
-  s.current.activeItemIds = ["candidate"];
-  assert.equal(evaluate(s).state, "RESUME");
-  assert.ok(evaluate(s).actions.includes("roadmap:RECONCILE_ADMISSION"));
-});
-
-test("matching execution blocks when a recorded displacement becomes active again", () => {
-  const s = resumed();
-  s.package.activeItemIdsBefore = ["old"];
-  s.package.displacedItemIds = s.current.displacedItemIds = ["old"];
-  s.package.capacityLimit = s.current.capacityLimit = 2;
-  s.receipt!.appliedDisplacedItemIds = ["old"];
-  s.current.activeItemIds = ["candidate", "old"];
-  s.current.activeCount = 2;
-  assert.equal(evaluate(s).state, "BLOCKED");
-});
-
-test("recorded admission blocks when its candidate is no longer NOW", () => {
-  const s = resumed();
-  s.current.activeItemIds = [];
-  s.current.activeCount = 0;
-  assert.equal(evaluate(s).state, "BLOCKED");
-});
-
-test("existing PR returns in-review without new actions", () => {
-  const s = resumed(); s.receipt!.prUrl = "https://github.com/example-org/example-product/pull/1";
-  assert.equal(evaluate(s).state, "IN_REVIEW");
-  assert.deepEqual(evaluate(s).actions, []);
-});
-
-test("another active owner blocks but an expired lease can be reclaimed", () => {
-  const s = resumed(); s.receipt!.workerId = "other";
-  assert.equal(evaluate(s).state, "BLOCKED");
-  s.receipt!.leaseExpiresAt = "2026-09-04T00:00:00Z";
-  assert.equal(evaluate(s).state, "RESUME");
-});
-
-test("existing work never bypasses current approval or receipt identity", () => {
-  const revoked = resumed(); revoked.decision.revoked = true;
-  assert.equal(evaluate(revoked).state, "BLOCKED");
-  for (const field of ["packageId", "packageDigest", "requestId", "decisionRevision", "projectId", "workspaceId", "repository"]) {
-    const s = resumed(); s.receipt![field] = "other";
-    assert.equal(evaluate(s).state, "BLOCKED", field);
-  }
-});
-
-test("CLI reads stdin and returns a blocked result for malformed JSON", () => {
-  const cli = new URL("../skills/build-authorization/scripts/evaluate-authorization.ts", import.meta.url);
-  const valid = spawnSync(process.execPath, [cli.pathname], { input: JSON.stringify(ready()), encoding: "utf8" });
-  assert.equal(valid.status, 0, valid.stderr);
-  assert.equal(JSON.parse(valid.stdout).state, "READY");
-  const malformed = spawnSync(process.execPath, [cli.pathname], { input: "{", encoding: "utf8" });
-  assert.equal(malformed.status, 1);
-  assert.equal(JSON.parse(malformed.stdout).state, "BLOCKED");
-});
-
-test("approval snapshots require explicit receipt absence and strict boolean verification", () => {
+test("already-active candidate does not require a displacement or another slot", () => {
   const s = ready();
-  assert.equal(evaluate({ ...s, receipt: undefined }).state, "BLOCKED");
-  assert.equal(evaluate({ ...s, decision: { ...s.decision, humanVerified: "true" } }).state, "BLOCKED");
-  assert.equal(evaluate({ ...s, current: { ...s.current, serializedWorker: "true" } }).state, "BLOCKED");
+  s.current.activeItemIds = ["candidate"];
+  s.current.capacityLimit = 1;
+  const result = evaluate(s);
+  assert.equal(result.state, "READY");
+  assert.ok(!result.actions.includes("roadmap:ADMIT_NOW"));
+});
+
+test("resuming an already-admitted package is READY again with no re-displacement", () => {
+  // Claiming/resuming in-flight work is the caller's Step 2 job (title-prefix + PR
+  // cross-check), identical for opted-in and legacy items — the evaluator only needs to
+  // keep saying READY for the same approved, still-active scope; it never re-admits.
+  const s = ready();
+  s.current.activeItemIds = ["candidate"];
+  const result = evaluate(s);
+  assert.equal(result.state, "READY");
 });
