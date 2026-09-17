@@ -26,8 +26,9 @@ and repository from `pm-config.md` and verified invocation context.
 
 Check eligibility inside the shared run. An empty NOW queue means no legacy delivery work,
 not an empty product-operations checklist. For opted-in projects, also inspect approved
-packages and unfinished receipts. Never put a delivery-only gate on the shared schedule.
-Preserve authorization, ownership, and one-PR limits below; return results to the checklist.
+packages awaiting admission — they may target a `LATER` item not yet visible in the NOW
+list. Never put a delivery-only gate on the shared schedule. Preserve authorization,
+ownership, and one-PR limits below; return results to the checklist.
 
 ## Non-negotiable guardrails
 
@@ -47,9 +48,10 @@ Preserve authorization, ownership, and one-PR limits below; return results to th
 4. **Never touch secrets directly.** If the fix requires a new/rotated secret, stop and
    report — do not guess values or write them to code/env files. Follow CLAUDE.md's
    secret-handling rules (1Password + `vercel env`) or use `request_secret`.
-5. **No silent duplicate work.** Use the build contract's serialized durable claim for
-   opted-in packages, or the legacy Step 2 check for other work, before writing code.
-   If ownership is uncertain, stop and reconcile; never duplicate an existing execution.
+5. **No silent duplicate work.** Run the Step 2 claim — GitHub PR cross-check, then
+   title-prefix and Opportunity `ACTIVE` — before writing code. Opted-in packages use the
+   exact same claim; there is no separate lock. If ownership is uncertain, stop and
+   reconcile; never duplicate an existing execution.
 6. **Two failures means change strategy.** If the same fix approach fails twice (test
    still red, build still broken), stop, re-read the actual error, form a new hypothesis.
    Do not attempt a third variation of the same broken approach.
@@ -73,20 +75,22 @@ tasks are the ones that outlive the run.
 
 ## Step 1 — Resolve routing, workspace, and target item
 
-**Opted-in build path takes precedence over Steps 1–4's legacy approval and claim rules.**
-If `build_authorization_policy.enabled` is true, invoke
-[build-authorization](../build-authorization/SKILL.md). Discover approved packages as well
-as existing NOW work; the package may authorize exact LATER-to-NOW admission. Run its
-evaluator before mutations, use durable runtime receipts and serialized claims, and resume
-the same execution despite its own ACTIVE/IN_DELIVERY/title markers. Reuse the approved
-plan without another design request. Then perform implementation and verification below
-within package limits. Never fall through to the legacy path when opted-in validation
-fails. Disabled/absent policy retains the existing eligibility and direct-instruction path.
+**Opted-in build path takes precedence over Step 1's legacy eligibility filter, but
+rejoins it at Step 2 for claiming.** If `build_authorization_policy.enabled` is true,
+invoke [build-authorization](../build-authorization/SKILL.md) to discover approved
+packages as well as existing NOW work; a package may authorize exact LATER-to-NOW
+admission. Run its evaluator before any mutation. On `READY`, admit to NOW per the
+evaluator's `roadmap:ADMIT_NOW` action (skip if the item is already active), then treat
+that roadmap item as the target for Step 2 onward — the **same** claim, worktree,
+implementation, and PR steps used for every other item, with the Solution Plan/
+design-direction request skipped because the approved package already covers design.
+Never fall through to the legacy eligibility filter when opted-in validation fails.
+Disabled/absent policy retains the existing eligibility and direct-instruction path.
 
-The opt-in delivery eligibility check must inspect pending approved packages and unfinished receipts,
-not just NOW count. A tracking-only decision itself does not grant authority; execution
-uses the verified standing policy. Eligibility inspection is not an authorization check
-or a lock.
+The opt-in delivery eligibility check must inspect pending approved packages, not just NOW
+count. A tracking-only decision itself does not grant authority; execution uses the
+verified standing policy. Eligibility inspection is not an authorization check or a lock —
+the lock is Step 2's claim, run identically for both paths.
 
 1. Read `pm-config.md`. Resolve `roadmap`, `ost`, and `delivery` plus the workflow
    `decision_records` capability. Load `integration-routing` and the configured decision provider's

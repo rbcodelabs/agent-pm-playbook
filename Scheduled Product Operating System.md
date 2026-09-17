@@ -21,26 +21,33 @@ This is an agent instruction workflow using the adopting runtime's available too
 a bundled scheduler service. Installing the skill does not install a live job. Missing
 runtime or domain adapters are visible blockers on the affected operations.
 
-### Build authorization update — 2026-09-05
+### Build authorization update — 2026-09-05, simplified 2026-09-17
 
 The opt-in [build-authorization](skills/build-authorization/SKILL.md) path consolidates
-investment, design and NOW commitment into one purpose-bound human request. A separately
-authorized, serialized executor reads the tracking-only decision and carries that scope
-through a tested PR. NEXT is optional queue organization for this path. The separate-gate
-procedures elsewhere in this document remain the default for projects without the policy.
+investment, design and NOW commitment into one purpose-bound human request. `compass-resolver`
+reads the tracking-only decision, admits the approved item to NOW, and carries that scope
+through a tested PR using the exact same claim step (title-prefix + Opportunity `ACTIVE` +
+GitHub PR cross-check) every other delivery item already goes through. NEXT is optional
+queue organization for this path. The separate-gate procedures elsewhere in this document
+remain the default for projects without the policy.
 
-Repository support includes the shared contract, deterministic snapshot evaluator and
-workflow routing. Live activation additionally requires verified installed skills,
-immutable package/decision provenance, durable runtime receipts and serialized execution.
-Delivery eligibility must also consider newly approved packages awaiting admission.
-An empty-NOW filter must not gate the shared product-operations run.
-Do not describe a documented dispatch procedure as an installed runtime integration.
+Repository support includes the shared contract and a deterministic snapshot evaluator.
+The 2026-09-17 pass removed the evaluator's package digest, execution-receipt/lease store,
+and worker-identity bookkeeping: drift detection now compares immutable plan-doc version
+IDs instead of a computed hash, and serialization/resume reuse the roadmap-item claim
+instead of a bespoke runtime store. Live activation still requires verified installed
+skills and immutable package/decision provenance. Delivery eligibility must also consider
+newly approved packages awaiting admission. An empty-NOW filter must not gate the shared
+product-operations run. Do not describe a documented dispatch procedure as an installed
+runtime integration.
 
 Generic approvals still grant no authority. The new standing policy must be explicitly
 activated for each project and packages must be prepared and approved after activation.
-The executor records admission/claim/task/PR progress outside the immutable decision and
-resumes from it after failure. Material changes return a concise revised request. Revocation
-stops further work; merge and production operations remain independently authorized.
+The roadmap item and its linked Compass Task are the durable record of admission and
+claim — no separate execution-progress store to reconcile after a failure. Material
+changes return a concise revised request (editing the plan doc creates a new version ID
+and invalidates the old approval automatically). Revocation stops further work; merge and
+production operations remain independently authorized.
 
 Measure approval-to-start, approval-to-PR and duplicate approval requests per build. A pilot
 must produce a real tested PR from one human approval before expansion to other projects.
