@@ -100,8 +100,8 @@ test("already-active candidate does not require a displacement or another slot",
 });
 
 test("resuming an already-admitted package is READY again with no re-displacement", () => {
-  // Claiming/resuming in-flight work is the caller's Step 2 job (title-prefix + PR
-  // cross-check), identical for opted-in and legacy items — the evaluator only needs to
+  // Claiming/resuming in-flight work is the caller's Step 2 job (PR cross-check + status
+  // writes), identical for opted-in and legacy items — the evaluator only needs to
   // keep saying READY for the same approved, still-active scope; it never re-admits.
   const s = ready();
   s.current.activeItemIds = ["candidate"];

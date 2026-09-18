@@ -14,7 +14,7 @@ old decisions or roadmap positions into approval.
 This contract deliberately avoids extra machinery: no cryptographic package hash, no
 separate receipt/lease store, no worker-identity bookkeeping. Provenance comes from the
 decision provider's own immutable revisions and doc versioning; claiming and serialization
-reuse the exact same title-prefix-and-PR-cross-check step every other delivery item already
+reuse the exact same PR-cross-check-and-status-write step every other delivery item already
 goes through in `compass-resolver`. Fewer moving parts means fewer things that can silently
 drift from what was actually approved.
 
@@ -109,15 +109,17 @@ request.
    — no separate receipt store.
 5. Claim work exactly the way `compass-resolver`'s legacy (non-opted-in) path already does:
    cross-check GitHub for an existing PR referencing the item's short UUID first (catches a
-   prior run's in-flight or completed work), then rename the roadmap item with the `🤖`
-   claim prefix and, if linked, set the Opportunity `ACTIVE`. Both calls must succeed before
-   writing a line of code. This is the *same* claim step used for every other item — opted-in
+   prior run's in-flight or completed work), then set the linked Opportunity `ACTIVE` and
+   move the delivery Task to `IN_PROGRESS` (creating and linking one if the item has none).
+   All of these must succeed before writing a line of code. Never encode the claim in the
+   roadmap item's title. This is the *same* claim step used for every other item — opted-in
    packages get no separate lease, worker ID, or receipt object.
 6. Follow the approved plan through delegated engineering and normal quality checks. Link
    the package, decision, branch, commit and PR reciprocally (e.g. in the Compass Task and
    PR body) so a later run recognizes this exact execution even if the opportunity is
    ACTIVE or the solution is IN_DELIVERY — those lifecycle states communicate product
-   status; the claim marker plus a matching PR is what establishes ownership.
+   status, not which run owns the work; the reciprocal linkage plus a matching PR is what
+   establishes ownership.
 7. On an uncertain provider response mid-step, read back the roadmap item/Task by its
    stable ID before retrying. If admission already applied but claiming hasn't happened
    yet (or vice versa), resume from the current state — do not repeat displacement or

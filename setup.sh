@@ -53,7 +53,7 @@ install_symlink() {
 }
 
 echo ""
-echo "🤖 Agentic Product Team — Setup"
+echo "Agentic Product Team — Setup"
 echo "   Repo: $REPO_DIR"
 [ "$DRY_RUN" = true ] && yellow "   Mode: dry-run (no changes will be made)"
 [ "$FORCE" = true ]   && yellow "   Mode: force (existing symlinks will be overwritten)"
