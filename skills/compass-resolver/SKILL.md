@@ -14,8 +14,8 @@ investment gating, and roadmap commitment happen upstream. This skill does not i
 approval from clarity, votes, or roadmap position alone.
 
 With an enabled `build_authorization_policy`, the build-package route in Step 1 replaces
-the legacy NOW-only discovery, separate plan approval, title-prefix claims and skip rules.
-The common verification and release boundaries still apply.
+the legacy NOW-only discovery, separate plan approval, and skip rules. The common claim,
+verification and release boundaries still apply.
 
 ## Scheduling and scope
 
@@ -39,19 +39,20 @@ ownership, and one-PR limits below; return results to the checklist.
    escalate to auto-merge even if checks are green.
 3. **Never fabricate a fix.** If the top item can't be scoped with reasonable confidence
    after real investigation (ambiguous requirements, needs a product decision, touches
-   auth/billing/data-destructive paths), do NOT force a low-quality patch. Skip it, mark
-   it `⚠️ ` + originalTitle via `update_roadmap_item` (not `🤖` — this isn't a claim, it's
-   a "needs human input" flag, and it keeps the eligibility filter in Step 1 from silently
-   re-attempting the same item every run), and say exactly why in the final report. Move
-   to the next eligible item only if this run has budget left — otherwise end the run with
-   zero PRs and report why.
+   auth/billing/data-destructive paths), do NOT force a low-quality patch. Skip it and
+   record the skip as durable state, not as a title edit: move (or create) a linked Task
+   to `BLOCKED` with a comment stating exactly why it was skipped — see Edge cases. That
+   `BLOCKED` Task is what keeps the eligibility filter in Step 1 from silently re-attempting
+   the same item every run. Say exactly why in the final report too. Move to the next
+   eligible item only if this run has budget left — otherwise end the run with zero PRs
+   and report why.
 4. **Never touch secrets directly.** If the fix requires a new/rotated secret, stop and
    report — do not guess values or write them to code/env files. Follow CLAUDE.md's
    secret-handling rules (1Password + `vercel env`) or use `request_secret`.
 5. **No silent duplicate work.** Run the Step 2 claim — GitHub PR cross-check, then
-   title-prefix and Opportunity `ACTIVE` — before writing code. Opted-in packages use the
-   exact same claim; there is no separate lock. If ownership is uncertain, stop and
-   reconcile; never duplicate an existing execution.
+   Opportunity `ACTIVE` and the delivery Task `IN_PROGRESS` — before writing code. Opted-in
+   packages use the exact same claim; there is no separate lock. If ownership is uncertain,
+   stop and reconcile; never duplicate an existing execution.
 6. **Two failures means change strategy.** If the same fix approach fails twice (test
    still red, build still broken), stop, re-read the actual error, form a new hypothesis.
    Do not attempt a third variation of the same broken approach.
@@ -104,13 +105,21 @@ the lock is Step 2's claim, run identically for both paths.
    `list_workspaces` for that organization and match the configured workspace.
 4. `list_roadmap_items(workspaceId, horizon: "NOW")`.
 5. **Eligibility filter**, in list order (list order = kanban priority order, top = highest):
-   - Skip any item whose `title` already starts with `🤖` (claimed — see Step 2) or `⚠️`
-     (previously attempted and skipped as unsuitable — see Edge cases). Both mean a
-     previous run already made a final call on this item; don't re-litigate it silently
-     every run.
-   - For items with a linked `Opportunity`, call `get_opportunity(opportunityId)` and
-     skip if its status is already `ACTIVE` (another run/human already claimed it) or if
-     any of its solutions is `IN_DELIVERY` / `SHIPPED`.
+   - Skip any item that is already claimed, in flight, or deliberately parked. Read this
+     from state, never from the title:
+     - An open or merged PR references the item's UUID (the Step 2 cross-check).
+     - For items with a linked `Opportunity`, call `get_opportunity(opportunityId)` and
+       skip if its status is already `ACTIVE` (another run/human already claimed it) or if
+       any of its solutions is `IN_DELIVERY` / `SHIPPED`.
+     - A linked Task is `IN_PROGRESS` or `IN_REVIEW` (in flight), or `BLOCKED` (a previous
+       run already made a final call — read its comment via `list_comments` rather than
+       re-litigating it silently every run). Read these with
+       `list_tasks(workspaceId, linkedType: "ROADMAP_ITEM", linkedId: itemId)`.
+   - **Legacy tolerance (read-only, deprecated).** Also skip any item whose `title` starts
+     with `🤖` or `⚠️`. These are residue from a retired title-prefix convention and may
+     still mark genuinely in-flight or deliberately-parked work in a workspace that hasn't
+     been cleaned up. Honor them as a skip signal; **never write one**. When you skip on
+     this signal, say so in the report so the item can be migrated to real Task state.
    - Verify the linked solution is `VALIDATED`. Implementation clarity is not validation.
    - Confirm the item is already in `NOW` and that the current run has explicit delivery
      authority under the configured standing policy or a direct human instruction. A
@@ -124,20 +133,26 @@ the lock is Step 2's claim, run identically for both paths.
 
 ## Step 2 — Claim it before writing any code
 
-Compass's MCP API has a real gap here: there is no `get_roadmap_item` or
-`update_opportunity` (non-status) tool, so you cannot safely read-modify-append a
-description field. Use only fields you already have and can set outright:
+The claim is recorded in real status fields, never in the item's title. A roadmap item's
+title describes the work and nothing else — this skill's own Step 6 rule applies here:
+**title matching is not a durable link**, so a title prefix was never a sound claim record.
 
 1. **Cross-check GitHub first** in case Compass state drifted from reality: from the repo,
    `gh pr list --state all --search "<first 8 chars of the roadmap item's UUID>"`. If a PR
    already exists (open or merged) referencing this item, treat it as claimed — do not
-   duplicate. Fix the Compass claim marker instead (title prefix + opportunity status) and
-   move to the next eligible item.
-2. Rename the roadmap item using the **exact title you already fetched**, prefixed:
-   `update_roadmap_item(itemId, title: "🤖 " + originalTitle)`.
-3. If the item has a linked opportunity: `update_opportunity_status(opportunityId, status: "ACTIVE")`.
-4. These two calls ARE the claim. They must both succeed before you write a single line of
-   code. If either fails, stop and report — do not proceed silently.
+   duplicate. Reconcile the Compass state instead (Opportunity status and Task status, per
+   the steps below) and move to the next eligible item.
+2. If the item has a linked opportunity:
+   `update_opportunity_status(opportunityId, status: "ACTIVE")`.
+3. Put the delivery work `IN_PROGRESS`. If the item already has a linked Task,
+   `move_task_status` it to `IN_PROGRESS`. If it has none yet, `create_task` one now for
+   the item as a whole and `link_task` it (`linkedType: "ROADMAP_ITEM"`, and `"SOLUTION"`
+   when present), then move it to `IN_PROGRESS`. Step 4 expands this into the full task
+   breakdown; this one exists early precisely so the claim is durable before any code is
+   written.
+4. These calls ARE the claim — the GitHub cross-check plus every status write above that
+   applies to this item. They must all succeed before you write a single line of code. If
+   any fails, stop and report — do not proceed silently.
 
 ## Step 3 — Isolate work in a fresh worktree
 
@@ -200,7 +215,9 @@ that repository rather than assuming a package manager or framework.
 
 1. Commit with a message describing the *why*. Push the branch (no force, no skipped hooks).
 2. `gh pr create` with:
-   - Title mirroring the roadmap item's original title (without the 🤖 prefix).
+   - Title mirroring the roadmap item's title. If that title still carries a legacy `🤖` or
+     `⚠️` prefix from the retired convention, strip it for the PR title — do not assume it
+     is absent, and do not reintroduce it anywhere.
    - Body: what changed, why, test plan, and — if a data migration script is needed — a
      "Migration required" section (script path, when to run it, one-line rollback).
    - Reference the Compass roadmap item ID and, if applicable, the originating feedback ID
@@ -255,9 +272,16 @@ requires one.
   criteria): do not force it into one PR. Either scope down to the smallest real slice of
   the item and say so explicitly in the report, or skip per guardrail #3.
 - **Item requires a design/product decision** (multiple valid UX approaches, no existing
-  pattern to follow): skip per guardrail #3 rather than guessing — flag it in the report
-  as needing human input, and apply the `⚠️` marker (not `🤖`) so a human or a future
-  `EnterPlanMode` session can pick it up properly, and future runs don't re-attempt it.
+  pattern to follow): skip per guardrail #3 rather than guessing. Record the skip as
+  durable state so a human — or a future planning session — can pick it up properly and
+  future runs don't silently re-attempt it:
+  - Prefer the route this skill already documents: raise a request through the configured
+    human-decision provider (`human-review-workflow`, gate type `design-direction`) and end
+    `AWAITING_DECISION`. That request is the durable record.
+  - Either way, move the linked Task to `BLOCKED` via `move_task_status` (creating and
+    linking one first if the item has none), and `add_comment` stating precisely why it was
+    skipped and what decision is needed. Reference the decision request if one was raised.
+  - Never encode any of this in the roadmap item's title.
 - **Two resolver runs for different workspaces race on the same day**: not a conflict —
   each workspace has its own `workspaceId`, roadmap, and routed decision records. Claims
   and idempotency keys are evaluated independently per workspace.
