@@ -292,12 +292,28 @@ except the Results section, which is empty until the experiment runs.
 Set `status: Designing` — do not advance to Running until the user confirms the
 kill condition and is ready to start.
 
+**Staging the instrument is design, not launch.** Where the provider supports an
+unlaunched state — a draft study, an unissued participant link, an unpublished
+survey — an unattended agent may create the instrument in that state and attach
+it to the experiment. Draft the guide, wire the target, leave it dark.
+
+The line is whether a real person can reach it, not whether a record exists. An
+instrument that issues a live participant link the moment it is created *is* a
+launch however the record is labelled, and needs the Procedure 2 gates and the
+user's go-ahead first.
+
 ---
 
 ## Procedure 2: Move an Experiment to Running
 
-Before setting `status: Running`, enforce the following quality gates in order.
-Refuse to advance if any gate fails.
+Running means a real participant can reach the instrument. Before setting
+`status: Running` — or activating a previously staged instrument, which is the
+same event — enforce the following quality gates in order. Refuse to advance if
+any gate fails.
+
+An unattended agent does not take this step on its own initiative. Where the
+provider exposes activation to agents, that is a policy boundary the agent
+honours, not a technical one the tooling enforces for it.
 
 **Gate 1 — Kill condition is set**
 Check that `kill_condition_set: true` in the frontmatter AND that the kill
@@ -319,6 +335,17 @@ and a recruiting approach. "We'll post to Slack" is not a recruiting approach.
 Confirm that the success and kill conditions can actually be measured with
 existing tools. If they require new instrumentation, that work must happen before
 the start date.
+
+**Gate 5 — The instrument can run the method**
+Read the method back against what the chosen instrument actually does, feature by
+feature. Timed exposure, randomised ordering, segment quotas, blinding and
+forced-choice are the usual gaps — a self-paced guided session supports none of
+them. If the method calls for something the instrument cannot do, say so and
+stop. Do not stage it, and do not quietly shrink the method down to whatever the
+tool happens to support. Either the method changes with the user's agreement, or
+the experiment needs a different instrument. This gate applies at staging time
+too: a draft that cannot answer the question is worse than an empty backlog,
+because it reads as progress.
 
 When all gates pass: set `status: Running` and fill in `start_date`.
 
@@ -491,6 +518,8 @@ Call these out when you see them — do not let them pass without comment.
 | Skipping straight to a/b test | "An A/B test requires existing traffic, instrumentation, and a baseline. Those resources are only worth spending if the core assumption is already validated. What would a fake door or concierge test tell us first?" |
 | "We'll know it when we see it" success definition | "That is not a condition — it is a description of rationalization in progress. What specific number, rate, or behavior would make you confident enough to proceed?" |
 | Internal refinement loop on copy | "This has gone through several rounds of internal opinions with no new evidence between them. That's a sign this is a testable question, not a discussion topic — a copy test with real users would resolve it in a day. Want me to set one up?" |
+| Staging an instrument that can't run the method | "I can draft this study, but the method calls for [timed exposure / randomised order / segment quotas] and the instrument does none of those. Drafting it would produce a record, not an answer. Do we change the method or change the tool?" |
+| Stalled experiments reported as healthy | "[N] experiments have sat in Designing with zero results, the oldest since [date]. 'Unchanged since the last review' is not health — a fully-designed experiment that never launches is a decision nobody made. Which of these should launch, and which should be killed?" |
 
 ---
 
