@@ -340,6 +340,34 @@ test("experiment workflow reaches for NOT_PURSUED instead of KILL or an open-end
   assert.match(compass, /reason.*is required for NOT_PURSUED/is);
 });
 
+test("staging an experiment instrument is design work; participant exposure stays a human gate", () => {
+  const experiments = readFileSync("skills/experiment-workflow/SKILL.md", "utf8");
+
+  // An unlaunched instrument may be staged by an unattended agent.
+  assert.match(experiments, /\*\*Staging the instrument is design, not launch\.\*\*/);
+  assert.match(experiments, /an unattended agent may create the instrument in that\s+state/);
+
+  // The gate keys on reachability by a real person, not on a record existing.
+  assert.match(experiments, /whether a real person can reach it, not whether a record\s+exists/);
+  assert.match(experiments, /Running means a real participant can reach the instrument/);
+  assert.match(experiments, /activating a previously staged instrument, which is the\s+same event/);
+
+  // That boundary is policy the agent honours, not something tooling enforces.
+  assert.match(experiments, /policy boundary the agent\s+honours, not a technical one/);
+
+  // A staged instrument must actually be capable of running the stated method.
+  assert.match(experiments, /\*\*Gate 5 — The instrument can run the method\*\*/);
+  assert.match(experiments, /a draft that cannot answer the question is worse than an empty\s+backlog/);
+
+  const scheduled = readFileSync("skills/scheduled-product-operations/SKILL.md", "utf8");
+  assert.match(
+    scheduled,
+    /Staging an unlaunched instrument \(draft study, unissued participant link\) is design work rather than launch/,
+  );
+  // A designed-but-never-launched experiment is a finding, not health.
+  assert.match(scheduled, /stalled test: report it, never as `healthy`/);
+});
+
 test("Compass intake and delivery no longer bypass human investment gates", () => {
   const triage = readFileSync("skills/compass-feedback-triage/SKILL.md", "utf8");
   const resolver = readFileSync("skills/compass-resolver/SKILL.md", "utf8");
