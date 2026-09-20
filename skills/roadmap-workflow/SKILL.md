@@ -293,11 +293,11 @@ When the user wants to remove an item from the roadmap without shipping it:
 
 ### Promoting an item
 
-**Opted-in build path:** a verified `build-authorization-v1` package may commit directly
-from LATER or NEXT to NOW under the standing policy. Follow
-[build-authorization](../build-authorization/SKILL.md) for exact capacity/displacement and
-the shared claim step. Do not add NEXT or NOW approval requests for the same scope.
-The separate gates below apply when this opt-in path is not being used.
+**Approved Builds and roadmap admission are separate.** Follow
+[build-authorization](../build-authorization/SKILL.md) to produce a tested PR under exact
+human approval. Unknown capacity blocks this horizon mutation, not the approved build;
+leave the horizon unchanged. If the same approval explicitly includes admission, reuse
+it and perform the live checks below without asking again.
 
 Moving an item between horizons (Later to Next, Next to Now):
 
@@ -431,13 +431,11 @@ Output a structured review:
 
 ## Procedure 4 — Scheduled Roadmap Steward
 
-For projects with enabled `build_authorization_policy`, use the build path first: prepare
-one complete package for the next eligible candidate, including design and exact capacity
-commitment. Reuse its pending request; after approval, dispatch execution under the
-standing policy. Report missing readiness with owner and next action. The legacy
-per-horizon review steps below apply to other work; do not run both paths for one package.
-The agent executing the package, not a tracking-only adapter, owns the roadmap-admission
-and claim mutations.
+For projects with enabled `approved_build_policy`, route approved build work to the
+common worker in [build-authorization](../build-authorization/SKILL.md). Do not wait for
+roadmap admission to dispatch an unconditional approval through a tested PR. The
+portfolio review below still governs horizon mutations; no duplicate design review is
+needed for an already approved scope.
 
 Run this as the recurring portfolio decision flow. It prepares reviews; it does not grow
 the roadmap because a candidate sounds promising.

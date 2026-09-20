@@ -17,12 +17,12 @@ memory.
 
 ## Capability Preflight
 
-For a request explicitly marked `build-authorization-v1`, load
-[build-authorization](../build-authorization/SKILL.md). That opt-in standing policy may
-authorize a separate worker to act after checking the current human response. It combines
-investment, design and commitment in one package. The decision adapter stays tracking-only;
-ordinary approvals below still have no automatic continuation. Without enabled policy,
-do not treat the package as execution authority.
+For an explicit approval to build through a tested PR, load
+[build-authorization](../build-authorization/SKILL.md). Under enabled
+`approved_build_policy`, the worker verifies the immutable human Decision and exact plan.
+The decision adapter stays tracking-only; the worker owns execution. Direct synchronous
+approval uses the same authority path without creating a second Decision. Ordinary
+concept approvals below retain their existing limits.
 
 Read `pm-config.md` and load the installed [integration-routing skill](../integration-routing/SKILL.md).
 

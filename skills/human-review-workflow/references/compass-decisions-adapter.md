@@ -17,11 +17,12 @@ required for Request changes and Reject and optional for Approve.
 
 ## Tracking-only contract
 
-An opted-in agent may use a purpose-bound build request as evidence under its separately
-established [build-authorization policy](../../build-authorization/SKILL.md). The agent
-verifies the exact immutable package and human revision; claiming and resuming reuse the
-same roadmap-item claim every other delivery item goes through, not a separate receipt
-store. Ordinary decisions and historical approvals remain informational.
+An opted-in agent may use an explicit approval to build under its separately established
+[approved-build policy](../../build-authorization/SKILL.md). The worker verifies exact
+scope and immutable human revision, then records its execution in a linked Task.
+Existing exact approvals retain their original limits during an authorized migration;
+generic historical approvals remain informational. The native application receipt below
+does not replace the Task or prove completion of the build.
 
 Every option has continuation `NO_ACTION`. A recorded decision never mutates its linked
 entity, dispatches work, moves a roadmap item, merges or deploys code, or performs a
@@ -60,8 +61,8 @@ separate permissions, and only the second has opened up to agents.
 When a run reaches a genuine human judgment:
 
 Apply [Writing requests people can decide](human-facing-requests.md) to the persisted
-`question` and opening `context`, not only the notification. Put required package,
-policy and version identifiers in a final supporting-evidence section of `context`.
+`question` and opening `context`, not only the notification. Put required authority,
+source and version references in a final supporting-evidence section of `context`.
 Keep the provider's fixed outcome labels and tracking-only semantics intact.
 
 1. Build a clear question and concise context, link the closest supported Compass subject,

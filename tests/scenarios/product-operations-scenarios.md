@@ -20,7 +20,8 @@ and no competing worker. Current sources contain:
   its reminder date has not arrived.
 - No other changed records; all other required sources are readable.
 
-Walkthrough: create all eleven rows and inspect every source before implementation.
+Walkthrough: create every checklist row. Inspect assigned tasks and authorized delivery,
+dispatch R-101 to one dedicated worker, then continue the remaining health inventory.
 Link F-101 to O-101 through Compass intake, then re-read the affected evidence for OST
 triage. Record X-101's missing results and next collection action; preserve its conclusion.
 Retain D-101 as awaiting decision, without a duplicate request or notification. The
@@ -37,7 +38,7 @@ run progress uses the runtime. No local product folder is created.
 
 Use the previous scenario after the intake link and PR exist. Run again on the same day.
 
-Walkthrough: all eleven areas are inspected again. Existing linkage, source versions,
+Walkthrough: every area is inspected again. Existing linkage, source versions,
 request identity, notification receipt, and PR prevent repeated synthesis, opportunity
 creation, review creation, notification, and delivery. The unresolved experiment and
 decision remain visible. If a reminder deadline passes, the same unchanged decision may
@@ -51,8 +52,8 @@ stale metric data, even though this run occurs midweek and midmonth.
 Walkthrough: neither empty queue gates the job. Every row is inspected; experiment
 results receive threshold comparison and any required human conclusion review. Outcomes
 surface the stale measurement and its next action. No area is marked "not due" based on
-weekday or month. An approved opted-in build package awaiting admission would also be
-inspected despite empty NOW, using the existing build-authorization evaluator.
+weekday or month. An explicit approved build is inspected despite empty NOW. Dispatch one dedicated worker
+before the remaining health inventory, leaving roadmap admission separate.
 
 ## Failure, incomplete inventory, and execution limit
 
@@ -73,8 +74,8 @@ authority. R-101's independent delivery authority is still valid.
 
 Walkthrough: read the exact current decision revision, report NO_ACTION for D-101, and
 do not turn concept approval into an experiment launch or implementation. Its branch ends;
-independent authorized delivery still runs. An actual build package must pass its separate
-policy evaluator; a generic approval cannot substitute for it.
+independent authorized delivery still runs. An actual approved build must have exact human authority and scope under the enabled
+policy; a generic concept approval cannot substitute for it.
 
 ## Installation, retry, and consolidation
 

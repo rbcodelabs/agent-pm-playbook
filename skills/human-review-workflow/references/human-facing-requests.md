@@ -12,12 +12,13 @@ its scope and limits, and the work already authorized.
 - Complete reversible preparation and repairs that existing authority covers.
 - Reuse a still-valid approval. A new run, changed storage format or missing local copy
   does not by itself create a new product decision.
-- If a repair cannot preserve required approval evidence, record the exact missing
-  requirement and what was tried. Do not invent an approval, backdate a version, bypass
-  a required gate or broaden authority to avoid bothering the reviewer.
+- If the approved scope cannot be established after reading the available authoritative
+  records, explain the specific uncertainty and what was tried. Do not invent an approval,
+  bypass a required gate or broaden authority to avoid bothering the reviewer.
 - If renewed confirmation is actually required, state what changed and why the existing
-  approval cannot be used. Distinguish an administrative confirmation from a new product
-  choice. Do not imply scope changed when only the approval record needs repair.
+  approval cannot be used. Ask only about the unresolved scope or material change.
+  An authorized migration that preserves exact scope and limits does not require another
+  product decision.
 
 If no human choice or required confirmation remains, do the authorized work and report
 the result. Do not manufacture a review for internal housekeeping.
@@ -43,9 +44,9 @@ real comparison. Use familiar product terms; explain necessary technical terms w
 affect the choice. Do not hide a security change, data loss or release consequence behind
 vague language such as "routine cleanup."
 
-Put package IDs, policy names, hashes, immutable revision/version IDs, idempotency keys,
-receipt states and evaluator output in **Supporting evidence / automation details** after
-the summary, or in provider metadata where supported. They must remain exact and available
+Put authority references, source IDs, plan versions and provider bookkeeping in
+**Supporting evidence / automation details** after the summary, or in provider metadata
+where supported. They must remain exact and available
 to the executor. They do not belong in the title or the opening ask.
 
 Provider-fixed response labels stay unchanged. Explain their practical meaning in the body;
@@ -56,20 +57,21 @@ separately authorized next step accurately.
 
 | Situation | Avoid | Prefer |
 |---|---|---|
-| A team must choose where to invest | "Approve package under delivery-policy-v3?" | "Build bulk invitation so team admins can invite colleagues together?" |
+| A team must choose where to invest | "Authorize delivery scope S-17?" | "Build bulk invitations so team admins can invite colleagues together?" |
 | Capacity is full | "Resolve admission overflow for candidate Q-17" | "Start bulk invitations now and delay the dashboard redesign?" |
-| An approval record cannot be reused | "Bind scope to immutable revision" | "Confirm the bulk-invitation work you already approved?" |
+| Earlier scope is unclear | "Resolve approval provenance mismatch" | "Should bulk invitations also include people outside your organization?" |
 | A technical decision really needs an expert | "Accept credential migration?" | "Require everyone to sign in again when we replace the login tokens?" |
 
-For the repeat-confirmation example, the opening might be:
+For the unclear-scope example, the opening might be:
 
-> You already approved bulk invitations. The approval system cannot carry that approval
-> over to the saved plan, so it needs your confirmation again. The feature, budget and
-> deadline are unchanged. I recommend confirming; the team will prepare and test the change,
-> then bring it back for release approval.
+> I found your approval for bulk invitations, but the available records do not establish
+> whether it includes external guests. I recommend keeping this release limited to
+> colleagues in your organization so we can avoid adding guest-access rules. Should
+> external guests be included too? That would require additional access checks and tests
+> before the change comes back for release review.
 
-Use this wording only after verifying those claims and exhausting authorized ways to reuse
-the existing approval. It is not a standard excuse to request approval twice.
+Use this wording only after checking the actual approval and available scope records.
+Continue independent work that is clearly covered; ask only about the unresolved part.
 
 ## Read-back check before sending
 

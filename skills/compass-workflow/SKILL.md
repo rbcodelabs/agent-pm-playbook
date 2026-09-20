@@ -187,6 +187,10 @@ complete ordered queue and `portfolio_policy`; require a `VALIDATED` Solution, a
 rank, and named displacement when the queue is full. Missing capacity or ordering data
 means keep `LATER`. `NEXT → NOW` requires a separate commitment decision.
 
+An exact [Approved Build](../build-authorization/SKILL.md) can produce a tested PR while
+the roadmap horizon stays unchanged. Capacity limits govern admission, not that build
+authorization. Opportunity/Solution lifecycle status is reporting, never worker ownership.
+
 ---
 
 ## Session Workflow
