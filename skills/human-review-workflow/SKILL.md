@@ -87,11 +87,20 @@ validating, applying, expiring, or superseding a review.
 
 Use when a product workflow reaches a human gate.
 
+Before creating a request, read and apply
+[Writing requests people can decide](references/human-facing-requests.md).
+Check whether existing authority already covers the work; repair routine bookkeeping
+within that authority instead of asking the human to decide it. When confirmation is
+required, explain the concrete change, recommendation, consequence and why their input is
+needed. Keep internal identifiers in supporting evidence. This standard also applies to
+notifications, reminders and digests, without changing any authorization requirement.
+
 1. **Snapshot the source.** Read the authoritative source objects and capture stable IDs
    plus `updatedAt` values or deterministic content hashes.
 2. **Check for an existing request.** The idempotency key is product + gate type + source
    IDs + source version. Reuse the existing pending request instead of creating a duplicate.
-3. **Build the packet for the provider mode.** Include one decision, why it is needed now,
+3. **Build the packet for the provider mode.** Pass the human-facing read-back check before
+   persisting. Include one decision, why it is needed now,
    the recommendation, minimum supporting evidence, and uncertainty.
    - For a tracking-only provider, use its fixed outcomes and map every outcome to
      `NO_ACTION`. Do not invent a continuation field the provider does not support.

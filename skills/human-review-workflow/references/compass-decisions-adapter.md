@@ -60,6 +60,11 @@ separate permissions, and only the second has opened up to agents.
 
 When a run reaches a genuine human judgment:
 
+Apply [Writing requests people can decide](human-facing-requests.md) to the persisted
+`question` and opening `context`, not only the notification. Put required authority,
+source and version references in a final supporting-evidence section of `context`.
+Keep the provider's fixed outcome labels and tracking-only semantics intact.
+
 1. Build a clear question and concise context, link the closest supported Compass subject,
    and persist one UUID idempotency key for the workflow, subject, and source version.
 2. Call `request_decision` with that persisted key and persist the returned request ID.

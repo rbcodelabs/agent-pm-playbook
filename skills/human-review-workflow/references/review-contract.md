@@ -6,6 +6,11 @@ below applies only to action-capable adapters.
 
 ## Minimal tracking-only packet
 
+All packets follow [Writing requests people can decide](human-facing-requests.md).
+The title and opening paragraph explain the product change, requested decision,
+recommendation and material consequence. Technical identity and authorization fields
+remain exact in metadata or a final supporting-evidence section.
+
 Approved Builds record authority, exact scope/plan version, repository/workspace,
 tested-PR boundary and exclusions/expiry as defined in
 [build-authorization](../../build-authorization/SKILL.md). These are immutable decision
@@ -23,7 +28,7 @@ request_id: <provider request UUID>
 idempotency_key: <persisted UUID>
 source_ids: { subject_type: ROADMAP_ITEM, subject_id: "..." }
 source_version: "updatedAt value or content hash captured in context"
-question: Should we proceed with this direction?
+question: Build bulk invitations so team admins can invite colleagues together?
 context: <evidence, recommendation, uncertainty, and source version>
 status: pending # pending | decided
 allowed_decisions: [APPROVE, REQUEST_CHANGES, REJECT]
@@ -83,8 +88,8 @@ notification:
 
 Render these sections in the provider's native format:
 
-1. Decision needed
-2. Why now
+1. Concrete change and decision needed
+2. Why human input is needed now (and what changed if this was asked before)
 3. Recommendation
 4. Options and tradeoffs
 5. Evidence and source links

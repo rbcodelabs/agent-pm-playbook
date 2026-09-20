@@ -55,6 +55,10 @@ For unattended execution, save a versioned plan and a purpose-explicit build Dec
 persist/reuse the provider idempotency key and request ID. Follow
 [human-review-workflow](../human-review-workflow/SKILL.md) and return `AWAITING_DECISION`.
 Do not create another request when the current human instruction already approved this scope.
+Apply [Writing requests people can decide](../human-review-workflow/references/human-facing-requests.md):
+lead with the product change, the choice, your recommendation and the consequence.
+Keep authority and plan references in supporting evidence. When scope materially changes,
+explain the specific delta and why it needs a new decision.
 
 ## Common worker procedure
 
