@@ -60,8 +60,13 @@ Do not create another request when the current human instruction already approve
 
 1. Re-read authority and current execution evidence. Search linked delivery Tasks,
    matching open/closed PRs, exact branches and runtime threads using stable item IDs.
+   Also inspect open and recently merged PR titles, descriptions and relevant changed files,
+   even when no item IDs are present. The same file alone is not a collision: compare actual
+   behavior and scope. Coordinate overlapping work; distinct approved scopes may proceed
+   with coordination. For partial overlap, preserve landed behavior and implement only
+   the remaining approved scope. A fully delivered scope calls for completion reconciliation,
+   not another build. These matches are discovery evidence, not authority.
    Lifecycle states such as Opportunity `ACTIVE` or Solution `IN_DELIVERY` are not ownership.
-   A matching merged PR calls for completion reconciliation, not another build.
 2. Inspect any existing Task's recorded owner and runtime before changing its description
    or status. Never overwrite a running or uncertain owner's claim; use recovery below.
    Create or reuse one linked delivery Task before code. Record authorization/plan
@@ -87,7 +92,11 @@ Do not create another request when the current human instruction already approve
    continuation to that owner when supported; missing/archived means reconcile branch/PR,
    recheck authority and claims, then record takeover on the same Task before proceeding.
    Unknown runtime state blocks takeover, not independent product operations.
-7. Recheck scope, expiry, revocation and collisions before publishing. Open or reuse one PR,
+7. Recheck scope, expiry, revocation and collisions before publishing, including the unlinked
+   scope scan above. Refresh the configured default branch before push or PR creation;
+   integrate new upstream changes and re-run affected verification, preserving landed
+   behavior while reconciling any now-delivered scope. This adds no approval or serialization
+   gate. Open or reuse one PR,
    with reciprocal Task/authority/branch/commit links and actual verification evidence.
    Verify the configured preview when applicable. Move the Task to `IN_REVIEW` and stop.
    [delivery-completion-watcher](../delivery-completion-watcher/SKILL.md) observes later

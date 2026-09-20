@@ -122,7 +122,8 @@ tracked decision is context, not an executable authorization.
 Use the common Task claim and recovery procedure in
 [build-authorization](../build-authorization/SKILL.md#common-worker-procedure), including
 for otherwise-authorized legacy work. Search PRs, exact branches, linked Tasks and runtime
-threads. Create/reuse one roadmap-linked Task, record authority, intended branch and
+threads, including unlinked scope overlap as described in that common procedure.
+Create/reuse one roadmap-linked Task, record authority, intended branch and
 worker thread, move it to `IN_PROGRESS`, then re-read. Check again before code and push.
 Never treat Opportunity `ACTIVE`, Solution `IN_DELIVERY` or a title prefix as a lock.
 No Task API supplies atomic claim semantics; report ambiguity honestly and reconcile
@@ -139,8 +140,8 @@ the configured default branch — do not edit the primary checkout directly. Bra
 - `feat/<slug>-<first8ofUUID>` for features
 - `chore/<slug>-<first8ofUUID>` for non-user-facing work
 
-Embedding the item's short UUID in the branch name is what makes the Step 2 GitHub
-cross-check reliable later.
+Embedding the item's short UUID improves later correlation; it does not replace the
+Step 2 scope-based check for PRs without item IDs.
 
 ## Step 4 — Plan, then investigate and implement
 
@@ -181,6 +182,7 @@ assume a package manager or framework. Failed checks keep the work in progress.
 ## Step 6 — Push and open the PR
 
 1. Re-read authority, expiry/revocation, Task ownership and matching PRs before push.
+   Follow the common procedure's default-branch refresh and unlinked scope overlap check.
    Reuse an existing PR; stop ambiguous collisions rather than creating a second one.
 2. Commit the scoped change, push without force or skipped hooks, and open one PR.
    Include the concrete problem, resulting behavior, observed verification and stable

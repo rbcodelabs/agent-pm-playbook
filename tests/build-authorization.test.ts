@@ -43,6 +43,24 @@ test("scheduled work dispatches early but does not acquire exclusive authority",
   assert.match(ops, /not an exclusive executor/);
 });
 
+test("unlinked PRs are compared by behavior without becoming authority or an automatic collision", () => {
+  const text = contract().replaceAll("\n", " ").replace(/\s+/g, " ");
+  const discovery = text.slice(text.indexOf("1. Re-read authority"), text.indexOf("2. Inspect any existing Task"));
+  assert.match(discovery, /open and recently merged PR titles, descriptions and relevant changed files/);
+  assert.match(discovery, /even when no item IDs are present/);
+  assert.match(discovery, /same file alone is not a collision/);
+  assert.match(discovery, /compare actual behavior and scope/);
+  assert.match(discovery, /distinct approved scopes may proceed with coordination/);
+  assert.match(discovery, /partial overlap.*preserve landed behavior/);
+  assert.match(discovery, /fully delivered scope.*completion reconciliation/);
+  assert.match(discovery, /not authority/);
+  assert.match(text, /Refresh the configured default branch before push or PR creation/);
+  assert.match(text, /integrate new upstream changes and re-run affected verification/);
+  const resolver = read("skills/compass-resolver/SKILL.md");
+  assert.doesNotMatch(resolver, /Embedding the item's short UUID.*makes the Step 2 GitHub/s);
+  assert.match(resolver, /unlinked scope overlap/);
+});
+
 test("legacy policy is explicit and review boundary is separate from release", () => {
   const text = contract();
   assert.match(text, /never silently opt in/);
