@@ -65,8 +65,13 @@ creates a new version ID, which the evaluator treats as a changed package.
 
 Persist a UUID idempotency key before `request_decision`, with the package ID and plan
 doc/version in context and the exact solution or roadmap subject. Re-read the resulting
-request ID. Show the human: "Approve this scope through a tested PR under policy
-[version]." Use the provider's normal Approve / Request changes / Reject controls. Every
+request ID. Apply
+[Writing requests people can decide](../human-review-workflow/references/human-facing-requests.md).
+Ask about the concrete product change and explain why it needs approval, the recommendation,
+material tradeoffs and the stopping point (a tested change ready for release review).
+Put the package purpose, policy version and exact plan Doc/version references in supporting
+evidence, not the title or opening ask. Use the provider's normal Approve / Request changes /
+Reject controls. Every
 provider-side continuation remains `NO_ACTION`. Notify only through already-authorized
 channels. Return `AWAITING_DECISION` with one stable link; subsequent runs reuse that
 request.
@@ -130,6 +135,13 @@ request.
    verified production behavior. A PR is not shipped work.
 
 ## Changes, limits and recovery
+
+Before asking for renewed approval, check whether the existing exact approval still covers
+the work and whether an authorized bookkeeping repair preserves its evidence. Reuse valid
+approval; do not ask again merely because a run or storage format changed. If this contract
+does require a new decision, explain the specific reason in ordinary language and identify
+what changed versus what remains approved. Never invent a new version binding, relax a gate
+or reinterpret historical approval to avoid requesting a genuinely required confirmation.
 
 Routine implementation choices, regression fixes, rebases, review fixes and retries remain
 covered while scope/approach and limits hold. Check elapsed time against the package's

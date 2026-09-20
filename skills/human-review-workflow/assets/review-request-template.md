@@ -29,11 +29,16 @@ notification:
   escalation_sent_at: ""
 ---
 
-# Review: [decision needed]
+# [Concrete product action or choice]
 
-## Why now
+[In a short paragraph: what changes for whom, the choice needed, your recommendation,
+and the material consequence. Do not lead with internal IDs or policy terminology.]
 
-[What triggered this request and what remains paused without the decision.]
+## Why your input is needed
+
+[The unresolved choice or required confirmation. If asked before: what changed, why the
+existing approval cannot be reused, and whether scope, cost, risk or timing changed.
+If existing authority covers the repair, do that work instead of creating this request.]
 
 ## Recommendation
 
@@ -54,6 +59,11 @@ notification:
 ## Uncertainty
 
 [What is missing and what would change the recommendation.]
+
+## Supporting evidence / automation details
+
+[Preserve exact source IDs, version references and authorization details here or in
+frontmatter. Follow references/human-facing-requests.md before sending.]
 
 ## Respond
 
