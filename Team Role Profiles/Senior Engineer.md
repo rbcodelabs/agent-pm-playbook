@@ -1,9 +1,9 @@
 # Team Role Profile — Senior Engineer
 
-For a current approved build package under an enabled project policy, follow
-`build-authorization` and reuse its approved design. Routine implementation, testing and
-review fixes within scope remain covered through a tested PR. Request a revised package
-only for material changes or exceeded limits. Merge and production need separate authority.
+For a current Approved Build, follow `build-authorization` and reuse its approved design.
+Routine implementation, testing and review fixes remain covered through a tested PR.
+Seek delta approval only for material changes or exceeded limits. Keep Task/branch/PR
+links. Merge and production need separate authority.
 
 **Agent file:** `agents/engineer.md`
 **Last updated:** 2026-05-14

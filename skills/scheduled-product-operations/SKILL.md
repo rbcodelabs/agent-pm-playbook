@@ -9,8 +9,8 @@ description: >-
 
 # Scheduled Product Operations
 
-One recurring job per configured product: inspect everything, build one checklist, then
-work through actionable findings. Current evidence and outstanding work determine action.
+One recurring job per configured product: create one checklist, dispatch approved work
+early, then inspect every area and work through actionable findings. Current evidence and outstanding work determine action.
 Do not divide inspection by daily, weekly, monthly, or quarterly eligibility. Never create
 child schedules. Human rituals and reporting deadlines can retain their cadence; check
 their readiness every run without regenerating unchanged artifacts.
@@ -51,7 +51,8 @@ Use this prompt, replacing the configuration locator with its verified value:
 
 ```text
 Run scheduled-product-operations in RUN mode using <pm-config locator>.
-Check every area in its checklist on this run, then prioritize and execute safe work
+Create the checklist, inspect authorized delivery early and dispatch at most one dedicated
+worker under approved_build_policy; continue every area and execute safe work
 through the configured providers and existing domain skills. Record all results in one
 checklist. Preserve human gates, continue independent items after blockers, and leave
 unfinished work visible. Do not create or modify schedules.
@@ -66,7 +67,18 @@ roadmap, or decision store. Do not silently create a local state file or a new p
 If durable run state is unavailable, inspect what is readable and report the limitation;
 do not start mutations that require unavailable receipts or ownership checks.
 
-Create all checklist rows below before substantial execution. Inspect each area's current
+Create all checklist rows below first. After assigned tasks, inspect authorized delivery
+before the remaining health inventory. Under enabled approved_build_policy, verify one
+exact approval and check existing Tasks/PRs/threads through build-authorization. Dispatch
+at most one dedicated delivery worker with authority, plan, repository/workspace and Task
+references; the worker re-reads and claims before code. The parent may prepare the linked
+Task handoff but must not claim as a competing worker. Record its runtime link and continue
+every remaining checklist row without waiting for implementation. The schedule is a
+backstop, not an exclusive executor. If dispatch is unavailable or its result ambiguous,
+record that item blocked and reconcile runtime state before retry; do not run long delivery
+inline or spawn blindly. Legacy policies keep their explicit compatibility boundary.
+
+Inspect each area's current
 sources, using pagination or provider-supported complete queries, and record evidence or
 the precise read failure. Share fetched context across rows. If an inventory is incomplete,
 mark it blocked or unfinished, never healthy. A missing optional capability remains a
@@ -86,7 +98,7 @@ run from piling fresh work on top of its own unresolved follow-ups.
 | Solutions and assumptions | Orphaned solutions, changed concept directions, untested assumptions, investment readiness | [investment-gate](../investment-gate/SKILL.md), [human-review-workflow](../human-review-workflow/SKILL.md) for concept/review packets |
 | Experiments | Missing success/kill conditions, overdue results, stalled tests, new results and contradictory interpretations | [experiment-workflow](../experiment-workflow/SKILL.md); launch and material conclusions retain human gates |
 | Roadmap and capacity | Complete NOW/NEXT/LATER queues, validation, ownership, dependencies, capacity and active-work collisions | [roadmap-workflow](../roadmap-workflow/SKILL.md), including its existing build-policy route where enabled |
-| Authorized delivery | Approval evidence, eligible commitments/packages, active claims, branches, PRs, unfinished execution receipts | [compass-resolver](../compass-resolver/SKILL.md) for Compass delivery; otherwise the configured delivery workflow; no inferred permission from queue position |
+| Authorized delivery | Approval evidence, explicit approved builds, active claims, branches, PRs, unfinished Task checkpoints | [compass-resolver](../compass-resolver/SKILL.md) for Compass delivery; otherwise the configured delivery workflow; no inferred permission from queue position |
 | Completion and adoption | PR/CI/deployment changes, stale review tasks, launch work, exposure, adoption, safety and outcome evidence | [delivery-completion-watcher](../delivery-completion-watcher/SKILL.md); resolved analytics for adoption; review scale/iterate/stop choices |
 | Outcomes and OKRs | Metric freshness, KR coverage, outcome drift, cycle boundaries, discovery health, calibration and retrospective needs | [okr-workflow](../okr-workflow/SKILL.md), [pm-coach](../pm-coach/SKILL.md); reconfirm/reset outcomes through human review |
 | Decisions and notifications | Pending reviews, **every decided review whose outcome is not yet reflected in product state**, source revisions, due reminders and escalations | [human-review-workflow](../human-review-workflow/SKILL.md) Mode 4, including its reconciliation rules and notification deduplication |
@@ -120,7 +132,8 @@ no transcripts remain unprocessed — mark that sub-check `blocked`, not `health
 
 ## Triage and execute
 
-- Inspect every row first so a lengthy delivery task cannot hide other areas. Rank findings
+- Dispatch approved delivery early as above; inspect every row before other substantial work.
+  Rank findings
   by observed urgency, impact on the current outcome, and dependencies. Prefer finishing
   interrupted work and unblocking existing commitments before creating new work.
 - Load the selected domain skill before acting. Resolve its required capabilities and
@@ -128,8 +141,8 @@ no transcripts remain unprocessed — mark that sub-check `blocked`, not `health
   can change capacity; intake can change evidence. Refresh affected checklist findings
   after those actions, without recursively restarting the entire run.
 - Execute safe actionable work within the run using existing skills and permitted worker
-  delegation. Preserve each skill's limits, including at most one delivery PR per resolver
-  invocation; invoke the resolver at most once per operations run. Reconcile existing
+  delegation. Preserve each skill's limits, including one delivery PR per worker and
+  at most one new delivery worker per operations run. Reconcile existing
   active workers instead of launching duplicate work. Check runtime ownership and existing
   domain receipts before mutation; uncertain ownership blocks that action.
 - Reuse source IDs, versions, existing artifacts and domain idempotency receipts. Retry

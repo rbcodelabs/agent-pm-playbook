@@ -12,12 +12,13 @@ description: >-
 
 ## Resolution algorithm
 
-For build execution, also resolve `build_authorization_policy` using the installed
-[build-authorization contract](../build-authorization/SKILL.md). It is opt-in standing
-authority, independent of provider mode. Missing/disabled policy preserves the legacy
-gates below; a verified approved package consolidates build admission and design approval.
-Expanded provider tables must agree with the profile plus overrides; stale tables are a
-configuration error, not an alternate source of routing truth.
+For build execution, resolve `approved_build_policy` using the installed
+[build-authorization contract](../build-authorization/SKILL.md). Direct user instructions
+and approved immutable Decisions use the same worker path; unattended discovery requires
+explicit opt-in. Missing/disabled policy never adds authority. A legacy
+`build_authorization_policy` requires its pinned legacy revision or an authorized migration,
+not silent conversion. Expanded provider tables must agree with profile plus overrides;
+stale tables are a configuration error, not an alternate source of routing truth.
 
 1. Read `pm-config.md` before any read or write.
 2. Load the named `integration_profile` from this skill's `assets/integration-profiles.json`.
@@ -78,8 +79,8 @@ configuration error, not an alternate source of routing truth.
   Tracking-only decisions record human judgment but never mutate product or delivery state.
 - Validation authorization leaves roadmap candidates in `LATER`. `NEXT` is a validated,
   ranked, capacity-limited queue. `NOW` commitment is approved either through the legacy
-  separate gate or as part of a current opted-in build package; generic validation never
-  supplies that approval.
+  separate gate or an explicit admission decision. An Approved Build can reach a tested PR
+  without NOW admission; generic validation never supplies build or admission authority.
 
 ## Backward compatibility
 
