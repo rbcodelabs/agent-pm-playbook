@@ -21,36 +21,26 @@ This is an agent instruction workflow using the adopting runtime's available too
 a bundled scheduler service. Installing the skill does not install a live job. Missing
 runtime or domain adapters are visible blockers on the affected operations.
 
-### Build authorization update — 2026-09-05, simplified 2026-09-17
+### Approved Builds
 
-The opt-in [build-authorization](skills/build-authorization/SKILL.md) path consolidates
-investment, design and NOW commitment into one purpose-bound human request. `compass-resolver`
-reads the tracking-only decision, admits the approved item to NOW, and carries that scope
-through a tested PR using the exact same claim step (title-prefix + Opportunity `ACTIVE` +
-GitHub PR cross-check) every other delivery item already goes through. NEXT is optional
-queue organization for this path. The separate-gate procedures elsewhere in this document
-remain the default for projects without the policy.
+The opt-in [Approved Build workflow](skills/build-authorization/SKILL.md) uses one exact
+human approval, one linked Task and one worker through a tested PR. Direct instructions
+and scheduled discovery share the same worker path. Product Operations dispatches at most
+one dedicated delivery worker early, then continues every checklist row.
 
-Repository support includes the shared contract and a deterministic snapshot evaluator.
-The 2026-09-17 pass removed the evaluator's package digest, execution-receipt/lease store,
-and worker-identity bookkeeping: drift detection now compares immutable plan-doc version
-IDs instead of a computed hash, and serialization/resume reuse the roadmap-item claim
-instead of a bespoke runtime store. Live activation still requires verified installed
-skills and immutable package/decision provenance. Delivery eligibility must also consider
-newly approved packages awaiting admission. An empty-NOW filter must not gate the shared
-product-operations run. Do not describe a documented dispatch procedure as an installed
-runtime integration.
+The Decision and immutable plan hold authorization and scope; the Task records execution
+and recovery. Task create/re-read detects collisions best-effort, not atomically: repeated
+checks before code and publication reduce races but cannot guarantee exactly once.
+Ambiguous ownership blocks only that item. Opportunity/Solution status never proves ownership.
 
-Generic approvals still grant no authority. The new standing policy must be explicitly
-activated for each project and packages must be prepared and approved after activation.
-The roadmap item and its linked Compass Task are the durable record of admission and
-claim — no separate execution-progress store to reconcile after a failure. Material
-changes return a concise revised request (editing the plan doc creates a new version ID
-and invalidates the old approval automatically). Revocation stops further work; merge and
-production operations remain independently authorized.
+There is no build package evaluator or exclusive cron executor. Roadmap capacity governs
+admission, not permission to create a tested PR; unreadable limits leave the horizon
+unchanged. Explicit per-build conditions and expiry still apply. Merge and production
+remain separate. Legacy policy projects retain their pinned skill revision until an
+authorized migration; exact existing approvals keep their original limits.
 
-Measure approval-to-start, approval-to-PR and duplicate approval requests per build. A pilot
-must produce a real tested PR from one human approval before expansion to other projects.
+Measure approval-to-start, approval-to-PR and repeated approvals. A live pilot must reach
+a real tested PR from one approval before expansion; instruction tests do not prove dispatch.
 
 Implemented in the playbook repository:
 
@@ -63,7 +53,7 @@ Implemented in the playbook repository:
 - Compass Decisions adapter for tracking-only requests and immutable human responses;
 - capacity policy plus separate validation, `NEXT` admission, and `NOW` commitment gates;
 - Compass feedback triage narrowed to evidence intake and review routing;
-- Compass delivery resolver narrowed to approved `NOW` work;
+- Compass delivery resolver uses exact approvals, with a separate legacy NOW path;
 - deterministic delivery-completion watcher for merged PR, production, smoke, lifecycle,
   receipt, and capacity-change reconciliation;
 - automated regression tests and install dry-run coverage.

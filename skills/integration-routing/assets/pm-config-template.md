@@ -124,26 +124,26 @@ portfolio_policy:
 If a required limit or capacity signal is unknown, scheduled stewards may prepare
 validation work in `LATER` but must not infer permission to add work to `NEXT` or `NOW`.
 
-## Build Authorization Policy (opt-in)
+## Approved Build Policy (opt-in)
 
 ```yaml
-build_authorization_policy:
+approved_build_policy:
   enabled: false
-  version: build-authorization-v1
-  project_id: unresolved
+  activation_authority: unresolved # human instruction authorizing this policy
   workspace_id: unresolved
   repository: unresolved
-  activated_at: unresolved
-  activation_authority: unresolved # exact human instruction/decision reference
+  decision_provider: unresolved # must agree with resolved decision_records
+  completion_boundary: tested_pr
+  excluded_actions: [merge, production_deploy, production_data_changes, external_messages]
 ```
 
-Enable only under explicit human authorization after installed workflow and provider
-checks in `build-authorization`. Missing fields block execution. This standing policy
-permits a current approved build package through a tested PR, including its exact roadmap
-admission. It grants no merge or production authority. Existing decisions are not
-grandfathered. Package-specific limits, scope, and plan version live in the decision
-provider and the linked plan doc — there is no separate receipt store or executor to
-configure; claiming and admission reuse the project's existing roadmap and Task state.
+Enable only under explicit human authorization after the provider and runtime checks in
+[build-authorization](../../build-authorization/SKILL.md). Scope and any expiry live in
+the direct instruction or immutable human Decision and plan. No package, evaluator,
+exclusive executor or separate lease store is required. Capacity governs roadmap
+admission, not permission to create a tested PR. A missing/disabled policy never enables
+unattended work. Legacy `build_authorization_policy` installations remain on their
+pinned revision until explicitly migrated; exact approvals retain their existing limits.
 
 ## Delivery Completion Policy
 

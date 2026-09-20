@@ -1,167 +1,139 @@
 ---
 name: build-authorization
-description: Prepare one bounded build request and execute its approved scope through a tested PR under an explicitly enabled standing policy. Use for build approval, delivery admission, and resuming authorized work; excludes merge and production release.
+description: Execute one explicit human approval through a tested PR. Use for direct or scheduled approved builds, claims, recovery and review fixes. Merge and production remain separate.
 ---
 
-# Build Authorization
+# Approved Build
 
-One human build decision covers investment, approach, capacity commitment, and execution
-through a tested PR. Read this contract before preparing or executing a build package.
-It replaces repeated approvals only for projects opting into `build_authorization_policy`.
-Absent or disabled policy preserves existing workflows. It never retrospectively converts
-old decisions or roadmap positions into approval.
+One explicit human approval bound to exact scope authorizes one worker to produce one
+tested PR. This skill keeps its historical name for installed links; there is no separate
+build package, snapshot evaluator, digest, lease service or exclusive executor.
 
-This contract deliberately avoids extra machinery: no cryptographic package hash, no
-separate receipt/lease store, no worker-identity bookkeeping. Provenance comes from the
-decision provider's own immutable revisions and doc versioning; claiming and serialization
-reuse the exact same PR-cross-check-and-status-write step every other delivery item already
-goes through in `compass-resolver`. Fewer moving parts means fewer things that can silently
-drift from what was actually approved.
+## Authority and routing
 
-## Authority and provider boundary
+Resolve the repository, tenant/workspace, delivery provider and applicable workflow
+providers through [integration-routing](../integration-routing/SKILL.md). An Approved
+Build is an authorization relationship, not a new provider object. Record:
 
-Resolve providers through `integration-routing` and read the project policy. The policy
-must record the human instruction activating it, its version, activation time, and exact
-project/workspace and repository. Agents cannot enable or widen it on their own. Approval
-to change the playbook is not approval of a product build.
+1. authority: current synchronous user instruction or approved immutable Decision revision;
+2. exact scope: inline approved scope or an immutable plan Doc/version;
+3. configured repository and tenant/workspace when applicable;
+4. stop boundary: tested PR;
+5. exclusions, expiry and any explicit limits.
 
-The policy grants an agent authority conditional on a current human-approved package.
-Compass Decisions remain tracking-only: the decision endpoint neither mutates the linked
-item nor dispatches work. The agent reads that evidence, checks this contract, and acts.
-Generic `Approve`, Solution Plan status, and legacy system reviews do not satisfy this
-contract. Never resurrect dormant native NOW-policy machinery.
+Direct instructions and scheduled discovery enter the same worker procedure below.
+A direct instruction authorizes only its stated work. Unattended discovery requires
+explicitly enabled `approved_build_policy`; missing or disabled policy never silently
+opts a project into automated execution. Agents cannot enable or widen policy themselves.
 
-The first adapter is `compass_decisions`. Both review and decision capabilities must
-resolve to it, and the expanded config table must agree with profile plus overrides.
-Other adapters require a verified equivalent immutable human decision contract before
-activation; do not treat a mutable approval checkbox as equivalent.
+For asynchronous work, resolve review and decision providers and verify their immutable
+human response contract. Compass uses `compass_decisions` for both; use its adapter.
+The endpoint remains tracking-only with `NO_ACTION` continuations: it neither dispatches
+nor mutates linked state. The worker acts under the enabled policy and exact human build
+approval. A generic concept approval, validated Solution or roadmap position is not build
+authority. A native decision-application receipt is bookkeeping, never proof the PR exists.
 
-## Prepare the package before asking
+Read the exact request/revision and plan version, authenticated human author, outcome,
+current scope, supersession/revocation and expiry. Compare the approved immutable content
+with the scope being executed; a mutable live plan cannot silently replace it. If live
+plan content changed, reconcile the difference before execution. Check repo/workspace
+identity and same-workspace links. Do not manufacture readiness booleans or infer approval
+from title matches, cached excerpts or lifecycle status.
 
-Inspect implementation context and existing work first. Prepare one package containing:
+If an approved implementation plan covers the scope, this satisfies
+[design-before-code](../design-before-code/SKILL.md).
+Do not enter Plan mode or ask for the same approval again.
+Use the design workflow once only when design is absent or materially changing. Routine
+implementation, tests, rebases and review fixes within the approved scope stay covered.
+A material change requires a concise delta approval; preserve prior evidence and branches.
 
-- Stable package ID, purpose `build-authorization-v1`, policy version, workspace ID,
-  repository, roadmap/solution/opportunity/KR IDs, and a versioned plan reference.
-- Outcome, evidence supporting investment, remaining uncertainty, scope and exclusions.
-  Existing validation requirements still apply. Missing evidence is a named preparation
-  blocker, never a reason to label an unvalidated solution `VALIDATED`.
-- Chosen approach, meaningful alternatives and tradeoffs, acceptance criteria, test plan,
-  approved environments and preview behavior, and any migration implications.
-- Delivery owner, exact target rank, and at most one named displacement item ID if the
-  target NOW slot is currently occupied. Otherwise capacity is checked at execution time.
-- Expiry and rollback boundary. Note any expected time/cost as context for the human
-  reviewing the request; the evaluator enforces expiry but does not meter spend.
-- Allowed actions: exact roadmap admission/displacement, linked task creation, isolated
-  implementation, tests, branch pushes, PR creation, preview verification and review fixes.
-  Merge, production deployment, production data changes, sending messages to third parties,
-  and extra paid resources require their own authority; identify merge-triggered deploys.
+## Preparing an approval when none exists
 
-Write the plan itself as a versioned doc (`create_doc` / `create_doc_version`) and record
-its `planDocId` and current `planDocVersionId` in the package. That version ID is the
-package's only binding to an exact scope: because a doc version is immutable once created,
-re-reading it later and comparing version IDs is sufficient to detect drift — no hashing,
-canonicalization, or separate digest field is needed. Editing the plan after approval
-creates a new version ID, which the evaluator treats as a changed package.
+Read the implementation context first. Present exact scope, approach, acceptance criteria,
+tests, exclusions and stop boundary, with evidence and uncertainty appropriate to the work.
+For unattended execution, save a versioned plan and a purpose-explicit build Decision;
+persist/reuse the provider idempotency key and request ID. Follow
+[human-review-workflow](../human-review-workflow/SKILL.md) and return `AWAITING_DECISION`.
+Do not create another request when the current human instruction already approved this scope.
 
-Persist a UUID idempotency key before `request_decision`, with the package ID and plan
-doc/version in context and the exact solution or roadmap subject. Re-read the resulting
-request ID. Show the human: "Approve this scope through a tested PR under policy
-[version]." Use the provider's normal Approve / Request changes / Reject controls. Every
-provider-side continuation remains `NO_ACTION`. Notify only through already-authorized
-channels. Return `AWAITING_DECISION` with one stable link; subsequent runs reuse that
-request.
+## Common worker procedure
 
-## Verify and execute
+1. Re-read authority and current execution evidence. Search linked delivery Tasks,
+   matching open/closed PRs, exact branches and runtime threads using stable item IDs.
+   Lifecycle states such as Opportunity `ACTIVE` or Solution `IN_DELIVERY` are not ownership.
+   A matching merged PR calls for completion reconciliation, not another build.
+2. Inspect any existing Task's recorded owner and runtime before changing its description
+   or status. Never overwrite a running or uncertain owner's claim; use recovery below.
+   Create or reuse one linked delivery Task before code. Record authorization/plan
+   references, item ID, repository, intended branch, worker thread/run ID and timestamp
+   in supported description/comment fields; move it to `IN_PROGRESS`. Re-read all linked
+   Tasks and PRs. Reuse the same Task on resume; do not create per-test duplicate Tasks.
+3. Treat create/re-read as **best-effort collision detection, not an atomic lock**.
+   Current Task tools have no unique claim key or compare-and-swap, so this protocol
+   cannot guarantee exactly-once execution. If simultaneous claims are visible and neither
+   worker has begun, choose earliest creation time then stable Task ID; other workers stop.
+   If either has begun or state is ambiguous, coordinate with the recorded owner and
+   stop only the ambiguous item. Never take over a running owner. Repeat collision checks
+   before code and before push or PR creation. Do not claim serialization from status writes.
+4. For an uncertain create response, read provider state by stable item/authorization
+   linkage before retrying. If creation cannot be recovered unambiguously, stop the item;
+   do not blindly issue another create. Record the observed error and next action.
+5. Create an isolated worktree from the current configured default branch; preserve dirty
+   primary checkouts. Inspect source/tests and follow the approved plan with delegated
+   engineering where the harness supports it. Follow the repository's test and PR gates.
+6. Checkpoint the same Task after worktree creation, regression test evidence, verification,
+   push and PR creation. Record branch/worktree, commit, test results and next action.
+   On recovery, inspect the recorded thread: running means leave it alone; idle means send
+   continuation to that owner when supported; missing/archived means reconcile branch/PR,
+   recheck authority and claims, then record takeover on the same Task before proceeding.
+   Unknown runtime state blocks takeover, not independent product operations.
+7. Recheck scope, expiry, revocation and collisions before publishing. Open or reuse one PR,
+   with reciprocal Task/authority/branch/commit links and actual verification evidence.
+   Verify the configured preview when applicable. Move the Task to `IN_REVIEW` and stop.
+   [delivery-completion-watcher](../delivery-completion-watcher/SKILL.md) observes later
+   authorized release and production evidence; a tested PR is not shipped work.
 
-1. Fetch the exact package, its plan doc's current version, and the linked decision's
-   current immutable revision: authenticated human author, approval timestamp, outcome,
-   and any superseding decision. Never trust a title match, list excerpt, self-asserted
-   reviewer, cached approval or proposed reply. Approval and package preparation must
-   postdate policy activation. Missing provenance blocks execution; no inference from an
-   old Plan approval is permitted.
-2. Re-read policy, current evidence/design/dependency readiness, and capacity (current NOW
-   items and limit). Check expiry and revocation at every resume and before any push or
-   admission.
-3. Normalize the verified snapshot and run the installed evaluator:
+## Dispatch
 
-   ```bash
-   node <build-authorization-skill-directory>/scripts/evaluate-authorization.ts < snapshot.json
-   ```
+The direct request's current thread may be the worker immediately. Scheduled Product
+Operations discovers approved, unclaimed work and dispatches at most one dedicated worker
+early, then continues its health checklist. It is a backstop, not an exclusive executor.
+The parent may prepare a Task handoff, but only the named worker claims execution after
+re-reading it. If dispatch response is uncertain, inspect runtime threads and Task
+checkpoints; never spawn another worker blindly. No child schedule is needed.
 
-   `READY` permits admission and claiming. `AWAITING_DECISION` or `BLOCKED` permits no
-   build mutation. The evaluator only answers whether a current, verified human approval
-   covers this exact scope and whether a delivery slot exists for it — it has no opinion on
-   whether the work is already claimed or mid-flight; that reuses the caller's existing
-   claim step (below), identically for opted-in and legacy items. The evaluator checks the
-   snapshot, not authenticity of external evidence: adapters must verify its inputs. Read
-   the exported input types in the script when mapping a provider; do not manufacture
-   readiness booleans from approval alone.
+## Capacity and safety
 
-   Map config `project_id`, `workspace_id`, and `activated_at` to the evaluator's
-   `projectId`, `workspaceId`, and `activatedAt` fields; package/decision/current fields
-   use the exported camelCase interface. `activation_authority` is verified by the adapter
-   before the normalized booleans are supplied; it is a reference, never a substitute for
-   approval evidence.
-4. On `READY`, admit to NOW if the candidate isn't already active: if the package names a
-   displacement, verify that item is still active and remove it; otherwise verify a free
-   capacity slot exists. Direct LATER-to-NOW admission is allowed by this package; NEXT is
-   optional queue organization. The roadmap item itself is the durable record of admission
-   — no separate receipt store.
-5. Claim work exactly the way `compass-resolver`'s legacy (non-opted-in) path already does:
-   cross-check GitHub for an existing PR referencing the item's short UUID first (catches a
-   prior run's in-flight or completed work), then set the linked Opportunity `ACTIVE` and
-   move the delivery Task to `IN_PROGRESS` (creating and linking one if the item has none).
-   All of these must succeed before writing a line of code. Never encode the claim in the
-   roadmap item's title. This is the *same* claim step used for every other item — opted-in
-   packages get no separate lease, worker ID, or receipt object.
-6. Follow the approved plan through delegated engineering and normal quality checks. Link
-   the package, decision, branch, commit and PR reciprocally (e.g. in the Compass Task and
-   PR body) so a later run recognizes this exact execution even if the opportunity is
-   ACTIVE or the solution is IN_DELIVERY — those lifecycle states communicate product
-   status, not which run owns the work; the reciprocal linkage plus a matching PR is what
-   establishes ownership.
-7. On an uncertain provider response mid-step, read back the roadmap item/Task by its
-   stable ID before retrying. If admission already applied but claiming hasn't happened
-   yet (or vice versa), resume from the current state — do not repeat displacement or
-   create a duplicate PR. If the provider cannot recover an operation unambiguously, stop
-   with that operation named as the blocker.
-8. At tested PR, set delivery work `IN_REVIEW` and present the release decision. The
-   existing completion watcher reconciles only after separately authorized release and
-   verified production behavior. A PR is not shipped work.
+Unknown capacity blocks roadmap admission only. When capacity cannot be read,
+leave the horizon unchanged and continue the approved build. Do not demand browser login
+or guessed limits to produce reviewable code. If exact admission/displacement is separately
+included in the approval, apply it only after the roadmap workflow's live checks succeed.
+If the human explicitly made building conditional on admission, honor that condition.
+Never mark an unvalidated Solution validated just to satisfy a build or roadmap gate.
 
-## Changes, limits and recovery
+Merge and production require separate authority. This workflow grants no production
+deployment, production migration/data repair, destructive rollback, external message or
+additional paid resource authority. Same-tenant checks and repository tests remain required.
+Revocation stops the next safe operation; preserve the Task, branch and PR, never roll back
+external state automatically.
 
-Routine implementation choices, regression fixes, rebases, review fixes and retries remain
-covered while scope/approach and limits hold. Check elapsed time against the package's
-expiry at each checkpoint. Material scope/approach changes, increased cost/risk, changed
-capacity commitments, expired limits, or changed policy version require a revised package
-with a concise delta — editing the plan doc creates a new version ID and invalidates the
-old approval automatically. Preserve the prior decision and branch; never edit an approved
-plan version in place.
+## Migration and compatibility
 
-Revocation or supersession stops the next safe operation. Disabling policy stops automated
-execution across the project. It does not undo an already-opened PR or reverse external
-changes. Never automatically roll back product state or production as a consequence of
-revocation.
+`approved_build_policy` is explicit opt-in; never silently opt in legacy projects.
+Absent/disabled new policy retains direct-instruction and existing non-policy workflows.
+A project still using `build_authorization_policy` must keep its pinned legacy skill revision
+until a human authorizes migration. If encountered with this revision, report that policy
+route unavailable; do not reinterpret it or fall through to another unattended route.
+If both policies are enabled, resolve the conflict before unattended dispatch.
 
-Every blocker records requirement, evidence, whether an authorized agent can repair it,
-owner, next action and decision link if applicable. Reuse unchanged blockers; escalate at
-the configured deadline once, then only on material change. Unknown capacity is a blocker,
-not an invitation to repeatedly ask for the same approval.
+Existing exact human approvals carry forward during an authorized migration with their
+original scope, exclusions and expiry; no new product Decision is required. Retain any old
+package ID as correlation only. Generic historical approvals do not become build approvals.
+Migration cannot erase an explicit per-build condition: reconcile any retired executor
+restriction against the migration authority and preserve the original Decision history.
 
-## Installation and pilot
-
-Install this skill, its evaluator and all referring workflows together. Verify actual
-installed file contents and scheduled prompt paths before enabling execution. The
-[product-operations run](../scheduled-product-operations/SKILL.md) checks newly approved
-packages awaiting admission even when NOW is empty — an empty-NOW gate alone is
-insufficient. No separate executor cron, receipt store, or lease service needs installing;
-this path reuses the same roadmap-item claim and Task primitives every other delivery path
-already uses. A generic decision router must not also apply the same package, and a
-delivery queue gate must never suppress inspection of other product areas.
-
-Migrate one project first. Repair only verified links; draft one complete eligible package.
-Do not change validation status to satisfy the pilot. If no candidate is ready, record the
-specific missing evidence and next action. Test approval-to-PR in the live pilot before
-enabling other projects. Track approval-to-start, approval-to-PR and repeat-approval count.
-The local evaluator tests are necessary evidence, not proof that live dispatch works.
+Install this contract and its referring skills/templates together; update existing schedule
+prompts in place only when authorized. Read back installed files, policy and schedule.
+Remove calls to the retired evaluator; do not invent replacements for its states.
+Verify one live approved item reaches a tested, preview-verified PR without a second
+approval or unavailable prerequisite. Documentation tests do not prove that live path.

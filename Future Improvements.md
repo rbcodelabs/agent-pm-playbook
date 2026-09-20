@@ -129,7 +129,7 @@ Three of the four cells currently receive treatment designed for the fourth.
 **Open questions for review:**
 - Who assigns cost-of-wrong, and at what point? Self-assessed by the PM invites optimism bias toward "low, just build it."
 - Does the carrying-cost term need its own health metric in [[Discovery Health Metrics]] — e.g. shipped-surface-per-validated-outcome — to catch the failure mode this unlocks?
-- Should `build_authorization_policy` projects get the 2×2 automatically, given they have already repriced delivery?
+- Should `approved_build_policy` projects get the 2×2 automatically, given they have already repriced delivery?
 
 ---
 

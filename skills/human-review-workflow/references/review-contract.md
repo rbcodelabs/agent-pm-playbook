@@ -6,9 +6,10 @@ below applies only to action-capable adapters.
 
 ## Minimal tracking-only packet
 
-Build packages use the additional purpose, plan doc/version reference, and policy version
-defined in [build-authorization](../../build-authorization/SKILL.md). These are immutable
-decision context, not provider continuation fields — the packet stays tracking-only.
+Approved Builds record authority, exact scope/plan version, repository/workspace,
+tested-PR boundary and exclusions/expiry as defined in
+[build-authorization](../../build-authorization/SKILL.md). These are immutable decision
+context, not provider continuation fields — the packet stays tracking-only.
 
 A tracking-only provider needs a stable request/idempotency key, linked source identity,
 question and context, pending/decided state, allowed outcomes, reviewer/rationale, and

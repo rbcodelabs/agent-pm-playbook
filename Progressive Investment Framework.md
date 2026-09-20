@@ -138,14 +138,12 @@ Listed from cheapest to most expensive. Always use the cheapest experiment that 
 
 ### One build approval for opted-in agent delivery
 
-Projects using `build_authorization_policy` consolidate the Testing-to-Building investment,
-MVP/design and delivery-capacity decisions into one complete
-[build package](skills/build-authorization/SKILL.md). Evidence thresholds still apply; the
-agent prepares evidence, design and exact capacity commitment before requesting approval.
-One current approval under the standing policy covers admission and implementation through
-a tested PR. Separate NEXT, NOW and design approvals are unnecessary for that same scope.
-Merge and production release retain separate authority. Projects that have not opted in
-continue using the gates below.
+Projects using `approved_build_policy` reuse one explicit human approval of exact scope
+through a tested PR with the [Approved Build workflow](skills/build-authorization/SKILL.md).
+Prepare investment evidence and design before requesting approval; preserve uncertainty.
+The approved plan is reused during delivery without another design gate. Capacity governs
+roadmap admission separately. Merge and production retain separate authority.
+Projects that have not opted in retain their existing investment and roadmap gates.
 
 These are the specific checkpoints that move you from one stage to the next. Each one is a question that must be answered — not a gut check, not a consensus vote.
 
