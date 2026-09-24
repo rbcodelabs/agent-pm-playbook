@@ -102,6 +102,26 @@ If you only ran targeted tests in step 2, run the full suite here. Confirm the c
 
 ## Completion report format
 
+### Screenshot evidence delivery
+
+When screenshots are required, capturing them locally is not the same as
+delivering evidence. Publish them with the QA report through the configured
+reporting provider so its intended readers can view them. Machine-local paths,
+private vault embeds, and inaccessible preview links do not satisfy a shared
+report's evidence requirement. A local archive may remain an additional copy.
+
+Label each capture or group with the tested commit/version, capture date,
+environment (local, preview, or production), viewport, and relevant state.
+Local evidence never substitutes for required hosted verification.
+
+Read back the saved report and check that its images actually render for an
+authorized reader. Preserve access controls and exclude secrets or unrelated
+private data. If upload or display verification is unavailable, report
+**screenshot publication incomplete** separately from test results; do not
+claim the QA handoff complete or broaden access to make the images load.
+Use the reporting provider's supported upload workflow; for Compass Docs,
+consult the Compass skill's private image-upload instructions.
+
 After all checks pass, report:
 
 ```
@@ -111,6 +131,7 @@ After all checks pass, report:
 **Tests:** X passing, 0 failing (Y new tests added)
 **E2E:** [passed / not applicable — no user-facing flow changed]
 **Manual verification:** [what you checked and what you observed]
+**Screenshot evidence:** [shared report link, environment and display check / incomplete with reason / not applicable]
 **Regressions:** none (full suite passed)
 
 **Files changed:**
