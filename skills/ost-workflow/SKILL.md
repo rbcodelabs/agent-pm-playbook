@@ -45,20 +45,17 @@ chainTo:
 
 # OST Workflow
 
+## Autonomy
+
+Act, then report ([Autonomy Policy](../../Autonomy%20Policy.md)). Framing the outcome, adding or restructuring branches, writing solution candidates, choosing a focus branch, and changing statuses are all reversible: do them and say what changed. Only archiving or killing a branch that has work behind it needs a human first; prepare that as one recommendation and keep working. When context is missing, infer, state the assumption in one line, and continue.
+
 ## Provider Preflight
 
-Before reading or writing state, read `pm-config.md` and resolve the `ost` capability through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Confirm exactly one authoritative provider. Use its workflow for persistence; do not silently create Markdown as a fallback. Any secondary artifact must be labeled `inbox`, `export`, `cache`, or `snapshot`. For legacy configs, show the inferred mapping and require confirmation before creating records. For Compass, invoke `compass-workflow` and persist the desired outcome, opportunities, solutions, and assumptions inline.
+Read `pm-config.md` and resolve the `ost` capability through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Use exactly one authoritative provider for persistence; label any secondary artifact `inbox`, `export`, `cache`, or `snapshot`. For legacy configs, state the inferred mapping and proceed. With no config, work from the conversation and repository, name the defaults you used, and offer `pm-setup` at the end. For Compass, invoke `compass-workflow` and persist the desired outcome, opportunities, solutions, and assumptions inline.
 
-The tree methodology below is provider-neutral. Markdown file language is the Markdown/Obsidian adapter only; otherwise use native objects and stable IDs while preserving the hierarchy and evidence gates.
-
-You are a specialist in building, reviewing, and maintaining Opportunity Solution
-Trees (OSTs) — the core operating model for continuous discovery. This skill
-activates when the user is actively working on an OST: starting fresh, extending
-an existing tree, running a health check, or deciding what to focus on next.
+The methodology below is provider-neutral. Markdown file language applies to the Markdown/Obsidian adapter only; otherwise use native objects and stable IDs while preserving the hierarchy.
 
 ## OST Structure
-
-An OST has four layers, all rooted in a single desired outcome:
 
 ```
 Desired Outcome (exactly 1)
@@ -67,122 +64,68 @@ Desired Outcome (exactly 1)
               └── Experiment (N) — how to validate a solution's key assumption
 ```
 
-**Critical rules — enforce these without exception:**
 - One tree = one desired outcome. Multiple outcomes = multiple trees.
-- Opportunities must be customer-centric, not company-centric.
-- Solutions never appear at the opportunity layer — reframe them if they do.
+- Opportunities are customer-centric, not company-centric. Reframe solutions that appear at the opportunity layer.
 - Every experiment tests a specific assumption within a specific solution.
 
 ## Building an OST from Scratch
 
 ### Step 1 — Define the Desired Outcome
-Ask the user: "What change in customer behavior will drive your business outcome?"
+Take it from the OKRs, config, or conversation: the change in customer behavior that drives the business outcome. If none is stated, infer one and say so.
 
 Good: "Increase the percentage of new users who complete their first meaningful action within 7 days"
-Poor: "Launch onboarding v2 by Q3" — this is output, not outcome
+Poor: "Launch onboarding v2 by Q3" — output, not outcome
 
-If the stated outcome is output-framed, reframe it before continuing. Don't proceed
-with a bad root — everything downstream inherits that mistake.
+If the outcome is output-framed, reframe it yourself and note the reframe; everything downstream inherits the root.
 
 ### Step 2 — Map Opportunities
-For each relevant customer segment, surface:
-- What prevents them from achieving the desired outcome today?
-- What do they struggle with in the current experience?
-- What workarounds are they using?
-
-Format each opportunity as: "Customers struggle to [X] when [context]"
-or "Customers need [X] but currently [workaround/gap]"
+For each relevant segment: what prevents them from reaching the outcome, what do they struggle with, what workarounds do they use? Format each as "Customers struggle to [X] when [context]" or "Customers need [X] but currently [workaround/gap]". Single-source or weak evidence still becomes an opportunity, tagged `weak`.
 
 ### Step 3 — Cluster and Organize
-- Group related opportunities into sub-trees (parent/child relationships)
-- Eliminate duplicates and near-duplicates — merge with rationale
-- Challenge any opportunity that sounds like a solution in disguise
+Group related opportunities into sub-trees, merge duplicates with a one-line rationale, and reframe any solution in disguise.
 
-### Step 4 — Identify Focus Area
-Help the user select the highest-priority opportunity branch using:
-- Which has the strongest supporting evidence?
-- Which is most directly connected to the desired outcome?
-- Which has the right risk/effort profile for the current moment?
-
-Don't let the user work multiple branches simultaneously — that's a red flag.
+### Step 4 — Choose the Focus Branch
+Pick the branch with the strongest evidence, the most direct link to the outcome, and the right risk/effort profile now. Record the choice and why. Flag it if the team is working several branches at once.
 
 ### Step 5 — Generate Solutions
-For the selected opportunity:
-- Generate at least 3 solution directions before evaluating any
-- Span the range from incremental to transformative — meaningfully different
-  approaches, not cosmetic variations of the same idea
-- For each: how does this specifically address the parent opportunity?
-
-**Generating candidates is discovery, not prioritization.** Authoring solution
-directions — even 3, 5, or more of them — is cheap, reversible drafting work.
-It requires no human sign-off. What requires a human decision is *selecting*
-among them: which one gets built, tested, or admitted to the roadmap. Never
-read a guardrail against "automatic admission" or "no autonomous roadmap
-promotion" as a ban on writing solution candidates — those rules govern
-selection, not authorship. If a coverage-gap check below finds an opportunity
-or KR with zero solutions, generating candidates to close that gap is exactly
-this step, not an exception to it.
+For the focus opportunity, write at least 3 meaningfully different directions, incremental to transformative, each stating how it addresses the parent. Then pick the lead candidate to test and give the reason. Writing and selecting candidates are reversible; roadmap admission follows `roadmap-workflow`.
 
 ### Step 6 — Design Experiments
-For the selected solution:
-- Name the riskiest assumption first
-- Design the minimum viable test that could falsify it
-- Define success and failure criteria before running anything
+Name the riskiest assumption, design the minimum test that could falsify it, and define success and failure criteria before running anything. Hand off to `experiment-workflow`.
 
 ## Tree Health Checks
 
-Run these any time the user wants a review of an existing tree:
+Run these on any review, then fix what you can in the same pass:
 
-| Check | Question to ask | Red flag |
+| Check | Red flag | Your action |
 |---|---|---|
-| Outcome clarity | Is the root outcome measurable and behavior-based? | Output-framed, vague, or unmeasurable |
-| Opportunity framing | Are opportunities stated as customer needs? | Sounds like a solution or a company goal |
-| Coverage | Are there enough opportunities? | Fewer than 5 distinct opportunities |
-| Evidence | Which opportunities have supporting research? | Most have no citations or evidence |
-| Focus | Is there a clear focus branch? | Team is actively exploring 3+ branches at once |
-| Experiment velocity | Are experiments actively running? | No experiments closed in the past 2 weeks |
-| Dead ideas | Are abandoned paths archived? | Abandoned solutions still shown as active |
-| Solution coverage | Does every active/prioritized opportunity have at least one non-killed solution? | Any opportunity with **zero** solutions — this is worse than "only one" and must be flagged separately |
-| Solution breadth | Are real alternatives being generated, not just one obvious answer? | Opportunity with exactly one solution ever considered |
-| Coverage gap age | How long has a zero-solution opportunity (or a KR-linked cohort item) sat uncovered? | Uncovered for more than 1 week — treat this as urgent, not routine backlog |
+| Outcome clarity | Output-framed, vague, or unmeasurable root | Reframe it |
+| Opportunity framing | Sounds like a solution or company goal | Reframe it |
+| Coverage | Fewer than 5 distinct opportunities | Add candidates from available evidence, tagged by confidence |
+| Evidence | Most opportunities lack citations | Tag them `weak`; name what would strengthen them |
+| Focus | 3+ branches actively explored | Recommend one focus branch |
+| Experiment velocity | No experiments closed in 2 weeks | Draft a test for the focus branch |
+| Dead ideas | Abandoned solutions still shown active | Recommend archiving (human confirms) |
+| Solution coverage | Any active/prioritized opportunity with **zero** solutions | Generate candidates per Step 5 now |
+| Solution breadth | Only one solution ever considered | Add alternatives |
+| Coverage gap age | Zero-solution opportunity or KR-cohort gap older than 1 week | Treat as urgent; close it this run |
 
-A zero-solution opportunity is a dead end wearing an EXPLORING/ACTIVE/PRIORITIZED
-label: nothing can move until a candidate exists to select between. Flag it the
-same run it's found — do not defer it to "someday" backlog grooming. Closing this
-gap means generating candidates per Step 5 above; it does not require a
-prioritization decision to *start* generating them.
-
-If 3+ red flags are present, the tree needs a reset session before any new work.
-Any zero-solution opportunity or KR-cohort gap is a red flag on its own,
-regardless of how many others are present.
+A zero-solution opportunity is a dead end with an active label: nothing moves until a candidate exists. Close the gap the run you find it. With 3+ red flags, restructure the tree and report the changes.
 
 ## Prioritizing Within the Tree
 
-When the user needs to decide which opportunity to focus on next, use evidence-weighted
-prioritization:
+Score each candidate 1–3 on evidence strength, outcome connection, and now-ability (testable this cycle with available resources). Show the matrix, set the top 1–2 as focus, and give the rationale. State the evidence age and outcome link you assumed.
 
-**Scoring matrix (1–3 each):**
-- Evidence strength — how much validated research supports this opportunity?
-- Outcome connection — how directly does addressing this move the desired outcome?
-- Now-ability — can this be tested with available resources in the current cycle?
-
-Score each candidate opportunity. Show the matrix. Recommend the top 1–2 with rationale.
-
-**Challenge questions to push thinking:**
-- "What's your evidence for that opportunity, and how recent is it?"
-- "How directly does solving this move your desired outcome metric?"
-- "Why is now the right time for this vs. next quarter?"
-
-## Common Mistakes — Correct Immediately
+## Common Mistakes
 
 | Mistake | Correction |
 |---|---|
-| Solution in the opportunity layer | Reframe as: "What customer need does this solution address?" |
-| Multiple desired outcomes in one tree | Split into separate trees before any other work |
-| No experiments running | "What's the riskiest assumption in your focus branch? Let's design a test now." |
-| Tree too wide, no depth | "Which of these opportunities have you actually validated with customers?" |
-| Stale tree | "When did you last update this based on a real customer conversation?" |
-| Deleting dead ideas | Archive with reason — deleted ideas can't teach the team anything |
+| Solution in the opportunity layer | Reframe as the customer need it addresses |
+| Multiple desired outcomes in one tree | Split into separate trees |
+| No experiments running | Design a test for the riskiest assumption in the focus branch |
+| Tree too wide, no depth | Mark unvalidated opportunities `weak`; deepen the focus branch |
+| Stale tree | Note the last customer-evidence date and what would refresh it |
+| Deleting dead ideas | Archive with a reason instead; deleted ideas teach nothing |
 
 ## References
 

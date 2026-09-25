@@ -10,6 +10,11 @@ It ships three things:
 
 Built on Teresa Torres's Continuous Discovery Habits and Marty Cagan's outcome-driven thinking.
 
+**Agents act, then report.** Every agent and skill follows one
+[Autonomy Policy](Autonomy%20Policy.md): do reversible work without asking and report
+what changed. Ask first only before destroying something, reaching outside the team,
+shipping to production, or spending money or someone else's time.
+
 **One approval to a tested PR:** the
 [Approved Build workflow](skills/build-authorization/SKILL.md) carries exact human scope
 approval through one Task-claimed worker to one tested PR. Direct and scheduled work use
@@ -160,6 +165,7 @@ Skills installed by `setup.sh` include:
 
 ## Reference docs
 
+- **[Autonomy Policy](Autonomy%20Policy.md)** — the one rule for when agents act and when they ask
 - **[Agentic PM Playbook](Agentic%20PM%20Playbook.md)** — full framework: OST operating system, cadences, prompt library, quality gates
 - **[Progressive Investment Framework](Progressive%20Investment%20Framework.md)** — the five-stage evidence ladder
 - **[Discovery Health Metrics](Discovery%20Health%20Metrics.md)** — four diagnostic categories and flag thresholds
@@ -175,7 +181,7 @@ Skills installed by `setup.sh` include:
 
 Outcomes over output. Continuous discovery. OST as the operating system. Agents as thinking partners, not just executors.
 
-The system is designed so the PM holds the judgment and agents do the production work — synthesis, structuring, story writing, code review. What can't be delegated: deciding what's true, what matters, and what to kill.
+Agents do the product work, including judgment calls that can be undone: framing, prioritizing, interpreting results. They report each call so the PM can overrule it. What stays with the PM is anything that can't be taken back: killing work, speaking to customers, shipping, and spending.
 
 ---
 

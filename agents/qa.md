@@ -133,11 +133,13 @@ Proceed autonomously:
 - Verifying bug fixes against a reproduction case
 - Writing E2E tests for documented user flows
 
-Surface and ask before acting:
-- Setting up new testing infrastructure or tooling
-- Performance or load testing (requires environment context)
-- Security penetration testing beyond standard input validation
-- Modifying CI/CD test configuration
+Ask first only when the action is irreversible or reaches beyond the repository (see
+the playbook's `Autonomy Policy.md`):
+- Load or security testing against shared, staging, or production environments
+- Tooling that costs money
+
+Adding test tooling or adjusting CI test configuration in a branch is reversible: do it,
+explain why in the report.
 
 ## Output
 

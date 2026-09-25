@@ -2,9 +2,13 @@
 
 > **Status:** Design plus first implementation slice
 >
-> **Purpose:** Turn the playbook into a closed-loop product workflow that can run
-> continuously without either bypassing product judgment or leaving agent sessions
-> blocked while they wait for a person to respond.
+> **Purpose:** Turn the playbook into a closed-loop product workflow that runs
+> continuously, does the reversible product work itself, and asks a human only for
+> irreversible actions, without ever blocking while it waits for a reply.
+>
+> **Governing rule:** [Autonomy Policy](Autonomy%20Policy.md): act, then report. A human
+> is needed first only to destroy something, reach outside the team, ship to production,
+> or spend money or someone's time.
 
 ## Implementation Status — 2026-08-29
 
@@ -12,14 +16,13 @@
 
 [Scheduled Product Operations](skills/scheduled-product-operations/SKILL.md) is the
 installation and run procedure for recurring playbook automation. Install one job per
-configured product at the requested frequency. Every run inspects all operating areas,
-builds one checklist, triages findings, and executes safe work through existing skills.
-No area waits for a daily, weekly, monthly, or quarterly inspection slot. Source changes,
-unresolved work, and actual deadlines determine actions; unchanged artifacts are reused.
+configured product. Every run inspects all operating areas, builds one checklist, and does
+the reversible work it finds through existing skills. Source changes, unresolved work, and
+deadlines determine actions; unchanged artifacts are reused.
 
-This is an agent instruction workflow using the adopting runtime's available tools, not
-a bundled scheduler service. Installing the skill does not install a live job. Missing
-runtime or domain adapters are visible blockers on the affected operations.
+This is an agent instruction workflow using the adopting runtime's tools, not a bundled
+scheduler. Installing the skill does not install a live job. Missing runtime or domain
+adapters are visible blockers on the affected operations only.
 
 ### Approved Builds
 
@@ -29,119 +32,82 @@ and scheduled discovery share the same worker path. Product Operations dispatche
 one dedicated delivery worker early, then continues every checklist row.
 
 The Decision and immutable plan hold authorization and scope; the Task records execution
-and recovery. Task create/re-read detects collisions best-effort, not atomically: repeated
-checks before code and publication reduce races but cannot guarantee exactly once.
-Ambiguous ownership blocks only that item. Opportunity/Solution status never proves ownership.
-
-There is no build package evaluator or exclusive cron executor. Roadmap capacity governs
-admission, not permission to create a tested PR; unreadable limits leave the horizon
-unchanged. Explicit per-build conditions and expiry still apply. Merge and production
-remain separate. Legacy policy projects retain their pinned skill revision until an
-authorized migration; exact existing approvals keep their original limits.
-
-Measure approval-to-start, approval-to-PR and repeated approvals. A live pilot must reach
-a real tested PR from one approval before expansion; instruction tests do not prove dispatch.
+and recovery. Collision checks are best-effort, not atomic, and cannot guarantee exactly
+once. Ambiguous ownership blocks only that item. Roadmap capacity governs admission, not
+permission to create a tested PR; unreadable limits leave the horizon unchanged. Merge and
+production remain separate. Legacy policy projects keep their pinned skill revision until
+an authorized migration.
 
 Implemented in the playbook repository:
 
-- contract-v2 product/workflow routing shape and independently composable workflow profiles;
-- validators for six workflow capabilities and profile overrides;
+- contract-v2 product/workflow routing and composable workflow profiles, with validators;
 - `pm-setup` behavior for resolving and auditing both routing layers;
-- provider-neutral `human-review-workflow` with durable create, apply, digest, stale-source,
-  and idempotency rules;
-- Obsidian/Markdown review-request adapter contract and packet template;
-- Compass Decisions adapter for tracking-only requests and immutable human responses;
-- capacity policy plus separate validation, `NEXT` admission, and `NOW` commitment gates;
-- Compass feedback triage narrowed to evidence intake and review routing;
-- Compass delivery resolver uses exact approvals, with a separate legacy NOW path;
-- deterministic delivery-completion watcher for merged PR, production, smoke, lifecycle,
-  receipt, and capacity-change reconciliation;
+- provider-neutral `human-review-workflow` for irreversible actions, with durable create,
+  apply, digest, stale-source, and idempotency rules;
+- Obsidian/Markdown and Compass Decisions review adapters;
+- capacity policy with separate validation and `NEXT` admission rules;
+- Compass feedback triage that acts fully on intake and reports what changed;
+- Compass delivery resolver using exact approvals, with a separate legacy NOW path;
+- delivery-completion watcher for merged PR, production, smoke, lifecycle, receipt, and
+  capacity-change reconciliation;
 - automated regression tests and install dry-run coverage.
 
-Still to implement against live systems:
-
-- verified live runtime installation, dispatch, and notification integrations;
-- a running decision-router watcher rather than skill-level procedure alone;
-- action-capable adapters for teams that explicitly need transactional continuations;
-- prototype generation/publishing adapters;
-- analytics adapters and the adoption/outcome watcher;
-- remaining scheduled flows in Sections 8 and 11.
+Still to implement against live systems: verified runtime installation, dispatch, and
+notification integrations; a running decision-router watcher; action-capable adapters;
+prototype publishing and analytics adapters; the adoption/outcome watcher; remaining flows
+in Sections 8 and 11.
 
 ## 1. The Target System
 
-The playbook describes a complete learning-and-delivery loop:
-
 ```text
-Strategy and metrics
-  → desired outcome
-  → signals
-  → opportunities
-  → focus decision
-  → solution directions
-  → assumptions
-  → experiments
-  → investment decision
-  → roadmap commitment
-  → design and delivery
-  → release and adoption
-  → outcome movement
-  → new signals and changed beliefs
+Strategy and metrics → desired outcome → signals → opportunities → focus
+  → solution directions → assumptions → experiments → investment decision
+  → roadmap placement → design and delivery → release and adoption
+  → outcome movement → new signals and changed beliefs
 ```
 
-The scheduled system should perform all recurring collection, synthesis, preparation,
-maintenance, verification, and safe execution in that loop. It should not convert every
-step into an autonomous decision. The agent does the work needed to make a judgment easy;
-the human supplies the few judgments that determine product direction or authorize an
-irreversible commitment.
-
-The operating pattern is:
+The scheduled system performs the collection, synthesis, preparation, maintenance,
+prioritization, and verification in that loop, and makes the reversible calls itself:
+focus, direction, horizon placement, statuses, scores. The human reads the trail and
+corrects it, and supplies approval only where an action cannot be undone.
 
 ```text
-Agent observes → Agent prepares → Human decides → Agent resumes → System learns
+Agent observes → Agent acts → Agent reports → Human corrects → System learns
 ```
 
 ## 2. The Asynchronous Review Rule
 
-An unattended job must never stay alive waiting for feedback.
+An unattended job never stays alive waiting for feedback, and one pending decision never
+blocks unrelated work.
 
-When a workflow reaches a human gate, it must:
+When a workflow reaches an irreversible step (or a decision the human explicitly asked to
+own), it:
 
-1. Persist everything it has completed to the authoritative provider.
-2. Create a durable review request with a stable ID.
-3. Put a compact review packet in the configured `review_requests` provider.
-   When that provider is `compass_decisions`, use the resolved decision provider for the
+1. Persists everything it has completed to the authoritative provider.
+2. Creates or reuses a durable review request with a stable ID and a recommended default.
+   When `review_requests` is `compass_decisions`, the resolved decision provider holds the
    request and immutable response. The result is tracking-only: it does not expand the
    workflow's pre-existing authority or automatically apply any action.
-4. Notify the reviewer with a direct link to that packet.
-5. For tracking-only providers, record `NO_ACTION`; for action-capable providers, record
-   the exact continuation each response authorizes.
-6. End the current run successfully with status `AWAITING_DECISION`.
+3. Notifies the reviewer with a direct link.
+4. Records `NO_ACTION` (tracking-only) or the exact continuation per response
+   (action-capable).
+5. Marks that item `AWAITING_DECISION` and continues the rest of the run.
 
-A separate **decision router** detects the completed review through its provider adapter
-and validates the exact request and revision. A tracking-only provider records and reports
-the outcome but never starts the next workflow step. Only an action-capable adapter
-may apply and dispatch a declared continuation under the workflow's existing authority.
-The original run is never resumed from memory.
-
-This separation prevents four common failures:
-
-- a scheduled thread consumes time or tokens while waiting;
-- the reviewer receives a vague request and has to reconstruct the context;
-- the agent loses state between the question and the response;
-- a late response applies to product state that has since changed.
+A separate **decision router** detects the completed review and validates the exact
+request and revision. A tracking-only provider records and reports
+the outcome but never starts the next workflow step. Only an action-capable adapter may
+apply and dispatch a declared continuation under the workflow's existing authority. The
+original run is never resumed from memory.
 
 ## 3. `pm-config.md` as the Routing Spine
 
-The system must not hardcode where reviews, decisions, prototypes, notifications, or
-scheduled runs live. `pm-config.md` remains the routing manifest for the whole product
-workflow.
+The system never hardcodes where reviews, decisions, prototypes, notifications, or runs
+live. `pm-config.md` is the routing manifest.
 
-The existing **integration routing** resolves authoritative product-state capabilities:
-`vision`, `research_capture`, `insights`, `okrs`, `ost`, `experiments`, `roadmap`,
-`delivery`, and `reporting_archive`. Those semantics do not change.
-
-Add a separate **workflow routing** section for the services that move work between those
-authoritative product objects and the humans or agents operating on them:
+**Integration routing** resolves authoritative product capabilities: `vision`,
+`research_capture`, `insights`, `okrs`, `ost`, `experiments`, `roadmap`, `delivery`, and
+`reporting_archive`. **Workflow routing** resolves the services that move work between
+those objects and the people or agents operating on them:
 
 | Workflow capability | Owns |
 |---|---|
@@ -152,22 +118,15 @@ authoritative product objects and the humans or agents operating on them:
 | `prototype_artifacts` | Versioned storyboards, wireframes, interactive previews, and spikes |
 | `product_analytics` | Metric definitions, exposure data, adoption, and outcome measurements |
 
-These are separated from the nine product capabilities because a team's product stack and
-workflow stack vary independently. Compass may own the OST while Obsidian presents review
-requests, Geode runs schedules, Slack sends notifications, a repo hosts prototypes, and a
-warehouse supplies metrics. Another team may do all of those things inside one platform.
+Product and workflow stacks vary independently: Compass may own the OST while Obsidian
+presents review requests, a runtime schedules jobs, a chat tool notifies, a repository
+hosts prototypes, and a warehouse supplies metrics.
 
 ### Profiles and overrides
 
-Use two independently named profiles:
-
-- `integration_profile` selects defaults for the nine authoritative product capabilities.
-- `workflow_profile` selects defaults for workflow execution and human interaction.
-
-Both support per-capability overrides. This avoids a combinatorial profile such as
-`compass-obsidian-geode-slack-vercel` for every possible tool mixture.
-
-Contract-v2 `pm-config.md` shape:
+`integration_profile` selects product-capability defaults; `workflow_profile` selects
+workflow defaults. Both support per-capability overrides, avoiding one profile per tool
+combination. Contract-v2 shape:
 
 ```yaml
 contract_version: 2
@@ -185,7 +144,7 @@ workflow_connections:
     workspace: personal
   review_requests:
     provider: obsidian
-    root: Products/Compass/Review Inbox
+    root: Products/Example/Review Inbox
     role: inbox
   decision_records:
     provider: compass_docs
@@ -221,36 +180,23 @@ delivery_completion_policy:
   capacity_change_dispatch: roadmap_steward
 ```
 
-Connections store stable IDs, paths, and secret-manager references—never credentials.
-Resolved providers should be expanded into an auditable table, just like the current
-product capability table.
-
-`portfolio_policy` configures decision constraints, not product state. A missing limit or
-capacity signal is not permission to grow a horizon: the steward may recommend validation,
-but it must not promote work to `NEXT` or `NOW` until the configured admission evidence is
-available.
+Connections store stable IDs, paths, and secret-manager references, never credentials.
+`portfolio_policy` holds checks the steward applies when it moves items, not approval
+gates. When capacity or ordering data is missing, the item stays where it is and the steward
+creates a task to get the data. It never waits on a human for a horizon move.
 
 ### Resolution rules
 
-Before a flow reads, writes, schedules, notifies, or publishes, it must:
+Before a flow reads, writes, schedules, notifies, or publishes, it reads `pm-config.md`,
+resolves product and workflow capabilities through profiles plus overrides, loads the
+adapters, and verifies each state-owning capability resolves to exactly one provider. A
+required provider that is unavailable fails visibly for that flow only; never silently
+create Markdown or switch notification channels unless a configured fallback permits it.
+`notifications` may declare ordered channels because channels own no product state; any
+secondary representation of other capabilities is labeled `inbox`, `export`, `cache`, or
+`snapshot`.
 
-1. Read `pm-config.md`.
-2. Resolve its required product capabilities through `integration_profile` plus
-   `provider_overrides`.
-3. Resolve its required workflow capabilities through `workflow_profile` plus
-   `workflow_overrides`.
-4. Load the corresponding provider adapters.
-5. Verify each state-owning capability resolves to exactly one provider.
-6. Fail visibly if a required provider is unavailable; never silently create Markdown or
-   switch notification channels unless the configured fallback explicitly permits it.
-
-The `notifications` capability may declare ordered delivery channels because channels do
-not own product state. `review_requests`, `decision_records`, and `prototype_artifacts`
-each resolve to one canonical provider. Any secondary representation is labeled `inbox`,
-`export`, `cache`, or `snapshot`.
-
-Each skill or scheduled flow declares its dependencies so preflight is mechanical rather
-than inferred from prompt wording:
+Each flow declares its dependencies so preflight is mechanical:
 
 ```yaml
 requires:
@@ -260,15 +206,12 @@ optional:
   workflow_capabilities: [prototype_artifacts, product_analytics]
 ```
 
-An optional capability may reduce fidelity—for example, falling back from a clickable
-prototype to an inline storyboard—but it may not change the underlying methodology or
-write product state somewhere else. A required capability that cannot resolve blocks only
-that flow and produces a visible configuration error.
+An optional capability may reduce fidelity (an inline storyboard instead of a clickable
+prototype) but may not change methodology or write product state elsewhere.
 
 ### Provider adapter contracts
 
-Domain flows own methodology; adapters own persistence and tool mechanics. A flow asks for
-capabilities, not brands.
+Domain flows own methodology; adapters own persistence and tool mechanics.
 
 | Adapter | Minimum operations |
 |---|---|
@@ -279,483 +222,253 @@ capabilities, not brands.
 | Automation runtime | `schedule`, `dispatch`, `gate`, `retry`, `get_run_status` |
 | Product analytics | `resolve_metric`, `read_baseline`, `read_current`, `read_exposure` |
 
-Examples of valid review-request adapters include Obsidian notes, Compass-native review
-objects, Jira/JPD approval issues, Linear issues, or another configured task system. Every
-adapter preserves stable identity and immutable human response history. Tracking-only
-adapters use `NO_ACTION`; continuation semantics apply only to action-capable adapters.
+Valid review-request adapters include Obsidian notes, Compass-native objects, tracker
+approval issues, or another configured task system. Every adapter preserves stable identity
+and immutable response history. Tracking-only adapters use `NO_ACTION`; continuation
+semantics apply only to action-capable adapters.
 
-### Obsidian adapter example
-
-When `review_requests` resolves to Obsidian, it is a labeled human-facing inbox—not a
-second source of product truth. Each note contains stable links or IDs back to the
-authoritative product objects.
-
-```text
-<configured review root>/
-  Pending/
-  Decided/
-  Expired/
-```
-
-After a response is applied, the authoritative product state and configured immutable
-decision record hold the result; the Obsidian note becomes a readable receipt.
+When `review_requests` resolves to Obsidian, it is a labeled inbox (`Pending/`,
+`Decided/`, `Expired/` under the configured root), not a second source of truth; the
+authoritative state and decision record hold the result.
 
 ## 4. Review Request Contract
 
-Every human gate produces a structured review request.
+Every irreversible step produces a structured request:
 
 ```yaml
 review_id: REV-YYYYMMDD-NNN
-artifact_type: concept-directions
+artifact_type: branch-cleanup
 product: Example Product
 status: pending # pending | decided | superseded | expired
 created_at: 2026-08-29T09:00:00-04:00
-requested_by: solution-studio
+requested_by: roadmap-steward
 reviewer: product-owner
 source_provider: compass
 source_ids:
-  opportunity_id: "..."
-  solution_ids: ["...", "...", "..."]
+  solution_ids: ["...", "..."]
 source_version: "updatedAt value or content hash"
 decision_due: 2026-09-02
 risk: medium
-recommended_option: B
-decision: "" # approve-A | approve-B | approve-C | revise | defer | reject
+recommended_option: archive
+decision: "" # archive | keep | defer
 decision_note: ""
 decided_at: ""
 continuation:
-  approve-A: design-experiment-for-solution-A
-  approve-B: design-experiment-for-solution-B
-  approve-C: design-experiment-for-solution-C
-  revise: regenerate-concepts-with-feedback
+  archive: archive-listed-solutions
+  keep: close-with-no-state-change
   defer: close-with-no-state-change
-  reject: archive-proposed-solutions
 ```
 
-For action-capable adapters, the decision router must reject or reissue a decision when
-`source_version` no longer matches and applying the same review twice must produce no
-duplicate objects or transitions. A tracking-only router reads the exact current revision,
-reports the outcome, and stops without applying anything.
+For action-capable adapters the router rejects or reissues a decision whose
+`source_version` no longer matches, and applying a review twice produces no duplicate
+objects or transitions. A tracking-only router reads the current revision, reports the
+outcome, and stops.
 
 ## 5. Review Packet Design
 
-The reviewer should be able to make the ordinary decision in under five minutes. A
-review request is not a status report and should not be a wall of generated prose.
+A reviewer should decide in under a minute or two. Every packet begins with the decision
+as one sentence, why now, the recommended default and its strongest reason, the options
+(only when there is a real comparison), the minimum evidence, and what happens after each
+response. Expose uncertainty: what is missing and what would change the recommendation.
 
-Every packet begins with:
-
-1. **Decision needed:** one sentence phrased as a choice.
-2. **Why now:** what triggered the request and what stalls without it.
-3. **Recommendation:** the agent's recommendation and its strongest reason.
-4. **Options:** two or three genuinely different choices shown side by side.
-5. **Evidence:** the smallest set of quotes, metrics, and links needed to inspect the
-   recommendation.
-6. **Consequences:** what the system will do after each choice.
-7. **Response controls:** approve an option, request a revision, defer, or reject.
-
-The packet must expose uncertainty rather than hide it. It should say what evidence is
-missing, which assumption is most dangerous, and what would change the recommendation.
-
-### Notification behavior
-
-- Use the configured `notifications` adapter; the review flow must not assume Geode,
-  Obsidian, email, Slack, or any other delivery channel.
-- Send one notification when the request is created, containing the decision, due date,
-  recommendation, and a direct link.
-- Send one reminder near the due date if it remains pending.
-- Roll overdue low- and medium-risk requests into a weekly decision digest rather than
-  repeatedly interrupting the reviewer.
-- Escalate an overdue high-risk request once through the configured channel.
-- Never interpret silence as approval.
-- Use a safe default on expiry: leave product state unchanged and mark the request
-  `expired` or `deferred`.
+Notifications go through the configured adapter: one on creation, one reminder near the
+due date, a digest for overdue low- and medium-risk requests, and one escalation for an
+overdue high-risk request. Silence never approves the irreversible step; on expiry, leave
+state unchanged and mark the request `expired` or `deferred`. Reversible work around it
+continues regardless.
 
 ## 6. Early-Idea Concept and Prototype Loop
 
-Early ideas should not arrive as bare titles asking, "Should we build this?" Before asking
-for direction, the system should turn a promising opportunity into reviewable alternatives.
-
-### Trigger
-
-Run the concept loop when:
-
-- an opportunity meets the evidence bar and becomes `PRIORITIZED`;
-- a reviewer explicitly asks for solution exploration;
-- new evidence materially changes an active solution set; or
-- a coverage-gap health check (weekly OST caretaker, OKR health review, or scheduled
-  audit) finds an opportunity, KR, or fixed cohort item with **zero** solutions. This is
-  the same preparation work as the first case — the opportunity already cleared its
-  evidence bar or the KR already exists; a coverage gap just means nobody generated
-  candidates yet. Treat it with the same urgency as a fresh `PRIORITIZED` transition, not
-  as backlog.
-
-Do not run it for a single weak signal. Weak ideas remain opportunities to validate, not
-features to visualize.
-
-**Generating these candidate directions never requires the human gate below.**
-Producing three concept directions — even for a coverage gap that has sat unnoticed for a
-week — is discovery preparation, exactly like the Agent-prepares column throughout Section
-7. It is authorship, not selection. The human gate exists for *choosing* a direction, not
-for permitting the agent to draft one. An agent that reads "no automatic NOW/NEXT
-admission" or "not a prioritization act" as license to leave a coverage gap unaddressed
-has misread the boundary — go generate the candidates, then open the review for the
-selection decision.
-
-### Agent preparation
-
-The **solution studio** produces three concept directions. They must be meaningfully
-different, not cosmetic variations of one design:
+Early ideas should not stall as bare titles. When an opportunity becomes `PRIORITIZED`,
+new evidence materially changes an active solution set, or a health check finds an
+opportunity or KR with **zero** solutions, the **solution studio** produces three
+meaningfully different directions:
 
 - **Minimum intervention:** the smallest change that could improve the outcome.
 - **Recommended direction:** the best balance of value, evidence, risk, and effort.
 - **Assumption challenger:** a direction based on a different belief about the problem.
 
-For each direction, prepare:
+For each: customer before/after, the cheapest prototype that makes it inspectable, scope,
+outcome connection, evidence, riskiest assumption, cheapest test, delivery shape, and
+tradeoff. A weak single signal gets a tagged-weak opportunity and cheap validation, not a
+full concept set.
 
-| Element | Required content |
-|---|---|
-| Customer experience | A short before/after scenario or storyboard |
-| Prototype | The cheapest artifact that makes the experience inspectable |
-| Scope | What is included and explicitly excluded |
-| Outcome connection | How this direction could move the active KR |
-| Evidence | Signals supporting the direction, with source links |
-| Riskiest assumption | The belief most likely to invalidate the direction |
-| Cheapest test | How to test that assumption before full build |
-| Delivery shape | Rough systems affected and relative effort, not a false estimate |
-| Tradeoff | What this direction gains and gives up |
+Prototype fidelity, lowest that makes the choice real: narrative scenario → storyboard or
+wireframe → clickable prototype → concierge simulation → technical spike (only when
+feasibility is the main risk). A prototype is a decision aid, never evidence of validation.
 
-### Prototype fidelity ladder
+The agent then **picks the direction to test**, creates or selects the `IDEA` solution,
+starts assumption mapping, and reports the choice with its reasoning. The human can
+redirect with an edit. A direction choice becomes a review only when the human has asked to
+own it or the test itself is irreversible (it contacts customers, recruits participants, or
+spends money). Choosing a direction does not validate the solution or authorize production
+code.
 
-Use the lowest fidelity that makes the decision real:
+## 7. Where a Human Is Needed
 
-1. **Narrative scenario** — for workflow or policy choices.
-2. **Storyboard or annotated wireframe** — for interaction and information choices.
-3. **Clickable prototype** — when navigation, sequence, or usability is the uncertainty.
-4. **Concierge simulation** — when value, trust, or operational behavior is uncertain.
-5. **Technical spike** — only when feasibility is the principal risk.
+Everything in the loop is reversible except the categories below. Before any of them, run
+an **execution-collision preflight** across systems declared in `pm-config.md` (product
+records, active runs, tasks, branches, PRs, previews, recent decisions) so the request is
+real rather than a duplicate of work already under way.
 
-A prototype is a decision aid or experiment artifact, not evidence that the solution has
-been validated. Visual polish must never substitute for customer evidence.
-
-### Concept review packet
-
-The concept packet asks:
-
-> Which direction should we test—not build—against this opportunity?
-
-It shows the three directions side by side, embeds or links each prototype, states the
-recommended direction, and offers these responses:
-
-- **Choose A/B/C:** authorize experiment design for that direction.
-- **Combine:** name the elements to combine; return to the studio for one revised concept.
-- **Revise:** give a constraint or concern; regenerate without changing product state.
-- **Need evidence:** send the opportunity back to validation with the named evidence gap.
-- **Defer:** retain the opportunity and close the current request.
-- **Reject all:** archive the proposed solutions with the review rationale; preserve the
-  underlying opportunity unless it was also invalidated.
-
-Choosing a direction creates or selects an `IDEA` solution and starts assumption mapping.
-It does not validate the solution, add it to `NOW`, or authorize production code.
-
-## 7. Human Gates
-
-Human review is required where the decision changes direction, commits meaningful
-resources, or makes a consequential interpretation.
-
-**These gates govern selection, not authorship.** Every row's "Agent prepares" column —
-generating outcome candidates, drafting opportunity framings, writing solution concepts,
-naming assumptions — is discovery and drafting work the agent should do without waiting
-for permission, including when the reason it's doing so is closing a coverage gap found
-during an audit rather than a fresh evidence-bar transition. The gate applies to the
-"Human decides" column: which candidate to admit, which direction to fund, which item to
-commit. An agent that declines to draft candidates because a downstream admission is
-gated has confused the two columns — that confusion is exactly what leaves an opportunity
-or KR sitting at zero solutions instead of a reviewable set of alternatives.
-
-Before opening any gate, run an **execution-collision preflight** across every system
-declared in `pm-config.md`: product records, active automation/agent runs, delivery tasks,
-branches and pull requests, previews, and recent decisions. A candidate is not undecided
-if an agent or team is already implementing a direction, even when Compass still labels
-its Opportunity or Solutions as exploratory. In that case, reconcile and link the active
-work instead of manufacturing a duplicate decision request. Record the checked sources
-and timestamp so scheduled runs can distinguish a real decision from stale product state.
-
-The final column below is a proposed continuation, not an effect of every decision. A
-tracking-only provider records `NO_ACTION` and stops; only an action-capable adapter may
-perform the listed continuation under independently established authority.
-
-| Gate | Agent prepares | Human decides | Continuation |
+| Irreversible category | Typical PM step | Agent does first | Human decides |
 |---|---|---|---|
-| Outcome selection | 3–5 outcome candidates, metric quality check, prior-cycle evidence | Which outcome to pursue or reconfirm | Create/update desired outcome and KR links |
-| New opportunity admission | Evidence packet, customer-voice framing, dedup analysis | Admit, merge, keep validating, or reject | Update OST |
-| Focus opportunity | Comparative scorecard and strongest counterargument | Which opportunity receives solution work | Start solution studio |
-| Concept direction | Three prototypes/plans and tradeoffs | Which direction to test | Map assumptions |
-| Portfolio admission | Several non-exclusive ideas with evidence and tradeoffs | Which ideas deserve preservation | Add each approved idea to `LATER`; prioritize later |
-| Validation authorization | Prototype or experiment plan, riskiest assumption, success and kill thresholds | Whether to spend discovery effort gathering evidence | Dispatch validation while the candidate remains in `LATER` |
-| Riskiest assumption | Ranked assumption map | Confirm the assumption whose failure kills the direction | Design cheapest experiment |
-| Experiment launch | Method, participants, success/kill/iterate thresholds | Approve the test and thresholds | Move experiment to `RUNNING` |
-| Experiment conclusion | Raw data, threshold comparison, interpretation, dissenting explanation | Proceed, kill, or iterate when judgment is material | Update assumption and solution |
-| Building investment | Complete gate assessment and delivery outline | Authorize `VALIDATED` and roadmap eligibility | Create roadmap recommendation |
-| `NEXT` admission | Validated candidate compared with the complete ordered `NEXT` queue, capacity limit, and explicit displacement when full | Admit at an exact rank, defer, or replace named work | Apply the exact queue change; create no delivery work |
-| `NOW` commitment | Capacity, KR coverage, dependencies, design readiness | Commit delivery resources | Add/promote to `NOW` |
-| Design direction | 2–3 implementation approaches, ADR/spec, prototype when useful | Approve technical/product approach | Start implementation |
-| Release | Verification evidence, rollout and rollback plan | Merge/release for material-risk work | Deploy or stage rollout |
-| Scale/stop | Adoption, reliability, and outcome movement | Expand, iterate, rollback, or stop | Update roadmap and learning record |
+| Destroying something | Archive/delete opportunities, solutions, feedback, or roadmap items; kill a branch with work; overwrite data | Evidence and a list of exactly what goes | Archive/delete, keep, or defer |
+| Reaching outside the team | Customer replies, surveys, announcements, published release notes, stakeholder updates, experiments that users see | Complete draft and audience | Send, revise, or hold |
+| Shipping to production | Merge and release | Verification evidence, rollout and rollback plan | Merge/release under its own authority |
+| Spending money or human time | Paid tools, research participants, assigning delivery work to people | Cost, timebox, and expected learning | Approve, trim, or decline |
 
-Low-risk, reversible maintenance can be pre-authorized by policy. The policy must name the
-allowed action, scope, risk ceiling, and rollback path; the agent may not infer standing
-approval merely because similar work was previously approved.
+The agent decides and reports everything else, including outcome candidates, opportunity
+admission and focus, concept direction, riskiest assumption, experiment design and
+interpretation, investment-stage changes, `LATER`/`NEXT`/`NOW` placement, design approach,
+and scale/iterate/stop recommendations. The human corrects by editing.
 
-Tracking-only reviews record and report `NO_ACTION`, then stop. They do not require
-application-oriented selection or continuation fields. Only action-capable reviews declare
-`selection_mode: single | multiple`: single-select gates choose one mutually exclusive
-continuation, while multi-select gates accept a subset and apply each approved continuation
-idempotently under existing authority. Only an action-capable adapter may create or reuse a
-`LATER` roadmap candidate as that declared effect. It never silently means `NEXT`, `NOW`, or
-permission to build. Validation continuation likewise leaves the candidate in `LATER`.
-Approval to validate likewise leaves the candidate in `LATER` for action-capable adapters.
-`NEXT` means validated and capacity-ranked, not merely interesting or inexpensive to test.
+Tracking-only reviews record and report `NO_ACTION`, then stop. They carry no application
+fields. Only action-capable reviews declare
+`selection_mode: single | multiple`: single-select chooses one exclusive continuation;
+multi-select accepts a subset and applies each approved continuation idempotently under
+existing authority. For owner-requested roadmap reviews, a `LATER` candidate never silently
+means `NEXT`, `NOW`, or permission to build. Approval to validate likewise leaves the candidate in `LATER`.
+`NEXT` means validated and capacity-ranked, not merely interesting.
 
-Action-capable reviews also separate **responding** from **finalizing**. While one is open,
-the review steward re-reads the complete parent object and all child options, discussions,
-and Plans; it incorporates comments, links newly added options, revises packets, and
-preserves approvals without applying them. A parent `updatedAt` is not a sufficient version
-check because child creation may not update it. For an action-capable adapter, downstream
-mutation begins only after an explicit finalization event and a current authority check.
-Tracking-only reviews never enter this application path.
-
-For the legacy no-schema Compass pilot, no new control is required: `IN_REVIEW` means the reviewer
-is still editing, and the human transition to `DONE` is the explicit finalization event.
-The resolver applies a `DONE` Product Review Task only when it has no application receipt;
-successful retries are no-ops, and failures move the Task to `BLOCKED`.
+Action-capable reviews separate **responding** from **finalizing**: while open, the steward
+re-reads the full parent and child objects (a parent `updatedAt` misses child changes) and
+revises the packet; mutation begins only after an explicit finalization event and a
+current authority check. In the legacy no-schema Compass pilot, the human move to `DONE`
+is that event; applied Tasks carry a receipt, retries are no-ops, and failures go
+`BLOCKED`.
 
 ## 8. Scheduled and Event-Driven Flows
 
-All flows below first resolve their required product and workflow capabilities from
-`pm-config.md`. These responsibilities share one recurring
-[product-operations checklist](skills/scheduled-product-operations/SKILL.md); every area
-is checked on every run. Existing event subscriptions can provide faster reactions;
-reconcile their work and receipts before acting to avoid duplicates.
+All flows resolve capabilities from `pm-config.md` and share one
+[product-operations checklist](skills/scheduled-product-operations/SKILL.md); every area is
+checked every run. Event subscriptions can react faster; reconcile their receipts first.
 
 ### Event-driven flows
 
 | Flow | Trigger | Output or action |
 |---|---|---|
-| Signal capture | New transcript, feedback item, support export, review, or sales note | Attributed raw signal in the resolved provider |
+| Signal capture | New transcript, feedback, support export, review, or sales note | Attributed raw signal in the resolved provider |
 | Interview synthesis | Transcript arrival | Needs, quotes, intensity, contradictions, OST mappings |
 | Decision router | Review request changes to `decided` | Tracking-only: validated outcome report and stop; action-capable: validated transition and dispatch under existing authority |
-| Experiment result collector | Result source updates or experiment end date arrives | Raw results and threshold comparison |
-| Delivery completion watcher | PR, CI, preview, production deployment, or merge changes state | Reconcile linked Tasks, launch/shipped state, Solution state, receipts, smoke findings, and capacity event |
-| Adoption watcher | Feature exposure or metric event becomes available | Early adoption and safety assessment |
+| Experiment result collector | Result source updates or end date arrives | Raw results, threshold comparison, recorded interpretation |
+| Delivery completion watcher | PR, CI, preview, deployment, or merge changes state | Reconcile Tasks, launch/shipped state, Solution state, receipts, smoke findings, capacity event |
+| Adoption watcher | Exposure or metric event available | Early adoption and safety assessment |
 
-### Operational checks — every run
+### Checks on every run
 
 | Flow | Purpose |
 |---|---|
-| Feedback triage | Empty the open-feedback queue through linking, candidate creation, or closure |
-| Experiment watchdog | Flag missing kill conditions, overdue results, and stalled experiments |
-| Delivery orchestrator | Work only on human-approved or policy-authorized `NOW` items |
-| Delivery completion catch-up | Reconcile stale linked Tasks left `IN_REVIEW` when a webhook or prior run was missed |
-| Review notifier | Deliver new requests and the single due-date reminder |
-| Automation health | Detect failed sources, credentials, stale locks, duplicate claims, and partial writes |
+| Feedback triage | Empty the open-feedback queue: link, create and score opportunities, adjust priority, close noise |
+| Signal synthesis | Cluster passive feedback; update the signal ledger and evidence counts |
+| OST caretaker | Fix weak, duplicate, stale, contradictory, and unmapped branches; **generate candidates immediately for any opportunity or cohort item with zero solutions** |
+| Experiment watchdog | Add missing kill conditions, chase overdue results, close stalled experiments |
+| Roadmap steward | Rebalance `NOW/NEXT/LATER` against validation, capacity, and KR coverage, **including stale or wrong-objective KR links and solutions that shipped without a status update** |
+| Delivery orchestrator | Work only on approved or policy-authorized items under the delivery workflow's rules |
+| Delivery completion catch-up | Reconcile Tasks left `IN_REVIEW` after a missed webhook |
+| Outcome learner | Connect releases to adoption and outcome movement |
+| Stakeholder update | Keep the evidence-linked draft current; sending it is a review request |
+| Review notifier and digest | Deliver new requests, the single reminder, and the digest |
+| Automation health | Detect failed sources, credentials, stale locks, duplicate claims, partial writes |
+
+Strategic health (pruning and reranking, outcomes and OKRs, discovery-health metrics,
+calibration, retrospectives) is also inspected every run; cycle boundaries and reporting
+deadlines shape the action, never the inspection. Human rituals may keep their cadence.
 
 ### Delivery completion watcher
 
-This flow is implemented by `skills/delivery-completion-watcher`. It is triggered by
-delivery-provider events and backed by the shared run's stale-`IN_REVIEW` inspection.
-
-1. The delivery resolver writes reciprocal linkage when it opens a PR: PR URL, repository,
-   branch, commit, Roadmap Item ID, Solution ID, and Task IDs in both Compass and the PR.
-2. The watcher observes the human merge; it never merges. Required checks, production
-   deployment, and a feature-specific production smoke test must all pass before completion.
-3. When launch work remains, the item enters `LAUNCHING`; otherwise verified work becomes
-   `SHIPPED`, linked Tasks become `DONE`, and the Solution becomes `SHIPPED` when supported.
-4. Unsupported provider mutations are explicit warnings in the receipt, not fabricated
-   success. Blocking smoke failures move the Task to `BLOCKED`; non-blocking findings create
-   one deduplicated linked Feedback item while allowing the verified release to complete.
-5. A capacity-releasing transition dispatches the before/after counts to the roadmap
-   steward. It never promotes a replacement item.
-6. The idempotent completion receipt makes retries no-ops or resumptions of missing actions,
-   never duplicate comments, feedback, or state transitions.
-
-### Discovery and reporting checks — every run
-
-| Flow | Purpose |
-|---|---|
-| Signal synthesis | Cluster passive feedback and update the signal ledger and evidence counts |
-| OST caretaker | Find weak, duplicate, stale, contradictory, and unmapped branches, **and every opportunity or fixed-cohort item with zero solutions — flag gap age, and generate candidates immediately rather than deferring** |
-| Opportunity recommender | Prepare comparative focus decisions when evidence changed materially |
-| Roadmap steward | Check `NOW/NEXT/LATER`, validation gates, capacity, and KR coverage, **including stale/wrong-objective KR links (roadmap items still wired to a KR from before a mid-cycle KR was created) and independent release-evidence reconciliation for solutions that may have shipped without their status updating** |
-| Outcome learner | Connect releases to adoption and outcome movement |
-| Decision digest | Present all pending decisions in priority order with direct links |
-| Stakeholder update | Inspect reporting commitments and material changes; prepare or update the evidence-linked draft for review |
-
-### Strategic health checks — every run
-
-Inspect pruning and reranking needs, solution/assumption health, outcomes and OKRs,
-discovery-health metrics, roadmap alignment, calibration, retrospective needs, and
-automation-policy health on every run. Actual cycle boundaries and agreed reporting
-deadlines inform what action is useful; they never exclude an area from inspection.
-Human weekly or quarterly rituals may remain, with preparation driven by current evidence.
+Implemented by `skills/delivery-completion-watcher`. The resolver writes reciprocal
+PR/Roadmap/Solution/Task linkage. The watcher observes the human merge (it never merges);
+required checks, production deployment, and a feature smoke test must pass before
+completion. Remaining launch work means `LAUNCHING`; otherwise verified work becomes
+`SHIPPED` with Tasks `DONE`. Unsupported mutations are warnings in the receipt. Blocking
+smoke failures move the Task to `BLOCKED`; non-blocking findings create one deduplicated
+Feedback item. A capacity-releasing transition dispatches before/after counts to the
+roadmap steward. The idempotent receipt makes retries no-ops.
 
 ### Roadmap steward admission algorithm
 
-The roadmap steward makes two separate recommendations and never collapses them:
+The steward applies these outcomes itself and reports each with before/after counts:
 
-1. **Validation recommendation.** For an interesting but unvalidated candidate, keep or
-   create the deduplicated `LATER` item and propose the cheapest evidence-gathering work.
-   With a tracking-only provider, approval is reported and never dispatches a prototype or
-   experiment. Only an action-capable adapter may dispatch validation under existing authority,
-   and it does not change the horizon.
-2. **Delivery-queue admission.** Consider a candidate for `NEXT` only after the linked
-   Solution is `VALIDATED` and the evidence, active-KR connection, dependencies, and owner
-   are current. Compare it with every existing `NEXT` item, not with an abstract quality
-   threshold.
-3. **Capacity enforcement.** Read `portfolio_policy` from `pm-config.md`. If `NEXT` is at
-   its limit, the review must name the item or items displaced to `LATER` and the proposed
-   rank of the candidate. Missing capacity or ordering data means keep `LATER`.
-4. **Commitment enforcement.** A `NEXT → NOW` recommendation requires a configured slot,
-   delivery owner, dependencies, current collision preflight, and the separate `NOW`
-   commitment gate. It may never be an automatic consequence of validation.
+1. **Validation.** For an interesting but unvalidated candidate, keep or create the
+   deduplicated `LATER` item and start the cheapest evidence-gathering work. Validation
+   does not change the horizon.
+2. **`NEXT` admission.** Admit only after the linked Solution is `VALIDATED` and evidence,
+   KR connection, dependencies, and owner are current. Rank it against every existing
+   `NEXT` item, not an abstract threshold.
+3. **Capacity.** Read `portfolio_policy`. If `NEXT` is at `next_limit`, displace the
+   lowest-ranked items to `LATER` and name them in the report. Missing capacity or ordering data means keep `LATER`.
+4. **`NOW`.** Move `NEXT → NOW` when a slot, owner, dependencies, and a current collision
+   preflight exist. Assigning human delivery capacity is a review request; delivery itself
+   starts only under the delivery workflow's own authority.
 
-The allowed roadmap-steward outcomes are therefore `VALIDATE_IN_LATER`, `KEEP_LATER`,
-`ADMIT_TO_NEXT_AT_RANK`, `REPLACE_NEXT_ITEM`, `COMMIT_TO_NOW`, `DEFER`, and `ARCHIVE`.
-Every applied queue change records the before/after counts, rank, displaced IDs, decision
-ID, and an idempotent receipt.
+Outcomes: `VALIDATE_IN_LATER`, `KEEP_LATER`, `ADMIT_TO_NEXT_AT_RANK`, `REPLACE_NEXT_ITEM`,
+`COMMIT_TO_NOW`, `DEFER`, and `ARCHIVE` (archive is destructive, so it becomes a review
+request). Every queue change records counts, rank, displaced IDs, reasoning, and an
+idempotent receipt.
 
 ## 9. Workflow State Machine
 
-The coordinator should move durable work through explicit states:
-
 ```text
-READY
-  → RUNNING
-  → AWAITING_DECISION
-  → DECIDED
-  → READY_FOR_CONTINUATION
-  → RUNNING
-  → COMPLETE
-
-Any state may also move to:
-  BLOCKED_DATA | SUPERSEDED | EXPIRED | FAILED_RETRYABLE | FAILED_FINAL
+READY → RUNNING → COMPLETE
+RUNNING → AWAITING_DECISION → DECIDED → READY_FOR_CONTINUATION → RUNNING   (irreversible steps only)
+Any state → BLOCKED_DATA | SUPERSEDED | EXPIRED | FAILED_RETRYABLE | FAILED_FINAL
 ```
 
-Each transition records:
+Each transition records trigger and run ID, source IDs and versions, artifacts read and
+created, changes made, reasoning and confidence, any decision and reviewer, next
+transition, and errors and retry count. Idempotency keys combine product, workflow, source
+object, source version, and transition; a retry never manufactures a second opportunity,
+experiment, roadmap item, or review request.
 
-- trigger and run ID;
-- source object IDs and versions;
-- artifacts read and created;
-- changes made;
-- recommendation and confidence;
-- decision and reviewer, when applicable;
-- next eligible transition;
-- missing data, errors, and retry count.
+## 10. Changes to the Existing Compass Jobs
 
-Jobs use idempotency keys based on product, workflow, source object, source version, and
-transition. A retry must continue or safely repeat the same transition, never manufacture
-a second opportunity, experiment, roadmap item, or review request.
+**Compass Feedback Triage** acts fully: capture, classify, deduplicate, link evidence,
+create opportunities (single-source ones tagged weak), score, move opportunity status, and
+adjust existing roadmap priority when evidence warrants, then report. Closing noise is a
+status change; deletion is a review request. Intake alone does not create solutions,
+solution plans, or new roadmap items from a single fresh signal; that belongs to solution
+and roadmap work. Bugs follow the configured severity policy.
 
-## 10. Changes Required to the Existing Compass Jobs
-
-### Compass Feedback Triage
-
-Keep autonomous capture, classification, deduplication, evidence linking, and obvious-noise
-closure. Change the roadmap behavior:
-
-- new actionable feedback may create an `EXPLORING` opportunity;
-- do not create **solution plans** (`add_solution_plan` — the implementation approach for a
-  solution already selected for delivery) for an opportunity that has not met the
-  opportunity evidence bar. This does not restrict creating **solutions** (`add_solution` —
-  candidate directions to choose between); authoring candidates is discovery prep and stays
-  allowed regardless of evidence-bar status. Don't let the similar names collapse two
-  different gates into one;
-- do not promote a solution to `NEXT` from intake alone;
-- when evidence becomes sufficient, create an opportunity-admission or focus review request;
-- bugs may follow a separate severity policy, but feature ideas follow the discovery gates.
-
-### Compass Auto-Resolver
-
-Rename or narrow it to **Compass Delivery Resolver**. It may select only:
-
-- a `NOW` item with recorded human approval; or
-- a low-risk maintenance item covered by an explicit standing policy.
-
-Remove these autonomous fallbacks:
-
-- promoting a clear-looking `NEXT` item to `NOW`;
-- turning raw or planned feedback directly into `NOW` work;
-- treating implementation clarity as evidence of product validation.
-
-When `NOW` is empty, the resolver should end cleanly. The roadmap steward—not the delivery
-resolver—should prepare the next investment or commitment decision.
+**Compass Delivery Resolver** (formerly Auto-Resolver) builds only approved or
+policy-authorized items under its own rules. It does not turn raw feedback into `NOW` work
+or treat implementation clarity as validation. When nothing is authorized it ends cleanly;
+the roadmap steward keeps the queue moving.
 
 ## 11. Minimum Viable Implementation
 
-Build the system in this order:
-
-### Phase 1 — Stop waiting
-
-1. Define the review-request schema plus the first configured `review_requests` and
-   `decision_records` adapters.
-2. Add `AWAITING_DECISION` as a normal terminal result for scheduled runs.
-3. Add the decision router with version checking and idempotency.
-4. Add direct-link notifications and a weekly decision digest.
-
-### Phase 2 — Make early ideas reviewable
-
-1. Add the solution-studio workflow.
-2. Generate three-direction concept packets.
-3. Support narrative, wireframe, clickable, concierge, and spike artifacts.
-4. Route the selected direction to assumption mapping and experiment design—not delivery.
-
-### Phase 3 — Protect investment gates
-
-1. Separate roadmap stewardship from delivery resolution.
-2. Separate validation authorization in `LATER` from capacity-ranked `NEXT` admission.
-3. Require a `VALIDATED` Solution, exact rank, and named displacement when `NEXT` is full.
-4. Require evidence of Building-gate approval and an available configured slot before `NOW`.
-5. Remove raw-feedback and `NEXT` auto-promotion from the delivery resolver.
-6. Add experiment and outcome monitoring.
-
-### Phase 4 — Close the learning loop
-
-1. Connect release exposure and product metrics to shipped solutions and KRs.
-2. Produce scale/iterate/stop review packets.
-3. Add monthly calibration and quarterly outcome-reset flows.
-4. Audit whether agent recommendations and human decisions produced the expected outcomes.
+1. **Never wait.** Review schema and first adapters for irreversible steps;
+   `AWAITING_DECISION` as a per-item result; decision router with version checks and
+   idempotency; direct-link notifications and digest.
+2. **Make early ideas concrete.** Solution studio, three-direction concepts, the fidelity
+   ladder, and agent-selected directions routed to assumption mapping.
+3. **Keep the roadmap honest.** Separate stewardship from delivery; validation in `LATER`
+   apart from capacity-ranked `NEXT`; `VALIDATED` plus exact rank and named displacement;
+   experiment and outcome monitoring.
+4. **Close the learning loop.** Connect exposure and metrics to shipped solutions and KRs,
+   scale/iterate/stop recommendations, calibration, and an audit of whether agent choices
+   and human corrections produced the expected outcomes.
 
 ## 12. Success Measures
 
-The system is working when:
-
-- no unattended run remains open waiting for a reply;
-- every pending decision is visible through the configured review provider;
-- a reviewer can understand and answer a normal request in under five minutes;
-- every decision shows exactly what will happen next;
-- early ideas arrive with inspectable alternatives, not just feature titles;
-- no production build begins without the required evidence and approval trail;
-- expired or ignored requests leave product state safe and unchanged;
-- every shipped solution traces backward to an experiment, assumption, opportunity, and
-  desired outcome;
-- every shipped solution is later assessed for adoption and outcome movement;
-- the system gets quieter when there is no work instead of generating empty status turns;
-- no opportunity, KR, or fixed-cohort item sits at zero solution coverage for more than a
-  week without a flagged review — a metric stuck at 0/N is a coverage defect until proven
-  otherwise, not a sign the team needs to try harder;
-- no roadmap item silently rolls up to a stale or wrong-objective KR, and no Objective
-  quietly ends up with zero roadmap items actually serving it;
-- no solution that has verifiably shipped still occupies `NOW` capacity because its status
-  was never reconciled — release verification is a routine check, not a one-off rescue.
+- No unattended run stays open waiting for a reply, and no reversible work waits on a human.
+- Every run reports what changed, why, and what was assumed.
+- Every pending request is irreversible, carries a recommendation, and is answerable in a
+  minute or two.
+- No production build begins without the required evidence and approval trail.
+- Every shipped solution traces back to an experiment, assumption, opportunity, and outcome,
+  and is later assessed for adoption and outcome movement.
+- The system gets quieter when there is no work.
+- No opportunity, KR, or cohort item sits at zero solutions for more than a week.
+- No roadmap item rolls up to a stale or wrong-objective KR, and no shipped solution still
+  occupies `NOW` because its status was never reconciled.
 
 ## 13. Open Design Questions
 
-1. Which workflow profiles and provider adapters should ship in the first supported set?
-2. Should reviewer routing be a property of `review_requests`, a separate workflow
-   capability, or a decision-type policy within `pm-config.md`?
-3. Which exact actions qualify for standing approval, and what risk ceiling applies?
-4. Which prototype generators and hosting surfaces should each initial adapter support?
-5. Should one person own every product gate, or should review routing vary by decision type?
-6. What is the maximum number of options and pending requests the weekly digest may show
-   before the system must consolidate them?
-7. Which workflow routing fields belong in contract version 2 versus product-local adapter
-   configuration?
+1. Which workflow profiles and adapters ship in the first supported set?
+2. Is reviewer routing a property of `review_requests`, a separate capability, or a
+   decision-type policy in `pm-config.md`?
+3. How should the human flag decisions they want to own, per product or per decision type?
+4. Which prototype generators and hosting surfaces should initial adapters support?
+5. How many pending requests may the digest show before it must consolidate them?
+6. Which workflow routing fields belong in contract v2 versus product-local configuration?

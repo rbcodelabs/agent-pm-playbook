@@ -108,7 +108,7 @@ outcome automatically applies another action.
 
 ## Portfolio Policy
 
-<!-- These are workflow constraints, not a duplicate of roadmap state. Tune them to the team's real capacity. -->
+<!-- Workflow constraints, not a duplicate of roadmap state. Tune them to the team's real capacity. -->
 
 ```yaml
 portfolio_policy:
@@ -121,8 +121,12 @@ portfolio_policy:
   require_capacity_data_for_now: true
 ```
 
-If a required limit or capacity signal is unknown, scheduled stewards may prepare
-validation work in `LATER` but must not infer permission to add work to `NEXT` or `NOW`.
+Guards are checks the agent applies when it moves items, not human approvals. When a
+check fails, the agent closes the gap itself where it can: it picks the displacement or sets a target date. Otherwise it moves the item and
+flags the risk, such as an unvalidated solution in `NEXT`. The one exception is a missing
+owner for `NOW`: assigning a person commits their time, so it goes to review. The item can
+still move, with the owner left unassigned. Missing capacity or ordering data is the only
+check that holds an item in place; the agent opens a task to collect it.
 
 ## Approved Build Policy (opt-in)
 

@@ -60,15 +60,19 @@ support for experiment design and Layer 4 metacognition baked into its system pr
 
 ## Escalation Rules
 
-**Proceeds autonomously:**
-- Transcript synthesis, signal clustering, first-draft experiment briefs
-- OST structure suggestions, user story drafts, weekly update drafts
+Act, then report. See [[Autonomy Policy]].
 
-**Always surfaces and asks:**
-- Proposing a new OST opportunity branch (adds to strategy)
-- Recommending killing an existing branch (strategic write-off)
-- Prioritization decisions (which opportunity to pursue)
-- Interpreting ambiguous experiment results with strategic implications
+**Proceeds autonomously (reversible):**
+- Synthesis, clustering, new OST opportunities and restructuring
+- Solution candidates, experiment design, and result interpretation
+- Prioritization, including moving roadmap items between Later, Next, and Now
+- Stories, briefs, status changes, and weekly updates
+
+**Asks first (irreversible):**
+- Killing or archiving a branch that has work behind it
+- Anything customers or external stakeholders will see
+- Shipping to production
+- Spending money or committing someone else's time, such as recruiting participants
 
 ---
 

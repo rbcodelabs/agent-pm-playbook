@@ -98,7 +98,9 @@ Each solution has a set of underlying assumptions. Experiments test the *riskies
 ### Overview
 
 Each OST layer has a corresponding agent workflow. The pattern is always:
-**Agent surfaces options / synthesizes inputs → PM applies judgment → OST gets updated**
+**Agent synthesizes inputs and updates the OST → reports what changed → PM corrects where judgment differs**
+
+Agents ask first only before irreversible actions ([[Autonomy Policy]]).
 
 ---
 
@@ -109,7 +111,7 @@ Each OST layer has a corresponding agent workflow. The pattern is always:
 **Agent workflow:**
 1. Feed in: business strategy doc, current metrics, stakeholder asks, previous cycle retrospective
 2. Prompt: *"Synthesize these inputs into 3-5 candidate product outcomes. Each should be specific, measurable, and owned by the product team. Flag any stakeholder asks that are outputs rather than outcomes."*
-3. PM selects and refines one outcome. Agents help stress-test: *"What behaviors would change if we hit this outcome? What wouldn't change? Is this a leading or lagging indicator?"*
+3. Agent recommends one as the working outcome with its reasoning; PM refines it. Agents stress-test: *"What behaviors would change if we hit this outcome? What wouldn't change? Is this a leading or lagging indicator?"*
 
 **Quality gate:** The team can describe the outcome without looking at a doc, and can immediately tell you whether any given work item connects to it.
 
@@ -129,14 +131,14 @@ Each OST layer has a corresponding agent workflow. The pattern is always:
 **Agent workflow — interview synthesis:**
 1. Paste or upload transcript
 2. Prompt: *"Extract every customer need, pain, desire, or friction point from this transcript. For each, note: exact quote, context, intensity (high/med/low), and whether it maps to an existing opportunity in our OST or represents something new."*
-3. PM reviews output, maps to OST, adds new branches where warranted
+3. Agent maps the output to the OST, adds new branches tagged by confidence, and reports the changes
 
 **Agent workflow — bulk signal triage:**
 1. Feed batch of support tickets / reviews
 2. Prompt: *"Cluster these by underlying customer problem (not feature request). For each cluster, write a one-sentence opportunity statement in the customer's voice. Estimate frequency and intensity. Flag any that contradict our current OST bets."*
-3. PM triages: which clusters warrant adding to the OST?
+3. Agent adds the clusters to the OST (weak ones tagged weak) and reports what changed
 
-**Quality gate:** Every opportunity node in the OST has at least 2 independent evidence sources. Single-source opportunities are marked `[weak evidence]` and prioritized for validation.
+**Quality gate:** Opportunity nodes aim for 2+ independent evidence sources. Single-source opportunities are still added, marked `[weak evidence]`, and prioritized for validation.
 
 ---
 
@@ -149,7 +151,7 @@ Each OST layer has a corresponding agent workflow. The pattern is always:
 2. Agent helps build a simple opportunity scorecard (Reach × Frequency × Importance vs. Risk)
 3. Agents can also play devil's advocate: *"Make the strongest case that Opportunity B matters more than Opportunity A, based only on the evidence we have."*
 
-**PM judgment required:** The scorecard is an input, not a decision. PMs must ask: "What would I need to believe for this to be our top opportunity? Do I believe that?"
+**Judgment check:** The scorecard informs the call; it doesn't make it. The agent sets the focus opportunity and states what it would need to believe for that to be right. The PM challenges that belief if it's wrong.
 
 ---
 
@@ -160,7 +162,7 @@ Each OST layer has a corresponding agent workflow. The pattern is always:
 **Agent workflow:**
 1. Describe the opportunity clearly (customer voice, evidence, outcome context)
 2. Prompt: *"Generate 8-10 possible solutions for this opportunity. Include: obvious solutions, analogies from adjacent industries, minimum viable approaches, technology-first ideas, and at least 2 that challenge our assumptions about how the product should work."*
-3. PM + team reviews options, eliminates clear non-starters, selects 3-5 to map assumptions for
+3. Agent eliminates clear non-starters and selects 3-5 to map assumptions for; the team adjusts the selection if needed
 4. Second prompt: *"For each of these solutions, what are the 3 riskiest assumptions that must be true for it to work? Which assumption is most likely to be wrong?"*
 
 **Quality gate:** Before moving forward with any solution, the team has explicitly named and ranked its top 3 assumptions.
@@ -174,7 +176,7 @@ Each OST layer has a corresponding agent workflow. The pattern is always:
 **Agent workflow:**
 1. List assumptions from 3.4
 2. Prompt: *"For the riskiest assumption, design the cheapest experiment that would give us meaningful signal within [1-2 weeks]. Include: what we're testing, how we'll test it, what success looks like, what failure looks like, and what we'll do in each case."*
-3. Agent drafts the experiment brief; PM pressure-tests the success metrics
+3. Agent designs the experiment; PM pressure-tests the success metrics
 4. Experiments are logged in the OST as children of their solution node
 
 **Types of experiments (smallest to largest):**
@@ -392,21 +394,21 @@ Keep it under 150 words. Plain language, no jargon.
 
 ## 7. Quality Gates & Anti-Patterns
 
-### The Five Questions (ask before any build)
+### The Five Questions (answer before any build)
 1. What outcome does this serve?
 2. What customer opportunity does this address — and what's the evidence?
 3. Have we explored at least 3 solutions to this opportunity?
 4. What's the riskiest assumption, and have we tested it?
 5. What's our kill condition — what result would make us stop?
 
-If you can't answer all five, you're not ready to build.
+Agents answer these themselves and show the answers. Where one has no good answer, write the best guess, mark it as the riskiest assumption, and make testing it the next step.
 
 ### Anti-Patterns to Watch
 | Anti-pattern | What it looks like | Fix |
 |---|---|---|
 | **Stakeholder OST** | Opportunities written as disguised feature requests | Rewrite every opportunity in the customer's voice, trace to a quote |
 | **Solution-first discovery** | Running interviews to validate a pre-decided solution | Start interviews with "tell me about your experience with X" — no leading |
-| **Single-source opportunities** | One interview = new OST branch | Require 2+ independent evidence sources before acting |
+| **Single-source certainty** | One interview treated as a validated branch | Add it, tag it weak, and prioritize finding a second independent source |
 | **Orphaned solutions** | Solutions with no parent opportunity | Delete or find the opportunity. If you can't, it's a feature request. |
 | **Zombie experiments** | Tests running with no clear success metric | Every experiment needs a written kill/proceed condition before it starts |
 | **Agent hallucination acceptance** | Taking agent synthesis at face value | Always trace agent-identified opportunities back to actual quotes |

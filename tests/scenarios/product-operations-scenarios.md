@@ -16,22 +16,22 @@ and no competing worker. Current sources contain:
   yesterday; no results are available. No authority to declare success exists.
 - R-101: a separate validated solution's NOW item, with current explicit delivery
   authority and an approved design, no active claim and no existing PR.
-- D-101: a pending concept-direction review with its creation notification already sent;
-  its reminder date has not arrived.
+- D-101: a pending concept-direction review the product owner explicitly asked to own,
+  with its creation notification already sent; its reminder date has not arrived.
 - No other changed records; all other required sources are readable.
 
 Walkthrough: create every checklist row. Inspect assigned tasks and authorized delivery,
 dispatch R-101 to one dedicated worker, then continue the remaining health inventory.
-Link F-101 to O-101 through Compass intake, then re-read the affected evidence for OST
-triage. Record X-101's missing results and next collection action; preserve its conclusion.
+Link F-101 to O-101 through Compass intake, re-read the affected evidence, and re-score or
+reprioritize O-101 directly if the evidence now warrants it, reporting the change. Record X-101's missing results and next collection action; preserve its conclusion.
 Retain D-101 as awaiting decision, without a duplicate request or notification. The
 independent R-101 can proceed through the resolver's authority/claim checks to one tested
 PR. Its task stays IN_REVIEW; completion needs later merge and production evidence.
 The consolidated checklist includes the remaining healthy areas and unresolved X-101/D-101.
 
-The insight → O-101 → S-101 → X-101 chain is evidence, not automatic roadmap or delivery
-authority. A later roadmap recommendation requires the roadmap skill's investment and
-capacity gates. All product mutations use Compass; reviews use Compass Decisions;
+The insight → O-101 → S-101 → X-101 chain is evidence the run may use to reprioritize the
+roadmap itself, a reversible change it reports. It is not delivery authority, and horizon
+moves still respect the roadmap skill's capacity rules. All product mutations use Compass; reviews use Compass Decisions;
 run progress uses the runtime. No local product folder is created.
 
 ## Repeat the run without source changes
@@ -50,7 +50,8 @@ Both queues are empty. An experiment has fresh results and a monthly outcome che
 stale metric data, even though this run occurs midweek and midmonth.
 
 Walkthrough: neither empty queue gates the job. Every row is inspected; experiment
-results receive threshold comparison and any required human conclusion review. Outcomes
+results receive threshold comparison and a recorded interpretation, reported in the
+checklist. Outcomes
 surface the stale measurement and its next action. No area is marked "not due" based on
 weekday or month. An explicit approved build is inspected despite empty NOW. Dispatch one dedicated worker
 before the remaining health inventory, leaving roadmap admission separate.
@@ -87,7 +88,7 @@ without a queue gate. Re-read to verify. Repeating installation reuses its ID. T
 contains no installation action, cadence filtering, or child schedule creation.
 
 For migration, supply two known product jobs plus one unrelated job. Record the exact
-targets and obtain replacement authority, pause only those targets, and check active runs
+targets, pause (not delete) only those targets, and check active runs
 before enabling the replacement. Preserve settings for rollback. Reusing a gated job
 clears its old gate. A failed replacement restores prior settings; uncertain ownership
 does not authorize pausing an unrelated job. A timezone mismatch or unavailable runtime

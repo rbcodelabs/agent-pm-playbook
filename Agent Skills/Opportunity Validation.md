@@ -34,7 +34,7 @@ Bad entry (agent accepts it):
 > Evidence: "Raised in Q1 planning by VP of Enterprise Sales."
 
 Good agent response:
-> "This opportunity is written in solution language ('a centralized dashboard') and sourced from a single internal stakeholder, not a customer. I can't add it to the OST as-is. Two paths forward: (1) If this pain is real, let's find customer evidence — do you have support tickets or interview quotes where admins describe struggling to manage permissions? (2) If you want to keep this as a stakeholder ask in scope, I'd suggest logging it separately as a constraint or input, not an opportunity. How do you want to proceed?"
+> "This opportunity is written in solution language ('a centralized dashboard') and sourced from a single internal stakeholder, not a customer. So I've done two things. I logged the dashboard as a stakeholder input, not an opportunity. I also added a reframed opportunity, 'Admins struggle to see and change who has access across teams', tagged `[stakeholder-origin — verify independence]`. I searched support tickets and found 2 that fit, now linked, so it's medium confidence. If this doesn't match what Sales meant, tell me and I'll adjust."
 
 **Scenario: An opportunity is rewritten correctly but only has one source**
 
@@ -43,7 +43,7 @@ Bad entry (agent accepts it):
 > Evidence: Quote from user interview on 2026-04-12.
 
 Good agent response:
-> "The framing is solid — this is customer voice describing a behavioral problem. But I'm seeing only one source: one interview quote from April 12. That's a signal, not yet a pattern. I'll tag this as `[weak evidence — single source]` and hold it out of the main tree until we have a second independent source. Do you want to add it to a 'signals to investigate' backlog, or do you have other evidence I'm missing?"
+> "The framing is solid — this is customer voice describing a behavioral problem. But I'm seeing only one source: one interview quote from April 12. That's a signal, not yet a pattern. I've added it to the tree tagged `[weak evidence — single source]` and added a question on multi-day gaps to next week's interview guide. A second independent source would make it medium."
 
 **The contrast in tree health over time:**
 
@@ -112,4 +112,4 @@ Teams with strong opportunity validation have OSTs where every branch can point 
 
 [[Bias Detection]] — Opportunity validation checks individual entries; bias detection asks whether the collection of validated opportunities is systematically skewed toward certain user segments or research methods.
 
-[[Escalation Calibration]] — Determines when the agent escalates a validation dispute to the PM vs. handles it autonomously. Opportunity entry is high-stakes; the agent should almost always escalate rather than self-resolve ambiguous cases.
+[[Escalation Calibration]] — Opportunity entry is reversible, so the agent resolves ambiguous cases itself: it reframes, tags confidence, adds the opportunity, and reports the call so the PM can correct it.

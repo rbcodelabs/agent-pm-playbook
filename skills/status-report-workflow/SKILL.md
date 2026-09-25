@@ -19,6 +19,10 @@ chainTo:
 
 # Status Report Workflow
 
+## Autonomy
+
+Act, then report ([Autonomy Policy](../../Autonomy%20Policy.md)). Generate the report without asking; list inferred context under Data Gaps. Sharing it outside the team needs a human first.
+
 ## Provider Preflight
 
 Before reading sources, read `pm-config.md` and resolve `roadmap`, `okrs`, `ost`, `insights`, `delivery`, and `reporting_archive` independently through the named profile and overrides, following the installed [integration-routing contract](../integration-routing/SKILL.md). Confirm exactly one authoritative provider per capability. Read each provider directly and write only to the resolved archive. A report is a labeled `snapshot`, never product state.
@@ -34,22 +38,21 @@ supplies only operational context:
 
 | Parameter | Example | Required |
 |---|---|---|
-| Product name | `Golden Wealth` | Yes |
-| Product slug | `golden-wealth` | Yes |
-| Repo path | `~/projects/golden-wealth-app` | Only when engineering activity is requested |
+| Product name | `Acme Notes` | Yes |
+| Product slug | `acme-notes` | Yes |
+| Repo path | `~/projects/acme-notes` | Only when engineering activity is requested |
 | Deployment platform | `vercel` \| `amplify` \| `electron-local-build` \| `none` | Yes |
 | Traffic/usage source | configured path/provider or `none` | Yes |
 
 Provider identifiers, workspace/team IDs, and archive paths come from resolved
-provider connections. Ask when required operational context is missing.
+provider connections. Infer missing operational context from the config or repository and state the assumption.
 
 ### Legacy compatibility inputs
 
 Only when `pm-config.md` has no integration profile may an existing job supply
 legacy `Roadmap/OKR source`, `Issue tracker`, Compass workspace, and vault-folder
-parameters. Label this the legacy compatibility path, infer and display a
-proposed capability map, and mark ambiguity `NOT VERIFIED`. Do not require or
-prefer these parameters for routed configs.
+parameters. Label this path legacy, show the inferred capability map, mark
+ambiguity `NOT VERIFIED`, and proceed. Routed configs ignore these parameters.
 
 ## Step 1 — Determine the report window
 
@@ -69,7 +72,8 @@ report includes discovery health. Query each authoritative provider once.
 - **JPD or another provider:** use its native goals, insights, discovery, and
   roadmap objects for the capabilities it owns.
 - **Unavailable provider:** mark only that capability **DATA UNAVAILABLE
-  (reason)** and continue. One missing source must not suppress other sections.
+  (reason)** and continue. One missing source must not suppress other sections; a
+  partial honest snapshot beats a skipped or fabricated report, attended or not.
 
 For each KR, report current versus target and stale check-ins. For roadmap,
 report horizon/status movement. For OST/insights, report material opportunity,
@@ -117,13 +121,6 @@ Activity, Delivery Snapshot, Traffic/Usage Metrics, Data Gaps, and Follow-ups.
 
 ## Step 7 — Provider-specific archive follow-through
 
-When the resolved archive is Obsidian, follow vault rules: link the report from
-today's daily note and sync only when its folder is vault-bridged. For every
-other archive provider, use its native link/navigation behavior. Do not create a
-daily note or vault path merely because older runs did so.
-
-## Unattended runs
-
-If any source is unreachable, write remaining sections and mark the affected
-capability **DATA UNAVAILABLE (reason)**. A partial honest snapshot beats a
-skipped or fabricated report.
+For an Obsidian archive, link the report from today's daily note. Other archives
+use their native linking. Don't create a daily note or vault path just because
+older runs did.
