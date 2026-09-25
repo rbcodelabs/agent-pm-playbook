@@ -8,7 +8,9 @@ validation authorization, or exact `NEXT` admission**. It tests whether the
 Compass Tasks `IN_REVIEW` experience is the right human inbox before Compass gains native
 ReviewRequest, ReviewOption, and DecisionRecord models. It does not satisfy the immutable
 generic decision-record contract and must not be used for `NOW`, release, security,
-billing, or destructive gates.
+billing, or destructive gates. These are reversible decisions the agent normally makes
+and reports itself (see the [Autonomy Policy](../../../Autonomy%20Policy.md)); use this
+adapter only when the human has explicitly asked to own one.
 
 ## Candidate preflight: execution collision
 

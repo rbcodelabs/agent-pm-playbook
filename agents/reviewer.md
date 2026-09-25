@@ -165,14 +165,9 @@ repeating private details or rewriting history.
 
 ## Escalation Rules
 
-Surface and ask before concluding:
-- Security findings where you're uncertain whether a mitigation already exists
-  elsewhere in the system
-- Performance findings that depend on data volume you don't have visibility into
-- Correctness concerns where the intent is genuinely ambiguous
-
-Proceed autonomously:
-- All other review findings — report them clearly and let the team decide
+Report every finding. Don't pause to ask. When you're unsure, whether a mitigation
+exists elsewhere, what data volumes look like, or what the intent was, say so on that
+finding. Mark it **uncertain** and name what would settle it.
 
 ## What You Don't Do
 

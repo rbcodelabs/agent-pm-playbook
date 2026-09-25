@@ -155,19 +155,19 @@ Every output should carry an implicit or explicit signal about certainty — and
 Good form: *"This cluster is based on 3 interviews and 12 support tickets — I'd treat it as a medium-confidence opportunity. Two more independent sources would make it strong."*
 
 **[[Escalation Calibration]]**
-Knowing when to proceed autonomously vs. pause and ask the PM. The goal is not to ask about everything (useless) or nothing (dangerous) but to develop an accurate sense of which decisions carry enough consequence or ambiguity that human judgment is required.
+Knowing when to act and when to ask. The test is reversibility, not importance: see [[Autonomy Policy]]. An agent that asks about reversible work is as miscalibrated as one that deletes records without asking — it just fails more quietly.
 
-Low-stakes (agent proceeds autonomously):
-- Transcript synthesis
-- Signal clustering
-- First-draft experiment briefs
-- Weekly update drafts
+Act, then report (reversible):
+- Synthesis, clustering, and new OST opportunities
+- Solution candidates, experiment design, and result interpretation
+- Prioritization, including moving roadmap items between Later, Next, and Now
+- Status changes, linking, scoring, and drafts
 
-High-stakes (agent surfaces and asks):
-- Proposing a new OST opportunity
-- Recommending killing an existing branch
-- Selecting which opportunity to prioritize
-- Interpreting ambiguous experiment results with strategic implications
+Ask first (irreversible):
+- Destroying something: deleting or archiving records, killing a branch with work behind it
+- Reaching outside the team: anything customers or external stakeholders see
+- Shipping to production
+- Spending money or committing someone else's time
 
 **[[Bias Detection]]**
 Noticing when the discovery corpus is skewed — only churned users, only power users, only inbound support, only one team's research — and flagging it before synthesis produces a false pattern. The agent should know what's missing from the evidence base, not just what's in it.
@@ -193,7 +193,8 @@ This is the hardest skill to develop and the one most worth investing in. An age
 
 ### Evaluation signals
 - Does the agent tag its outputs with confidence levels?
-- Does it ask clarifying questions on high-stakes decisions vs. low-stakes ones?
+- Does it act on reversible work without asking, and ask only before irreversible actions?
+- When context is missing, does it infer and state the assumption instead of stopping?
 - Does it notice and flag gaps in the evidence corpus (what's missing, not just what's there)?
 - Does it surface issues proactively, without being asked?
 
@@ -213,7 +214,7 @@ Different use cases demand different skill mixes.
 | Assumption mapping | Produces full assumption maps unprompted | Co-creates with PM, prompts for missing assumptions |
 | Experiment design | Proposes lean tests with kill conditions | Drafts briefs, PM pressure-tests metrics |
 | [[Confidence Tagging]] | Consistent across all outputs | Surfaces uncertainty on high-stakes outputs |
-| [[Escalation Calibration]] | Strong — low false-positive rate on asks | Defers frequently; flags when it's uncertain |
+| [[Escalation Calibration]] | Asks only before irreversible actions | Acts on reversible work and reports it; states assumptions where uncertain |
 | [[Bias Detection]] | Notices corpus gaps in real time | Flags gaps when PM shares evidence base |
 | Context retention | Persistent memory across the product lifecycle | Session-aware; references prior work when surfaced |
 
@@ -229,8 +230,8 @@ A rough progression for evaluating an agent's development across these skills:
 |---|---|
 | **L1 — Reactive** | Responds to prompts accurately. Synthesizes when asked, clusters when asked. No proactive surfacing. |
 | **L2 — Structured** | Applies OST framing consistently. Distinguishes customer voice from product voice. Flags obvious anti-patterns. |
-| **L3 — Critical** | Tags confidence levels. Detects contradictions. Asks clarifying questions on high-stakes outputs. Designs lean experiments unprompted. |
-| **L4 — Calibrated** | Surfaces issues before asked. Notices corpus gaps. Self-critiques outputs. Escalates accurately with low noise. Maintains OST integrity over time. |
+| **L3 — Critical** | Tags confidence levels. Detects contradictions. States its assumptions instead of stalling on them. Designs lean experiments unprompted. |
+| **L4 — Calibrated** | Surfaces issues before asked. Notices corpus gaps. Self-critiques outputs. Acts on reversible work and escalates only irreversible actions. Maintains OST integrity over time. |
 
 Most current agents with good system prompting can reach L2-L3. L4 requires persistent memory, strong system prompt design, and deliberate self-critique loops.
 
@@ -243,9 +244,9 @@ If you want to move your current agent setup up the maturity curve:
 - [ ] Add a self-critique step to your synthesis prompts: *"Now flag any opportunity statements above that use solution language instead of customer language."*
 - [ ] Add a confidence requirement to all clustering outputs: *"For each cluster, note how many sources support it and whether you'd call it strong, medium, or weak evidence."*
 - [ ] Build a tree health check prompt (run bi-weekly): *"Review this OST and identify any zombie experiments, orphaned solutions, or opportunities with no linked evidence."*
-- [ ] Add an escalation rule to your agent instructions: *"Always ask before proposing to add a new opportunity branch. Always ask before recommending to kill an existing one."*
+- [ ] Add the autonomy rule to your agent instructions: *"Act, then report. Ask first only before deleting or archiving work, contacting anyone outside the team, shipping to production, or spending money or someone else's time."*
 - [ ] Build the null hypothesis habit into experiment design prompts: *"Include a kill condition — what result would cause us to abandon this solution entirely?"*
 
 ---
 
-*The goal is not an agent that works harder. It's an agent that knows what it doesn't know.*
+*The goal is an agent that gets real product work done and knows what it doesn't know. It states uncertainty and keeps moving.*

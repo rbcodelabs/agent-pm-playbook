@@ -1,10 +1,16 @@
 # Progressive Investment Framework
 
-> How to move from idea to scale with confidence — and how to hold the line when pressure comes from both directions.
+> How to move from idea to scale with confidence, spending only what each question needs.
 
 **Part of:** [[Agentic PM Playbook]]
 **Last updated:** 2026-05-15
-**See also:** [[Discovery Health Metrics]], [[PM Tool Integration Guide]], [[Signal Ledger]]
+**See also:** [[Discovery Health Metrics]], [[PM Tool Integration Guide]], [[Signal Ledger]], [[Autonomy Policy]]
+
+> [!note] Gates are assessments, not blocks
+> Per the [[Autonomy Policy]], agents check these criteria honestly and act on the result:
+> advance the stage when criteria are met; when they are not, say so plainly, record the
+> risk, and draft the cheapest test. Archiving a solution, recruiting participants, and
+> spending money still need a human.
 
 ---
 
@@ -32,7 +38,7 @@ Each stage has a specific question it answers, a minimum evidence threshold to e
 | **Building** | Does the built thing move the metric? | 1+ validated experiment connected to the active outcome | One focused team, time-boxed sprint | Real usage data showing metric movement (not test data) |
 | **Scaling** | Should we invest to grow this? | Metric movement confirmed with real users | Full investment | Metric target reached, or strategic decision to extend the cycle |
 
-The investment ceiling is as important as the evidence threshold. You do not put a sprint team on something that is still in Testing. You do not run a fake door on something that has already been validated by real users. Each stage has a natural boundary on what it is appropriate to spend.
+The investment ceiling matters as much as the evidence threshold: a sprint team on something still in Testing, or a fake door on something real users already validated, both spend the wrong amount.
 
 ---
 
@@ -136,16 +142,11 @@ Listed from cheapest to most expensive. Always use the cheapest experiment that 
 
 ## The Transition Gates
 
-### One build approval for opted-in agent delivery
-
 Projects using `approved_build_policy` reuse one explicit human approval of exact scope
 through a tested PR with the [Approved Build workflow](skills/build-authorization/SKILL.md).
-Prepare investment evidence and design before requesting approval; preserve uncertainty.
-The approved plan is reused during delivery without another design gate. Capacity governs
-roadmap admission separately. Merge and production retain separate authority.
-Projects that have not opted in retain their existing investment and roadmap gates.
+Merge and production retain separate authority.
 
-These are the specific checkpoints that move you from one stage to the next. Each one is a question that must be answered — not a gut check, not a consensus vote.
+Each checkpoint is a question answered with evidence, not a gut check or a consensus vote. An unmet criterion is reported as a named risk with the cheapest next test; it does not freeze the work.
 
 ### Exploring → Validating
 
@@ -153,7 +154,7 @@ These are the specific checkpoints that move you from one stage to the next. Eac
 - Is the opportunity expressed in customer language, not solution language?
 - Does it connect to the team's active desired outcome?
 
-If any of these is no: stay in Exploring. Gather more signal.
+If any of these is no, the opportunity is still Exploring. Gather more signal.
 
 ### Validating → Testing
 
@@ -161,16 +162,16 @@ If any of these is no: stay in Exploring. Gather more signal.
 - Have you identified the riskiest assumption the solution depends on?
 - Have you written a kill condition: the specific result that would make you stop?
 
-The kill condition must exist before the test starts. If it does not exist, the test is not ready to run. "We'll evaluate results when they come in" is not a kill condition.
+Write the kill condition before the test starts. "We'll evaluate results when they come in" is not a kill condition; if none exists, draft one.
 
 ### Testing → Building
 
 - Did the riskiest assumption pass the test?
-- Was the kill condition triggered? (If yes, stop. Archive the solution with the reason. Do not proceed.)
+- Was the kill condition triggered? (If yes, say so plainly and recommend archiving the solution with the reason.)
 - Is the solution still connected to the team's active desired outcome?
 - Has the team agreed on what the MVP is — the smallest version that delivers the core value?
 
-If any of these is no: do not move to Building. Either run another test or archive the solution.
+If any of these is no, recommend another test or archiving. Building anyway carries the open assumption as a recorded risk.
 
 ### Building → Scaling
 
@@ -182,13 +183,13 @@ If any of these is no: do not move to Building. Either run another test or archi
 
 ---
 
-## Holding the Line
+## Handling Pressure
 
-Pressure to skip stages comes from two directions and requires two different responses.
+Pressure to skip stages comes from two directions. In both cases, name the tradeoff and offer the faster test; the team decides.
 
 ### Stakeholder pressure (from above)
 
-Stakeholders pushing to ship before validation are usually solving for speed or visibility, not for user value. The conversation that works is not "we're not ready." It is: redirect to the test that gets them an answer faster than a full build.
+Stakeholders pushing to ship are usually solving for speed or visibility. Offer the test that answers faster than a full build.
 
 **When a stakeholder says "just build it":**
 
@@ -206,7 +207,7 @@ Stakeholders pushing to ship before validation are usually solving for speed or 
 
 ### Team pressure (from within)
 
-Engineers who want to build are not wrong — they want to do their jobs well and see real things ship. The conversation that works acknowledges that impulse and redirects it toward the smallest real build.
+Engineers who want to build are not wrong. Point that energy at the smallest real build.
 
 **When an engineer says "let's just build it and see":**
 

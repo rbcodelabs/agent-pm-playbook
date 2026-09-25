@@ -15,7 +15,7 @@ Configure `pm-config.md` as a routing manifest. It is not a duplicate product-st
 
 ## Existing configuration and migration
 
-If `pm-config.md` exists, read it first. For a contract-v2 config, show both profiles, both override maps, and both resolved tables before asking what should change. Contract-v1 routed configs remain valid for product-only flows; offer workflow routing when the user wants scheduling, review, notification, prototypes, or analytics. For a legacy config, infer a proposed product profile/capability mapping from Notes System, Discovery Tool, Issue Tracker, and paths. Show ambiguities and ask for confirmation before writing. Migration updates routing only; it never moves, copies, or deletes live records.
+If `pm-config.md` exists, read it first. For a contract-v2 config, show both profiles, both override maps, and both resolved tables before asking what should change. Contract-v1 routed configs remain valid for product-only flows; offer workflow routing when the user wants scheduling, review, notification, prototypes, or analytics. For a legacy config, infer a proposed product profile/capability mapping from Notes System, Discovery Tool, Issue Tracker, and paths. Resolve ambiguities with the most likely mapping, write it, and list each inference so the user can correct it. Migration updates routing only; it never moves, copies, or deletes live records.
 
 ## Interview
 
@@ -29,9 +29,9 @@ Ask one section at a time:
 6. **Connections:** collect identifiers and credential *locations* only for providers actually resolved. Never place a secret in `pm-config.md`.
 7. **Context:** active cycle, objective, KR, desired outcome, focus opportunity, and focus solution. Store provider-native IDs when available.
 8. **Portfolio policy:** collect positive `now_limit`, `next_limit`, and
-   `concurrent_validation_limit` values plus whether full horizons require explicit
-   displacement. Default the evidence, owner, and capacity guards to `true`; never infer
-   unlimited capacity from a missing answer.
+   `concurrent_validation_limit` values. Default the displacement, evidence, owner, and
+   capacity guards to `true`; they are checks the agent applies and reports when it moves
+   items between horizons, not human approvals. Record an unanswered limit as `unresolved`.
 9. **Delivery completion policy:** collect the production-verification requirement,
    stale-`IN_REVIEW` threshold, release classes that require a launch gate, provider for
    non-blocking smoke-test feedback, unsupported Solution-status behavior, and the
@@ -73,8 +73,8 @@ Write `pm-config.md` from the installed `integration-routing/assets/pm-config-te
 
 - set contract version `2`, both named profiles, both override maps, and both fully expanded resolved-provider tables;
 - include connection sections only for resolved providers;
-- include a complete `portfolio_policy`; unknown limits must be recorded as unresolved and
-  block automated `NEXT`/`NOW` admission rather than becoming implicit infinity;
+- include a complete `portfolio_policy`; record unknown limits as `unresolved` (never implicit
+  infinity; agents hold items in place and open a task to collect the missing data);
 - include a complete `delivery_completion_policy`; production verification defaults to
   required and preview success never counts as production evidence;
 - include paths only for filesystem-owned capabilities;

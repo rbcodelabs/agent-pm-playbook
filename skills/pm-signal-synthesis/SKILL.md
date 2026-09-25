@@ -44,121 +44,83 @@ chainTo:
 
 # PM Signal Synthesis
 
+## Autonomy
+
+Act, then report ([Autonomy Policy](../../Autonomy%20Policy.md)). Clustering, tagging, and applying the results to the tree (adding opportunities, attaching evidence, flagging challenged ones) are reversible: do them and report what changed. Confidence is a label, not a blocker: a single-source signal still becomes an opportunity, tagged `Low`. Missing provenance: infer it from the material, state the assumption in one line, continue. Contacting customers or recruiting participants to fill gaps needs a human first.
+
 ## Provider Preflight
 
-Before reading or writing state, read `pm-config.md` and resolve `research_capture` for inputs and `insights` for synthesized output through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Confirm exactly one authoritative provider per capability. Use each provider's workflow; do not silently create Markdown. Secondary artifacts must be labeled `inbox`, `export`, `cache`, or `snapshot`. For Compass insights, invoke `compass-workflow`, create granular feedback/insight records, and link them to OST objects inline.
+Read `pm-config.md` and resolve `research_capture` for inputs and `insights` for synthesized output through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Use exactly one authoritative provider per capability; label secondary artifacts `inbox`, `export`, `cache`, or `snapshot`. With no config, work from context, name the defaults you used, and offer `pm-setup` at the end. For Compass insights, invoke `compass-workflow`, create granular feedback/insight records, and link them to OST objects inline.
 
 Clustering, confidence, contradiction, and bias rules are invariant. The Signal Ledger format is only the Markdown/Obsidian adapter; otherwise persist provider-native insight records.
 
-You are a specialist in transforming raw product signals into structured,
-OST-ready opportunities. This skill activates when the user has research or
-customer data — interview transcripts, support tickets, NPS responses, sales
-call notes, behavioral data — and needs to extract actionable insights from it.
-
 ## What You Produce
 
-Every synthesis session outputs:
-- Clustered opportunity themes (customer needs, pain points, desires) — not topics
-- Confidence-tagged evidence for each cluster
-- Contradiction flags between signals or against existing OST assumptions
-- OST mapping recommendations (new opportunity, update existing, challenge existing)
-- Proactive questions the team should investigate based on gaps in the data
+- Opportunity clusters framed as customer needs, not topics
+- Confidence-tagged evidence per cluster
+- Contradiction flags between signals or against the existing OST
+- OST changes applied (new, updated, challenged opportunities)
+- Gaps worth investigating next
 
 ## Signal Synthesis Workflow
 
 ### Step 1 — Inventory the Signals
-Before processing anything, ask for:
-- Source type (interviews, support tickets, surveys, behavioral data, sales calls)
-- Volume (how many signals?)
-- Customer segment(s) represented
-- Time window the data was collected
-- Any existing hypotheses or OST opportunities the user wants to test against
+Record source type, volume, segments, time window, and any hypotheses or OST opportunities to test against. Read these from the material and context; state any you inferred. Synthesis without provenance is guessing, so the inventory goes in the output.
 
-Don't skip this — synthesis without provenance is just guessing.
+### Step 2 — Cluster by Underlying Need
+Read all signals before tagging. Group by **underlying customer need**, not surface topic.
 
-### Step 2 — First Pass: Cluster by Underlying Need
-Read all signals before tagging anything. Then group by **underlying customer need**,
-not by surface topic.
+Good: "Customers lose context when switching between tasks" — need: continuity
+Bad: "Customers mentioned the dashboard" — topic, not need
 
-Good cluster: "Customers lose context when switching between tasks" — underlying need: continuity
-Bad cluster: "Customers mentioned the dashboard" — surface topic, not a need
+Per cluster: opportunity statement, signal count and source breakdown, 2–3 verbatims with source type, confidence tag.
 
-For each cluster, produce:
-- Opportunity statement (customer need framing)
-- Signal count and source breakdown
-- 2–3 representative verbatims with source type noted
-- Confidence level (see Confidence Tagging below)
+### Step 3 — Detect Contradictions
+- Same need framed differently → merge, note the variance
+- Conflicting needs across segments → state the segmentation question
+- Signal that invalidates an existing OST opportunity → flag it at the top of the output
 
-### Step 3 — Contradiction Detection
-Actively look for signals that conflict:
-- Same need framed differently by different users → consider merging, note the variance
-- Contradicting needs from different segments → surface the segmentation question explicitly
-- New signal that invalidates an existing OST opportunity → flag urgently, don't bury it
+Surface contradictions; don't smooth them over.
 
-Contradictions are valuable. Don't smooth them over — surface them.
+### Step 4 — Check Longitudinal Patterns
+Against prior rounds: which clusters are strengthening, weakening, or new? Trend direction matters as much as strength.
 
-### Step 4 — Longitudinal Pattern Check
-If the user has prior research rounds, compare:
-- Which clusters are growing stronger across time?
-- Which are weakening or disappearing?
-- Any new themes that didn't appear in earlier rounds?
+### Step 5 — Apply to the OST
+Check for duplicates, then per cluster:
+- **Update existing** — attach the evidence to the known opportunity
+- **Add new** — create the opportunity with its confidence tag
+- **Challenge existing** — record the contradicting evidence on it and flag it; recommend archiving to a human only if the evidence is strong
 
-Trend direction matters as much as current signal strength.
+### Step 6 — Name the Gaps
+Close with the questions the data raises, each with a suggested next step: strong signal with no experiment running, clusters that may be one need, under-represented segments.
 
-### Step 5 — OST Mapping
-For each cluster, recommend one of three actions:
-- **Update existing** — this supports an already-known opportunity, add evidence
-- **Add new** — this is a net-new opportunity not currently in the tree
-- **Challenge existing** — this contradicts or weakens an opportunity already in the tree
+## Interview Transcript Synthesis
 
-Never recommend adding without checking for duplicates first.
-
-### Step 6 — Proactive Questions
-After synthesis, surface the questions the team should be asking but isn't:
-- "You have strong signal about X but no experiment running — what's the blocker?"
-- "These two clusters may be the same underlying need — worth a dedicated session?"
-- "This segment is barely represented — are you systematically missing them?"
-
-## Interview Transcript Synthesis (Detailed)
-
-When given raw transcripts:
-
-1. **Read fully before tagging** — first-pass tagging on a skim misses nuance
-2. **Find moments of friction, workaround, delight, and desire** — these are the signal-rich moments, not opinions or feature requests
-3. **Tag each moment** with: theme, sentiment, segment, and exact verbatim quote
+1. **Read fully before tagging** — skim-tagging misses nuance
+2. **Find friction, workarounds, delight, and desire** — not opinions or feature requests
+3. **Tag each moment** with theme, sentiment, segment, and exact quote
 4. **Cluster tags across transcripts** into opportunity themes
-5. **Weight by frequency AND intensity** — one passionate, specific signal can outweigh three mild mentions
-6. **Note what was NOT said** — absence of expected concerns is data too
+5. **Weight by frequency and intensity** — one specific, intense signal can outweigh three mild ones
+6. **Note what was not said** — absent expected concerns are data
 
 ## Confidence Tagging
 
-Every synthesized opportunity must carry a confidence tag. Never present an insight
-without it.
+Every synthesized opportunity carries a tag.
 
 | Level | Criteria |
 |---|---|
 | **High** | 5+ independent signals, multiple methods, consistent across segments |
-| **Medium** | 2–4 signals, or 5+ but all from a single source or method |
-| **Low** | 1 signal, or signals that all come from the same customer or session |
-| **Hypothesis** | No evidence yet — team assumption, explicitly labeled as such |
+| **Medium** | 2–4 signals, or 5+ from a single source or method |
+| **Low** | 1 signal, or all from the same customer or session |
+| **Hypothesis** | No evidence yet — team assumption, labeled as such |
 
-Low-confidence insights aren't worthless — they're starting points. Label them
-accurately so the team knows what to verify next.
+Low-confidence insights are starting points; the tag tells the team what to verify.
 
 ## Bias Detection
 
-Before finalizing any synthesis, check for these and flag them explicitly:
-
-- **Sampling bias** — Are certain customer types overrepresented in the signals?
-- **Confirmation bias** — Are the clusters shaped to confirm existing hypotheses?
-- **Recency bias** — Are the most recent signals weighted too heavily?
-- **Loudness bias** — Are the most vocal customers drowning out the quiet majority?
-
-If a bias is detected, name it in the output. Don't suppress it.
+Check and name in the output: **sampling** (over-represented customer types), **confirmation** (clusters shaped to fit existing hypotheses), **recency** (recent signals over-weighted), **loudness** (vocal customers drowning out the quiet majority).
 
 ## Standard Output Format
-
-Structure every synthesis output this way:
 
 ```
 ## Signal Synthesis — [Date] — [Source(s)]
@@ -171,7 +133,7 @@ Structure every synthesis output this way:
 - Verbatims:
   - "[exact quote]" — [source type]
   - "[exact quote]" — [source type]
-- OST recommendation: Add new / Update [existing opportunity] / Challenges [existing opportunity]
+- OST action taken: Added / Updated [existing opportunity] / Challenged [existing opportunity]
 
 [repeat for each cluster]
 
@@ -180,11 +142,14 @@ Structure every synthesis output this way:
 ### Contradictions & Flags
 - [Contradiction or urgent flag with explanation]
 
-### Proactive Questions
-- [Question the team should be investigating based on gaps]
+### Gaps and Next Steps
+- [Question raised by the data, with suggested next step]
 
 ### Confidence-Lowering Factors
-- [Any sampling, confirmation, recency, or loudness biases detected]
+- [Sampling, confirmation, recency, or loudness bias detected]
+
+### Assumptions Made
+- [Provenance or context inferred]
 ```
 
 ## References

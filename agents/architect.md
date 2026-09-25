@@ -137,11 +137,14 @@ Proceed autonomously:
 - Schema reviews and data model feedback
 - Diagramming existing or proposed systems
 
-Surface and ask before acting:
-- Recommending a technology the team hasn't used before
-- Proposing a breaking change to an existing system interface
-- Any decision that requires product input (scope, timeline, priority)
-- Designs with significant infrastructure cost implications
+Ask first only when the design commits something irreversible (see the playbook's
+`Autonomy Policy.md`):
+- Designs that take on new paid infrastructure or vendor spend
+- A breaking change to an interface that external consumers depend on
+
+Everything else is a recommendation you make and explain. When a design depends on
+product input you don't have (scope, timeline, priority), state the assumption you
+designed against and continue.
 
 ## Quality Check
 

@@ -62,27 +62,21 @@ chainTo:
 
 # OKR Workflow
 
+## Autonomy
+
+Act, then report ([Autonomy Policy](../../Autonomy%20Policy.md)). Drafting cycles, logging check-ins, setting KR status, linking KRs to OST outcomes, reframing weak Objectives or KRs, and closing a finished cycle are reversible: do them and say what changed. Missing values or context: infer from the config, tracker, analytics, or conversation, state the assumption in one line, and continue. Deleting a cycle or KR needs a human first.
+
 ## Provider Preflight
 
-Before reading or writing state, read `pm-config.md` and resolve the `okrs` capability through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Confirm exactly one authoritative provider. Use its workflow for persistence; do not silently create Markdown as a fallback. Any secondary artifact must be labeled `inbox`, `export`, `cache`, or `snapshot`. For legacy configs, show the inferred mapping and require confirmation before creating records. For Compass, invoke `compass-workflow` and persist OKRs and check-ins inline.
+Read `pm-config.md` and resolve the `okrs` capability through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Use exactly one authoritative provider for persistence; label any secondary artifact `inbox`, `export`, `cache`, or `snapshot`. For legacy configs, state the inferred mapping and proceed. With no config, work from context, name the defaults you used, and offer `pm-setup` at the end. For Compass, invoke `compass-workflow` and persist OKRs and check-ins inline.
 
-All file paths and templates below are the Markdown/Obsidian adapter only. For another provider, perform the same quality gates and lifecycle steps against provider-native objects and IDs. Updating `pm-config.md` updates active references, never a duplicate OKR body.
+File paths and templates below are the Markdown/Obsidian adapter only. For another provider, apply the same quality gates and lifecycle steps to native objects and IDs. Updating `pm-config.md` updates active references, never a duplicate OKR body.
 
-You are a specialist in building and maintaining OKR cycles that are tightly
-connected to product discovery. This skill activates when the user is creating,
-reviewing, updating, or archiving OKRs — and when they need to understand
-whether their discovery work is aligned to what they are trying to move.
-
-OKRs in this system are not a reporting artifact. They are the top of the
-hierarchy that directs all discovery activity. If a KR has no connected OST
-desired outcome, the team has no structured way to find solutions for it — that
-is a gap to fix immediately.
+OKRs sit at the top of the hierarchy that directs discovery. A KR with no connected OST desired outcome has no structured path to solutions; connect it.
 
 ---
 
 ## The Hierarchy
-
-Every work item in the system traces to a KR:
 
 ```
 OKR Objective
@@ -94,49 +88,26 @@ OKR Objective
                           └── Roadmap Item (delivery)
 ```
 
-**The critical connections:**
-- Every KR has exactly one connected Desired Outcome in the OST.
-- Every Desired Outcome traces up to exactly one KR.
-- If a KR is at risk, the right response is to work the OST for that KR harder —
-  not to add more roadmap items.
+- Every KR has exactly one connected Desired Outcome, and each Desired Outcome traces to exactly one KR.
+- An at-risk KR calls for working its OST harder, not adding roadmap items.
 
 ---
 
 ## Where OKRs Live
 
-When `okrs` resolves to Markdown or Obsidian, cycles live in `product/okrs/[CYCLE].md` (e.g., `product/okrs/Q2-2026.md`). Other providers own their cycles natively.
-
-The product's `pm-config.md` file identifies:
-- The active OKR cycle file path
-- The currently active KR (the one the team is focused on moving right now)
-
-Check `pm-config.md` before any OKR work to establish context.
+With Markdown or Obsidian, cycles live in `product/okrs/[CYCLE].md` (e.g., `product/okrs/Q2-2026.md`); other providers own cycles natively. `pm-config.md` names the active cycle and the active KR. Read it first; if absent, use the most recent cycle and say so.
 
 ---
 
 ## Workflow 1: Create a New OKR Cycle
 
-### Step 1 — Ask what you need
+### Step 1 — Gather inputs
 
-Collect these inputs before writing anything:
-1. The cycle identifier (e.g., Q3-2026)
-2. Start and end dates
-3. The Objectives — qualitative ambition statements, one per strategic direction
-4. For each Objective: the Key Results (2-3 measurable outcomes per Objective)
-5. For each KR: the baseline (current value) and target (goal value by end of cycle)
+From the conversation, strategy docs, prior cycle, and analytics, collect: cycle identifier, start/end dates, Objectives (qualitative, one per strategic direction), 2–3 KRs per Objective, and each KR's baseline and target. Fill gaps with a stated inference (e.g., calendar quarter dates; baseline from the latest metric reading). If no baseline can be found, record `Baseline: TBD` and add a task to measure it before the first check-in.
 
-If the user provides Objectives that are measurable (e.g., "Increase retention to
-80%"), correct them. Objectives are qualitative direction — not metrics. KRs hold
-the metrics.
+### Step 2 — Apply the quality gate
 
-If a KR has no baseline, flag it: "You can't track progress without knowing where
-you started. What is the current value of this metric?"
-
-### Step 2 — Run the quality gate
-
-Before creating the file, enforce every rule from the Quality Gate section below.
-If anything fails the gate, fix it with the user before writing the file. Do not
-scaffold a cycle that has known structural defects.
+Run the Quality Gate below and fix failures yourself: move numbers from Objectives into KRs, reframe output KRs as outcomes, trim excess Objectives with a note on what was cut. Report each fix.
 
 ### Step 3 — Scaffold the cycle file
 
@@ -174,118 +145,58 @@ status: Active
 | [cycle start] | [baseline value] | On Track | Cycle started |
 ```
 
-Repeat the KR block for each KR within the Objective. Repeat the Objective block
-for each Objective.
+Repeat the KR block per KR and the Objective block per Objective.
 
 ### Step 4 — Connect each KR to the OST
 
-For each KR, check whether a connected Desired Outcome already exists:
-- If yes: confirm the statement is still accurate and link it in the file.
-- If no: chain to `ost-workflow` to create the Desired Outcome before finalizing
-  the cycle file. A KR with no OST connection is directionally incomplete.
+If a matching Desired Outcome exists, link it. If not, chain to `ost-workflow` to create one.
 
 ### Step 5 — Update pm-config.md
 
-Add the new cycle file path and set `active_okr_cycle` to the new cycle. If there
-is a previously active cycle, confirm with the user whether it should be archived
-first.
+Add the cycle path and set `active_okr_cycle`. If the previous cycle's end date has passed, close it via Workflow 5; otherwise leave it and note the overlap.
 
 ---
 
 ## Workflow 2: Log a Check-In
 
-Use this workflow when the user wants to update the current value of a KR and
-record the check-in. Check-ins should happen on a regular cadence (weekly or
-bi-weekly — whatever the team has committed to).
-
 ### Step 1 — Identify the KR
+Use the KR named in the conversation, else the active KR in `pm-config.md`.
 
-Ask for or confirm: which cycle, which Objective, which KR. If `pm-config.md`
-specifies the active KR, use that as the default.
-
-### Step 2 — Collect the check-in data
-
-Ask for:
-- Current value as of today
-- Date the measurement was taken
-- Status assessment (On Track / At Risk / Off Track)
-- Any brief notes worth recording (what drove the movement, any blockers)
+### Step 2 — Get the data
+Take the current value, measurement date, and notes from the conversation or the bound metric. Set status yourself from pace (see Workflow 3, Step 2): On Track / At Risk / Off Track.
 
 ### Step 3 — Update the cycle file
-
-Make two edits in `product/okrs/[CYCLE].md`:
-1. Update the `**Current:**` line for the KR to reflect the new value and date.
-2. Update the `**Status:**` line if it has changed.
-3. Add a new row to the KR's Check-ins table.
-
-Format the new check-in row:
+1. Update the KR's `**Current:**` line with value and date.
+2. Update `**Status:**` if it changed.
+3. Add a Check-ins row:
 ```
 | [YYYY-MM-DD] | [current value] | [On Track / At Risk / Off Track] | [brief note] |
 ```
 
-### Step 4 — Flag if at risk
-
-If the status is At Risk or Off Track, do not just record it and move on.
-Immediately surface:
-- The gap between current value and target (absolute and percentage of the way there)
-- How much of the cycle has elapsed (as a percentage)
-- Whether the current trajectory reaches the target
-- Which OST opportunities are actively in play for this KR
-
-If the trajectory does not reach the target and no experiments are running, say so
-explicitly and offer to chain to `ost-workflow` or `experiment-workflow`.
+### Step 4 — Act on risk
+If At Risk or Off Track, report the gap to target (absolute and %), cycle elapsed %, whether the trajectory reaches the target, and which OST opportunities are in play. If the trajectory misses and no experiments are running, chain to `ost-workflow` or `experiment-workflow` and start the work.
 
 ---
 
 ## Workflow 3: OKR Health Review
 
-Run this workflow when the user asks for an overall health assessment of the
-active cycle, or when a regular review cadence triggers it (e.g., monthly).
-
 ### Step 1 — Pull the current state
+For each KR: baseline, current, target, elapsed vs. remaining time, last check-in date, status.
 
-Read `product/okrs/[CYCLE].md` in full. For each KR, collect:
-- Baseline, current value, target
-- Elapsed time in the cycle vs. time remaining
-- Last check-in date
-- Current status
-
-### Step 2 — Compute trajectory for each KR
-
-For each KR:
+### Step 2 — Compute trajectory
 - Progress ratio: (current - baseline) / (target - baseline)
 - Time ratio: days elapsed / total cycle days
-- Is the KR on pace? Progress ratio >= time ratio = on pace
-- If not: how large is the gap, and is it closable in the remaining time?
+- On pace when progress ratio >= time ratio; otherwise size the gap and whether it can close in time.
 
-### Step 3 — Surface the OST connection
+### Step 3 — Check the OST connection for each at-risk KR
+- Is there a connected desired outcome, and are experiments running against it?
+- Are high-priority opportunities sitting unworked?
+- **Solution coverage** (check first): do the KR's opportunities have any solutions? An experiment needs a solution to test.
+- **Fixed-cohort coverage:** if the KR tracks a fixed set (e.g., "N of M capability groups"), count how many of the M have an owning solution. A KR stuck at 0/M or low for over a week is a coverage gap, not an effort gap.
 
-For each KR that is at risk or off track:
-- Is there a connected OST desired outcome?
-- Are experiments actively running against that desired outcome?
-- Are there high-priority opportunities in the tree that have not been acted on?
-- **Solution coverage:** do the opportunities under this KR have any solutions at
-  all, or are they sitting as bare OPEN/EXPLORING items with nothing to select
-  between? A KR cannot move if there is no candidate path toward it — check this
-  before checking experiment velocity, since an experiment needs a solution to
-  test in the first place.
-- **Fixed-cohort coverage:** if this KR tracks a fixed set of items (e.g., "N of
-  M capability groups," "N of M migration targets"), compute coverage directly:
-  how many of the M items have at least one owning solution? A KR stuck at 0/M
-  or a low fraction for more than a week is very likely a coverage-gap problem,
-  not a discovery-effort problem — check coverage before assuming the team just
-  needs to work harder.
-
-A KR that is at risk with no active experiments is a discovery urgency — flag it.
-A KR whose opportunities have no solutions at all is a **coverage** urgency, and
-comes first: there is nothing yet to design an experiment around. Closing that
-gap means generating candidate solutions (see `ost-workflow` Step 5) — that is
-discovery prep work, not a roadmap or prioritization decision, and does not
-require the same sign-off as admitting a solution to `NEXT`/`NOW`.
+Zero solutions is a coverage urgency and comes before experiment velocity. Close it by generating candidates (`ost-workflow` Step 5) in the same run; that is discovery drafting, not a roadmap admission.
 
 ### Step 4 — Deliver the health report
-
-Use this output format:
 
 ```
 ## OKR Health Review — [CYCLE] — [Date]
@@ -318,51 +229,27 @@ Use this output format:
 
 ## Workflow 4: Connect a KR to the OST
 
-Use this workflow when a KR exists but no connected Desired Outcome exists in the
-OST — or when the user wants to verify or update the connection.
+### Step 1 — Find a matching Desired Outcome
+Read the OST the KR references. Look for a Desired Outcome expressing the same behavioral shift.
 
-### Step 1 — Check whether a Desired Outcome already exists
+Good match: KR "day-7 retention rate" ↔ "More new users complete a meaningful action in their first week."
+Weak match: KR "day-7 retention rate" ↔ "Grow the user base" — produces discovery that doesn't move the KR.
 
-Read `product/discovery/ost-[identifier].md` (or whatever file the KR references
-in its OST file field). Look for a Desired Outcome statement that expresses the
-same behavioral shift the KR is measuring.
-
-Good match: KR measures "day-7 retention rate" and the Desired Outcome is "More
-new users complete a meaningful action in their first week."
-
-Weak match: KR measures "day-7 retention rate" and the Desired Outcome is "Grow
-the user base." These are different things — a weak connection will produce
-discovery work that does not move the KR.
-
-### Step 2 — Create or update the Desired Outcome
-
-If no match exists, chain to `ost-workflow` with context:
-- The KR statement and target metric
-- A proposed Desired Outcome framing to start from
-
-If a weak match exists, surface the mismatch to the user and offer to either
-reframe the Desired Outcome or confirm the KR is intentionally broader.
+### Step 2 — Create or fix it
+No match: chain to `ost-workflow` with the KR statement, target metric, and a proposed Desired Outcome. Weak match: reframe the Desired Outcome to fit the KR and note the change (or, if the KR is clearly meant to be broader, record that reading).
 
 ### Step 3 — Update the cycle file
-
-Once the Desired Outcome is confirmed, update the KR's `**Connected Desired
-Outcome:**` and `**OST file:**` fields in the cycle file.
+Set the KR's `**Connected Desired Outcome:**` and `**OST file:**` fields.
 
 ---
 
-## Workflow 5: Archive a Cycle
+## Workflow 5: Close a Cycle
 
-Run this workflow when a cycle ends or when the user explicitly closes out a cycle.
-
-### Step 1 — Complete all check-ins
-
-Ensure every KR has a final check-in recorded with the actual end-of-cycle value.
-If the user does not have final values, ask for them before proceeding.
+### Step 1 — Final check-ins
+Record a final end-of-cycle value per KR. If a value is unavailable, use the latest reading, mark it `(latest available, [date])`, and continue.
 
 ### Step 2 — Write the cycle summary
-
-Add a `## Cycle Summary` section at the top of the cycle file (after the
-frontmatter, before Objective 1):
+Add a `## Cycle Summary` section after the frontmatter, before Objective 1:
 
 ```markdown
 ## Cycle Summary — [CYCLE]
@@ -384,136 +271,64 @@ frontmatter, before Objective 1):
 - [Any opportunities that proved important and should anchor the next cycle's OSTs]
 ```
 
-### Step 3 — Update the frontmatter
-
-Change `status: Active` to `status: Completed` in the cycle file frontmatter.
-
-### Step 4 — Update pm-config.md
-
-Clear or update `active_okr_cycle` to reflect that this cycle is closed. If the
-next cycle already exists, point to it.
+### Step 3 — Update frontmatter and config
+Change `status: Active` to `status: Completed`. Clear or update `active_okr_cycle` in `pm-config.md`, pointing to the next cycle if it exists.
 
 ---
 
 ## Quality Gate for OKR Cycles
 
-Run every check before finalizing a new cycle. Do not let a cycle go active with
-known defects — they compound over time.
-
-### Structural checks
+Run before a cycle goes active and fix what fails; defects compound.
 
 | Check | Rule | Failure signal |
 |---|---|---|
-| Objective count | At most 3 Objectives per cycle | More than 3 = losing focus |
-| KR count | 2-3 KRs per Objective | 1 = not enough accountability; 4+ = too complex |
-| Total KR count | At most 9 KRs in a cycle | More than 9 = team cannot hold them all in working memory |
-| Objective framing | Each Objective is qualitative and directional | Contains a number, a date, or a deliverable |
-| KR framing | Each KR is a measurable outcome, not an output | Mentions shipping, launching, building, or delivering |
-| Baseline present | Every KR has a baseline value | No baseline = cannot track progress |
-| Target present | Every KR has a specific target value and date | Vague targets like "improve" or "increase" |
-| OST connection | Every KR has a connected Desired Outcome | Missing link = no discovery direction |
+| Objective count | At most 3 per cycle | More than 3 = losing focus |
+| KR count | 2–3 per Objective | 1 = thin accountability; 4+ = too complex |
+| Total KR count | At most 9 | More won't fit in working memory |
+| Objective framing | Qualitative and directional | Contains a number, date, or deliverable |
+| KR framing | Measurable outcome, not output | Mentions shipping, launching, building, delivering |
+| Baseline present | Every KR has one | Can't track progress |
+| Target present | Specific value and date | "Improve", "increase" |
+| OST connection | Every KR has a Desired Outcome | No discovery direction |
 
-### Framing checks
-
-**Objectives must be qualitative.** If it contains a number, it belongs in a KR,
-not an Objective. Reframe: "Achieve 80% day-7 retention" should be the Objective
-"Build a product that keeps new users coming back" with a KR for the retention metric.
-
-**KRs must measure outcomes, not outputs.** Run this test: if the KR can be
-achieved without any change in customer behavior, it is an output KR.
-
-- Output KR (reject): "Ship the onboarding redesign by May 1"
-- Outcome KR (accept): "Increase the percentage of new users who complete their
-  first meaningful action within 7 days from 34% to 55%"
-
-**KRs need a baseline.** "Increase NPS to 50" is unmeasurable if you do not know
-that NPS is currently 32. Always establish the baseline before committing to the target.
+- **Objectives are qualitative.** "Achieve 80% day-7 retention" becomes Objective "Build a product that keeps new users coming back" plus a retention KR.
+- **KRs measure outcomes.** If it can be achieved with no change in customer behavior, it's an output. Output: "Ship the onboarding redesign by May 1". Outcome: "Increase new users completing their first meaningful action within 7 days from 34% to 55%".
+- **KRs need baselines.** "Increase NPS to 50" means little without knowing it's 32 today.
 
 ---
 
-## Anti-Patterns to Call Out Immediately
+## Anti-Patterns
 
-These patterns undermine OKRs as a direction-setting tool. Call them out explicitly
-when you see them — do not soften the feedback.
+Name these plainly and fix them:
 
-**Output KRs disguised as outcome KRs**
-"Launch X by Y date" is a milestone, not a KR. It is 100% within the team's
-control and tells you nothing about whether customers got value. Reframe it: "What
-change in customer behavior do we expect after launching X?"
-
-**KRs with no OST connection**
-This means the team has a stated goal but no structured way to discover how to
-reach it. The OST exists precisely to solve this. Connect the KR before the cycle
-starts, or the discovery work will be directionless.
-
-**Objective inflation**
-More than 3 Objectives means the team is not making strategic trade-offs — they
-are listing everything important. Push back: "If you could only move one of these
-this quarter, which would it be? Start there."
-
-**Missing baselines**
-"Increase retention" with no current baseline is an unmeasurable aspiration. The
-first check-in will expose this. Establishing baselines is not optional — it is
-the minimum viable measurement setup.
-
-**Vanity KRs**
-KRs that are easy to hit but do not reflect real progress. Signs: the KR was
-already mostly achieved at cycle start, the target is below the current trajectory,
-or the KR measures activity rather than outcome (e.g., "run 10 user interviews"
-is a task, not a KR).
-
-**KRs the team cannot influence**
-If the metric is primarily driven by external factors (macroeconomic conditions,
-competitor actions), it is a poor KR — the team cannot take directional action on
-it. Surface the dependency explicitly.
-
-**KR or fixed-cohort item with zero solution coverage**
-A KR (or an item within a KR's fixed cohort — e.g., one of N capability groups)
-that has an opportunity but no solution at all cannot move by definition: there
-is nothing to select between. This can persist silently for weeks because
-nothing "fails" loudly — the KR just sits at its baseline. Check solution
-coverage explicitly every check-in and health review, not just experiment
-status. If found, the correction is to generate candidate solutions immediately
-(discovery work, no gate required) — not to wait for a prioritization decision
-that has nothing to prioritize yet.
+| Anti-pattern | Fix |
+|---|---|
+| Output KR ("Launch X by Y") | Reframe as the customer behavior change expected after launch |
+| KR with no OST connection | Connect it (Workflow 4) |
+| Objective inflation (4+) | Keep the 3 with the clearest outcome link; list what was cut |
+| Missing baseline | Pull one from analytics, or mark TBD with a measurement task |
+| Vanity KR (already mostly hit, below trajectory, or measures activity like "run 10 interviews") | Raise the target or replace with an outcome |
+| KR driven by external factors | Name the dependency; propose a KR the team can influence |
+| KR or cohort item with zero solution coverage | Generate candidate solutions now; it can sit silently at baseline for weeks otherwise. Check every check-in and review |
 
 ---
 
 ## Bridging OKRs to Discovery
 
-When a KR is at risk or off track, the correct response is not to add more
-roadmap items — it is to look at the OST for that KR and ask:
+For an at-risk KR, work its OST rather than adding roadmap items:
 
-1. Are the right opportunities in the tree? Is there new signal that should update
-   the tree?
-2. Do those opportunities have any solutions at all? If not, generate candidates
-   now — this is discovery preparation, not a roadmap decision, and needs no
-   sign-off to start.
-3. Are experiments running? If not, why? Start one immediately.
-4. Are we working the highest-priority branch, or are we spreading effort?
+1. Are the right opportunities in the tree? Does new signal update it?
+2. Do they have solutions? If not, generate candidates now.
+3. Are experiments running? If not, start one.
+4. Is effort on the highest-priority branch, or spread thin?
 
-**Also check the reverse direction.** A KR can look correctly connected in the
-OST while roadmap items meant to deliver against it actually point at a stale or
-unrelated KR — most often after a new KR was created mid-cycle and existing
-`NOW`/`NEXT` items were never re-pointed. Cross-reference `okr_krs` on active
-roadmap items against the current cycle file (see `roadmap-workflow`'s KR
-coverage and stale-link checks). An Objective with zero roadmap items rolling up
-to it can be masked entirely if the items are silently still wired to an old
-Objective's KR — the tree looks fine, the roadmap looks busy, and nothing is
-actually pointed at the outcome you're measuring.
+**Check the reverse direction too.** Roadmap items can point at a stale KR, typically after a mid-cycle KR was created and `NOW`/`NEXT` items were never re-pointed. Cross-reference `okr_krs` on active roadmap items against the current cycle (see `roadmap-workflow`'s KR coverage and stale-link checks) and re-point stale links, reporting each. Otherwise an Objective can have nothing rolling up to it while the tree and roadmap both look busy.
 
-Use this as a handoff prompt when chaining to `ost-workflow`:
+Handoff to `ost-workflow`:
+> "KR [id] is [at risk / off track]. Connected Desired Outcome: '[statement]'. Review the OST for this outcome and set which opportunities get attention to move the KR before cycle end."
 
-> "KR [id] is [at risk / off track]. The connected Desired Outcome is '[statement]'.
-> Let's review the OST for this outcome and identify which opportunities should be
-> getting attention right now to move the KR before end of cycle."
-
-When the user asks what experiments could move a KR, chain to `experiment-workflow`
-with:
-
-> "KR [id] target is [target]. Current is [value]. What experiments could close
-> that gap? Let's identify the riskiest assumption about how to move this metric
-> and design a test for it."
+Handoff to `experiment-workflow`:
+> "KR [id] target is [target]; current is [value]. Identify the riskiest assumption about moving this metric and design a test."
 
 ---
 

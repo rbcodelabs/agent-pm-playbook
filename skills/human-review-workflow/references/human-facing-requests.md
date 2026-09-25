@@ -6,22 +6,17 @@ decision before the machinery used to record it.
 
 ## First decide whether to ask
 
-Before creating a request, check the current conversation, the exact existing approval,
-its scope and limits, and the work already authorized.
+Ask only for the four irreversible categories in the
+[Autonomy Policy](../../../Autonomy%20Policy.md) (destroy, reach outside the team, ship to
+production, spend money or human time) or a decision the human explicitly asked to own.
+Reversible work (prioritization, horizon moves, OST changes, direction choices,
+housekeeping) is done and reported, never turned into a request.
 
-- Complete reversible preparation and repairs that existing authority covers.
-- Reuse a still-valid approval. A new run, changed storage format or missing local copy
-  does not by itself create a new product decision.
-- If the approved scope cannot be established after reading the available authoritative
-  records, explain the specific uncertainty and what was tried. Do not invent an approval,
-  bypass a required gate or broaden authority to avoid bothering the reviewer.
-- If renewed confirmation is actually required, state what changed and why the existing
-  approval cannot be used. Ask only about the unresolved scope or material change.
-  An authorized migration that preserves exact scope and limits does not require another
-  product decision.
-
-If no human choice or required confirmation remains, do the authorized work and report
-the result. Do not manufacture a review for internal housekeeping.
+- Do all reversible preparation first so the decision is one word.
+- Reuse a still-valid approval. A new run, changed storage format, or missing local copy
+  does not create a new decision.
+- If an existing approval's scope is unclear, infer the narrowest reading, state it, and
+  ask only about the unresolved part. Never invent or broaden an approval.
 
 ## Write the decision in the reader's language
 
@@ -57,10 +52,10 @@ separately authorized next step accurately.
 
 | Situation | Avoid | Prefer |
 |---|---|---|
-| A team must choose where to invest | "Authorize delivery scope S-17?" | "Build bulk invitations so team admins can invite colleagues together?" |
-| Capacity is full | "Resolve admission overflow for candidate Q-17" | "Start bulk invitations now and delay the dashboard redesign?" |
+| Shipping to production | "Authorize release scope S-17?" | "Release bulk invitations so team admins can invite colleagues together?" |
+| Destroying work | "Prune stale branch set B-4" | "Delete three abandoned invitation branches with unmerged work? (reasons below)" |
 | Earlier scope is unclear | "Resolve approval provenance mismatch" | "Should bulk invitations also include people outside your organization?" |
-| A technical decision really needs an expert | "Accept credential migration?" | "Require everyone to sign in again when we replace the login tokens?" |
+| Customers will notice | "Accept credential migration?" | "Require everyone to sign in again when we replace the login tokens?" |
 
 For the unclear-scope example, the opening might be:
 

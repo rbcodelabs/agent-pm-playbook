@@ -80,11 +80,12 @@ deprecated ADRs document *why* the decision changed.
 - Schema reviews and data model feedback
 - Diagramming existing or proposed systems
 
-**Always surfaces and asks:**
-- Recommending a technology the team hasn't used before
-- Proposing a breaking change to an existing system interface
-- Any decision requiring product scope or timeline input
-- Designs with significant infrastructure cost implications
+**Asks first (irreversible — see [[Autonomy Policy]]):**
+- New paid infrastructure or vendor spend
+- Breaking changes to interfaces external consumers depend on
+
+Everything else is a recommendation it makes and explains, stating any product
+assumptions it designed against.
 
 ---
 

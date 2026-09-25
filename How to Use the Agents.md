@@ -2,7 +2,7 @@
 
 > A practical guide to working with the virtual product team. No code required.
 
-The playbook ships six specialized agents. Each one has a defined role, a set of tools it can use, and explicit rules about what it decides on its own versus what it surfaces to you first. This page covers who they are, when to use them, and what to say.
+The playbook ships six specialized agents, each with a defined role and tools. All follow one rule: act, then report. They ask you first only before something irreversible: destroying work, reaching customers, shipping to production, or spending money or people's time ([[Autonomy Policy]]). This page covers who they are, when to use them, and what to say.
 
 ---
 
@@ -22,16 +22,16 @@ The playbook ships six specialized agents. Each one has a defined role, a set of
 ```
 "Synthesize the three interviews I did this week into opportunity statements for the OST."
 
-"Review our current OST for GoldenWealth and flag any structural problems."
+"Review our current OST for Acme Notes and fix any structural problems."
 
 "Write user stories for the beneficiary invite flow."
 
 "Design an experiment for the riskiest assumption in our onboarding solution."
 ```
 
-**What it will ask before acting:** Whether an OST already exists, which outcome you're working toward, what discovery phase you're in.
+**What it works out itself:** Whether an OST exists, the outcome you're working toward, and the discovery phase — from your config, tracker, and conversation. It states anything it inferred.
 
-**What it writes autonomously:** Synthesis reports, OST updates, first-draft experiment briefs, user story drafts. Surfaces prioritization calls and major OST branch decisions to you before acting.
+**What it does without asking:** Synthesis, OST updates including new or restructured branches, prioritization, experiment design and result interpretation, user stories. **Asks first:** archiving a branch with work behind it, anything customers see, recruiting research participants.
 
 ---
 
@@ -47,7 +47,7 @@ The playbook ships six specialized agents. Each one has a defined role, a set of
 
 **Example invocations:**
 ```
-"Design the data model for document sharing in GoldenWealth. Hard constraints: Aurora DSQL, no joins across schemas."
+"Design the data model for document sharing in Acme Notes. Hard constraints: Postgres, no joins across schemas."
 
 "Write an ADR for how we handle background job processing. We haven't decided yet — lay out the options."
 
@@ -56,7 +56,7 @@ The playbook ships six specialized agents. Each one has a defined role, a set of
 "We're evaluating Resend vs. SES for transactional email. Evaluate both and recommend one."
 ```
 
-**What it will ask before acting:** What the hard constraints are, what's already been ruled out, what the team has tried.
+**What it looks up first:** Hard constraints, what's been ruled out, and what the team has tried — from the repo and prior ADRs, stating any it had to assume.
 
 **What it produces autonomously:** ADRs, design docs, Mermaid diagrams, schema review memos. Escalates any recommendation that requires a new tech the team hasn't used, or a breaking change to an existing interface.
 
@@ -80,7 +80,7 @@ The playbook ships six specialized agents. Each one has a defined role, a set of
 "Refactor the document upload component — it's doing too many things. Don't change external behavior."
 ```
 
-**What it will ask before acting:** Whether requirements are ambiguous, whether scope is larger than expected, whether there are architectural decisions baked in that should be escalated first.
+**What it checks first:** Ambiguous requirements (it picks the most reasonable reading and says so), scope larger than expected, and embedded architectural decisions that belong with the architect.
 
 **What it produces autonomously:** Implementation code, unit tests, integration tests. Escalates decisions about new dependencies, public interface changes, or anything that affects multiple services.
 
@@ -105,7 +105,7 @@ The playbook ships six specialized agents. Each one has a defined role, a set of
 "Verify the fix for PROJ-83. Write a test that reproduces the original bug first, then confirm the fix makes it pass."
 ```
 
-**What it will ask before acting:** What tooling is already in use, what the riskiest paths in the feature are, whether there are existing tests to use as a pattern.
+**What it looks up first:** Existing test tooling and patterns, and the riskiest paths in the feature.
 
 **What it produces autonomously:** Unit tests, integration tests, E2E tests, a coverage gap report. Escalates new testing infrastructure setup or load testing (requires environment context).
 
@@ -122,7 +122,7 @@ The playbook ships six specialized agents. Each one has a defined role, a set of
 
 **Example invocations:**
 ```
-"Review PR #83 on the golden-wealth-app. Focus especially on auth boundaries and any N+1 query risks."
+"Review PR #83 on acme-notes. Focus especially on auth boundaries and any N+1 query risks."
 
 "Audit the changes in src/api/documents — I want to know if there are any security holes before this ships."
 
@@ -143,12 +143,12 @@ The playbook ships six specialized agents. Each one has a defined role, a set of
 
 **Example invocations:**
 ```
-"Ship all open PRs on golden-wealth-app. It's a Vercel app. Show me the merge plan before you do anything."
+"Ship all open PRs on acme-notes. It's a Vercel app. Show me the merge plan before you do anything."
 
-"Merge and release the Linear plugin. Patch bump."
+"Merge and release the desktop plugin. Patch bump."
 ```
 
-**What it will always pause and ask about:**
+**What it always asks about** (merging and shipping are irreversible):
 - The merge plan (shows it to you before executing anything)
 - Version bump size for plugin/distributable releases
 - Any PR with failing CI or unresolved conflicts
@@ -157,7 +157,7 @@ The playbook ships six specialized agents. Each one has a defined role, a set of
 
 ## How Orchestration Works
 
-You don't need to invoke agents explicitly — you can just tell Claude what you want and it will route to the right agent. But explicit delegation gives you more control.
+Just say what you want and Claude routes it to the right agent; explicit delegation gives you more control.
 
 ### Natural language routing (automatic)
 
@@ -177,7 +177,7 @@ You don't need to invoke agents explicitly — you can just tell Claude what you
 
 "Have the reviewer audit src/auth while the QA agent writes tests for the invite flow."
 
-"Have the PM agent review the OST and flag any structural issues."
+"Have the PM agent review the OST and fix any structural issues."
 ```
 
 ### Parallel agents
@@ -214,21 +214,21 @@ Reviewer (code review) ←── each other, not sequentially
 Release Manager (merge + ship)
 ```
 
-You don't have to follow this order strictly. But knowing it helps you understand why the engineer has an explicit rule to escalate architectural decisions up instead of making them, and why the architect explicitly does not write implementation code.
+The order isn't strict, but it explains why the engineer hands architectural decisions to the architect and the architect doesn't write implementation code.
 
 ---
 
 ## Tips for Good Results
 
-**Brief the agent like a new team member walking in.** Include: what you're trying to accomplish, what repo or files are relevant, what constraints apply, and what you've already tried or ruled out. Terse prompts produce shallow work.
+**Brief the agent like a new team member walking in.** Include what you're trying to accomplish, relevant repo or files, constraints, and what you've ruled out. Agents infer what you leave out and tell you what they assumed, so a good brief mostly saves corrections.
 
-**Include the file path or Linear issue number.** Agents can read the codebase, but they'll do better work faster if you point them at the right starting point.
+**Include the file path or issue number.** Agents can search, but a starting point is faster.
 
-**Name the constraint that matters most.** "We're on Aurora DSQL" or "this needs to ship by Friday" or "the PM already decided X" changes the output significantly.
+**Name the constraint that matters most.** "We're on Postgres", "this ships Friday", or "we already decided X" changes the output significantly.
 
 **Separate what you want from what you're worried about.** "Implement X, and I'm specifically worried about Y" gets you both the implementation and a focused eye on the risk.
 
-**Let the architect go first for anything significant.** The engineer is fast, but if the design is wrong, you pay twice. Spend 10 minutes with the architect before you spend 2 hours with the engineer.
+**Let the architect go first for anything significant.** If the design is wrong, you pay twice: 10 minutes with the architect saves 2 hours with the engineer.
 
 ---
 

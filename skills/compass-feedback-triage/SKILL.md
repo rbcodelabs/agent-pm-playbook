@@ -1,116 +1,97 @@
 ---
 name: compass-feedback-triage
 description: >
-  Processes all OPEN feedback items in the Compass workspace and takes real product
-  actions on each: dedup/link to an existing opportunity, create an EXPLORING opportunity,
-  route evidence-backed focus decisions for human review, or close noise. Keeps the OPEN
-  feedback queue empty without turning a single signal into an autonomous build commitment.
-  Use from the product-operations checklist or manually when feedback has piled up.
+  Processes all OPEN feedback items in the Compass workspace and acts fully on each:
+  dedup/link to an existing opportunity, create an opportunity (single-source ones tagged
+  weak), score it, adjust opportunity status and roadmap priority when the evidence
+  warrants, or close noise — then reports what changed. Keeps the OPEN feedback queue
+  empty. Use from the product-operations checklist or manually when feedback has piled up.
 ---
 
 # Compass Feedback Triage
 
-> **Scheduling:** invoke this skill from the feedback-and-research item in
-> [scheduled-product-operations](../scheduled-product-operations/SKILL.md).
-> Do not install a separate feedback cron. Inspect the OPEN queue inside the shared run;
-> when empty, return that result to the checklist so other areas are still checked.
-> Intake and delivery keep their existing authorization boundaries.
+## Autonomy
+
+Follow the [Autonomy Policy](../../Autonomy%20Policy.md): act, then report. Linking,
+creating and scoring opportunities, changing statuses (including closing noise), and
+adjusting roadmap priority are reversible, so do them and report them. Deleting or
+archiving feedback and replying to customers are irreversible; send those through
+`human-review-workflow`.
+
+> **Scheduling:** invoke from the feedback-and-research row in
+> [scheduled-product-operations](../scheduled-product-operations/SKILL.md), not a separate
+> cron. When the OPEN queue is empty, return that to the checklist.
 
 ## Setup
 
-1. Read `pm-config.md`. Resolve `insights` and `ost` to Compass and resolve
-   `review_requests`, `decision_records`, and `notifications` before creating a review.
-   Follow `integration-routing`; do not assume Obsidian or Geode.
-   Route ambiguous focus, investment, and scope judgment through the configured decision provider.
-   A recorded decision does not expand this intake workflow's existing authority
-   boundary or turn feedback into implementation permission.
-2. Invoke the `compass` skill for the MCP tool catalog and data model if not already loaded.
-3. Resolve the organization and workspace ID from the configured Compass connection.
-   If discovery is needed, list workspaces for that organization and match the configured
-   workspace; never select an unrelated workspace by name or list position.
+1. Read `pm-config.md` and follow `integration-routing`. Resolve `insights` and `ost` to
+   Compass, and resolve `review_requests`, `decision_records`, and `notifications` for the
+   rare irreversible action. Irreversible requests go to the configured decision provider;
+   a recorded decision does not expand this workflow's existing authority boundary or turn
+   feedback into implementation permission.
+2. Load the `compass` skill for the MCP tool catalog and data model if not already loaded.
+3. Resolve the organization and workspace ID from the configured Compass connection; match
+   the configured workspace, never an unrelated one by name or list position.
 
 ## Processing loop
 
-4. `list_feedback(workspaceId, status: "OPEN")` — if empty, report "queue already empty,
-   no action taken" and stop. Do not fabricate work.
-5. `list_opportunities(workspaceId)` for dedup/linking context.
-6. `list_okr_cycles(workspaceId)` → find the `ACTIVE` cycle, then `get_okr_cycle(cycleId)`
-   for its objectives/key results (for linking new opportunities to OKRs).
+4. `list_feedback(workspaceId, status: "OPEN")`. If empty, report "queue already empty, no
+   action taken" and stop.
+5. `list_opportunities(workspaceId)` for dedup context, and `list_okr_cycles` →
+   `get_okr_cycle` on the `ACTIVE` cycle for key results to link.
 
 For **each** open feedback item:
 
-a. `get_feedback_item(feedbackId)` for full details.
-b. `update_feedback_status(feedbackId, status: "UNDER_REVIEW", note: "Being processed by
-   Compass Feedback Triage")`.
-c. Reason about it:
-   - **Type:** bug report, feature request, UX friction, performance issue, or
-     unclear/noise? (`update_feedback_type` can reclassify BUG vs IDEA if the current type
-     looks wrong. Bugs follow the configured severity/standing-approval policy; ideas
-     follow the Opportunity → evidence → human focus decision → Solution flow.)
+a. `get_feedback_item`, then `update_feedback_status(..., "UNDER_REVIEW", note: "Being
+   processed by Compass Feedback Triage")`.
+b. Judge it:
+   - **Type:** bug, feature request, UX friction, performance, or noise. Reclassify with
+     `update_feedback_type` if the type looks wrong.
    - **Dedup:** does it closely match an existing opportunity?
-   - **Urgency:** weigh `voteCount` as one signal among several, never as a gate. A high
-     vote count is meaningful demand evidence, but a single well-argued blocking or severe
-     report can outweigh several lukewarm upvotes, and low votes on a brand-new item often
-     just mean nobody has seen it yet. Judge urgency on the whole picture: vote count,
-     severity, how clearly actionable it is, and OKR relevance.
-d. Act:
+   - **Urgency:** weigh `voteCount` with severity, actionability, and OKR relevance. One
+     well-argued blocking report can outweigh several lukewarm upvotes; low votes on a new
+     item often just mean nobody has seen it yet.
+c. Act:
 
    **Matches an existing opportunity:**
-   - `link_feedback_to_opportunity(feedbackId, opportunityId)`
-   - `update_feedback_status(feedbackId, status: "PLANNED", note: "Linked to existing
-     opportunity: [title]")`
-   - Re-read the opportunity and its linked evidence. If this signal causes it to meet the
-     evidence bar for `PRIORITIZED`, update the opportunity status and invoke
-     `human-review-workflow` to create an opportunity-focus request. End this branch
-     `AWAITING_DECISION`; do not add a solution or roadmap item.
+   - `link_feedback_to_opportunity`, then set feedback `PLANNED` ("Linked to existing
+     opportunity: [title]").
+   - Re-read the opportunity's evidence. If it now meets the bar, move it to `PRIORITIZED`,
+     re-score it (`score_opportunity`), and adjust the priority of its existing roadmap
+     item through [roadmap-workflow](../roadmap-workflow/SKILL.md). Report the change and why.
 
-   **New and actionable (bug, feature, UX friction, performance):**
-   - `create_opportunity` — title synthesized in clear PM phrasing; description:
-     "Customer feedback: [original title]. [description summary]. [submitter if
-     available]. Feedback ID: [id]."; status `EXPLORING`; link to the most relevant OKR
-     key result if one fits.
-   - `link_feedback_to_opportunity` to connect the original feedback to the new opportunity.
-   - Leave it `EXPLORING`. Intake does not add a solution, solution plan, assumption, or
-     roadmap item from a single new signal. The next synthesis pass may add corroborating
-     evidence and earn an opportunity-focus review.
-     **Scope note:** this restriction is specific to a single fresh signal with no evidence
-     bar met yet — it is not a general ban on authoring solutions. A different workflow
-     (weekly OST caretaker, OKR health review, or a scheduled audit) finding an
-     already-established, evidence-backed opportunity or KR with zero solutions should
-     generate candidates immediately; that is coverage-gap remediation, not intake, and
-     this line does not apply to it.
-   - For a bug, use direct roadmap promotion only when an explicit standing policy in
-     `pm-config.md` covers its severity, scope, and rollback path. Otherwise route an
-     expedited bug-investment review through `human-review-workflow`.
-   - `update_feedback_status(feedbackId, status: "PLANNED", note: "New opportunity
-     created: [opportunity title]")`.
+   **New and actionable:**
+   - `create_opportunity` — clear PM title; description "Customer feedback: [original
+     title]. [summary]. Feedback ID: [id]."; status `EXPLORING`; link the best-fitting key
+     result. Tag a single-source opportunity `weak` and note what would strengthen it.
+   - `link_feedback_to_opportunity`, score it, and set feedback `PLANNED` ("New opportunity
+     created: [title]").
+   - Intake does not add a solution, solution plan, assumption, or
+     roadmap item from a single new signal; that is solution and roadmap work, not intake.
+     This does not stop other workflows from generating solutions for an evidence-backed
+     opportunity that has none.
+   - For a severe bug, promote it to the roadmap directly when `pm-config.md` has a standing
+     bug policy covering it; otherwise raise its priority on the existing roadmap and report
+     it.
 
-   **Noise, spam, or unclear:**
-   - `update_feedback_status(feedbackId, status: "CLOSED", note: "Closed by feedback
-     agent: [brief reason]")`.
+   **Noise, spam, or unclear:** `update_feedback_status(..., "CLOSED", note: "Closed by
+   feedback agent: [reason]")`. Closing is a status change; never delete.
 
-Be decisive. If feedback is borderline, lean toward creating an opportunity rather than
-closing — the goal is an empty OPEN queue with every real signal represented in the OST.
+Be decisive. When borderline, create a weak opportunity rather than closing: every real
+signal should be represented in the OST.
 
 ## Report
 
-After processing all items, report:
-- Total items processed.
-- Items linked to existing opportunities (list them).
-- New EXPLORING opportunities created (list them with evidence links).
-- Human-review requests created (review ID, decision, due date, and direct link).
-- Items closed as noise (list them).
-- Any items skipped or that errored.
+List: items processed; items linked (with opportunity); opportunities created (with
+evidence links and weak tags); statuses, scores, and roadmap priorities changed, each with
+a one-line why; items closed as noise; any review requests for irreversible actions; errors
+or skips; and any assumptions made.
 
-If this run took real action, write its outcome to the resolved `reporting_archive`
-provider. Human-review requests and notifications are persisted by
-`human-review-workflow`; do not duplicate them into a hardcoded vault or channel. A pure
-empty-queue no-op creates no report.
+If the run took action, write the outcome to the resolved `reporting_archive` provider.
+`human-review-workflow` persists its own requests and notifications. An empty-queue no-op
+creates no report.
 
-## Downstream handoff
+## Downstream
 
-This skill is evidence intake, not implementation prioritization. It feeds signal
-synthesis, OST maintenance, and asynchronous focus reviews. After a human selects an
-opportunity, the solution studio prepares alternative concepts for another review; after
-experiments and the investment gate, the roadmap steward may request a `NOW` commitment.
-`compass-resolver` acts only after that approval is recorded on an existing `NOW` item.
+Triage feeds signal synthesis, OST maintenance, solution work, and roadmap stewardship.
+`compass-resolver` builds only under its own approval rules; triage never starts delivery.
