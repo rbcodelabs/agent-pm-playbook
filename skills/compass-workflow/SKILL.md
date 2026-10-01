@@ -51,7 +51,7 @@ retrieval:
     - workspace
 chainTo:
   - pattern: "ost|ookrst|the loop|loop framework|opportunity solution tree|tree health|prioritiz"
-    targetSkill: ost-workflow
+    targetSkill: loop-workflow
     message: Switching to the Loop tree workflow for tree-level discovery work
   - pattern: "signal|interview|transcript|feedback|synthesis"
     targetSkill: pm-signal-synthesis
@@ -407,6 +407,5 @@ value in `pm-config.md`.
 - [Compass URL and Data Model](https://compass.rbcodelabs.com)
 - [PM Tool Integration Guide -- Compass section](../../PM Tool Integration Guide.md)
 - [The Loop](../../guides/the-loop.md)
-- [Loop Tree Workflow skill](../ost-workflow/SKILL.md)
-- [OKR (Outcome/KR) Workflow skill](../okr-workflow/SKILL.md)
+- [Loop Workflow skill](../loop-workflow/SKILL.md)
 - [Test Workflow skill](../experiment-workflow/SKILL.md)

@@ -38,7 +38,7 @@ retrieval:
     - opportunity theme
 chainTo:
   - pattern: "opportunity solution tree|\\bOST\\b|\\bOOKRST\\b|\\bthe loop\\b|\\bloop framework\\b|add to.*tree|update.*tree"
-    targetSkill: ost-workflow
+    targetSkill: loop-workflow
     message: Switching to the Loop tree workflow to map synthesized signals onto Opportunities
 ---
 
@@ -86,7 +86,7 @@ Surface contradictions; don't smooth them over.
 Against prior rounds: which clusters are strengthening, weakening, or new? Trend direction matters as much as strength.
 
 ### Step 5 — Apply to the Loop Tree
-Check for duplicates, then per cluster. Signals attach to **Opportunities** (the root of the tree); when a signal bears on a specific Solution's assumption or a Test, also link it there. Never attach raw signals to a KR or Outcome. If a new Opportunity has no Outcome yet, say so and hand off to `ost-workflow` Step 3 to derive one.
+Check for duplicates, then per cluster. Signals attach to **Opportunities** (the root of the tree); when a signal bears on a specific Solution's assumption or a Test, also link it there. Never attach raw signals to a KR or Outcome. If a new Opportunity has no Outcome yet, say so and hand off to `loop-workflow` Part 1, Step 3 to derive one.
 - **Update existing** — attach the evidence to the known Opportunity
 - **Add new** — create the Opportunity with its confidence tag and named segment
 - **Challenge existing** — record the contradicting evidence on it and flag it; recommend archiving to a human only if the evidence is strong

@@ -145,8 +145,7 @@ Skills installed by `setup.sh` include:
 | `human-review-workflow` | Routes asynchronous product decisions, including tracking-only Compass Decisions that stop for human judgment without auto-applying actions |
 | `delivery-completion-watcher` | Reconciles merged PRs and verified production delivery back into product, roadmap, and capacity state |
 | `pm-coach` | Thinking partner for discovery, tree review, Test design |
-| `ost-workflow` | Build, extend, and health-check the Loop tree: Opportunity, Solution, and Test levels (skill id predates Loop) |
-| `okr-workflow` | Define and check in Outcomes and Key Results, and scope cycles (skill id predates Loop) |
+| `loop-workflow` | The whole Loop: build and health-check the tree, run Outcome and KR cycles and check-ins, close the loop, and convert legacy OKR/OST data |
 | `pm-signal-synthesis` | Turn interviews, tickets, and reviews into tree-ready Opportunity clusters |
 | `investment-gate` | Assess readiness against the Progressive Investment ladder |
 | `jira-workflow` | Create and update Jira issues from discovery artifacts |
@@ -195,4 +194,4 @@ Agents do the product work, including judgment calls that can be undone: framing
 
 ## Legacy terminology
 
-Earlier versions used a separate OKR cycle and Opportunity Solution Tree (OST). Those are now one Loop tree; Objective and Desired Outcome merged into Outcome, and Experiment is now Test. Skill ids (`ost-workflow`, `okr-workflow`, `experiment-workflow`) keep their old names for compatibility. See the [mapping in the Loop guide](guides/the-loop.md#mapping-from-the-legacy-okr--ost-model).
+Earlier versions used a separate OKR cycle and Opportunity Solution Tree (OST). Those are now one Loop tree; Objective and Desired Outcome merged into Outcome, and Experiment is now Test. The former `ost-workflow` and `okr-workflow` skills are merged into `loop-workflow`; `experiment-workflow` still owns Tests. See the [mapping in the Loop guide](guides/the-loop.md#mapping-from-the-legacy-okr--ost-model).

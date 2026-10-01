@@ -15,7 +15,7 @@ This flow is separate from the delivery resolver: the resolver creates a PR and 
 
 ## Capability preflight
 
-Read `pm-config.md` and resolve `roadmap`, `ost`, `delivery`, `insights`,
+Read `pm-config.md` and resolve `roadmap`, `loop`, `delivery`, `insights`,
 `automation_runtime`, `decision_records`, and `notifications`. Read the configured
 `delivery_completion_policy`. Missing production verification or launch policy blocks a
 shipped claim; it never defaults to success.

@@ -128,4 +128,4 @@ The annotated risk levels, the kill-risk vs. drag-risk distinction, the named ri
 - [[Bias Detection]] — catches when the assumption map is systematically skipping uncomfortable categories
 - [[Epistemic Self-Awareness]] — enables the agent to flag when it lacks the domain knowledge to assess feasibility or viability assumptions
 
-The workflow that sequences these steps is the `ost-workflow` skill (id unchanged for compatibility), which now covers the Opportunity, Solution, and Test levels of the Loop tree; the `okr-workflow` skill (also an unchanged id) covers the Outcome and Key Result levels.
+The workflow that sequences these steps is the `loop-workflow` skill, which covers all five levels of the Loop tree.

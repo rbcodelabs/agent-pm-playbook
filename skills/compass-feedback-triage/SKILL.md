@@ -24,7 +24,7 @@ archiving feedback and replying to customers are irreversible; send those throug
 
 ## Setup
 
-1. Read `pm-config.md` and follow `integration-routing`. Resolve `insights` and `ost` to
+1. Read `pm-config.md` and follow `integration-routing`. Resolve `insights` and `loop` to
    Compass, and resolve `review_requests`, `decision_records`, and `notifications` for the
    rare irreversible action. Irreversible requests go to the configured decision provider;
    a recorded decision does not expand this workflow's existing authority boundary or turn

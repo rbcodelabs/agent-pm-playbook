@@ -182,4 +182,4 @@ For each structural issue, describe what it is and what the PM should decide.
 
 [[Epistemic Self-Awareness]] — The meta-skill that underlies contradiction detection: the agent must be willing to challenge its own prior synthesis, not just new inputs.
 
-The `ost-workflow` and `okr-workflow` skill ids are unchanged for compatibility; between them they cover all five Loop levels, and contradictions found here route to whichever covers the affected level.
+The `loop-workflow` skill covers all five Loop levels, and contradictions found here route to it.

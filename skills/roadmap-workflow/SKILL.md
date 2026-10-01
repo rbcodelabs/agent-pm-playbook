@@ -54,12 +54,9 @@ chainTo:
   - pattern: "experiment|\\btest\\b|validate|not.*validated|no.*experiment|risk|assumption"
     targetSkill: experiment-workflow
     message: Switching to the Test workflow — the Solution has an open assumption worth testing
-  - pattern: "okr|key result|\\bKR\\b|outcome|objective|which.*metric|move.*metric"
-    targetSkill: okr-workflow
-    message: Switching to the Outcome/KR workflow to check KR alignment for this roadmap item
-  - pattern: "opportunity|\\bOPP-\\b|why.*exist|customer.*need|\\bOST\\b|ookrst|the loop|loop framework|solution.*parent"
-    targetSkill: ost-workflow
-    message: Switching to the Loop tree workflow to understand the Opportunity and KR behind this roadmap item
+  - pattern: "okr|key result|\\bKR\\b|outcome|objective|which.*metric|move.*metric|opportunity|\\bOPP-\\b|why.*exist|customer.*need|\\bOST\\b|ookrst|the loop|loop framework|solution.*parent"
+    targetSkill: loop-workflow
+    message: Switching to the Loop workflow to check KR alignment and understand the Opportunity and KR behind this roadmap item
 ---
 
 # Roadmap Workflow
@@ -279,7 +276,7 @@ capacity. Do not assume `delivery-completion-watcher` already reconciled it.
 Group `NOW` and `NEXT` items by KR, then by Outcome. Call out every KR and every Outcome
 with zero roadmap items rolling up to it — an Outcome can look staffed while nothing
 actually serves it. Also list KRs whose Solutions have not reached the gate: those are
-discovery gaps, not roadmap gaps, and go to `ost-workflow`.
+discovery gaps, not roadmap gaps, and go to `loop-workflow`.
 
 ### Step 4: Report
 
@@ -306,7 +303,7 @@ For projects with enabled `approved_build_policy`, route approved build work to
 
 Each run:
 
-1. Resolve `roadmap`, `ost`, `experiments`, `okrs` (capability keys unchanged; together they cover the Loop levels), `delivery`, `review_requests`, and
+1. Resolve `roadmap`, `loop`, `experiments` (together they cover the Loop levels), `delivery`, `review_requests`, and
    `decision_records`, then read `portfolio_policy`.
 2. Inventory the ordered `NOW`, `NEXT`, and `LATER` horizons, active validation work,
    delivery work, agent runs, branches, and pull requests. Record before-counts.
@@ -370,8 +367,7 @@ work against [KR] — this is a gap."
 - [Autonomy Policy](../../Autonomy%20Policy.md)
 - [The Loop](../../guides/the-loop.md)
 - [Full Playbook — Discovery Tree as Operating System](../../Agentic%20PM%20Playbook.md)
-- [OKR (Outcome/KR) Workflow](../okr-workflow/SKILL.md)
-- [Loop Tree Workflow](../ost-workflow/SKILL.md)
+- [Loop Workflow](../loop-workflow/SKILL.md)
 - [Test Workflow](../experiment-workflow/SKILL.md)
 - [Build Authorization](../build-authorization/SKILL.md)
 - [Stakeholder Status Reports](../status-report-workflow/SKILL.md)

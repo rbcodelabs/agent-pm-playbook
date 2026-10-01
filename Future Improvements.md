@@ -10,7 +10,7 @@
 
 ### The Loop
 **Added:** 2026-10-01
-Replaces the separate OKR and OST pair with a single goal-to-learning tree: Opportunity is the root, an Outcome (the merged Objective and Desired Outcome) sits beneath it, KRs measure the Outcome, Solutions are parented by a KR, and Tests (formerly Experiments) falsify a Solution's riskiest assumption. Roadmap Items are admitted only after a Solution clears its investment gate. Defines stable IDs (`OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, `TST-n`) and the legacy mapping. Skill ids (`ost-workflow`, `okr-workflow`, `experiment-workflow`) are unchanged and now cover the Loop levels.
+Replaces the separate OKR and OST pair with a single goal-to-learning tree: Opportunity is the root, an Outcome (the merged Objective and Desired Outcome) sits beneath it, KRs measure the Outcome, Solutions are parented by a KR, and Tests (formerly Experiments) falsify a Solution's riskiest assumption. Roadmap Items are admitted only after a Solution clears its investment gate. Defines stable IDs (`OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, `TST-n`) and the legacy mapping. The `loop-workflow` skill (merged from the former OST and OKR skills) and `experiment-workflow` cover the Loop levels.
 **File:** [The Loop](guides/the-loop.md)
 
 ---
@@ -145,7 +145,7 @@ Three of the four cells currently receive treatment designed for the fourth.
 ## 🟡 Medium Priority
 
 ### 16. Automated Fixed-Cohort Coverage Metric in Compass
-**Area:** `skills/okr-workflow`, `skills/compass-workflow`, Discovery Health Metrics
+**Area:** `skills/loop-workflow`, `skills/compass-workflow`, Discovery Health Metrics
 **Gap:** This run (2026-09-14) added the *procedure* for checking fixed-cohort Solution coverage (e.g., "N of 7 capability groups") by hand during a health review, but there's no computed metric or Compass query that surfaces it automatically. A scheduled audit still has to enumerate the cohort and count solutions manually every time.
 **Fix:** If Compass's MCP API grows a way to tag Opportunities/KRs as members of a named cohort, add a `get_cohort_coverage`-style query and wire it into the weekly tree caretaker (Opportunity-to-Test) and Outcome/KR health review flows so the 0/N count is computed, not narrated. Deferred because it requires a Compass API capability that doesn't exist yet — the playbook can only specify the procedure, not the query, today.
 
@@ -155,8 +155,8 @@ Three of the four cells currently receive treatment designed for the fourth.
 **Fix:** Design a "release-evidence sweep" flow: for every Solution not yet SHIPPED whose linked roadmap item is NOW or IN_DELIVERY, search GitHub for merged PRs referencing the roadmap/solution ID regardless of whether the reciprocal Task link exists, and reconcile status. Deferred because it needs its own adapter contract and schedule (Section 8 already lists many flows still "to implement against live systems" per the doc's own status section) — this run scoped the procedure into the existing weekly Roadmap Steward instead of designing a new scheduled flow, to keep the edit targeted rather than adding new infrastructure.
 
 ### 18. Formal "Add a KR Mid-Cycle" Workflow
-**Area:** `skills/okr-workflow`
-**Gap:** `okr-workflow` (skill id unchanged; it covers the Outcome/KR layer and cycles) has a full "Workflow 1: Create a New OKR Cycle" (a legacy workflow title, now creating a cycle of Outcomes and KRs) but no equivalent workflow for adding a KR to an *already active* cycle. The real failure (roadmap items still wired to the original KR after new KRs were created mid-cycle) happened exactly at this seam — nothing in the skill prompts a reconciliation pass over existing roadmap items when a KR is added outside the normal cycle-creation flow.
+**Area:** `skills/loop-workflow`
+**Gap:** `loop-workflow` (Part 3 covers the Outcome/KR layer and cycles) has a full "Workflow 1: Create a New Cycle" (creating a cycle of Outcomes and KRs) but no equivalent workflow for adding a KR to an *already active* cycle. The real failure (roadmap items still wired to the original KR after new KRs were created mid-cycle) happened exactly at this seam — nothing in the skill prompts a reconciliation pass over existing roadmap items when a KR is added outside the normal cycle-creation flow.
 **Fix:** Add a short "Workflow 1b — Add a KR to an Existing Cycle" that, after creating the KR, explicitly triggers `roadmap-workflow`'s Gate 8 (stale/wrong-Outcome KR links) against every current NOW/NEXT item, and prompts the first three candidate Solutions under the new KR. Deferred rather than folded into this run's edits because it's a new workflow section (not a guardrail fix to existing text) and deserves its own review of where mid-cycle KR creation is currently documented, if anywhere, before writing the procedure.
 
 

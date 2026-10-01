@@ -6,7 +6,7 @@ description: >-
 retrieval:
   aliases: [pm setup, configure pm, setup playbook, pm config]
   intents: [set up the pm playbook, configure my pm environment, create pm config, update my pm configuration]
-chainTo: [okr-workflow]
+chainTo: [loop-workflow]
 ---
 
 # PM Setup
@@ -50,15 +50,14 @@ Scaffold only capabilities resolved to `markdown` or `obsidian`:
 | vision | `product/vision.md` |
 | research_capture | `product/research/` |
 | insights | `product/discovery/Signal Ledger.md` |
-| okrs | `product/okrs/` (Outcomes and KRs) |
-| ost | `product/discovery/` (Opportunities and Solutions) |
+| loop | `product/okrs/` (Outcomes, KRs, cycles) and `product/discovery/` (Opportunities and Solutions) |
 | experiments | `product/discovery/tests/` (Tests) |
 | roadmap | `product/roadmap/` |
 | reporting_archive | `product/reports/` |
 
 Do not create a path merely because an older template had one. In particular, `compass-full` creates no `product/` tree. The hybrid profile creates only Obsidian-owned vision, research, and reporting paths. JPD/Jira creates no authoritative Markdown discovery tree. An override may add or remove one scaffolded capability.
 
-`okrs`, `ost`, and `experiments` jointly resolve the Loop tree (`guides/the-loop.md`: Opportunity -> Outcome -> KR -> Solution -> Test) and must share one provider family; refuse an override that splits them, and offer to override all three together. When Markdown owns the Loop tree or roadmap, initialize the corresponding existing generated templates. When Compass owns those capabilities, create provider-native records only if the user explicitly asked setup to initialize product state; otherwise record connection metadata and active IDs.
+`loop` and `experiments` jointly resolve the Loop tree (`guides/the-loop.md`: Opportunity -> Outcome -> KR -> Solution -> Test) and must share one provider family; refuse an override that splits them, and offer to override both together. When Markdown owns the Loop tree or roadmap, initialize the corresponding existing generated templates. When Compass owns those capabilities, create provider-native records only if the user explicitly asked setup to initialize product state; otherwise record connection metadata and active IDs.
 
 ## Write and validate
 

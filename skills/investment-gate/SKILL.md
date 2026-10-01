@@ -57,7 +57,7 @@ chainTo:
     targetSkill: pm-signal-synthesis
     message: Switching to signal synthesis to gather the evidence needed to clear this gate
   - pattern: "opportunity.*framing|reframe|solution.*masquerad|OST|OOKRST|the loop|loop framework|tree|orphan"
-    targetSkill: ost-workflow
+    targetSkill: loop-workflow
     message: Switching to the Loop tree workflow to fix the Opportunity framing or broken chain first
   - pattern: "coach|strategy|philosophy|broader|what should we|how should we"
     targetSkill: agentic-pm

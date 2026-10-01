@@ -35,16 +35,16 @@ Opportunity is the root. Each level has its own skill coverage, file template, a
 | JPD Construct | Agentic Stack | File Location | Skill |
 |---|---|---|---|
 | Insights (signals) | Signal Ledger | `product/discovery/Signal Ledger.md` | `pm-signal-synthesis` |
-| Ideas / Opportunities | Opportunity files (`OPP-n`) | `product/discovery/opportunities/` | `ost-workflow` |
-| Goals | Outcomes (`OUT-n`, each naming its parent `OPP-n`) with their Key Results (`OUT-n-KR-n`), recorded in the cycle file | `product/okrs/[CYCLE].md` | `okr-workflow` |
-| Ideas / Solutions | Solution files (`SOL-n`) | `product/discovery/solutions/` | `ost-workflow` |
+| Ideas / Opportunities | Opportunity files (`OPP-n`) | `product/discovery/opportunities/` | `loop-workflow` |
+| Goals | Outcomes (`OUT-n`, each naming its parent `OPP-n`) with their Key Results (`OUT-n-KR-n`), recorded in the cycle file | `product/okrs/[CYCLE].md` | `loop-workflow` |
+| Ideas / Solutions | Solution files (`SOL-n`) | `product/discovery/solutions/` | `loop-workflow` |
 | Tests | Test files (`TST-n`) | `product/discovery/tests/` | `experiment-workflow` |
 | Delivery Issues | Linear issues | Linear + `product/roadmap/items/` | `roadmap-workflow`, `jira-workflow` |
-| Hierarchy view | Tree summary | `product/discovery/tree-summary.md` | `ost-workflow` |
+| Hierarchy view | Tree summary | `product/discovery/tree-summary.md` | `loop-workflow` |
 | Board / Kanban | Obsidian Bases | `[Product] Discovery Board.base` | n/a |
 | Roadmap view | Roadmap Bases | `[Product] Roadmap.base` | `roadmap-workflow` |
 
-Skill ids keep their legacy names. `okr-workflow` covers the Outcome and Key Result levels plus cycle scoping; `ost-workflow` covers the tree-wide Loop structure (Opportunity, Solution, Test, and the tree health check); `experiment-workflow` covers Test design and results.
+`loop-workflow` covers the whole Loop: tree building and health check, Outcome and KR cycles and check-ins, and closing the loop; `experiment-workflow` covers Test design and results.
 
 ---
 
@@ -56,11 +56,11 @@ This is the complete workflow from raw signal to shipped feature. Each arrow is 
 Signal arrives (interview, ticket, NPS, sales call)
   → pm-signal-synthesis
       Cluster into opportunity themes, tag confidence, cite evidence
-  → ost-workflow
+  → loop-workflow
       Add the Opportunity (OPP-n) as a root of the tree, with evidence and segment
-  → okr-workflow
+  → loop-workflow
       Define the Outcome (OUT-n) for the focus Opportunity and its 2-3 Key Results (OUT-n-KR-n) for the cycle
-  → ost-workflow
+  → loop-workflow
       Add 3+ candidate Solutions (SOL-n) under each KR, map riskiest assumptions
   → experiment-workflow
       Design the Test (TST-n) on the riskiest assumption, write success, failure, and kill criteria, run, record result against the KR
@@ -72,7 +72,7 @@ Signal arrives (interview, ticket, NPS, sales call)
       Roadmap item → Linear issue for engineering handoff
 ```
 
-Calls that weigh most on PM judgment: `investment-gate`, `ost-workflow` (adding new branches), `roadmap-workflow` (committing to Now). The agent makes them, states what it would need to believe, and reports so the PM can overrule; it asks first only before irreversible actions.
+Calls that weigh most on PM judgment: `investment-gate`, `loop-workflow` (adding new branches), `roadmap-workflow` (committing to Now). The agent makes them, states what it would need to believe, and reports so the PM can overrule; it asks first only before irreversible actions.
 
 ---
 
@@ -149,9 +149,9 @@ This scaffolds the product folder, creates `pm-config.md`, and walks you through
 
 **Step 2: Seed the tree with Opportunities**
 
-Run `ost-workflow` and add your 3 best existing customer insights as Opportunities (`OPP-n`). These should come from real signals (interviews, tickets, reviews) — not from internal intuition. Each Opportunity needs at least one evidence citation (or a `weak` tag) and a named segment.
+Run `loop-workflow` and add your 3 best existing customer insights as Opportunities (`OPP-n`). These should come from real signals (interviews, tickets, reviews) — not from internal intuition. Each Opportunity needs at least one evidence citation (or a `weak` tag) and a named segment.
 
-**Step 3: Run `okr-workflow` to define your first Outcome and cycle**
+**Step 3: Run `loop-workflow` to define your first Outcome and cycle**
 
 Name the cycle file (e.g., `Q3-2026.md`). For the focus Opportunity, write one Outcome (`OUT-n`): a one-sentence customer-behavior change, no numbers. Then define 2-3 Key Results (`OUT-n-KR-n`) with baseline, target, and date. The Outcome's parent is the Opportunity; each KR's parent is the Outcome.
 
@@ -163,10 +163,10 @@ In the product's vault folder, create the three `.base` files described above. P
 
 - Customer touchpoint (interview or async review)
 - Run `pm-signal-synthesis` on the transcript or signal batch
-- Add new Opportunities to the tree via `ost-workflow`
+- Add new Opportunities to the tree via `loop-workflow`
 - Add Solutions under any KR with fewer than 3 candidates
 - Check active Tests via `experiment-workflow` and log results up the tree
-- Update KR progress via `okr-workflow`
+- Update KR progress via `loop-workflow`
 
 After 4-6 weeks of this rhythm, the tree will start surfacing patterns you didn't know you knew.
 
@@ -174,4 +174,4 @@ After 4-6 weeks of this rhythm, the tree will start surfacing patterns you didn'
 
 ## Legacy terminology
 
-Earlier versions of this stack used the OKR → OST hierarchy (Objective → Key Result → Desired Outcome → Opportunity → Solution → Experiment) with `EXP-nnn` experiment files and an `ost-summary.md`. Those level names are retired: Objective and Desired Outcome merged into Outcome, Opportunity became the root, Solutions are parented by a KR, and Experiment is now Test. The skill ids `ost-workflow` and `okr-workflow` are unchanged. Existing data can be converted using the mapping in the [Loop guide](guides/the-loop.md#mapping-from-the-legacy-okr--ost-model).
+Earlier versions of this stack used the OKR → OST hierarchy (Objective → Key Result → Desired Outcome → Opportunity → Solution → Experiment) with `EXP-nnn` experiment files and an `ost-summary.md`. Those level names are retired: Objective and Desired Outcome merged into Outcome, Opportunity became the root, Solutions are parented by a KR, and Experiment is now Test. The former `ost-workflow` and `okr-workflow` skills are merged into `loop-workflow`. Existing data can be converted using the mapping in the [Loop guide](guides/the-loop.md#mapping-from-the-legacy-okr--ost-model).

@@ -11,7 +11,7 @@
 The PM agent is the discovery and strategy layer of the team. It translates customer
 signals into structured Opportunities, maintains the Loop tree (Opportunity → Outcome → KR → Solution → Test), designs Tests, and
 produces the artifacts that connect engineering work to customer outcomes. It wraps
-the PM skills (`agentic-pm`, `ost-workflow` for tree-wide Loop structure, `okr-workflow` for the Outcome/KR layer and cycles, `pm-signal-synthesis`) and extends
+the PM skills (`agentic-pm`, `loop-workflow` for the Loop tree, Outcome/KR cycles, and check-ins, `pm-signal-synthesis`) and extends
 them with direct Obsidian vault integration for persistent artifact storage.
 
 ---

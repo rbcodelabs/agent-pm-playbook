@@ -120,12 +120,11 @@ A Test is not the end of the chain; its result feeds back into the tree, which i
 
 ### Skills that cover the tree
 
-Skill ids predate Loop and are unchanged; each now covers Loop levels:
+Two skills cover the Loop levels:
 
 | Skill id | Covers |
 |---|---|
-| `okr-workflow` | Outcome and Key Result levels, plus cycle scoping and check-ins |
-| `ost-workflow` | Tree-wide Loop structure: Opportunity, Solution, Test, and the tree health check |
+| `loop-workflow` | The whole Loop: building the tree, tree health checks, Outcome and KR cycles and check-ins, closing the loop, and legacy OKR/OST conversion |
 | `experiment-workflow` | Test design, execution, and result recording |
 | `pm-signal-synthesis` | Signals → Opportunities |
 | `investment-gate` | Whether a Solution may advance (and reach the roadmap) |
@@ -499,7 +498,7 @@ The tree won't be "right" at first. That's fine. The discipline is updating it w
 
 ## Legacy terminology
 
-Earlier versions of this playbook used a separate OKR cycle and Opportunity Solution Tree (OST) joined at a Key Result. Those terms are retired as levels: OKR Objective and OST Desired Outcome are now one Outcome; the OST Opportunity is now the root Opportunity; the OST Experiment is now a Test; Solutions are parented by a KR. Skill ids (`ost-workflow`, `okr-workflow`) keep their old names. See the mapping table and conversion steps in the [Loop guide](guides/the-loop.md#mapping-from-the-legacy-okr--ost-model).
+Earlier versions of this playbook used a separate OKR cycle and Opportunity Solution Tree (OST) joined at a Key Result. Those terms are retired as levels: OKR Objective and OST Desired Outcome are now one Outcome; the OST Opportunity is now the root Opportunity; the OST Experiment is now a Test; Solutions are parented by a KR. The former `ost-workflow` and `okr-workflow` skills are merged into `loop-workflow`. See the mapping table and conversion steps in the [Loop guide](guides/the-loop.md#mapping-from-the-legacy-okr--ost-model).
 
 ---
 

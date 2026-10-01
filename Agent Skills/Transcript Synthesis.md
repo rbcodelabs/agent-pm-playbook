@@ -154,4 +154,4 @@ Read this transcript and identify any moments where the customer requests a spec
 
 [[Epistemic Self-Awareness]] — The meta-skill that underlies good synthesis: knowing the difference between what you observed and what you concluded.
 
-The `ost-workflow` skill id is unchanged for compatibility; it now covers the Opportunity, Solution, and Test levels of the Loop tree, and is where synthesized signals are registered once mapped.
+The `loop-workflow` skill covers the Loop tree, and is where synthesized signals are registered once mapped.

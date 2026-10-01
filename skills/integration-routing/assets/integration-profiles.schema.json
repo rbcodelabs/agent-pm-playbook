@@ -19,15 +19,14 @@
         "description": { "type": "string", "minLength": 1 },
         "providers": {
           "type": "object",
-          "required": ["vision", "research_capture", "insights", "okrs", "ost", "experiments", "roadmap", "delivery", "reporting_archive"],
+          "required": ["vision", "research_capture", "insights", "loop", "experiments", "roadmap", "delivery", "reporting_archive"],
           "additionalProperties": false,
           "properties": {
             "vision": { "type": "string", "minLength": 1 },
             "research_capture": { "type": "string", "minLength": 1 },
             "insights": { "type": "string", "minLength": 1 },
-            "okrs": { "type": "string", "minLength": 1, "description": "Loop Outcomes and Key Results. Must share a provider family with ost and experiments." },
-            "ost": { "type": "string", "minLength": 1, "description": "Loop Opportunities and Solutions (and assumptions). Must share a provider family with okrs and experiments." },
-            "experiments": { "type": "string", "minLength": 1, "description": "Loop Tests. Must share a provider family with okrs and ost." },
+            "loop": { "type": "string", "minLength": 1, "description": "Loop Opportunities, Outcomes, Key Results, cycles, Solutions, and assumptions. Must share a provider family with experiments." },
+            "experiments": { "type": "string", "minLength": 1, "description": "Loop Tests. Must share a provider family with loop." },
             "roadmap": { "type": "string", "minLength": 1 },
             "delivery": { "type": "string", "minLength": 1 },
             "reporting_archive": { "type": "string", "minLength": 1 }

@@ -73,10 +73,10 @@ flow below reads and writes one or more of those levels and preserves the parent
 (Outcome → Opportunity, KR → Outcome, Solution → KR, Test → Solution) and the stable IDs.
 
 > **Legacy terminology.** The earlier OKR-then-OST model (Objective, Desired Outcome,
-> Experiment) is gone from this document except in skill ids (`ost-workflow`,
-> `okr-workflow`, `experiment-workflow`, which keep their ids and now cover the Loop
-> levels), the `okrs`/`ost`/`experiments` routing keys in `pm-config.md`, and
-> provider-native object names. Where this document says "tree" it means all five levels.
+> Experiment) is gone from this document except where it names a retired term for
+> routing or search and in provider-native object names. The `loop-workflow` and
+> `experiment-workflow` skills cover the Loop levels, and the `loop` and
+> `experiments` routing keys in `pm-config.md` resolve them. Where this document says "tree" it means all five levels.
 
 The scheduled system performs the collection, synthesis, preparation, maintenance,
 prioritization, and verification in that loop, and makes the reversible calls itself:
@@ -117,11 +117,10 @@ The system never hardcodes where reviews, decisions, prototypes, notifications, 
 live. `pm-config.md` is the routing manifest.
 
 **Integration routing** resolves authoritative product capabilities: `vision`,
-`research_capture`, `insights`, `okrs`, `ost`, `experiments`, `roadmap`, `delivery`, and
-`reporting_archive`. The keys `okrs`, `ost`, and `experiments` are legacy contract names kept
-so existing configurations stay valid: `okrs` covers Outcomes, KRs, and cycles; `ost` covers
-Opportunities and Solutions plus the parent chain across all five levels; `experiments` covers
-Tests. A provider that cannot hold a level natively states its interim mapping (label, issue
+`research_capture`, `insights`, `loop`, `experiments`, `roadmap`, `delivery`, and
+`reporting_archive`. `loop` covers Opportunities, Outcomes, KRs, cycles, check-ins, Solutions,
+and the parent chain across all five levels; `experiments` covers Tests and must resolve to the
+same provider as `loop`. A provider that cannot hold a level natively states its interim mapping (label, issue
 type, or custom field) and keeps the parent chain; see the
 [PM Tool Integration Guide](PM%20Tool%20Integration%20Guide.md). **Workflow routing** resolves the services that move work between
 those objects and the people or agents operating on them:
@@ -217,7 +216,7 @@ Each flow declares its dependencies so preflight is mechanical:
 
 ```yaml
 requires:
-  product_capabilities: [okrs, ost, experiments]  # legacy keys: Outcomes/KRs, Opportunities/Solutions, Tests
+  product_capabilities: [loop, experiments]  # the Loop tree (Opportunities through Solutions), Tests
   workflow_capabilities: [review_requests, decision_records, notifications]
 optional:
   workflow_capabilities: [prototype_artifacts, product_analytics]
@@ -379,7 +378,7 @@ checked every run. Event subscriptions can react faster; reconcile their receipt
 |---|---|
 | Feedback triage | Empty the open-feedback queue: link evidence to and create and score Opportunities, adjust priority, close noise |
 | Signal synthesis | Cluster passive feedback; update the signal ledger and evidence counts |
-| Tree caretaker (`ost-workflow`) | Fix weak, duplicate, stale, contradictory, and unmapped branches across all five levels and enforce the tree quality gates below; **generate candidates immediately for any KR or cohort item with zero Solutions** |
+| Tree caretaker (`loop-workflow`) | Fix weak, duplicate, stale, contradictory, and unmapped branches across all five levels and enforce the tree quality gates below; **generate candidates immediately for any KR or cohort item with zero Solutions** |
 | Test watchdog (`experiment-workflow`) | Add missing kill conditions, chase overdue results, close stalled Tests |
 | Roadmap steward | Rebalance `NOW/NEXT/LATER` against validation, capacity, and KR coverage, **including stale or wrong-Outcome KR links and Solutions that shipped without a status update**; a Roadmap Item exists only for a Solution that cleared its investment gate |
 | Delivery orchestrator | Work only on approved or policy-authorized items under the delivery workflow's rules |

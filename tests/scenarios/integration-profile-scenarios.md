@@ -20,7 +20,7 @@ Setup records JPD and Jira connection metadata without creating authoritative Ma
 
 ## Loop split-provider scenario
 
-Starting from `compass-full`, an override of only `ost: markdown` would put Opportunities and Solutions in Markdown while Outcomes, KRs, and Tests stay in Compass, splitting the parent chain. Setup rejects it and offers to override `okrs`, `ost`, and `experiments` together. The reusable profile is unchanged.
+Starting from `compass-full`, an override of only `loop: markdown` would put Opportunities, Outcomes, KRs, and Solutions in Markdown while Tests stay in Compass, splitting the parent chain. Setup rejects it and offers to override `loop` and `experiments` together. The reusable profile is unchanged.
 
 ## Override scenario
 

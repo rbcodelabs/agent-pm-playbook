@@ -152,4 +152,4 @@ The weak version provides no specifics, no actionable items, and no way to know 
 
 [[Epistemic Self-Awareness]] — The meta-skill underlying health checks: the agent must know what a healthy tree looks like well enough to recognize an unhealthy one, and be confident enough to surface bad news without softening it.
 
-**Related skills by id:** `ost-workflow` and `okr-workflow` keep their ids for compatibility. Both cover the Loop levels (the former the Opportunity and Solution side, the latter the Outcome and KR side); the health check reads the tree they maintain as one structure.
+**Related skills by id:** `loop-workflow` covers all five Loop levels and owns the tree health check as one structure.

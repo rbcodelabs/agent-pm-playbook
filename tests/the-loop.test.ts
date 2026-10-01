@@ -50,17 +50,18 @@ test("manifest and tests reference no stale experiment template", () => {
 });
 
 test("key skills and agents reference Loop", () => {
-  for (const path of ["skills/okr-workflow/SKILL.md", "skills/ost-workflow/SKILL.md", "skills/experiment-workflow/SKILL.md", "skills/roadmap-workflow/SKILL.md", "agents/pm.md"]) {
+  for (const path of ["skills/loop-workflow/SKILL.md", "skills/experiment-workflow/SKILL.md", "skills/roadmap-workflow/SKILL.md", "agents/pm.md"]) {
     assert.match(read(path), /Loop/, path);
   }
   assert.match(read("agents/pm.md"), /guides\/the-loop\.md/);
 });
 
-test("integration routing documents the Loop rule and keeps legacy capability keys", () => {
+test("integration routing documents the Loop rule and the single loop capability key", () => {
   const routing = read("skills/integration-routing/SKILL.md");
   assert.match(routing, /Loop/);
   assert.match(routing, /guides\/the-loop\.md/);
-  assert.match(routing, /`okrs`, `ost`, and `experiments`/);
+  assert.match(routing, /`loop` and `experiments` must resolve to the same provider family/);
+  assert.doesNotMatch(routing, /`okrs`|`ost`/);
   assert.match(read("skills/integration-routing/assets/pm-config-template.md"), /Loop/);
   assert.match(read("skills/pm-setup/SKILL.md"), /Loop/);
 });
@@ -69,8 +70,24 @@ test("the Loop guide closes the loop and keeps the previous OOKRST name searchab
   const guide = read(GUIDE);
   assert.match(guide, /## Closing the loop/);
   assert.match(guide, /Previously called the OOKRST structure/);
-  for (const path of ["skills/ost-workflow/SKILL.md", "skills/okr-workflow/SKILL.md", "skills/experiment-workflow/SKILL.md", "Agentic PM Playbook.md"]) {
+  for (const path of ["skills/loop-workflow/SKILL.md", "skills/experiment-workflow/SKILL.md", "Agentic PM Playbook.md"]) {
     assert.match(read(path), /Closing the loop|Close the loop/, path);
   }
   assert.ok(!existsSync("guides/ookrst-structure.md"));
+});
+
+test("one loop-workflow skill replaces the separate OST and OKR skills", () => {
+  for (const root of ["skills", "packs/compass/skills"]) {
+    assert.ok(existsSync(`${root}/loop-workflow/SKILL.md`), root);
+    assert.ok(!existsSync(`${root}/ost-workflow`), `${root}/ost-workflow`);
+    assert.ok(!existsSync(`${root}/okr-workflow`), `${root}/okr-workflow`);
+  }
+  const skill = read("skills/loop-workflow/SKILL.md");
+  for (const heading of ["## Part 1: Build the Tree", "## Part 2: Tree Health Checks", "## Part 3: Outcome and KR Cycle", "## Part 4: Closing the Loop", "## Part 5: Convert Legacy OKR/OST Data"]) {
+    assert.ok(skill.includes(heading), heading);
+  }
+  assert.match(skill, /experiment-workflow/);
+  // Old terms remain only as routing aliases in the description and retrieval block.
+  assert.match(skill, /OKR/);
+  assert.match(skill, /opportunity solution tree/);
 });

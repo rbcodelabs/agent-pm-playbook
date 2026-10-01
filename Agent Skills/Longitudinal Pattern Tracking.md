@@ -209,4 +209,4 @@ Current tree: [PASTE]
 
 [[Bias Detection]] — Longitudinal tracking can surface corpus bias over time — if the signal mix has been predominantly one customer type for three months, that's a structural issue the PM should know about.
 
-The `okr-workflow` skill id (unchanged for compatibility) covers cycle scoping and check-ins for the Outcome and Key Result levels, and `ost-workflow` (also unchanged) covers the Opportunity, Solution, and Test levels; this skill supplies the cross-cycle history both rely on.
+The `loop-workflow` skill covers cycle scoping and check-ins for the Outcome and Key Result levels and the Opportunity, Solution, and Test levels; this skill supplies the cross-cycle history both rely on.

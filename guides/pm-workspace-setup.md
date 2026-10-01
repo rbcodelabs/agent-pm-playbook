@@ -11,7 +11,7 @@ This guide installs the optional Obsidian + Claude Threads workspace used by pro
 | **Claude Threads plugin** | Claude running inside Obsidian — threaded conversations that see your notes |
 | **Vault Bridges plugin** | A live link from your product repo (or docs folder) into your vault |
 | **Issue tracker connection** | Your Linear or JIRA work items surfaced alongside your Loop tree (Opportunity → Outcome → KR → Solution → Test) |
-| **Agent PM skills** | The 6 agents + PM skills (ost-workflow, okr-workflow, pm-signal-synthesis, etc.) installed in Claude Code |
+| **Agent PM skills** | The 6 agents + PM skills (loop-workflow, pm-signal-synthesis, etc.) installed in Claude Code |
 
 ---
 
@@ -123,7 +123,7 @@ Vault Bridges creates a **bidirectional link** between a local folder (a product
 
 ## Step 5 — Install the Claude Code agent skills
 
-The agents and skills (ost-workflow, okr-workflow, pm-signal-synthesis, investment-gate, etc.; skill ids keep their historical names but cover the Loop levels) run in Claude Code, not in Obsidian. If you haven't done this yet:
+The agents and skills (loop-workflow, pm-signal-synthesis, investment-gate, etc.) run in Claude Code, not in Obsidian. If you haven't done this yet:
 
 ```bash
 git clone https://github.com/rbcodelabs/agent-pm-playbook
@@ -167,7 +167,7 @@ Synthesize this batch of customer signals into Opportunity clusters, attaching t
 ```
 The pm-signal-synthesis skill will cluster them, tag confidence, flag contradictions, and suggest which existing Opportunity (`OPP-n`) each maps to.
 
-**5. Update the tree in its provider.** The synthesis skill resolves the tree capability (its config key is still named `ost`, a legacy name) from `pm-config.md` and updates Compass, JPD, or Markdown/Obsidian as configured.
+**5. Update the tree in its provider.** The synthesis skill resolves the tree capability (its config key is `loop`) from `pm-config.md` and updates Compass, JPD, or Markdown/Obsidian as configured.
 
 **6. Done.** One Signal Ledger entry, one tree update, 10 minutes of judgment work. That's the weekly heartbeat.
 

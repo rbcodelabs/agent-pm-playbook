@@ -2,13 +2,13 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-export const CAPABILITIES = ["vision", "research_capture", "insights", "okrs", "ost", "experiments", "roadmap", "delivery", "reporting_archive"] as const;
+export const CAPABILITIES = ["vision", "research_capture", "insights", "loop", "experiments", "roadmap", "delivery", "reporting_archive"] as const;
 // Loop (Opportunity -> Outcome -> KR -> Solution -> Test, see guides/the-loop.md) is one tree.
-// The capability keys `okrs` (Outcomes + KRs), `ost` (Opportunities + Solutions + assumptions) and
+// The capability keys `loop` (Opportunities, Outcomes, KRs, Solutions, assumptions) and
 // `experiments` (Tests) jointly resolve it, so they must share one provider family; otherwise the
 // parent chain would be split across systems. A family is the provider id up to its first underscore
-// (compass_okrs and compass_discovery are both "compass"; jpd_goals and jpd are both "jpd").
-export const LOOP_CAPABILITIES = ["okrs", "ost", "experiments"] as const;
+// (compass_loop and compass_experiments are both "compass"; jpd and jpd_tests are both "jpd").
+export const LOOP_CAPABILITIES = ["loop", "experiments"] as const;
 export const REQUIRED_PROFILES = ["compass-full", "compass-obsidian-linear", "markdown-linear", "jpd-jira"] as const;
 type Capability = (typeof CAPABILITIES)[number];
 type Providers = Record<Capability, string>;
@@ -44,7 +44,7 @@ export function validateProfiles(input: ProfilesFile): string[] {
       if (!profile.providers?.[capability]?.trim()) errors.push(`${name}: missing provider for ${capability}`);
     }
     const split = splitLoopProviders(profile.providers ?? {});
-    if (split.length) errors.push(`${name}: okrs, ost, and experiments must share one provider so the Loop parent chain is not split (${split.join(", ")})`);
+    if (split.length) errors.push(`${name}: loop and experiments must share one provider so the Loop parent chain is not split (${split.join(", ")})`);
     for (const capability of Object.keys(profile.providers ?? {})) {
       if (!CAPABILITIES.includes(capability as Capability)) errors.push(`${name}: unknown capability ${capability}`);
     }
@@ -61,7 +61,7 @@ export function resolveProviders(input: ProfilesFile, profileName: string, overr
   }
   const resolved = { ...profile.providers, ...overrides } as Providers;
   if (splitLoopProviders(resolved).length) {
-    throw new Error("okrs, ost, and experiments must resolve to one provider so the Loop parent chain is not split; override all three together");
+    throw new Error("loop and experiments must resolve to one provider so the Loop parent chain is not split; override both together");
   }
   return resolved;
 }

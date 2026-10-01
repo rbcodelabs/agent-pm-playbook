@@ -17,7 +17,7 @@ There are two layers here, and conflating them is what makes setup feel heavy. K
 | Piece | Layer | What it is | Which shift it serves |
 |---|---|---|---|
 | Claude Code | **Required** | The host you run the agents and skills in | The whole model — this is the engine |
-| The agents + PM skills (via `setup.sh`) | **Required** | 6 agents (pm, architect, engineer, qa, reviewer, release-manager) + PM skills (`pm-coach`, `pm-setup`, `ost-workflow`, `pm-signal-synthesis`, `investment-gate`, …) | *PM as judgment holder* — agents produce artifacts, you decide |
+| The agents + PM skills (via `setup.sh`) | **Required** | 6 agents (pm, architect, engineer, qa, reviewer, release-manager) + PM skills (`pm-coach`, `pm-setup`, `loop-workflow`, `pm-signal-synthesis`, `investment-gate`, …) | *PM as judgment holder* — agents produce artifacts, you decide |
 | `pm-config.md` (via `pm-setup`) | **Required** | Your config: notes system, tracker (or "none"), current outcome and headline Key Result | Everything — every skill reads this |
 | Obsidian + Claude Threads | Recommended | A notes home with Claude in the loop | *Continuous discovery* — signal and synthesis in one place |
 | Issue-tracker integration (Linear / Jira / JPD) | Optional | Work items sync between tracker and notes | *Outcomes* — work items stay traceable. **Skip if you track work in plain notes.** |

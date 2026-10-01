@@ -46,13 +46,12 @@ stale tables are a configuration error, not an alternate source of routing truth
 | `vision` | Product vision and durable product narrative |
 | `research_capture` | Raw interviews, notes, transcripts, and observations |
 | `insights` | Synthesized signals and evidence links |
-| `okrs` | Loop Outcomes (`OUT-n`), Key Results (`OUT-n-KR-n`), cycles, and check-ins |
-| `ost` | Loop Opportunities (`OPP-n`), Solutions (`SOL-n`), and assumptions |
+| `loop` | Loop Opportunities (`OPP-n`), Outcomes (`OUT-n`), Key Results (`OUT-n-KR-n`), cycles, check-ins, Solutions (`SOL-n`), and assumptions |
 | `experiments` | Loop Tests (`TST-n`): designs, results, and conclusions |
 
 #### Loop routing rule
 
-The playbook's single hierarchy is Opportunity -> Outcome -> KR -> Solution -> Test (see [Loop structure](../../guides/the-loop.md)). The legacy keys `okrs`, `ost`, and `experiments` are kept for compatibility and jointly resolve that one tree; no separate `loop` key exists. Because every record has exactly one parent in another of these capabilities, **`okrs`, `ost`, and `experiments` must resolve to the same provider family** (for example `compass_okrs` + `compass_discovery` + `compass_experiments`, or `jpd_goals` + `jpd` + `jpd_tests`). Never split the tree across systems, and when overriding one of the three, override all three together. The validator rejects a split profile and `resolveProviders` throws on one.
+The playbook's single hierarchy is Opportunity -> Outcome -> KR -> Solution -> Test (see [Loop structure](../../guides/the-loop.md)). The `loop` key owns every level except Tests, and `experiments` owns Tests. Because every Test has exactly one parent Solution in `loop`, **`loop` and `experiments` must resolve to the same provider family** (for example `compass_loop` + `compass_experiments`, or `jpd` + `jpd_tests`). Never split the tree across systems, and when overriding one of the two, override both together. The validator rejects a split profile and `resolveProviders` throws on one.
 | `roadmap` | Investment horizons and commitments |
 | `delivery` | Engineering tasks and execution status |
 | `reporting_archive` | Durable status reports and snapshots |

@@ -26,7 +26,7 @@ Some exercises say "trigger the skill" — but if you're running a plain Claude 
 
 ## Module 2 — Your First Loop
 
-### "Trigger the `ost-workflow` skill" — skill isn't responding
+### "Trigger the `loop-workflow` skill" — skill isn't responding
 
 See *Skill invocations* above. Manual path: apply the five-level rules from the concept reading directly in a plain Claude thread. Ask Claude to help you surface customer needs (Opportunities), derive the Outcome and KRs, and generate candidate Solutions and a Test, then run the health-check table manually against the output.
 

@@ -13,7 +13,7 @@
 
 Regardless of which tools you use, the product system requires a home for each capability. `pm-config.md` selects a named profile and optional per-capability overrides using the canonical [integration-routing contract](skills/integration-routing/SKILL.md). If any capability lacks a clear, single home, state fragments and becomes unreliable.
 
-The required capability keys are `vision`, `research_capture`, `insights`, `okrs`, `ost`, `experiments`, `roadmap`, `delivery`, and `reporting_archive`. The keys `okrs`, `ost`, and `experiments` are legacy contract names kept so existing configurations stay valid; read them as the Loop layers they now cover: `okrs` = Outcomes, Key Results, and cycles; `ost` = Opportunities and Solutions plus the parent chain linking all five levels; `experiments` = Tests. Named profiles are starting points, not stack mandates: `compass-full`, `compass-obsidian-linear`, `markdown-linear`, and `jpd-jira`.
+The required capability keys are `vision`, `research_capture`, `insights`, `loop`, `experiments`, `roadmap`, `delivery`, and `reporting_archive`. `loop` = Opportunities, Outcomes, Key Results, cycles, check-ins, and Solutions plus the parent chain linking all five levels; `experiments` = Tests, and must resolve to the same provider as `loop`. Named profiles are starting points, not stack mandates: `compass-full`, `compass-obsidian-linear`, `markdown-linear`, and `jpd-jira`.
 
 | Loop Level | What it is | "Done" means |
 |---|---|---|

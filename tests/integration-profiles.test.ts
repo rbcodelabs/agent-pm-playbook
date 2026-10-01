@@ -6,7 +6,7 @@ import test from "node:test";
 
 import { CAPABILITIES, loadProfiles, providerFamily, resolveProviders, splitLoopProviders, validateProfiles } from "../skills/integration-routing/scripts/validate-integration-profiles.ts";
 
-const expectedCapabilities = ["vision", "research_capture", "insights", "okrs", "ost", "experiments", "roadmap", "delivery", "reporting_archive"];
+const expectedCapabilities = ["vision", "research_capture", "insights", "loop", "experiments", "roadmap", "delivery", "reporting_archive"];
 
 test("the provider contract defines every required capability", () => {
   assert.deepEqual(CAPABILITIES, expectedCapabilities);
@@ -47,14 +47,14 @@ test("per-capability overrides replace defaults without mutating the profile", (
   const original = profiles.profiles["compass-full"].providers.delivery;
   const resolved = resolveProviders(profiles, "compass-full", { delivery: "linear" });
   assert.equal(resolved.delivery, "linear");
-  assert.equal(resolved.okrs, "compass_okrs");
+  assert.equal(resolved.loop, "compass_loop");
   assert.equal(profiles.profiles["compass-full"].providers.delivery, original);
   assert.throws(() => resolveProviders(profiles, "missing", {}), /Unknown profile/);
   assert.throws(() => resolveProviders(profiles, "compass-full", { unknown: "markdown" }), /Unknown capability/);
 });
 
 test("every affected domain skill contains the shared provider preflight", () => {
-  const paths = ["skills/okr-workflow/SKILL.md", "skills/ost-workflow/SKILL.md", "skills/pm-signal-synthesis/SKILL.md", "skills/experiment-workflow/SKILL.md", "skills/roadmap-workflow/SKILL.md", "skills/status-report-workflow/SKILL.md"];
+  const paths = ["skills/loop-workflow/SKILL.md", "skills/pm-signal-synthesis/SKILL.md", "skills/experiment-workflow/SKILL.md", "skills/roadmap-workflow/SKILL.md", "skills/status-report-workflow/SKILL.md"];
   for (const path of paths) {
     const contents = readFileSync(path, "utf8");
     assert.match(contents, /## Provider Preflight/, path);
@@ -95,7 +95,7 @@ test("installed skills have self-contained routing resources", () => {
   const setup = readFileSync("setup.sh", "utf8");
   assert.match(setup, /for skill_dir in "\$REPO_DIR\/skills"\/\*\//);
   for (const path of ["skills/integration-routing/SKILL.md", "skills/integration-routing/assets/integration-profiles.json", "skills/integration-routing/assets/integration-profiles.schema.json", "skills/integration-routing/assets/workflow-profiles.json", "skills/integration-routing/assets/workflow-profiles.schema.json", "skills/integration-routing/assets/pm-config-template.md", "skills/integration-routing/scripts/validate-integration-profiles.ts", "skills/integration-routing/scripts/validate-workflow-profiles.ts"]) assert.doesNotThrow(() => readFileSync(path));
-  for (const path of ["skills/pm-setup/SKILL.md", "skills/okr-workflow/SKILL.md", "skills/ost-workflow/SKILL.md", "skills/pm-signal-synthesis/SKILL.md", "skills/experiment-workflow/SKILL.md", "skills/roadmap-workflow/SKILL.md", "skills/status-report-workflow/SKILL.md"]) {
+  for (const path of ["skills/pm-setup/SKILL.md", "skills/loop-workflow/SKILL.md", "skills/pm-signal-synthesis/SKILL.md", "skills/experiment-workflow/SKILL.md", "skills/roadmap-workflow/SKILL.md", "skills/status-report-workflow/SKILL.md"]) {
     const contents = readFileSync(path, "utf8");
     assert.doesNotMatch(contents, /(?:\.\.\/\.\.\/)?(?:generated|docs|config)\//, path);
     for (const match of contents.matchAll(/\]\((\.\.\/integration-routing\/[^)]+)\)/g)) {
@@ -108,7 +108,7 @@ test("status reports resolve capabilities instead of requiring stack parameters"
   const report = readFileSync("skills/status-report-workflow/SKILL.md", "utf8");
   assert.doesNotMatch(report, /\| Roadmap\/OKR source \|/);
   assert.doesNotMatch(report, /\| Issue tracker \|/);
-  assert.match(report, /resolve `roadmap`, `okrs`, `ost`, `insights`, `delivery`, and `reporting_archive` independently/);
+  assert.match(report, /resolve `roadmap`, `loop`, `insights`, `delivery`, and `reporting_archive` independently/);
   assert.match(report, /`compass_tasks`/);
   assert.match(report, /Legacy compatibility inputs/);
 });
@@ -121,18 +121,20 @@ test("pm-setup uses installed routing validation without locating the repository
   assert.match(setup, /validate-workflow-profiles\.ts/);
 });
 
-test("okrs, ost, and experiments jointly resolve one Loop tree from a single provider family", () => {
+test("loop and experiments jointly resolve one Loop tree from a single provider family", () => {
   const profiles = loadProfiles("skills/integration-routing/assets/integration-profiles.json");
   for (const [name, profile] of Object.entries(profiles.profiles)) {
-    const families = new Set([profile.providers.okrs, profile.providers.ost, profile.providers.experiments].map(providerFamily));
+    const families = new Set([profile.providers.loop, profile.providers.experiments].map(providerFamily));
     assert.equal(families.size, 1, `${name} splits the Loop tree`);
   }
-  // Overriding all three together is allowed; overriding one splits the parent chain.
-  const resolved = resolveProviders(profiles, "compass-full", { okrs: "markdown", ost: "markdown", experiments: "markdown" });
-  assert.equal(resolved.ost, "markdown");
-  assert.throws(() => resolveProviders(profiles, "compass-full", { ost: "markdown" }), /Loop/);
+  // Overriding both together is allowed; overriding one splits the parent chain.
+  const resolved = resolveProviders(profiles, "compass-full", { loop: "markdown", experiments: "markdown" });
+  assert.equal(resolved.loop, "markdown");
+  assert.throws(() => resolveProviders(profiles, "compass-full", { loop: "markdown" }), /Loop/);
+  assert.throws(() => resolveProviders(profiles, "compass-full", { okrs: "markdown" }), /Unknown capability/);
+  assert.throws(() => resolveProviders(profiles, "compass-full", { ost: "markdown" }), /Unknown capability/);
   const split = structuredClone(profiles);
   split.profiles["compass-full"].providers.experiments = "jpd_tests";
   assert.ok(validateProfiles(split).some((error) => error.includes("Loop parent chain")));
-  assert.deepEqual(splitLoopProviders({ okrs: "compass_okrs", ost: "compass_discovery", experiments: "compass_experiments" }), []);
+  assert.deepEqual(splitLoopProviders({ loop: "compass_loop", experiments: "compass_experiments" }), []);
 });

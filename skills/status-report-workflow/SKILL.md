@@ -13,8 +13,8 @@ chainTo:
     targetSkill: roadmap-workflow
     message: Switching to roadmap workflow for a state change found in the report
   - pattern: "okr|key result|\\bKR\\b|check-?in"
-    targetSkill: okr-workflow
-    message: Switching to the Outcome/KR workflow for a check-in found in the report
+    targetSkill: loop-workflow
+    message: Switching to the Loop workflow for a check-in found in the report
 ---
 
 # Status Report Workflow
@@ -25,7 +25,7 @@ Act, then report ([Autonomy Policy](../../Autonomy%20Policy.md)). Generate the r
 
 ## Provider Preflight
 
-Before reading sources, read `pm-config.md` and resolve `roadmap`, `okrs`, `ost`, `insights`, `delivery`, and `reporting_archive` independently through the named profile and overrides, following the installed [integration-routing contract](../integration-routing/SKILL.md). Confirm exactly one authoritative provider per capability. Read each provider directly and write only to the resolved archive. A report is a labeled `snapshot`, never product state.
+Before reading sources, read `pm-config.md` and resolve `roadmap`, `loop`, `insights`, `delivery`, and `reporting_archive` independently through the named profile and overrides, following the installed [integration-routing contract](../integration-routing/SKILL.md). Confirm exactly one authoritative provider per capability. Read each provider directly and write only to the resolved archive. A report is a labeled `snapshot`, never product state.
 
 This skill is read-only and reporting-only. It never changes roadmap, Outcome/KR,
 discovery-tree, or delivery state. Put recommended changes in Follow-ups for the
@@ -60,7 +60,7 @@ Use the seven days ending today and state the exact dates in the report header.
 
 ## Step 2 — Read roadmap, Outcomes/KRs, and the discovery tree
 
-Resolve `roadmap` and `okrs` separately. Resolve `ost` (the Opportunity, Solution, and Test levels) and `insights` when the
+Resolve `roadmap` and `loop` (Opportunities, Outcomes/KRs, and Solutions) separately. Resolve `experiments` (Tests) and `insights` when the
 report includes discovery health. Query each authoritative provider once.
 
 - **Compass providers:** use the Compass connection and `compass-workflow` to
@@ -68,7 +68,7 @@ report includes discovery health. Query each authoritative provider once.
   insights relevant to each resolved capability. Diff stable IDs/statuses
   against the previous snapshot; never invent timestamp-based movement.
 - **Markdown/Obsidian providers:** read only configured capability paths. Do not
-  assume filenames such as `roadmap.md`, `ost.md`, or `okrs/*.md` (these are legacy example names; the Loop tree may live in any of them).
+  assume filenames such as `roadmap.md`, `loop.md`, or `okrs/*.md` (these are example names; the Loop tree may live in any of them).
 - **JPD or another provider:** use its native goals, insights, discovery, and
   roadmap objects for the capabilities it owns.
 - **Unavailable provider:** mark only that capability **DATA UNAVAILABLE

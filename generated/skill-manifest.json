@@ -6,8 +6,15 @@
       "summary": "Install or run one recurring product-operations checklist that checks every area and executes safe actionable work on every run",
       "bodyPath": "skills/scheduled-product-operations/SKILL.md",
       "retrieval": {
-        "aliases": ["schedule playbook", "consolidate playbook cron jobs", "product operations"],
-        "intents": ["install the playbook scheduled jobs", "check and triage all product operations"]
+        "aliases": [
+          "schedule playbook",
+          "consolidate playbook cron jobs",
+          "product operations"
+        ],
+        "intents": [
+          "install the playbook scheduled jobs",
+          "check and triage all product operations"
+        ]
       }
     },
     "agentic-pm": {
@@ -26,7 +33,7 @@
       "chainTo": [
         {
           "pattern": "opportunity solution tree|OOKRST|the loop|loop framework|\\bOST\\b|build.*tree|tree.*health|my tree",
-          "targetSkill": "ost-workflow",
+          "targetSkill": "loop-workflow",
           "message": "Switching to the Loop tree workflow for tree-specific work"
         },
         {
@@ -68,16 +75,16 @@
         "examples": []
       }
     },
-    "ost-workflow": {
+    "loop-workflow": {
       "priority": 5,
-      "summary": "Build, review, and maintain Opportunity Solution Trees: construction, health checks, prioritization, and common mistake correction",
+      "summary": "Build, run, and maintain the Loop: tree construction and health checks, Outcome and KR cycles and check-ins, closing the loop, prioritization, and legacy OKR/OST conversion",
       "docs": [
         "https://github.com/richardbowman/agent-pm-playbook"
       ],
       "pathPatterns": [],
       "bashPatterns": [],
       "importPatterns": [],
-      "bodyPath": "skills/ost-workflow/SKILL.md",
+      "bodyPath": "skills/loop-workflow/SKILL.md",
       "pathRegexSources": [],
       "bashRegexSources": [],
       "importRegexSources": [],
@@ -88,6 +95,16 @@
           "message": "Switching to signal synthesis to process research before updating the tree"
         },
         {
+          "pattern": "\\btest\\b|experiment|assumption|kill condition|validate",
+          "targetSkill": "experiment-workflow",
+          "message": "Switching to the Test workflow to design the cheapest test of this Solution's riskiest assumption"
+        },
+        {
+          "pattern": "roadmap|delivery|milestone|when.*ship|what.*build",
+          "targetSkill": "roadmap-workflow",
+          "message": "Switching to roadmap workflow to connect roadmap items to KR progress"
+        },
+        {
           "pattern": "coach|playbook|philosophy|how should I|what should I|strategy",
           "targetSkill": "agentic-pm",
           "message": "Switching to PM coaching for broader strategic guidance"
@@ -95,34 +112,62 @@
       ],
       "retrieval": {
         "aliases": [
-          "Loop",
+          "the Loop",
+          "Loop tree",
           "OST",
           "opportunity solution tree",
           "opportunity tree",
           "solution tree",
+          "OOKRST",
+          "OKR",
+          "OKRs",
+          "outcome",
+          "key result",
+          "KR",
+          "okr cycle",
+          "okr check-in",
+          "okr health",
+          "kr check-in",
+          "quarterly goals",
           "tree review",
-          "tree health"
+          "tree health",
+          "discovery tree"
         ],
         "intents": [
+          "build the Loop tree",
           "build an OST",
           "review my opportunity solution tree",
           "check my tree health",
           "add opportunities to my tree",
-          "prioritize within my OST",
-          "help me structure opportunities and solutions",
-          "validate my opportunity",
-          "my tree needs work"
+          "generate solutions for this KR",
+          "prioritize within my tree",
+          "set up OKRs for this quarter",
+          "create a new OKR cycle",
+          "log a check-in for my KR",
+          "review OKR health",
+          "which KRs are at risk",
+          "connect this KR to discovery",
+          "convert my OKRs and OST to the Loop",
+          "archive the OKR cycle",
+          "close the loop on this test result"
         ],
         "entities": [
+          "the Loop",
+          "Opportunity",
+          "Outcome",
+          "Key Result",
+          "KR",
+          "Solution",
+          "Test",
+          "OKR cycle",
+          "check-in",
           "opportunity solution tree",
-          "Loop",
           "OST",
           "desired outcome",
-          "opportunity layer",
-          "solution layer",
-          "test layer",
           "tree health",
-          "opportunity framing"
+          "opportunity framing",
+          "orphan",
+          "coverage gap"
         ],
         "examples": []
       }
@@ -148,7 +193,7 @@
         },
         {
           "pattern": "opportunity.*framing|reframe|solution.*masquerad|OST|tree",
-          "targetSkill": "ost-workflow",
+          "targetSkill": "loop-workflow",
           "message": "Switching to the Loop tree workflow to address the opportunity framing issue first"
         },
         {
@@ -214,7 +259,7 @@
       "chainTo": [
         {
           "pattern": "opportunity solution tree|OOKRST|the loop|loop framework|\\bOST\\b|add to.*tree|update.*tree",
-          "targetSkill": "ost-workflow",
+          "targetSkill": "loop-workflow",
           "message": "Switching to the Loop tree workflow to map synthesized signals into the tree"
         }
       ],

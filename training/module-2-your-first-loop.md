@@ -24,7 +24,7 @@ By the end of this module you will be able to:
 - Start from an **Opportunity** framed as a customer need, and recognize a solution wearing an opportunity's clothing.
 - Derive the **Outcome** (a behavior change, no numbers) the Opportunity requires, and 2–3 measurable **Key Results** for it.
 - Generate ≥3 meaningfully different **Solutions** under a KR and design a **Test** for the riskiest assumption of one.
-- Use the `ost-workflow` skill to build and extend the tree.
+- Use the `loop-workflow` skill to build and extend the tree.
 - Run a **tree health check** and name which of the seven checks a tree fails.
 - Pick a focus branch using evidence-weighted prioritization instead of gut feel.
 
@@ -74,7 +74,7 @@ For ShiftLoop: *"Managers struggle to get their existing team and their staff's 
 
 **3+ red flags = the tree needs a reset before any new work.**
 
-**Go deeper:** the [Loop guide](../guides/the-loop.md), the [`ost-workflow` skill](../skills/ost-workflow/SKILL.md) (the full build + health-check + prioritization procedure), [Agentic PM Playbook](../Agentic%20PM%20Playbook.md), and [Tree Health Checks](../Agent%20Skills/Tree%20Health%20Checks.md).
+**Go deeper:** the [Loop guide](../guides/the-loop.md), the [`loop-workflow` skill](../skills/loop-workflow/SKILL.md) (the full build + health-check + prioritization procedure), [Agentic PM Playbook](../Agentic%20PM%20Playbook.md), and [Tree Health Checks](../Agent%20Skills/Tree%20Health%20Checks.md).
 
 ---
 
@@ -92,7 +92,7 @@ Two parts: **build** a clean tree, then **diagnose** a broken one. The diagnosis
 
 1. In a thread, trigger the skill: *"Build a Loop tree for `<product>`. Start from the opportunity; the current goal is in the product brief."* *(Sample run: "Build a Loop tree for ShiftLoop…")*
 
-   > **No `ost-workflow` skill?** If you're working without the skill active, apply the five-level structure directly: describe your product and goal in a plain Claude thread, then ask it to help you surface customer needs (Opportunities) and walk down to Outcome, KRs, Solutions and a Test. The skill enforces good structure automatically — without it, *you're* the enforcer. Re-read the rules and the health-check table above and check your own work at each step.
+   > **No `loop-workflow` skill?** If you're working without the skill active, apply the five-level structure directly: describe your product and goal in a plain Claude thread, then ask it to help you surface customer needs (Opportunities) and walk down to Outcome, KRs, Solutions and a Test. The skill enforces good structure automatically — without it, *you're* the enforcer. Re-read the rules and the health-check table above and check your own work at each step.
 2. **Start from needs, not the goal.** Surface **at least 5 candidate Opportunities**, each framed as a customer need with context. Pull them from your personas — for ShiftLoop that's managers, the buyer, and staff; for a single-persona product it's all from that one user. Resist writing solutions.
 3. **Pick the root Opportunity** for this cycle (the best-bounded, best-evidenced one that your current goal depends on) and give it an ID: `OPP-1`.
 4. **Derive the Outcome.** Write one sentence, behavior-framed, no numbers: what must customers do differently if you capture `OPP-1`? (For ShiftLoop: trial managers publish a complete first schedule in their first week.) Give it `OUT-1`.

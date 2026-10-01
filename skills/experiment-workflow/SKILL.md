@@ -76,7 +76,7 @@ chainTo:
     targetSkill: investment-gate
     message: Switching to investment gate to assess whether this validated solution is ready to move to build
   - pattern: "kill.*solution|archive.*solution|solution.*dead|solution.*failed|\\bost\\b|ookrst|the loop|loop framework|opportunity.*tree"
-    targetSkill: ost-workflow
+    targetSkill: loop-workflow
     message: Switching to the Loop tree workflow to update the tree and archive the killed Solution
   - pattern: "coach|philosophy|strategy|broader|how should we think about|what should we"
     targetSkill: agentic-pm
@@ -188,7 +188,7 @@ created: YYYY-MM-DD
 
 ### Step 1 - Locate the parent Solution and KR
 
-Find the parent Solution (SOL-NNN) and, through it, its KR and Opportunity. If the Solution is missing, create it from context (tagged `weak` if thinly evidenced) under the KR it most directly moves, and say so; if the KR is missing, chain to `okr-workflow`. If the Solution is archived or already on the roadmap, note that and design against the closest active Solution.
+Find the parent Solution (SOL-NNN) and, through it, its KR and Opportunity. If the Solution is missing, create it from context (tagged `weak` if thinly evidenced) under the KR it most directly moves, and say so; if the KR is missing, chain to `loop-workflow`. If the Solution is archived or already on the roadmap, note that and design against the closest active Solution.
 
 ### Step 2 - Name the riskiest assumption
 
@@ -268,7 +268,7 @@ Did the success condition trigger (Yes / No / Partial)? Did the kill condition t
 Make the call, record the reasoning and confidence, and report it. For ambiguous data, follow [Result Interpretation](../../Agent%20Skills/Result%20Interpretation.md).
 
 - **Proceed:** success met, kill not triggered. Chain to `investment-gate`.
-- **Kill:** kill triggered, or success clearly missed with sufficient data. Record the result, then recommend archiving the Solution to a human (it has work behind it) via `ost-workflow`.
+- **Kill:** kill triggered, or success clearly missed with sufficient data. Record the result, then recommend archiving the Solution to a human (it has work behind it) via `loop-workflow`.
 - **Iterate:** mixed or inconclusive, including design or sample issues. Design the next iteration on the same assumption.
 - **Not Pursued:** a deliberate choice not to run the Test (opportunity cost, timing, a blocked dependency, reprioritization) - no evidence either way. For Compass, call `conclude_experiment` with `NOT_PURSUED`, never `KILL`: `NOT_PURSUED` leaves the linked Assumption `UNTESTED`, while `KILL` would incorrectly set it `INVALIDATED`. A `reason` is required; record the actual reasoning. Don't leave a shelved Test in `DESIGNING`.
 
@@ -293,7 +293,7 @@ Add Learnings worth keeping regardless of outcome; failed Tests often teach the 
 
 A result is not finished until it has moved up (structure rule 6):
 1. Update the Solution's confidence and its assumption status (validated / invalidated / untested).
-2. Add the Test and what it showed to the parent KR's evidence line (see `okr-workflow` Workflow 2, Step 4), without attaching raw signals to the KR.
+2. Add the Test and what it showed to the parent KR's evidence line (see `loop-workflow` Part 3, Workflow 2, Step 4), without attaching raw signals to the KR.
 3. If the result is new customer evidence about the underlying need, attach it to the Opportunity or ask `pm-signal-synthesis` to.
 4. Close the loop. A passed Test promotes the Solution and updates the KR. A failed or inconclusive Test reopens or re-scores the parent Opportunity, or spawns new Opportunities the result exposed. Side-findings enter as Opportunities. See [Closing the loop](../../guides/the-loop.md#closing-the-loop).
 
@@ -366,7 +366,7 @@ Name these when you see them and fix them:
 ## Chain Logic
 
 - **Proceed:** chain to `investment-gate`; the result is evidence, the gate decides sufficiency.
-- **Kill:** chain to `ost-workflow` to record the kill reason, recommend archiving the Solution, and pick the next candidate under the same KR or re-evaluate the Opportunity.
+- **Kill:** chain to `loop-workflow` to record the kill reason, recommend archiving the Solution, and pick the next candidate under the same KR or re-evaluate the Opportunity.
 - **Iterate:** stay here and design the next iteration, noting what this one taught about the design.
 - **Not Pursued result:** record `conclude_experiment(experimentId, "NOT_PURSUED", reason)` and stop. Don't chain as if it failed or passed; the Solution's fate is a separate decision.
 - **"Are we ready to build?":** chain to `investment-gate` with the Test as primary input.
@@ -376,6 +376,7 @@ Name these when you see them and fix them:
 ## References
 
 - [The Loop](../../guides/the-loop.md)
+- [Loop Workflow](../loop-workflow/SKILL.md) (tree, cycles, check-ins, and closing the loop; this skill owns the Test level)
 - [Progressive Investment Framework](../../Progressive%20Investment%20Framework.md)
 - [Discovery Tree as Operating System](../../Agentic%20PM%20Playbook.md)
 - [Test Minimalism](../../Agent%20Skills/Test%20Minimalism.md)

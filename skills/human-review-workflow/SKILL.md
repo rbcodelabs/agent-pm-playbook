@@ -182,7 +182,7 @@ already permitted, or visible as outstanding work. `Request changes` and `Reject
 ## Owner-requested reviews (Modes 5–8)
 
 By default the agent makes these choices itself through the domain skill
-([ost-workflow](../ost-workflow/SKILL.md), [roadmap-workflow](../roadmap-workflow/SKILL.md),
+([loop-workflow](../loop-workflow/SKILL.md), [roadmap-workflow](../roadmap-workflow/SKILL.md),
 [experiment-workflow](../experiment-workflow/SKILL.md)) and reports them. Use a mode below
 only when the human has explicitly asked to own that decision, in session or in
 `pm-config.md`. With `compass_decisions` or any tracking-only provider, each mode means:

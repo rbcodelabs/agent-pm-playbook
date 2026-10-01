@@ -42,7 +42,7 @@ retrieval:
     - Marty Cagan
 chainTo:
   - pattern: "opportunity solution tree|\\bOST\\b|\\bOOKRST\\b|\\bthe loop\\b|\\bloop framework\\b|build.*tree|tree.*health|my tree"
-    targetSkill: ost-workflow
+    targetSkill: loop-workflow
     message: Switching to the Loop tree workflow for tree-specific work
   - pattern: "interview|transcript|signal|synthesis|research|feedback|survey|tickets"
     targetSkill: pm-signal-synthesis

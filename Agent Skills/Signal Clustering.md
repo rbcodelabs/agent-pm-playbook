@@ -173,4 +173,4 @@ Flag your three weakest cluster memberships — the individual signal-to-cluster
 
 [[Confidence Tagging]] — Cluster-level confidence is one of the most important places this skill is exercised.
 
-The `ost-workflow` skill id is unchanged for compatibility; it now covers the Opportunity, Solution, and Test levels of the Loop tree, and is where a cluster that passes validation is registered as an `OPP-n`.
+The `loop-workflow` skill covers the Loop tree, and is where a cluster that passes validation is registered as an `OPP-n`.

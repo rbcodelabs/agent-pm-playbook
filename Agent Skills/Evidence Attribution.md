@@ -133,4 +133,4 @@ The agent should apply this taxonomy in its output so PMs can see the evidence q
 
 [[Epistemic Self-Awareness]] — The underlying disposition that makes attribution enforcement possible: the agent must know that "I believe this is true" and "I have evidence this is true" are different claims, and must be willing to require the latter even when the PM is confident.
 
-The `ost-workflow` skill id is unchanged for compatibility; it now covers the Opportunity, Solution, and Test levels of the Loop tree, which are the levels where this skill's attribution rules apply.
+The `loop-workflow` skill covers the Loop tree, including the Opportunity, Solution, and Test levels where this skill's attribution rules apply.
