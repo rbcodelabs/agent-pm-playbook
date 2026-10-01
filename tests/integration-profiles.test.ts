@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
 
-import { CAPABILITIES, loadProfiles, resolveProviders, validateProfiles } from "../skills/integration-routing/scripts/validate-integration-profiles.ts";
+import { CAPABILITIES, loadProfiles, providerFamily, resolveProviders, splitOokrstProviders, validateProfiles } from "../skills/integration-routing/scripts/validate-integration-profiles.ts";
 
 const expectedCapabilities = ["vision", "research_capture", "insights", "okrs", "ost", "experiments", "roadmap", "delivery", "reporting_archive"];
 
@@ -67,7 +67,7 @@ test("setup scenarios document profile-specific scaffolding and the full deliver
   for (const profile of ["compass-full", "compass-obsidian-linear", "markdown-linear", "jpd-jira"]) {
     assert.match(scenarios, new RegExp(`## ${profile}`));
   }
-  assert.match(scenarios, /insight.*OST.*experiment.*roadmap.*delivery/is);
+  assert.match(scenarios, /insight.*OOKRST.*Opportunity.*Test.*roadmap.*delivery/is);
   assert.match(scenarios, /compass-full[\s\S]*does not create `product\/`/);
 });
 
@@ -119,4 +119,20 @@ test("pm-setup uses installed routing validation without locating the repository
   assert.match(setup, /integration-routing/);
   assert.match(setup, /validate-integration-profiles\.ts/);
   assert.match(setup, /validate-workflow-profiles\.ts/);
+});
+
+test("okrs, ost, and experiments jointly resolve one OOKRST tree from a single provider family", () => {
+  const profiles = loadProfiles("skills/integration-routing/assets/integration-profiles.json");
+  for (const [name, profile] of Object.entries(profiles.profiles)) {
+    const families = new Set([profile.providers.okrs, profile.providers.ost, profile.providers.experiments].map(providerFamily));
+    assert.equal(families.size, 1, `${name} splits the OOKRST tree`);
+  }
+  // Overriding all three together is allowed; overriding one splits the parent chain.
+  const resolved = resolveProviders(profiles, "compass-full", { okrs: "markdown", ost: "markdown", experiments: "markdown" });
+  assert.equal(resolved.ost, "markdown");
+  assert.throws(() => resolveProviders(profiles, "compass-full", { ost: "markdown" }), /OOKRST/);
+  const split = structuredClone(profiles);
+  split.profiles["compass-full"].providers.experiments = "jpd_tests";
+  assert.ok(validateProfiles(split).some((error) => error.includes("OOKRST parent chain")));
+  assert.deepEqual(splitOokrstProviders({ okrs: "compass_okrs", ost: "compass_discovery", experiments: "compass_experiments" }), []);
 });

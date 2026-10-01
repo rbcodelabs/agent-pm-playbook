@@ -9,7 +9,7 @@ decision before the machinery used to record it.
 Ask only for the four irreversible categories in the
 [Autonomy Policy](../../../Autonomy%20Policy.md) (destroy, reach outside the team, ship to
 production, spend money or human time) or a decision the human explicitly asked to own.
-Reversible work (prioritization, horizon moves, OST changes, direction choices,
+Reversible work (prioritization, horizon moves, OOKRST tree changes, direction choices,
 housekeeping) is done and reported, never turned into a request.
 
 - Do all reversible preparation first so the decision is one word.

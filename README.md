@@ -6,9 +6,9 @@ It ships three things:
 
 - **A training curriculum** — 7 modules + a capstone that teach the operating model step by step, on a sample product, then on yours
 - **A team of Claude agents** — pm, architect, engineer, qa, reviewer, and release-manager, each with a focused role and explicit handoff rules
-- **A set of skills** — specialized Claude Code skills for OST work, signal synthesis, experiment design, investment gating, and engineering discipline (design gates, TDD, verification)
+- **A set of skills** — specialized Claude Code skills for OOKRST tree work (Opportunity → Outcome → Key Result → Solution → Test), signal synthesis, test design, investment gating, and engineering discipline (design gates, TDD, verification)
 
-Built on Teresa Torres's Continuous Discovery Habits and Marty Cagan's outcome-driven thinking.
+Built on Teresa Torres's Continuous Discovery Habits and Marty Cagan's outcome-driven thinking, unified into one hierarchy: **OOKRST** (Opportunity → Outcome → Key Result → Solution → Test, with Roadmap Items hanging off Solutions that clear the investment gate). See the [OOKRST Structure guide](guides/ookrst-structure.md).
 
 **Agents act, then report.** Every agent and skill follows one
 [Autonomy Policy](Autonomy%20Policy.md): do reversible work without asking and report
@@ -43,7 +43,7 @@ Restart Claude Code after setup finishes (`exit`, then `claude` again).
 ```bash
 # In a Claude Code session, after restarting:
 # 1. Confirm agents loaded — reference one by name:
-"Have the pm agent review my OST"
+"Have the pm agent review my OOKRST tree"
 
 # 2. Confirm skills loaded — trigger one:
 "Run the pm-setup skill"
@@ -54,7 +54,7 @@ If you get "unknown skill" or "unknown agent" errors, re-run `./setup.sh --force
 **First-time config:** run this in a Claude Code session inside your product's folder:
 
 ```
-Run the pm-setup skill to select an integration profile, configure provider routing, and set my current desired outcome.
+Run the pm-setup skill to select an integration profile, configure provider routing, and set my current focus Opportunity and Outcome.
 ```
 
 This writes a `pm-config.md` routing manifest that every PM agent and skill reads automatically. Choose `compass-full`, `compass-obsidian-linear`, `markdown-linear`, or `jpd-jira`, then override individual capabilities if needed. Product state stays in its resolved provider.
@@ -79,9 +79,9 @@ The curriculum teaches the operating model first (why), then the tools (how). It
 |---|---|---|---|
 | **0** | [The Operating Model](training/module-0-operating-model.md) | Half day | A backward trace from a real feature to its (missing) outcome |
 | **1** | [Environment Setup](training/module-1-environment-setup.md) | Half day | A working environment + `pm-config.md` |
-| **2** | [Your First OST](training/module-2-your-first-ost.md) | 1 day | A health-checked Opportunity Solution Tree |
-| **3** | [Signal Synthesis](training/module-3-signal-synthesis.md) | 1 day | Clustered, evidence-tagged opportunities mapped to the OST |
-| **4** | [Experiments & Investment](training/module-4-experiments-and-investment.md) | 1 day | One assumption decomposed, leanest test designed, gated |
+| **2** | [Your First OOKRST Tree](training/module-2-your-first-ookrst-tree.md) | 1 day | A health-checked OOKRST tree |
+| **3** | [Signal Synthesis](training/module-3-signal-synthesis.md) | 1 day | Clustered, evidence-tagged opportunities mapped to the tree |
+| **4** | [Tests & Investment](training/module-4-tests-and-investment.md) | 1 day | One assumption decomposed, leanest Test designed, gated |
 | **5** | [The Agent Team](training/module-5-the-agent-team.md) | 1 day | One solution run from story → design brief |
 | **6** | [Cadences & Health](training/module-6-cadences-and-health.md) | Half day | Recurring rituals scheduled in your own calendar |
 | **Capstone** | [One Full Cycle on Your Real Product](training/capstone.md) | 1–2 weeks | A complete discovery loop, scored against a rubric |
@@ -104,7 +104,7 @@ Six specialized agents installed by `setup.sh`:
 
 | Agent | Role |
 |---|---|
-| `pm` | Discovery, OST maintenance, signal synthesis, user stories |
+| `pm` | Discovery, tree maintenance, signal synthesis, user stories |
 | `architect` | System design, ADRs, schema review |
 | `engineer` | Implementation, refactoring, debugging |
 | `qa` | Test strategy, test writing, edge case hunting |
@@ -126,7 +126,7 @@ Delegate explicitly or let Claude route automatically:
 Ask: “Install the playbook's product-operations job every weekday at 9 AM in my timezone.”
 After resolving your configuration and schedule, the
 [scheduled-product-operations skill](skills/scheduled-product-operations/SKILL.md) installs
-one job per product. Every run checks feedback, discovery, experiments, roadmap, delivery,
+one job per product. Every run checks feedback, discovery, tests, roadmap, delivery,
 outcomes, decisions, reporting, and automation health, then works through one checklist.
 Healthy areas remain visible; human decisions and unfinished work include direct links.
 Existing multiple-job installations can be consolidated through the same skill.
@@ -144,9 +144,10 @@ Skills installed by `setup.sh` include:
 | `scheduled-product-operations` | Installs one recurring job that checks every area, builds one checklist, and executes safe actionable work on every run |
 | `human-review-workflow` | Routes asynchronous product decisions, including tracking-only Compass Decisions that stop for human judgment without auto-applying actions |
 | `delivery-completion-watcher` | Reconciles merged PRs and verified production delivery back into product, roadmap, and capacity state |
-| `pm-coach` | Thinking partner for discovery, OST review, experiment design |
-| `ost-workflow` | Build, extend, and health-check an Opportunity Solution Tree |
-| `pm-signal-synthesis` | Turn interviews, tickets, and reviews into OST-ready clusters |
+| `pm-coach` | Thinking partner for discovery, tree review, Test design |
+| `ost-workflow` | Build, extend, and health-check the OOKRST tree: Opportunity, Solution, and Test levels (skill id predates OOKRST) |
+| `okr-workflow` | Define and check in Outcomes and Key Results, and scope cycles (skill id predates OOKRST) |
+| `pm-signal-synthesis` | Turn interviews, tickets, and reviews into tree-ready Opportunity clusters |
 | `investment-gate` | Assess readiness against the Progressive Investment ladder |
 | `jira-workflow` | Create and update Jira issues from discovery artifacts |
 | `agentic-pm` | Full-cycle PM workflow orchestration |
@@ -166,7 +167,8 @@ Skills installed by `setup.sh` include:
 ## Reference docs
 
 - **[Autonomy Policy](Autonomy%20Policy.md)** — the one rule for when agents act and when they ask
-- **[Agentic PM Playbook](Agentic%20PM%20Playbook.md)** — full framework: OST operating system, cadences, prompt library, quality gates
+- **[Agentic PM Playbook](Agentic%20PM%20Playbook.md)** — full framework: the OOKRST operating system, cadences, prompt library, quality gates
+- **[OOKRST Structure](guides/ookrst-structure.md)** — the five levels, structural rules, and ID formats
 - **[Progressive Investment Framework](Progressive%20Investment%20Framework.md)** — the five-stage evidence ladder
 - **[Discovery Health Metrics](Discovery%20Health%20Metrics.md)** — four diagnostic categories and flag thresholds
 - **[Signal Ledger](Signal%20Ledger.md)** — the synthesis artifact format
@@ -179,7 +181,7 @@ Skills installed by `setup.sh` include:
 
 ## Philosophy
 
-Outcomes over output. Continuous discovery. OST as the operating system. Agents as thinking partners, not just executors.
+Outcomes over output. Continuous discovery. The OOKRST tree as the operating system. Agents as thinking partners, not just executors.
 
 Agents do the product work, including judgment calls that can be undone: framing, prioritizing, interpreting results. They report each call so the PM can overrule it. What stays with the PM is anything that can't be taken back: killing work, speaking to customers, shipping, and spending.
 
@@ -188,3 +190,9 @@ Agents do the product work, including judgment calls that can be undone: framing
 ## Want help adopting this with your team?
 
 **[RB Code Labs](https://rbcodelabs.com)** offers facilitated workshops to help product teams adopt this operating model — live, with your real product and real signals. If you want the curriculum accelerated and embedded in your team rather than self-served, get in touch at **rick@rbcodelabs.com**.
+
+---
+
+## Legacy terminology
+
+Earlier versions used a separate OKR cycle and Opportunity Solution Tree (OST). Those are now one OOKRST tree; Objective and Desired Outcome merged into Outcome, and Experiment is now Test. Skill ids (`ost-workflow`, `okr-workflow`, `experiment-workflow`) keep their old names for compatibility. See the [mapping in the OOKRST Structure guide](guides/ookrst-structure.md#mapping-from-the-legacy-okr--ost-model).

@@ -2,34 +2,31 @@
 
 > The complete Obsidian + Linear replacement for Jira Product Discovery. Built for agentic teams doing continuous discovery without a separate SaaS tool.
 
-**See also:** [[Agentic PM Playbook]] for philosophy and workflows. [[Agentic PM — Agent Capability Framework]] for skill definitions.
+**See also:** [[Agentic PM Playbook]] for philosophy and workflows. [[Agentic PM — Agent Capability Framework]] for skill definitions. [OOKRST Structure](guides/ookrst-structure.md) for the level definitions, rules, and ID formats this stack implements.
 
 ---
 
 ## What This Is
 
-This document describes the full agentic-JPD-equivalent system: a set of skills, file structures, and Obsidian Bases views that replicate everything Jira Product Discovery does — and adds OKR-layer connective tissue that JPD lacks.
+This document describes the full agentic-JPD-equivalent system: a set of skills, file structures, and Obsidian Bases views that replicate everything Jira Product Discovery does — and puts goals and discovery in one integrated tree (OOKRST) rather than a separate OKR layer bolted onto a separate tree.
 
-Every JPD construct has a direct equivalent here. All state lives in Markdown files in your product vault folder, queryable by Obsidian Bases. All workflows are driven by named skills. Nothing requires a separate SaaS subscription.
+Every JPD construct has a direct equivalent here. All state lives in Markdown files in your product vault folder, queryable by Obsidian Bases. All workflows are driven by named skills. Nothing requires a separate SaaS subscription. This is the Markdown/Obsidian adapter; other providers map the same five levels to their own objects (see [PM Tool Integration Guide](PM%20Tool%20Integration%20Guide.md)).
 
 ---
 
 ## The Full Hierarchy
 
 ```
-OBJECTIVE  (OKR — why this matters to the business)
-└── Key Result  (measurable milestone, owned by the team)
-    └── Desired Outcome  (OST root — the product metric the team controls)
-        └── Opportunity  (customer need, pain, or desire with evidence)
-            ├── Solution A  (hypothesis for addressing the opportunity)
-            │   └── Experiment  (riskiest assumption test)
-            └── Solution B
-                └── Experiment
-                    └── Roadmap Item  (validated solution → delivery commitment)
-                        └── Linear Issue  (engineering work)
+OPPORTUNITY  OPP-n  (customer need, pain, or desire with evidence)
+└── OUTCOME  OUT-n  (the customer-behavior change we commit to producing)
+    └── Key Result  OUT-n-KR-n  (measurable signal: baseline, target, date)
+        └── Solution  SOL-n  (candidate way to move the KR; 3+ per KR)
+            ├── Test  TST-n  (riskiest-assumption test, kill condition written first)
+            └── Roadmap Item  (only after the Solution clears its investment gate)
+                └── Linear Issue  (engineering work)
 ```
 
-Each layer has its own skill, file template, and Bases view. Nothing moves to the next layer without passing the quality gate at the current one.
+Opportunity is the root. Each level has its own skill coverage, file template, and Bases view. Nothing moves to the next level without passing the quality gate at the current one. Every record has exactly one parent.
 
 ---
 
@@ -37,43 +34,45 @@ Each layer has its own skill, file template, and Bases view. Nothing moves to th
 
 | JPD Construct | Agentic Stack | File Location | Skill |
 |---|---|---|---|
-| Goals | OKR cycles | `product/okrs/[CYCLE].md` | `okr-workflow` |
 | Insights (signals) | Signal Ledger | `product/discovery/Signal Ledger.md` | `pm-signal-synthesis` |
-| Ideas / Opportunities | Opportunity files | `product/discovery/opportunities/` | `ost-workflow` |
-| Ideas / Solutions | Solution files | `product/discovery/solutions/` | `ost-workflow` |
-| Tests / Experiments | Experiment files | `product/discovery/experiments/` | `experiment-workflow` |
+| Ideas / Opportunities | Opportunity files (`OPP-n`) | `product/discovery/opportunities/` | `ost-workflow` |
+| Goals | Outcomes (`OUT-n`, each naming its parent `OPP-n`) with their Key Results (`OUT-n-KR-n`), recorded in the cycle file | `product/okrs/[CYCLE].md` | `okr-workflow` |
+| Ideas / Solutions | Solution files (`SOL-n`) | `product/discovery/solutions/` | `ost-workflow` |
+| Tests | Test files (`TST-n`) | `product/discovery/tests/` | `experiment-workflow` |
 | Delivery Issues | Linear issues | Linear + `product/roadmap/items/` | `roadmap-workflow`, `jira-workflow` |
-| Hierarchy view | OST summary | `product/discovery/ost-summary.md` | `ost-workflow` |
+| Hierarchy view | Tree summary | `product/discovery/tree-summary.md` | `ost-workflow` |
 | Board / Kanban | Obsidian Bases | `[Product] Discovery Board.base` | n/a |
 | Roadmap view | Roadmap Bases | `[Product] Roadmap.base` | `roadmap-workflow` |
+
+Skill ids keep their legacy names. `okr-workflow` covers the Outcome and Key Result levels plus cycle scoping; `ost-workflow` covers the tree-wide OOKRST structure (Opportunity, Solution, Test, and the tree health check); `experiment-workflow` covers Test design and results.
 
 ---
 
 ## The Skill Chain
 
-This is the complete workflow from raw signal to shipped feature. Each arrow is a handoff point where PM judgment is required.
+This is the complete workflow from raw signal to shipped feature. Each arrow is a handoff point where PM judgment is applied (the agent proposes, then acts and reports per the [Autonomy Policy](Autonomy%20Policy.md)).
 
 ```
 Signal arrives (interview, ticket, NPS, sales call)
   → pm-signal-synthesis
       Cluster into opportunity themes, tag confidence, cite evidence
   → ost-workflow
-      Add opportunity to OST, connect to desired outcome, assign status
+      Add the Opportunity (OPP-n) as a root of the tree, with evidence and segment
   → okr-workflow
-      Connect opportunity to the active Key Result it would move
-  → investment-gate
-      Is evidence strong enough (2+ sources) to explore solutions?
+      Define the Outcome (OUT-n) for the focus Opportunity and its 2-3 Key Results (OUT-n-KR-n) for the cycle
   → ost-workflow
-      Add candidate solutions (3 minimum), map riskiest assumptions
+      Add 3+ candidate Solutions (SOL-n) under each KR, map riskiest assumptions
   → experiment-workflow
-      Design assumption test, set kill condition, run, record result
+      Design the Test (TST-n) on the riskiest assumption, write success, failure, and kill criteria, run, record result against the KR
+  → investment-gate
+      Is the evidence strong enough for the Solution to advance (and reach the roadmap)?
   → roadmap-workflow
-      Validated solution → roadmap item (Now / Next / Later)
+      Cleared Solution → roadmap item (Now / Next / Later)
   → jira-workflow
       Roadmap item → Linear issue for engineering handoff
 ```
 
-Skills that require PM judgment before proceeding: `investment-gate`, `ost-workflow` (adding new branches), `roadmap-workflow` (committing to Now). The agent never makes these calls autonomously.
+Calls that weigh most on PM judgment: `investment-gate`, `ost-workflow` (adding new branches), `roadmap-workflow` (committing to Now). The agent makes them, states what it would need to believe, and reports so the PM can overrule; it asks first only before irreversible actions.
 
 ---
 
@@ -83,34 +82,34 @@ Every product gets this folder layout. Run `pm-setup` to scaffold it.
 
 ```
 product/
-  pm-config.md                        # Team config, desired outcome, skill paths
+  pm-config.md                        # Team config, active Outcome, skill paths
   vision.md                           # Product vision and ICP summary
   icp.md                              # Ideal customer profile
   okrs/
-    Q3-2026.md                        # OKR cycle (one file per cycle)
+    Q3-2026.md                        # Cycle file (one per cycle): holds the Outcomes and their KRs, each with a parent Opportunity
   discovery/
-    ost-summary.md                    # OST tree narrative (human-readable)
+    tree-summary.md                   # OOKRST tree narrative (human-readable)
     Signal Ledger.md                  # Signal synthesis sessions log
     opportunities/
-      OPP-001-[slug].md               # Individual opportunity files
+      OPP-001-[slug].md               # Opportunity files (the root level)
       OPP-002-[slug].md
     solutions/
-      SOL-001-[slug].md               # Individual solution files
-    experiments/
-      EXP-001-[slug].md               # Experiment files with kill conditions
+      SOL-001-[slug].md               # Solution files; parent: a KR
+    tests/
+      TST-001-[slug].md               # Test files with success, failure, and kill criteria; parent: a Solution
   roadmap/
     roadmap-summary.md                # Narrative overview of roadmap
     items/
-      RD-001-[slug].md                # Individual roadmap items
+      RD-001-[slug].md                # Roadmap items; parent: a cleared Solution
 ```
 
-All individual files use consistent frontmatter (`status`, `created`, `updated`, `confidence`, etc.) so Obsidian Bases can query across them without any database or external index.
+All individual files use consistent frontmatter (`status`, `created`, `updated`, `confidence`, `parent`, etc.) so Obsidian Bases can query across them without any database or external index. The `parent` field holds the single parent ID (`OUT-001` for a KR's outcome, `OUT-001-KR-2` for a Solution, and so on).
 
 ---
 
 ## Obsidian Bases Views
 
-Create these three `.base` files in the product's vault folder. They give you the equivalent of JPD's board, experiment tracker, and roadmap view.
+Create these three `.base` files in the product's vault folder. They give you the equivalent of JPD's board, test tracker, and roadmap view.
 
 ### Discovery Board
 
@@ -120,15 +119,15 @@ Kanban view over `product/discovery/opportunities/`. Group by `status` field.
 
 Columns: `Exploring` → `Validating` → `Prioritized` → `Active` → `Archived`
 
-Use this as your daily driver for opportunity work. Every opportunity in the OST has a card here. The card links to the opportunity file, which links to its parent solutions and experiments.
+Use this as your daily driver for Opportunity work. Every Opportunity in the tree has a card here. The card links to the Opportunity file, which links to its Outcomes, and through their Key Results to Solutions and Tests.
 
-### Experiments Table
+### Tests Table
 
-File: `[Product] Experiments.base`
+File: `[Product] Tests.base`
 
-Table view over `product/discovery/experiments/`. Show columns: `name`, `assumption`, `status`, `kill_condition`, `deadline`, `result`.
+Table view over `product/discovery/tests/`. Show columns: `name`, `solution`, `assumption`, `status`, `kill_condition`, `deadline`, `result`.
 
-The `kill_condition` column is the health check. If any experiment row has a blank kill condition, it's a zombie. Fix it before it runs.
+The `kill_condition` column is the health check. If any Test row has a blank kill condition, it's a zombie. Fix it before it runs.
 
 ### Roadmap Board
 
@@ -138,7 +137,7 @@ Kanban view over `product/roadmap/items/`. Group by `horizon` field.
 
 Columns: `Now` / `Next` / `Later`
 
-Items move to `Now` only after the linked experiment shows a validated result. Items in `Later` are directional bets, not commitments.
+Items move to `Now` only after the parent Solution has cleared its investment gate on the strength of a validated Test result. Items in `Later` are directional bets, not commitments.
 
 ---
 
@@ -146,26 +145,33 @@ Items move to `Now` only after the linked experiment shows a validated result. I
 
 **Step 1: Run `pm-setup`**
 
-This scaffolds the product folder, creates `pm-config.md`, and walks you through the initial desired outcome.
+This scaffolds the product folder, creates `pm-config.md`, and walks you through the initial focus Opportunity.
 
-**Step 2: Run `okr-workflow` to create your first OKR cycle**
+**Step 2: Seed the tree with Opportunities**
 
-Name the cycle file (e.g., `Q3-2026.md`), write one Objective, and define 2-3 Key Results. Connect the most important KR to a Desired Outcome. That Desired Outcome becomes the root of your OST.
+Run `ost-workflow` and add your 3 best existing customer insights as Opportunities (`OPP-n`). These should come from real signals (interviews, tickets, reviews) — not from internal intuition. Each Opportunity needs at least one evidence citation (or a `weak` tag) and a named segment.
 
-**Step 3: Seed the OST with existing knowledge**
+**Step 3: Run `okr-workflow` to define your first Outcome and cycle**
 
-Run `ost-workflow` and add your 3 best existing customer insights as opportunities. These should come from real signals (interviews, tickets, reviews) — not from internal intuition. Each opportunity needs at least one evidence citation before it's valid.
+Name the cycle file (e.g., `Q3-2026.md`). For the focus Opportunity, write one Outcome (`OUT-n`): a one-sentence customer-behavior change, no numbers. Then define 2-3 Key Results (`OUT-n-KR-n`) with baseline, target, and date. The Outcome's parent is the Opportunity; each KR's parent is the Outcome.
 
 **Step 4: Create your Bases views**
 
-In the product's vault folder, create the three `.base` files described above. Point each one at the correct subfolder. You now have a working discovery board, experiment tracker, and roadmap.
+In the product's vault folder, create the three `.base` files described above. Point each one at the correct subfolder. You now have a working discovery board, test tracker, and roadmap.
 
 **Step 5: Run your first weekly discovery cycle**
 
 - Customer touchpoint (interview or async review)
 - Run `pm-signal-synthesis` on the transcript or signal batch
-- Add new opportunities to the OST via `ost-workflow`
-- Check active experiments via `experiment-workflow`
+- Add new Opportunities to the tree via `ost-workflow`
+- Add Solutions under any KR with fewer than 3 candidates
+- Check active Tests via `experiment-workflow` and log results up the tree
 - Update KR progress via `okr-workflow`
 
-After 4-6 weeks of this rhythm, the OST will start surfacing patterns you didn't know you knew.
+After 4-6 weeks of this rhythm, the tree will start surfacing patterns you didn't know you knew.
+
+---
+
+## Legacy terminology
+
+Earlier versions of this stack used the OKR → OST hierarchy (Objective → Key Result → Desired Outcome → Opportunity → Solution → Experiment) with `EXP-nnn` experiment files and an `ost-summary.md`. Those level names are retired: Objective and Desired Outcome merged into Outcome, Opportunity became the root, Solutions are parented by a KR, and Experiment is now Test. The skill ids `ost-workflow` and `okr-workflow` are unchanged. Existing data can be converted using the mapping in the [OOKRST Structure guide](guides/ookrst-structure.md#mapping-from-the-legacy-okr--ost-model).

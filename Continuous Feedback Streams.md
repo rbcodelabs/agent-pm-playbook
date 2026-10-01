@@ -39,7 +39,7 @@ Use a hybrid time-plus-volume trigger. The goal is regularity without over-index
 
 **Weekly triage (10 minutes, every week regardless of volume):**
 - Scan for any Critical or High severity signals that need immediate attention
-- Flag anything that contradicts an active OST assumption
+- Flag anything that contradicts an assumption on an active Solution, or an active Outcome's premise
 - Do not do full synthesis — just check for fires
 
 **Full synthesis session (whichever trigger comes first):**
@@ -128,16 +128,16 @@ Research platforms (UserTesting, Respondent, User Interviews, etc.) are valuable
 
 ---
 
-## Connecting Streams to the OST
+## Connecting Streams to the OOKRST Tree
 
-Both interview signals and passive feedback flow into the same [[Signal Ledger]]. The OST doesn't care about source type. An opportunity is an opportunity whether it surfaced in an interview or across 40 NPS comments.
+Both interview signals and passive feedback flow into the same [[Signal Ledger]]. The tree doesn't care about source type. An Opportunity is an Opportunity whether it surfaced in an interview or across 40 NPS comments. Evidence attaches to the **Opportunity** (the root of the [OOKRST tree](guides/ookrst-structure.md)) and flows up from there; when a signal bears on a specific Solution or Test, it attaches there too. Do not attach raw feedback to a KR.
 
 What matters operationally:
 
-- Tag evidence with source type so you can assess diversity later. An opportunity supported by only one source type is less robust than one that surfaces across multiple streams.
+- Tag evidence with source type so you can assess diversity later. An Opportunity supported by only one source type is less robust than one that surfaces across multiple streams.
 - Calibrate confidence levels for richness. 40 one-sentence NPS comments clustering around the same theme may earn medium confidence, not high. Volume doesn't substitute for depth.
 
-One useful check at each synthesis session: for your top OST opportunities, are you getting corroborating signal from multiple source types? An opportunity that only surfaces in interviews but never in support tickets or NPS may not be as universal as it appears. The inverse is also true — a pattern that shows up in passive feedback but never comes up when you talk to users directly is worth probing in the next interview cycle.
+One useful check at each synthesis session: for your top Opportunities (and the Outcomes pursuing them), are you getting corroborating signal from multiple source types? An Opportunity that only surfaces in interviews but never in support tickets or NPS may not be as universal as it appears. The inverse is also true — a pattern that shows up in passive feedback but never comes up when you talk to users directly is worth probing in the next interview cycle.
 
 ---
 

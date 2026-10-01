@@ -25,9 +25,9 @@
             "vision": { "type": "string", "minLength": 1 },
             "research_capture": { "type": "string", "minLength": 1 },
             "insights": { "type": "string", "minLength": 1 },
-            "okrs": { "type": "string", "minLength": 1 },
-            "ost": { "type": "string", "minLength": 1 },
-            "experiments": { "type": "string", "minLength": 1 },
+            "okrs": { "type": "string", "minLength": 1, "description": "OOKRST Outcomes and Key Results. Must share a provider family with ost and experiments." },
+            "ost": { "type": "string", "minLength": 1, "description": "OOKRST Opportunities and Solutions (and assumptions). Must share a provider family with okrs and experiments." },
+            "experiments": { "type": "string", "minLength": 1, "description": "OOKRST Tests. Must share a provider family with okrs and ost." },
             "roadmap": { "type": "string", "minLength": 1 },
             "delivery": { "type": "string", "minLength": 1 },
             "reporting_archive": { "type": "string", "minLength": 1 }

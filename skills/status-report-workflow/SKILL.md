@@ -1,12 +1,12 @@
 ---
 name: status-report-workflow
 description: >-
-  Generate a weekly product status report by resolving roadmap, OKRs,
-  discovery, delivery, and archive providers independently from pm-config.md.
+  Generate a weekly product status report by resolving roadmap, OKRs (Outcomes and KRs),
+  discovery (the OOKRST tree), delivery, and archive providers independently from pm-config.md.
 metadata:
   priority: 4
 retrieval:
-  aliases: [status report, weekly status, weekly update, product status]
+  aliases: [status report, weekly status, weekly update, product status, OOKRST status]
   intents: [generate a weekly status report, what happened this week, give me a status update]
 chainTo:
   - pattern: "roadmap item|move.*horizon|promote to roadmap"
@@ -14,7 +14,7 @@ chainTo:
     message: Switching to roadmap workflow for a state change found in the report
   - pattern: "okr|key result|\\bKR\\b|check-?in"
     targetSkill: okr-workflow
-    message: Switching to OKR workflow for a check-in found in the report
+    message: Switching to the Outcome/KR workflow for a check-in found in the report
 ---
 
 # Status Report Workflow
@@ -27,8 +27,8 @@ Act, then report ([Autonomy Policy](../../Autonomy%20Policy.md)). Generate the r
 
 Before reading sources, read `pm-config.md` and resolve `roadmap`, `okrs`, `ost`, `insights`, `delivery`, and `reporting_archive` independently through the named profile and overrides, following the installed [integration-routing contract](../integration-routing/SKILL.md). Confirm exactly one authoritative provider per capability. Read each provider directly and write only to the resolved archive. A report is a labeled `snapshot`, never product state.
 
-This skill is read-only and reporting-only. It never changes roadmap, OKR,
-discovery, or delivery state. Put recommended changes in Follow-ups for the
+This skill is read-only and reporting-only. It never changes roadmap, Outcome/KR,
+discovery-tree, or delivery state. Put recommended changes in Follow-ups for the
 appropriate domain/provider workflow.
 
 ## Inputs
@@ -58,26 +58,25 @@ ambiguity `NOT VERIFIED`, and proceed. Routed configs ignore these parameters.
 
 Use the seven days ending today and state the exact dates in the report header.
 
-## Step 2 — Read roadmap, OKRs, and discovery
+## Step 2 — Read roadmap, Outcomes/KRs, and the discovery tree
 
-Resolve `roadmap` and `okrs` separately. Resolve `ost` and `insights` when the
+Resolve `roadmap` and `okrs` separately. Resolve `ost` (the Opportunity, Solution, and Test levels) and `insights` when the
 report includes discovery health. Query each authoritative provider once.
 
 - **Compass providers:** use the Compass connection and `compass-workflow` to
-  read roadmap items, active OKR/KR progress, opportunities, experiments, and
+  read roadmap items, active Outcome/KR progress, Opportunities, Solutions, Tests (native experiments), and
   insights relevant to each resolved capability. Diff stable IDs/statuses
   against the previous snapshot; never invent timestamp-based movement.
 - **Markdown/Obsidian providers:** read only configured capability paths. Do not
-  assume filenames such as `roadmap.md`, `ost.md`, or `okrs/*.md`.
+  assume filenames such as `roadmap.md`, `ost.md`, or `okrs/*.md` (these are legacy example names; the OOKRST tree may live in any of them).
 - **JPD or another provider:** use its native goals, insights, discovery, and
   roadmap objects for the capabilities it owns.
 - **Unavailable provider:** mark only that capability **DATA UNAVAILABLE
   (reason)** and continue. One missing source must not suppress other sections; a
   partial honest snapshot beats a skipped or fabricated report, attended or not.
 
-For each KR, report current versus target and stale check-ins. For roadmap,
-report horizon/status movement. For OST/insights, report material opportunity,
-experiment, and evidence changes without mutating them.
+For each KR, report current versus target and stale check-ins, grouped under its Outcome and parent Opportunity. For roadmap,
+report horizon/status movement. For the tree and insights, report material Opportunity, Solution, Test, and evidence changes, plus orphans (KR with no Solution, Solution with no Test) and chain breaks, without mutating them.
 
 ## Step 3 — Engineering activity
 
@@ -116,7 +115,7 @@ Write the report to `reporting_archive` as a labeled `snapshot`:
 - Unavailable archive: do not redirect to the current directory or a vault;
   report the blocked write and preserve the rendered response in conversation.
 
-Use these sections: Roadmap & OKR Movement, Discovery Health, Engineering
+Use these sections: Roadmap & Outcome/KR Movement, Discovery Health (all five OOKRST levels), Engineering
 Activity, Delivery Snapshot, Traffic/Usage Metrics, Data Gaps, and Follow-ups.
 
 ## Step 7 — Provider-specific archive follow-through

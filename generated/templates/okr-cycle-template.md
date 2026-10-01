@@ -6,46 +6,55 @@ end_date: 2026-06-30
 status: Active
 ---
 
-> [Guide: `cycle` uses the format Q[1-4]-YYYY or H[1-2]-YYYY. `status` moves through Draft → Active → Closed. Never have more than one Active cycle per product at a time.]
+> [Guide: This is the Outcome and Key Result level of the OOKRST tree (Opportunity -> Outcome -> KR -> Solution -> Test). Canonical definition: `guides/ookrst-structure.md`. `cycle` uses the format Q[1-4]-YYYY or H[1-2]-YYYY. `status` moves through Draft -> Active -> Closed. Never have more than one Active cycle per product at a time. Opportunities persist across cycles; Outcomes and KRs belong to this cycle.]
 
-# OKR Cycle: Q2-2026
+# Outcome/KR Cycle: Q2-2026
 
 **Period:** April 1 – June 30, 2026
 **Status:** Active
 
-> [Guide: State the single most important thing this cycle must prove. One sentence. If you can't write it, your objectives aren't aligned yet.]
+> [Guide: State the single most important thing this cycle must prove. One sentence. If you can't write it, your outcomes aren't aligned yet.]
 
 **Cycle Theme:** [One sentence: the single strategic bet this quarter is making]
 
 ---
 
-## Objectives
+## Outcomes
 
-> [Guide: Maximum 3 objectives per cycle. Each objective states a qualitative ambition — inspirational but grounded. It answers "what are we trying to achieve?" not "what will we ship?" Objectives should be achievable in one cycle and clearly connected to the product strategy. If you are tempted to write a 4th objective, you don't have focus yet.]
+> [Guide: Maximum 3 Outcomes per cycle. Each Outcome is the qualitative customer-behavior change that capturing one parent Opportunity requires. No numbers and no outputs ("launch X"); the numbers live in its 2-3 KRs. Every Outcome has exactly one parent Opportunity (`OPP-n`). An Opportunity may have several Outcomes across segments or cycles. If you are tempted to write a 4th Outcome, you don't have focus yet.]
 
 ---
 
-### OBJ-01: [Objective title]
+### OUT-1: [Outcome title]
 
-> [Guide: A good objective sounds like "Make the first week feel so good that new users immediately want to invite someone" not "Improve onboarding." Write it so you'd be proud to read it aloud at the end of the quarter. It should feel slightly ambitious but not delusional.]
+> [Guide: A good Outcome sounds like "New users invite a teammate in their first week", not "Improve onboarding" and not "Ship invitations." It describes what customers will do differently.]
 
-**Objective:** [Full statement of what you want to achieve this quarter]
-
-#### KR-01-1: [Outcome metric name]
-
-> [Guide: Every KR must measure a customer or business outcome, not an output. Use the form "[Metric] increases/decreases from [baseline] to [goal] by [date]." Wrong: "Ship the onboarding redesign." Right: "7-day activation rate increases from 23% to 38% by June 30." If the KR doesn't have a baseline number yet, your first task is to establish one — not to skip writing a KR.]
+**Outcome:** [One sentence: the customer-behavior change we commit to producing]
 
 | Field | Value |
 |---|---|
-| **ID** | OBJ-01-KR-1 |
+| **ID** | OUT-1 |
+| **Parent Opportunity** | [[OPP-1]] — [Opportunity title] |
+| **Status** | Active |
+| **Health** | On Track |
+
+> [Guide: `Health` is rolled up from the KRs below (rule 6 of the structure guide). Outcome health updates the parent Opportunity's status (pursuing / sustained / retired).]
+
+#### OUT-1-KR-1: [Measurable signal name]
+
+> [Guide: Every KR measures that the Outcome is happening, not that work shipped. Use the form "[Metric] increases/decreases from [baseline] to [goal] by [date]." Wrong: "Ship the onboarding redesign." Right: "7-day activation rate increases from 23% to 38% by June 30." If there is no baseline yet, your first task is to establish one, not to skip writing the KR.]
+
+| Field | Value |
+|---|---|
+| **ID** | OUT-1-KR-1 |
+| **Parent Outcome** | OUT-1 |
 | **Target** | [Metric] increases from [current baseline] to [goal] by 2026-06-30 |
 | **Current** | [current value] as of [YYYY-MM-DD] |
 | **Status** | On Track |
-| **Connected Desired Outcome** | [The OST desired outcome this KR directly serves] |
-| **OST file** | `product/discovery/ost-summary.md` |
-| **Evidence** | [Link or description of Signal Ledger entry confirming the baseline] |
+| **Solutions moving this KR** | [[SOL-1]], [[SOL-2]], [[SOL-3]] (at least 3 candidates before one is selected) |
+| **Evidence** | [Link or description of the Signal Ledger entry confirming the baseline] |
 
-> [Guide: "Current" must always include a measurement date — a number without a date is not trackable. Update this field at every weekly check-in, not only at quarter end. "Evidence" is required: if you don't know your baseline, you aren't ready to commit to this KR.]
+> [Guide: "Current" must always include a measurement date. Update at every weekly check-in. Attach raw signals to the Opportunity (or the Solution/Test they bear on), never to the KR. A KR with no Solution is a coverage gap.]
 
 **Check-ins**
 
@@ -54,21 +63,20 @@ status: Active
 | [YYYY-MM-DD] | | On Track | |
 | [YYYY-MM-DD] | | | |
 | [YYYY-MM-DD] | | | |
-| [YYYY-MM-DD] | | | |
 
 ---
 
-#### KR-01-2: [Outcome metric name]
+#### OUT-1-KR-2: [Measurable signal name]
 
 | Field | Value |
 |---|---|
-| **ID** | OBJ-01-KR-2 |
+| **ID** | OUT-1-KR-2 |
+| **Parent Outcome** | OUT-1 |
 | **Target** | [Metric] increases from [current baseline] to [goal] by 2026-06-30 |
 | **Current** | [current value] as of [YYYY-MM-DD] |
 | **Status** | On Track |
-| **Connected Desired Outcome** | [The OST desired outcome this KR directly serves] |
-| **OST file** | `product/discovery/ost-summary.md` |
-| **Evidence** | [Link or description of Signal Ledger entry confirming the baseline] |
+| **Solutions moving this KR** | [[SOL-4]] |
+| **Evidence** | [Link or description of the Signal Ledger entry confirming the baseline] |
 
 **Check-ins**
 
@@ -76,99 +84,77 @@ status: Active
 |---|---|---|---|
 | [YYYY-MM-DD] | | On Track | |
 | [YYYY-MM-DD] | | | |
-| [YYYY-MM-DD] | | | |
-| [YYYY-MM-DD] | | | |
 
 ---
 
-### OBJ-02: [Objective title]
+### OUT-2: [Outcome title]
 
-> [Guide: If you only have one strong objective this cycle, that is fine. Don't manufacture objectives to fill three slots. Quality beats quantity every time.]
+> [Guide: If you only have one strong Outcome this cycle, that is fine. Don't manufacture Outcomes to fill three slots.]
 
-**Objective:** [Full statement]
-
-#### KR-02-1: [Outcome metric name]
+**Outcome:** [One sentence]
 
 | Field | Value |
 |---|---|
-| **ID** | OBJ-02-KR-1 |
+| **ID** | OUT-2 |
+| **Parent Opportunity** | [[OPP-2]] — [Opportunity title] |
+| **Status** | Active |
+| **Health** | On Track |
+
+#### OUT-2-KR-1: [Measurable signal name]
+
+| Field | Value |
+|---|---|
+| **ID** | OUT-2-KR-1 |
+| **Parent Outcome** | OUT-2 |
 | **Target** | [Metric] increases from [current baseline] to [goal] by 2026-06-30 |
 | **Current** | [current value] as of [YYYY-MM-DD] |
 | **Status** | On Track |
-| **Connected Desired Outcome** | [The OST desired outcome this KR directly serves] |
-| **OST file** | `product/discovery/ost-summary.md` |
-| **Evidence** | [Link or description of Signal Ledger entry confirming the baseline] |
+| **Solutions moving this KR** | [[SOL-5]] |
+| **Evidence** | [Link or description] |
 
 **Check-ins**
 
 | Date | Current Value | Status | Notes |
 |---|---|---|---|
 | [YYYY-MM-DD] | | On Track | |
-| [YYYY-MM-DD] | | | |
-| [YYYY-MM-DD] | | | |
-| [YYYY-MM-DD] | | | |
-
----
-
-#### KR-02-2: [Outcome metric name]
-
-| Field | Value |
-|---|---|
-| **ID** | OBJ-02-KR-2 |
-| **Target** | [Metric] increases from [current baseline] to [goal] by 2026-06-30 |
-| **Current** | [current value] as of [YYYY-MM-DD] |
-| **Status** | On Track |
-| **Connected Desired Outcome** | [The OST desired outcome this KR directly serves] |
-| **OST file** | `product/discovery/ost-summary.md` |
-| **Evidence** | [Link or description of Signal Ledger entry confirming the baseline] |
-
-**Check-ins**
-
-| Date | Current Value | Status | Notes |
-|---|---|---|---|
-| [YYYY-MM-DD] | | On Track | |
-| [YYYY-MM-DD] | | | |
-| [YYYY-MM-DD] | | | |
 | [YYYY-MM-DD] | | | |
 
 ---
 
 ## Cycle Health Snapshot
 
-> [Guide: Update this section at each weekly review. It is a snapshot, not a report. One word status per KR plus a blocker if one exists. If you're writing paragraphs here, move that content to a check-in note in the table above.]
+> [Guide: Update at each weekly review. It is a snapshot, not a report. One word status per KR plus a blocker if one exists. At-risk KRs mean work the Solutions and Tests harder, not add roadmap items.]
 
-| KR | Status | Blocker |
-|---|---|---|
-| OBJ-01-KR-1 | On Track | |
-| OBJ-01-KR-2 | On Track | |
-| OBJ-02-KR-1 | On Track | |
-| OBJ-02-KR-2 | On Track | |
+| KR | Outcome | Status | Blocker |
+|---|---|---|---|
+| OUT-1-KR-1 | OUT-1 | On Track | |
+| OUT-1-KR-2 | OUT-1 | On Track | |
+| OUT-2-KR-1 | OUT-2 | On Track | |
 
-**Experiments running this cycle:** [Count] — see `product/discovery/experiments/`
+**Opportunities pursued this cycle:** [[OPP-1]], [[OPP-2]]
 
-**Opportunities in active focus:** [[OPP-XXX]], [[OPP-XXX]]
+**Solutions in testing:** [[SOL-1]], [[SOL-4]]
 
-**Solutions in testing:** [[SOL-XXX]], [[SOL-XXX]]
+**Tests running this cycle:** [Count] — [[TST-1]], [[TST-2]] (see `product/discovery/tests/`)
 
 ---
 
 ## Retrospective
 
-> [Guide: Fill this in at cycle close, after measuring actuals, before planning the next cycle. Honest retrospectives are the fastest way to calibrate OKR-writing. A good retro takes 30 minutes and saves 2 weeks of misaligned work next quarter.]
+> [Guide: Fill this in at cycle close, after measuring actuals, before planning the next cycle. A good retro takes 30 minutes and saves 2 weeks of misaligned work next quarter.]
 
 **Actuals vs. targets:**
 
 | KR | Target | Actual | % Achieved |
 |---|---|---|---|
-| OBJ-01-KR-1 | | | |
-| OBJ-01-KR-2 | | | |
-| OBJ-02-KR-1 | | | |
-| OBJ-02-KR-2 | | | |
+| OUT-1-KR-1 | | | |
+| OUT-1-KR-2 | | | |
+| OUT-2-KR-1 | | | |
 
 **What we achieved:**
 
 **What we missed and why:**
 
-**What we learned about our OST (did opportunities or solutions change shape?):**
+**What we learned about the tree (did Opportunities, Solutions, or Tests change shape?):**
 
-**What carries forward to the next cycle:**
+**What carries forward to the next cycle:** [Opportunities persist; unresolved Solutions and Tests carry over; Outcomes and KRs are re-declared]

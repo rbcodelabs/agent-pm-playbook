@@ -44,7 +44,7 @@ code; it writes the documentation that makes source code reviewable and reversib
 
 | Scenario | Handoff to |
 |---|---|
-| Opportunity validated, feature scoped | **Architect** receives from PM; designs and produces ADR |
+| Solution cleared its investment gate, feature scoped | **Architect** receives from PM; designs and produces ADR |
 | Design approved, ready to implement | **Engineer** receives ADR and design doc |
 | Implementation complete | **QA** designs test strategy against the spec; **Reviewer** audits against design |
 | Existing system needs audit | **Architect** reviews; **Engineer** implements remediations |
@@ -54,7 +54,7 @@ code; it writes the documentation that makes source code reviewable and reversib
 ## ADR Lifecycle
 
 ```
-PM defines outcome + opportunity
+PM defines Opportunity → Outcome → KR → Solution (gate cleared)
         ↓
 Architect scopes the design space
         ↓

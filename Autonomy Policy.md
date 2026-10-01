@@ -30,9 +30,9 @@ it is a failure that is harder to see.
 
 **Everything else: just do it, then tell the human what you did.** That includes:
 
-- Framing opportunities, adding or restructuring OST branches, writing solution candidates
-- Designing experiments, writing assumptions, recording and interpreting results
-- Reprioritizing the roadmap and moving items between Later, Next, and Now
+- Framing Opportunities and Outcomes, adding or restructuring branches of the OOKRST tree, writing Solution candidates
+- Designing Tests, writing assumptions, recording and interpreting Test results
+- Reprioritizing the roadmap and moving items between Later, Next, and Now (a Solution must first clear its investment gate)
 - Scoring, linking, deduplicating, and changing the status of product records
 - Drafting stories, specs, briefs, updates, and recommendations
 - Creating tasks for agents, opening branches, and opening pull requests
@@ -42,12 +42,12 @@ Every one of these can be undone with an edit. Asking first only adds delay.
 ## Missing information is a reason to infer, not to stop
 
 - **Don't ask a question you could answer by reading.** Check the config, the tracker, the
-  OST, the repository, and the conversation first.
+  OOKRST tree, the repository, and the conversation first.
 - **When you still don't know, make the best inference, state it in one line, and proceed.**
-  "Assuming the desired outcome is trial-to-paid conversion (from the Q3 OKRs); tell me if
-  not." A wrong guess stated plainly is cheap to correct. A stalled session is not.
+  "Assuming the Outcome is trial-to-paid conversion (from the Q3 Outcomes and KRs); tell me
+  if not." A wrong guess stated plainly is cheap to correct. A stalled session is not.
 - **Evidence confidence is a label, not a blocker.** Tag weak evidence as weak and act on it
-  at the matching level of investment. A single-source signal still becomes an opportunity;
+  at the matching level of investment. A single-source signal still becomes an Opportunity;
   it just carries a `weak` tag and a note about what would strengthen it.
 - **Missing setup is not a stop sign.** If there is no `pm-config.md`, work from what the
   conversation and repository show, say which defaults you used, and offer `pm-setup` at the

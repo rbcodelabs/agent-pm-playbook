@@ -6,7 +6,7 @@
 
 ## About Parcel
 
-Parcel is a monthly artisan food subscription box. Solo founder. ~200 active subscribers. Desired outcome: **raise month-3 retention from 42% to 65%**. No issue tracker — work tracked in Markdown notes. No engineering team; the founder handles the Shopify storefront and a monthly email.
+Parcel is a monthly artisan food subscription box. Solo founder. ~200 active subscribers. Goal: **raise month-3 retention from 42% to 65%**, which in the OOKRST tree is split into an Outcome (*subscribers keep their subscription past the third box*, `OUT-1`) and its headline Key Result (`OUT-1-KR-1`: month-3 retention 42% → 65% by end of quarter). No issue tracker — work tracked in Markdown notes. No engineering team; the founder handles the Shopify storefront and a monthly email.
 
 ---
 
@@ -51,36 +51,38 @@ Two cancel surveys and one App Store review mentioned price, but the language wa
 - One voice interview (subscriber since month 8, still active) said personalization was "not a selling point — I trust the curation." Directly contradicts Cluster A. Could be a retention survivor; could be a segment this product actually serves well. Flagged — needs one more data point before acting.
 - Cluster B and C may both be downstream of Cluster A. If the product felt personalized, would discovery friction still matter? Unknown.
 
-**OST update:** Cluster A maps to existing opportunity "Customers struggle to feel like the box is curated for them." Cluster B is new — adding as "Customers struggle to connect with the producers behind what they're eating." Cluster C held as Low / not actioned.
+**Tree mapping:** Cluster A strengthens existing `OPP-1` "Customers struggle to feel like the box is curated for them." Cluster B is new — adding as `OPP-3` "Customers struggle to connect with the producers behind what they're eating." Cluster C held as Low / not actioned. No signal is attached to a KR — evidence goes on the Opportunities.
 
 ---
 
-## Step 3: OST update (before → after)
+## Step 3: Tree update (before → after)
 
-**Before:** OST had 5 opportunities, all in Exploring. Focus branch: "Customers struggle to get their first box right" (onboarding gap hypothesis from month 1).
+**Before:** the tree had 5 Opportunities, all in Exploring. The only Outcome (`OUT-2`, "subscribers get through their first box confidently", parent `OPP-2` "Customers struggle to get their first box right") was the focus branch (onboarding gap hypothesis from month 1). The month-3 retention goal had no Outcome behind it yet.
 
 **After:**
-- Demoted "first box" opportunity from focus — no signal in this batch; no verbatims in cancel surveys.
-- Promoted "Customers struggle to feel the box is curated for them" (Cluster A) to **Validating** — now the highest-evidence branch, 6 independent sources across 2 methods.
-- Added "Customers struggle to connect with producers" (Cluster B) at Exploring.
-- Added contradiction flag to Cluster A opportunity node: "1 of 6 long-term subscribers explicitly said personalization isn't what keeps them. Investigate segment."
+- Demoted `OPP-2` / `OUT-2` ("first box") from focus — no signal in this batch; no verbatims in cancel surveys. Kept, not deleted; reason recorded.
+- Promoted `OPP-1` (Cluster A) to **Validating** — now the highest-evidence branch, 6 independent sources across 2 methods.
+- Created `OUT-1` under `OPP-1`: *Subscribers keep their subscription past the third box* (behavior, no numbers).
+- Wrote two KRs: `OUT-1-KR-1` month-3 retention 42% → 65% by end of quarter; `OUT-1-KR-2` share of month-2 subscribers answering 4–5 on a "this box feels chosen for me" pulse question, baseline `TBD` (task created to add the question to the month-2 email), target 60%.
+- Added `OPP-3` (Cluster B) at Exploring, no Outcome yet.
+- Added contradiction flag to `OPP-1`: "1 of 6 long-term subscribers explicitly said personalization isn't what keeps them. Investigate segment."
 
-**Focus branch: "Customers struggle to feel the box is curated for them"**
-Rationale: highest-evidence, directly connected to month-3 churn (the desired outcome), and addressable without engineering.
+**Focus branch: `OPP-1` → `OUT-1` → `OUT-1-KR-1`**
+Rationale: highest-evidence, directly connected to month-3 churn (the KR), and addressable without engineering.
 
 ---
 
-## Step 4: Experiment brief
+## Step 4: Test brief
 
-**Focus opportunity:** Customers struggle to feel the box is curated for them.
+**Focus branch:** `OPP-1` (Customers struggle to feel the box is curated for them) → `OUT-1` → `OUT-1-KR-1` (month-3 retention).
 **Stage:** Validating → entering Testing.
 
-**Candidate solutions under this opportunity:**
-1. Personalization survey after month 2 ("tell us what to dial up/down")
-2. A handwritten card from the founder each month explaining *why* this month's items were chosen
-3. A brief "your palate profile" email that tells each subscriber what their past ratings revealed
+**Candidate Solutions under `OUT-1-KR-1`** (each addresses `OPP-1`; ≥3 before any is chosen):
+1. `SOL-1` Personalization survey after month 2 ("tell us what to dial up/down")
+2. `SOL-2` A handwritten card from the founder each month explaining *why* this month's items were chosen
+3. `SOL-3` A brief "your palate profile" email that tells each subscriber what their past ratings revealed
 
-**Riskiest assumption on solution 2 (handwritten card):**
+**Test `TST-1`, on `SOL-2` (handwritten card). Riskiest assumption:**
 *That receiving a personal explanation of curation — not actually personalizing the product — is enough to make subscribers feel the box is "for them."*
 
 If the problem is that the box *is* actually generic and a card can't fix that, no communication layer will hold retention. The demand side (do subscribers want to feel seen?) is validated; the riskiest assumption is whether *the feeling* is separable from *actual customization*.
@@ -90,7 +92,7 @@ Send 5 month-2 subscribers a personal email from the founder this month: one par
 
 Why not fake door? Demand isn't the unknown — 4/6 interview subscribers said they wanted the story behind the curation. The unknown is whether *providing* it actually holds retention, so demand-measurement is the wrong test.
 
-Why not A/B? Can't hit statistical significance on 200 subscribers before a meaningful number churn. Concierge answers the behavioral question faster and cheaper.
+Why not an A/B test? Can't hit statistical significance on 200 subscribers before a meaningful number churn. Concierge answers the behavioral question faster and cheaper.
 
 **Success condition (written pre-test):** ≥4 of 5 concierge subscribers retain into month 4. (Month 4 = first renewal decision post-intervention, at roughly 30 days.)
 
@@ -109,7 +111,7 @@ Why not A/B? Can't hit statistical significance on 200 subscribers before a mean
 |---|---|---|
 | Problem evidence | ✅ Yes | Cluster A: High confidence, 6 independent sources, 2 methods |
 | Widespread enough | ✅ Yes | 14/23 App Store reviews, 4/6 interviews — not a niche complaint |
-| Solution tested | ⚠️ Partially | Concierge test designed and ready; not yet run |
+| Solution tested | ⚠️ Partially | `TST-1` (concierge) designed and ready; not yet run |
 | Kill condition written | ✅ Yes | Specific numbers, written before results |
 | Investment ceiling respected | ✅ Yes | Concierge = 1 email, 1 hour founder time. No build. |
 
@@ -139,7 +141,7 @@ Why not A/B? Can't hit statistical significance on 200 subscribers before a mean
 | Dimension | Score | Justification |
 |---|---|---|
 | **Evidence quality** | **2** | Every cluster carries verbatims, source counts, calibrated confidence. Contradictions named. Nothing prioritized rests on a single source. |
-| **Tree integrity** | **2** | One outcome at root; opportunities framed as customer needs; focus branch justified by evidence + outcome connection. Orphan ("first box") demoted with reason. |
+| **Tree integrity** | **2** | Every record has one parent (`OPP-1` → `OUT-1` → two KRs → three Solutions → `TST-1`); Outcome has no numbers, KRs are measurable (one baseline `TBD` with a task); Opportunities framed as customer needs; focus branch justified by evidence + KR connection. The previous focus branch (`OPP-2`) was demoted with a reason, not deleted. |
 | **Test minimalism** | **2** | Riskiest assumption correctly ranked (feeling vs. actual customization). Concierge is cheapest test that answers it — fake door (demand already proven) and A/B (sample too small) explicitly ruled out. Kill condition written pre-test. |
 | **Honest uncertainty** | **2** | Three open uncertainties named explicitly. Low-N acknowledged with a plan. Contradiction flagged and not smoothed. Reflection names what's unknown and the cheapest way to learn it. |
 
@@ -147,4 +149,4 @@ Why not A/B? Can't hit statistical significance on 200 subscribers before a mean
 
 ---
 
-> **Note to the reviewer (or self-reviewer):** the score above is what the submission earns — not what the founder *wants* it to earn. The test that earns the 2 on Test Minimalism isn't running a concierge; it's ruling out fake door and A/B with specific, honest reasons and pre-writing the kill condition. The 2 on Honest Uncertainty isn't listing the open questions; it's naming what specific data would close each one and not pretending the N=5 is more than it is.
+> **Note to the reviewer (or self-reviewer):** the score above is what the submission earns — not what the founder *wants* it to earn. The Test that earns the 2 on Test Minimalism isn't running a concierge; it's ruling out fake door and A/B with specific, honest reasons and pre-writing the kill condition. The 2 on Honest Uncertainty isn't listing the open questions; it's naming what specific data would close each one and not pretending the N=5 is more than it is.

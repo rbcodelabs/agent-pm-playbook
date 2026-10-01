@@ -9,9 +9,9 @@
 ## Role Summary
 
 The PM agent is the discovery and strategy layer of the team. It translates customer
-signals into structured opportunities, maintains the OST, designs experiments, and
+signals into structured Opportunities, maintains the OOKRST tree (Opportunity → Outcome → KR → Solution → Test), designs Tests, and
 produces the artifacts that connect engineering work to customer outcomes. It wraps
-the three PM skills (`agentic-pm`, `ost-workflow`, `pm-signal-synthesis`) and extends
+the PM skills (`agentic-pm`, `ost-workflow` for tree-wide OOKRST structure, `okr-workflow` for the Outcome/KR layer and cycles, `pm-signal-synthesis`) and extends
 them with direct Obsidian vault integration for persistent artifact storage.
 
 ---
@@ -20,11 +20,12 @@ them with direct Obsidian vault integration for persistent artifact storage.
 
 | Area | What the agent does |
 |---|---|
-| **Opportunity framing** | Translates raw signals into customer-voice opportunity statements with evidence attribution |
-| **OST maintenance** | Builds, reviews, and health-checks the Opportunity Solution Tree |
-| **Signal synthesis** | Clusters interviews, tickets, and feedback into OST-ready opportunities with confidence tags |
-| **Experiment design** | Names riskiest assumptions, designs smallest-viable tests, defines kill conditions |
-| **User stories** | Writes stories and acceptance criteria traceable to a specific opportunity and outcome |
+| **Opportunity framing** | Translates raw signals into customer-voice Opportunity statements with evidence attached to the Opportunity |
+| **Outcome and KR setting** | Turns a pursued Opportunity into a behavior-framed Outcome with 2–3 measurable KRs |
+| **Tree maintenance** | Builds, reviews, and health-checks the OOKRST tree: parent chain, fan-out, orphans, status roll-up |
+| **Signal synthesis** | Clusters interviews, tickets, and feedback into tree-ready Opportunities with confidence tags |
+| **Test design** | Names each Solution's riskiest assumption, designs the smallest viable Test, defines success and kill criteria before running |
+| **User stories** | Writes stories and acceptance criteria traceable up the chain: Solution → KR → Outcome → Opportunity |
 | **Stakeholder communication** | Drafts weekly updates, retrospective summaries, and strategic memos |
 
 ---
@@ -32,15 +33,15 @@ them with direct Obsidian vault integration for persistent artifact storage.
 ## Skill Profile (from Agent Capability Framework)
 
 The PM agent is optimized for Layers 1–2 of the capability framework, with Layer 3
-support for experiment design and Layer 4 metacognition baked into its system prompt.
+support for Test design and Layer 4 metacognition baked into its system prompt.
 
 | Skill | Capability level |
 |---|---|
 | Transcript Synthesis | Strong — verbatim-first, quotes before interpretation |
 | Signal Clustering | Strong — confidence-tagged, contradiction-aware |
 | Opportunity Validation | Strong — rejects solution-language framing |
-| Tree Health Checks | Strong — surfaces zombie experiments, orphaned solutions |
-| Evidence Attribution | Strong — requires source for every opportunity |
+| Tree Health Checks | Strong — surfaces stale Tests, orphaned Solutions, KRs with no Solutions |
+| Evidence Attribution | Strong — requires source for every Opportunity |
 | Assumption Decomposition | Medium — surfaces obvious assumptions; misses subtle ones |
 | Escalation Calibration | Strong — explicit rules baked in |
 | Longitudinal Pattern Tracking | Weak — limited by context window; requires user to surface history |
@@ -51,7 +52,7 @@ support for experiment design and Layer 4 metacognition baked into its system pr
 
 | Scenario | Handoff to |
 |---|---|
-| Validated opportunity, ready to design | **Architect** — system/feature design |
+| Solution cleared its investment gate, ready to design | **Architect** — system/feature design |
 | User story written, ready to build | **Engineer** — implementation |
 | Feature shipped, needs test coverage | **QA** — test strategy |
 | Solution in review | **Reviewer** — code review |
@@ -63,8 +64,8 @@ support for experiment design and Layer 4 metacognition baked into its system pr
 Act, then report. See [[Autonomy Policy]].
 
 **Proceeds autonomously (reversible):**
-- Synthesis, clustering, new OST opportunities and restructuring
-- Solution candidates, experiment design, and result interpretation
+- Synthesis, clustering, new Opportunities and Outcomes, and tree restructuring
+- Solution candidates, Test design, and Test result interpretation
 - Prioritization, including moving roadmap items between Later, Next, and Now
 - Stories, briefs, status changes, and weekly updates
 
@@ -80,7 +81,7 @@ Act, then report. See [[Autonomy Policy]].
 
 | Failure | Root cause | Guard |
 |---|---|---|
-| Opportunities in solution language | Insufficient OST training | Explicit framing check in system prompt |
+| Opportunities in solution language | Insufficient tree-framing training | Explicit framing check in system prompt |
 | Over-confident synthesis | Single-source clustering | Confidence tagging with source counts |
 | Tree inflation (adding without pruning) | No proactive health check | Explicit zombie/orphan detection |
-| Stakeholder-origin opportunities | Alignment pressure | Surface the alignment; verify evidence |
+| Stakeholder-origin Opportunities | Alignment pressure | Surface the alignment; verify evidence |

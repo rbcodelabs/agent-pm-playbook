@@ -12,7 +12,7 @@
     },
     "agentic-pm": {
       "priority": 3,
-      "summary": "AI-augmented PM coaching: OSTs, continuous discovery, experiment design, and weekly synthesis workflows grounded in the Agentic PM Playbook",
+      "summary": "AI-augmented PM coaching: the OOKRST tree (Opportunity -> Outcome -> KR -> Solution -> Test), continuous discovery, test design, and weekly synthesis workflows grounded in the Agentic PM Playbook",
       "docs": [
         "https://github.com/richardbowman/agent-pm-playbook"
       ],
@@ -25,9 +25,9 @@
       "importRegexSources": [],
       "chainTo": [
         {
-          "pattern": "opportunity solution tree|\\bOST\\b|build.*tree|tree.*health|my tree",
+          "pattern": "opportunity solution tree|OOKRST|\\bOST\\b|build.*tree|tree.*health|my tree",
           "targetSkill": "ost-workflow",
-          "message": "Switching to OST workflow for tree-specific work"
+          "message": "Switching to the OOKRST tree workflow for tree-specific work"
         },
         {
           "pattern": "interview|transcript|signal|synthesis|research|feedback|survey|tickets",
@@ -56,6 +56,7 @@
         ],
         "entities": [
           "opportunity solution tree",
+          "OOKRST",
           "OST",
           "continuous discovery",
           "desired outcome",
@@ -94,6 +95,7 @@
       ],
       "retrieval": {
         "aliases": [
+          "OOKRST",
           "OST",
           "opportunity solution tree",
           "opportunity tree",
@@ -113,11 +115,12 @@
         ],
         "entities": [
           "opportunity solution tree",
+          "OOKRST",
           "OST",
           "desired outcome",
           "opportunity layer",
           "solution layer",
-          "experiment layer",
+          "test layer",
           "tree health",
           "opportunity framing"
         ],
@@ -146,7 +149,7 @@
         {
           "pattern": "opportunity.*framing|reframe|solution.*masquerad|OST|tree",
           "targetSkill": "ost-workflow",
-          "message": "Switching to OST workflow to address the opportunity framing issue first"
+          "message": "Switching to the OOKRST tree workflow to address the opportunity framing issue first"
         },
         {
           "pattern": "coach|strategy|philosophy|broader|what should we|how should we",
@@ -197,7 +200,7 @@
     },
     "pm-signal-synthesis": {
       "priority": 5,
-      "summary": "Synthesize user research signals into OST-ready opportunities: interview synthesis, signal clustering, contradiction detection, and confidence tagging",
+      "summary": "Synthesize user research signals into OOKRST-ready opportunities: interview synthesis, signal clustering, contradiction detection, and confidence tagging",
       "docs": [
         "https://github.com/richardbowman/agent-pm-playbook"
       ],
@@ -210,9 +213,9 @@
       "importRegexSources": [],
       "chainTo": [
         {
-          "pattern": "opportunity solution tree|\\bOST\\b|add to.*tree|update.*tree",
+          "pattern": "opportunity solution tree|OOKRST|\\bOST\\b|add to.*tree|update.*tree",
           "targetSkill": "ost-workflow",
-          "message": "Switching to OST workflow to map synthesized signals into the tree"
+          "message": "Switching to the OOKRST tree workflow to map synthesized signals into the tree"
         }
       ],
       "retrieval": {

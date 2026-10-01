@@ -4,6 +4,9 @@ This guide covers the structural enforcement layer that makes quality checks imp
 
 **Time to set up:** ~15 minutes per project.
 
+> [!note] Where these gates sit in OOKRST
+> These are *delivery* gates. They apply to work that has already cleared the **investment gate** ([Progressive Investment Framework](../Progressive%20Investment%20Framework.md)), i.e. a Roadmap Item hanging off a Solution in the [OOKRST tree](ookrst-structure.md) (Opportunity → Outcome → KR → Solution → Test). The investment gate decides whether a Solution advances; these gates decide whether its code is fit to merge and ship. Neither replaces the other.
+
 ---
 
 ## The core problem
@@ -255,6 +258,7 @@ Gates enforce *when* to check. Skills define *what* to check. The two work toget
 │  → E2E passing + new/updated tests written                           │
 │  → Docs reviewed and updated                                         │
 │  → Screenshots regenerated (if project has docs:screenshots)         │
+│  → PR names its parent Solution (SOL-n) and the KR it moves          │
 └───────────────────────────┬─────────────────────────────────────────┘
                             │ merge to main → vercel --prod
                             ↓
@@ -266,6 +270,18 @@ Gates enforce *when* to check. Skills define *what* to check. The two work toget
 │  → No known regressions                                              │
 └─────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Traceability: every change names its Solution
+
+A PR or delivery task is a Roadmap Item's implementation, and a Roadmap Item exists only because a Solution cleared its investment gate. So each PR description (and the `pr-checklist` run behind Gate 2) should state:
+
+- the **Solution** (`SOL-n`) it implements, and through it the KR and Outcome it serves;
+- the **Test** (`TST-n`) or assumption the change is meant to confirm, when the build is itself the next Test (for example a staged rollout);
+- the **KR reading or check-in** that will show whether it worked after release.
+
+If an engineer or agent is handed a task with no parent Solution, say so in the PR and report it to the PM rather than inventing one: it is an orphan in the tree, not an engineering defect. After release, the result flows up: the Test or KR reading updates the Solution, the Solution updates the KR, and so on.
 
 ---
 
@@ -304,6 +320,7 @@ The QA agent (`agents/qa.md`) works in three layers. Understand which layer catc
 | TypeScript errors merged to main | Gate 1 + Gate 2 |
 | New user flow ships without an E2E test | Gate 1 (reminder) + Gate 2 (pr-checklist requires E2E) |
 | Docs not updated after behavior change | Gate 1 (reminder) + Gate 2 (step 4 of pr-checklist) |
+| Work shipped with no parent Solution or cleared investment gate | Traceability check in the PR description; the PM's tree health check flags the orphan |
 
 ---
 

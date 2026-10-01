@@ -7,7 +7,7 @@
     {
       "name": "agentic-pm",
       "source": "./",
-      "description": "Agentic PM Playbook: AI-augmented product management using Opportunity Solution Trees and continuous discovery",
+      "description": "Agentic PM Playbook: AI-augmented product management using the OOKRST tree (Opportunity, Outcome, KR, Solution, Test) and continuous discovery",
       "author": {
         "name": "Rick Bowman"
       },
@@ -15,6 +15,7 @@
       "license": "MIT",
       "keywords": [
         "product-management",
+        "OOKRST",
         "OST",
         "continuous-discovery",
         "agentic-pm",

@@ -2,7 +2,7 @@
 name: pm-signal-synthesis
 description: >-
   Synthesize raw product signals — interviews, support tickets, surveys, sales
-  calls — into structured, OST-ready opportunities. Use when the user has
+  calls — into structured Opportunities that attach to the OOKRST tree (signals attach to Opportunities, and to the Solution or Test they bear on, never to KRs). Use when the user has
   research or customer data to process and needs clustered insights with
   confidence tagging.
 metadata:
@@ -37,9 +37,9 @@ retrieval:
     - signal cluster
     - opportunity theme
 chainTo:
-  - pattern: "opportunity solution tree|\\bOST\\b|add to.*tree|update.*tree"
+  - pattern: "opportunity solution tree|\\bOST\\b|\\bOOKRST\\b|add to.*tree|update.*tree"
     targetSkill: ost-workflow
-    message: Switching to OST workflow to map synthesized signals into the tree
+    message: Switching to the OOKRST tree workflow to map synthesized signals onto Opportunities
 ---
 
 # PM Signal Synthesis
@@ -50,7 +50,7 @@ Act, then report ([Autonomy Policy](../../Autonomy%20Policy.md)). Clustering, ta
 
 ## Provider Preflight
 
-Read `pm-config.md` and resolve `research_capture` for inputs and `insights` for synthesized output through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Use exactly one authoritative provider per capability; label secondary artifacts `inbox`, `export`, `cache`, or `snapshot`. With no config, work from context, name the defaults you used, and offer `pm-setup` at the end. For Compass insights, invoke `compass-workflow`, create granular feedback/insight records, and link them to OST objects inline.
+Read `pm-config.md` and resolve `research_capture` for inputs and `insights` for synthesized output through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Use exactly one authoritative provider per capability; label secondary artifacts `inbox`, `export`, `cache`, or `snapshot`. With no config, work from context, name the defaults you used, and offer `pm-setup` at the end. For Compass insights, invoke `compass-workflow`, create granular feedback/insight records, and link them to OOKRST objects inline (Opportunity first; Solution or Test where the signal bears on one).
 
 Clustering, confidence, contradiction, and bias rules are invariant. The Signal Ledger format is only the Markdown/Obsidian adapter; otherwise persist provider-native insight records.
 
@@ -58,14 +58,14 @@ Clustering, confidence, contradiction, and bias rules are invariant. The Signal 
 
 - Opportunity clusters framed as customer needs, not topics
 - Confidence-tagged evidence per cluster
-- Contradiction flags between signals or against the existing OST
-- OST changes applied (new, updated, challenged opportunities)
+- Contradiction flags between signals or against the existing Opportunities (and any Solution or Test they touch)
+- Tree changes applied (new, updated, challenged Opportunities; evidence attached to affected Solutions or Tests)
 - Gaps worth investigating next
 
 ## Signal Synthesis Workflow
 
 ### Step 1 — Inventory the Signals
-Record source type, volume, segments, time window, and any hypotheses or OST opportunities to test against. Read these from the material and context; state any you inferred. Synthesis without provenance is guessing, so the inventory goes in the output.
+Record source type, volume, segments, time window, and any hypotheses or existing Opportunities (and Solutions or Tests) to test against. Read these from the material and context; state any you inferred. Synthesis without provenance is guessing, so the inventory goes in the output.
 
 ### Step 2 — Cluster by Underlying Need
 Read all signals before tagging. Group by **underlying customer need**, not surface topic.
@@ -78,21 +78,21 @@ Per cluster: opportunity statement, signal count and source breakdown, 2–3 ver
 ### Step 3 — Detect Contradictions
 - Same need framed differently → merge, note the variance
 - Conflicting needs across segments → state the segmentation question
-- Signal that invalidates an existing OST opportunity → flag it at the top of the output
+- Signal that invalidates an existing Opportunity, or a Solution's assumption or a Test result → flag it at the top of the output
 
 Surface contradictions; don't smooth them over.
 
 ### Step 4 — Check Longitudinal Patterns
 Against prior rounds: which clusters are strengthening, weakening, or new? Trend direction matters as much as strength.
 
-### Step 5 — Apply to the OST
-Check for duplicates, then per cluster:
-- **Update existing** — attach the evidence to the known opportunity
-- **Add new** — create the opportunity with its confidence tag
+### Step 5 — Apply to the OOKRST Tree
+Check for duplicates, then per cluster. Signals attach to **Opportunities** (the root of the tree); when a signal bears on a specific Solution's assumption or a Test, also link it there. Never attach raw signals to a KR or Outcome. If a new Opportunity has no Outcome yet, say so and hand off to `ost-workflow` Step 3 to derive one.
+- **Update existing** — attach the evidence to the known Opportunity
+- **Add new** — create the Opportunity with its confidence tag and named segment
 - **Challenge existing** — record the contradicting evidence on it and flag it; recommend archiving to a human only if the evidence is strong
 
 ### Step 6 — Name the Gaps
-Close with the questions the data raises, each with a suggested next step: strong signal with no experiment running, clusters that may be one need, under-represented segments.
+Close with the questions the data raises, each with a suggested next step: strong signal with no Test running or no Outcome above the Opportunity, clusters that may be one need, under-represented segments.
 
 ## Interview Transcript Synthesis
 
@@ -133,7 +133,7 @@ Check and name in the output: **sampling** (over-represented customer types), **
 - Verbatims:
   - "[exact quote]" — [source type]
   - "[exact quote]" — [source type]
-- OST action taken: Added / Updated [existing opportunity] / Challenged [existing opportunity]
+- Tree action taken: Added / Updated [existing Opportunity] / Challenged [existing Opportunity]; also attached to: [SOL-n / TST-n or none]
 
 [repeat for each cluster]
 

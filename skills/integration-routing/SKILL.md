@@ -46,9 +46,13 @@ stale tables are a configuration error, not an alternate source of routing truth
 | `vision` | Product vision and durable product narrative |
 | `research_capture` | Raw interviews, notes, transcripts, and observations |
 | `insights` | Synthesized signals and evidence links |
-| `okrs` | Objectives, key results, cycles, and check-ins |
-| `ost` | Desired outcomes, opportunities, solutions, and assumptions |
-| `experiments` | Test designs, results, and conclusions |
+| `okrs` | OOKRST Outcomes (`OUT-n`), Key Results (`OUT-n-KR-n`), cycles, and check-ins |
+| `ost` | OOKRST Opportunities (`OPP-n`), Solutions (`SOL-n`), and assumptions |
+| `experiments` | OOKRST Tests (`TST-n`): designs, results, and conclusions |
+
+#### OOKRST routing rule
+
+The playbook's single hierarchy is Opportunity -> Outcome -> KR -> Solution -> Test (see [OOKRST structure](../../guides/ookrst-structure.md)). The legacy keys `okrs`, `ost`, and `experiments` are kept for compatibility and jointly resolve that one tree; no separate `ookrst` key exists. Because every record has exactly one parent in another of these capabilities, **`okrs`, `ost`, and `experiments` must resolve to the same provider family** (for example `compass_okrs` + `compass_discovery` + `compass_experiments`, or `jpd_goals` + `jpd` + `jpd_tests`). Never split the tree across systems, and when overriding one of the three, override all three together. The validator rejects a split profile and `resolveProviders` throws on one.
 | `roadmap` | Investment horizons and commitments |
 | `delivery` | Engineering tasks and execution status |
 | `reporting_archive` | Durable status reports and snapshots |

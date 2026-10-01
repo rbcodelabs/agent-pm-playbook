@@ -1,6 +1,6 @@
 # Agentic PM Training — Start Here
 
-This curriculum turns the Agentic PM Playbook from a pile of docs into a teachable system. By the end you will run product discovery in a fundamentally different way: outcomes traced to every work item, signals synthesized the same week they arrive, and a team of agents doing the production work while you hold the judgment.
+This curriculum turns the Agentic PM Playbook from a pile of docs into a teachable system. By the end you will run product discovery in a fundamentally different way: every work item traced up to the customer need and Outcome it serves and down to the Test that checks it, signals synthesized the same week they arrive, and a team of agents doing the production work while you hold the judgment.
 
 > **The one thing to internalize first:** this is not a course on "how to use plugins." It is a course on a new operating model. The tooling exists to make that operating model cheap enough to sustain. If you learn the tools without the model, you will just do old-style PM faster — and miss the point.
 
@@ -28,7 +28,7 @@ You do **not** need to be technical. Modules 0–4 and 6 require no coding. Modu
 
 | From (traditional PM) | To (agentic PM) |
 |---|---|
-| Output and roadmap features | Outcomes, with every work item traced to a measurable result |
+| Output and roadmap features | Outcomes, with every work item traced through one tree: Opportunity → Outcome → Key Result → Solution → Test ([OOKRST](../guides/ookrst-structure.md)) |
 | Quarterly research sprints | Continuous weekly discovery; signals processed the same week |
 | PM as document producer | PM as judgment holder; agents produce artifacts, PM decides |
 | Binary "ready to build?" gates | Progressive Investment: staged evidence thresholds |
@@ -39,16 +39,16 @@ Everything in this curriculum serves one of these four shifts.
 
 ## The learning path
 
-Work the modules in order. Each builds on the artifact the previous one produced — by Module 4 you are operating on a single thread of work (one outcome → one OST → real signals → one tested assumption).
+Work the modules in order. Each builds on the artifact the previous one produced — by Module 4 you are operating on a single thread of work (one Opportunity → its Outcome and KRs → real signals → one tested Solution assumption).
 
 | Module | Title | Time | Coding? | Produces |
 |---|---|---|---|---|
 | **0** | [The Operating Model](module-0-operating-model.md) | Half day | No | A backward trace from a real feature to its (missing) outcome |
 | **1** | [Environment Setup](module-1-environment-setup.md) | Half day | A little | A working environment + `pm-config.md` |
-| **2** | [Your First OST](module-2-your-first-ost.md) | 1 day | No | A health-checked Opportunity Solution Tree |
-| **3** | [Signal Synthesis](module-3-signal-synthesis.md) | 1 day | No | Clustered, evidence-tagged opportunities mapped to the OST |
-| **4** | [Experiments & Progressive Investment](module-4-experiments-and-investment.md) | 1 day | No | One assumption decomposed, leanest test designed, gated |
-| **5** | [The Agent Team](module-5-the-agent-team.md) | 1 day | Delegation only | One solution run from story → design brief |
+| **2** | [Your First OOKRST Tree](module-2-your-first-ookrst-tree.md) | 1 day | No | A health-checked OOKRST tree (Opportunity → Outcome → KR → Solution → Test) |
+| **3** | [Signal Synthesis](module-3-signal-synthesis.md) | 1 day | No | Clustered, evidence-tagged Opportunities attached to the tree |
+| **4** | [Tests & Progressive Investment](module-4-tests-and-investment.md) | 1 day | No | One assumption decomposed, leanest Test designed, gated |
+| **5** | [The Agent Team](module-5-the-agent-team.md) | 1 day | Delegation only | One Solution run from story → design brief |
 | **6** | [Cadences & Health](module-6-cadences-and-health.md) | Half day | No | Recurring rituals scheduled in your own calendar |
 | **Capstone** | [One Full Cycle on Your Real Product](capstone.md) | 1–2 weeks async | Depends | A complete discovery loop, reviewed against a rubric |
 
@@ -72,7 +72,7 @@ Every module follows the same template (see [`_module-template.md`](_module-temp
 
 ## The sample dataset
 
-Modules 2–4 operate on a shared fictional product so the exercises are concrete and repeatable. See [`sample-data/`](sample-data/) for the product brief, interview transcripts, support tickets, and a seed OST. (The fictional product is deliberately boring and relatable — a B2B SaaS scheduling tool — so nobody's real product leaks into the exercises.)
+Modules 2–4 operate on a shared fictional product so the exercises are concrete and repeatable. See [`sample-data/`](sample-data/) for the product brief, interview transcripts, support tickets, and a seed OOKRST tree. (The fictional product is deliberately boring and relatable — a B2B SaaS scheduling tool — so nobody's real product leaks into the exercises.)
 
 The capstone is the moment you drop the sample data and run the whole loop on *your* product.
 

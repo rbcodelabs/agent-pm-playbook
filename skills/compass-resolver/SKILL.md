@@ -9,7 +9,7 @@ description: >
 # Compass Delivery Resolver
 
 Turns one exact approved build into a reviewable PR, including direct requests and
-approved work whose roadmap horizon is still `LATER`. Discovery intake, opportunity focus, solution selection, experiments,
+approved work whose roadmap horizon is still `LATER`. Discovery intake, Opportunity focus, Solution selection, Tests,
 investment gating, and roadmap commitment happen upstream. This skill does not infer
 approval from clarity, votes, or roadmap position alone.
 

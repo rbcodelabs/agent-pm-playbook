@@ -50,7 +50,7 @@ artifact_type: concept-directions
 product: Example Product
 gate_type: concept-direction
 selection_mode: single # single | multiple
-approved_effect: experiment_design # experiment_design | roadmap_candidate | validation_design | roadmap_admission
+approved_effect: experiment_design # experiment_design (design a Test for the selected Solution) | roadmap_candidate | validation_design | roadmap_admission
 status: pending # pending | decided | applied | superseded | expired
 created_at: 2026-08-29T09:00:00-04:00
 requested_by: solution-studio
@@ -124,7 +124,7 @@ Render these sections in the provider's native format:
 - `revise` and `reject` require a rationale; `defer` should include a revisit condition or date.
 - Applying the request twice produces no duplicate state transition.
 - A stale source version supersedes the request rather than applying it.
-- A concept-selection continuation ends in assumption mapping or experiment design, never delivery.
+- A concept-selection continuation ends in assumption mapping or Test (experiment) design, never delivery.
 - A portfolio-admission continuation creates or reuses one roadmap candidate per approved
   option and records every resulting ID; applying it twice creates no duplicates.
 

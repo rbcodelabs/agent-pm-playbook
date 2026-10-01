@@ -2,7 +2,7 @@
 name: compass-feedback-triage
 description: >
   Processes all OPEN feedback items in the Compass workspace and acts fully on each:
-  dedup/link to an existing opportunity, create an opportunity (single-source ones tagged
+  dedup/link to an existing Opportunity (the root of the OOKRST tree; feedback is a signal and attaches there), create an Opportunity (single-source ones tagged
   weak), score it, adjust opportunity status and roadmap priority when the evidence
   warrants, or close noise — then reports what changed. Keeps the OPEN feedback queue
   empty. Use from the product-operations checklist or manually when feedback has piled up.
@@ -29,7 +29,7 @@ archiving feedback and replying to customers are irreversible; send those throug
    rare irreversible action. Irreversible requests go to the configured decision provider;
    a recorded decision does not expand this workflow's existing authority boundary or turn
    feedback into implementation permission.
-2. Load the `compass` skill for the MCP tool catalog and data model if not already loaded.
+2. Load the `compass` skill for the MCP tool catalog and data model if not already loaded. Compass is mid-migration to OOKRST: feedback attaches to Opportunities, and the Opportunity's Outcome and KRs sit above it in the chain. Use the native objects that exist and do not flatten the chain.
 3. Resolve the organization and workspace ID from the configured Compass connection; match
    the configured workspace, never an unrelated one by name or list position.
 
@@ -38,7 +38,7 @@ archiving feedback and replying to customers are irreversible; send those throug
 4. `list_feedback(workspaceId, status: "OPEN")`. If empty, report "queue already empty, no
    action taken" and stop.
 5. `list_opportunities(workspaceId)` for dedup context, and `list_okr_cycles` →
-   `get_okr_cycle` on the `ACTIVE` cycle for key results to link.
+   `get_okr_cycle` on the `ACTIVE` cycle for key results (and their parent Outcomes) to link.
 
 For **each** open feedback item:
 
@@ -48,7 +48,7 @@ b. Judge it:
    - **Type:** bug, feature request, UX friction, performance, or noise. Reclassify with
      `update_feedback_type` if the type looks wrong.
    - **Dedup:** does it closely match an existing opportunity?
-   - **Urgency:** weigh `voteCount` with severity, actionability, and OKR relevance. One
+   - **Urgency:** weigh `voteCount` with severity, actionability, and relevance to an active Outcome or KR. One
      well-argued blocking report can outweigh several lukewarm upvotes; low votes on a new
      item often just mean nobody has seen it yet.
 c. Act:
@@ -62,14 +62,14 @@ c. Act:
 
    **New and actionable:**
    - `create_opportunity` — clear PM title; description "Customer feedback: [original
-     title]. [summary]. Feedback ID: [id]."; status `EXPLORING`; link the best-fitting key
-     result. Tag a single-source opportunity `weak` and note what would strengthen it.
+     title]. [summary]. Feedback ID: [id]."; status `EXPLORING`; link it to the best-fitting Outcome or key
+     result where the provider supports that link (otherwise note the intended parent in the description). Tag a single-source opportunity `weak` and note what would strengthen it.
    - `link_feedback_to_opportunity`, score it, and set feedback `PLANNED` ("New opportunity
      created: [title]").
    - Intake does not add a solution, solution plan, assumption, or
-     roadmap item from a single new signal; that is solution and roadmap work, not intake.
-     This does not stop other workflows from generating solutions for an evidence-backed
-     opportunity that has none.
+     roadmap item (or a Test) from a single new signal; that is Solution and roadmap work, not intake.
+     This does not stop other workflows from generating Solutions for an evidence-backed
+     Opportunity that has none.
    - For a severe bug, promote it to the roadmap directly when `pm-config.md` has a standing
      bug policy covering it; otherwise raise its priority on the existing roadmap and report
      it.
@@ -78,7 +78,7 @@ c. Act:
    feedback agent: [reason]")`. Closing is a status change; never delete.
 
 Be decisive. When borderline, create a weak opportunity rather than closing: every real
-signal should be represented in the OST.
+signal should be represented as an Opportunity in the OOKRST tree.
 
 ## Report
 
@@ -93,5 +93,5 @@ creates no report.
 
 ## Downstream
 
-Triage feeds signal synthesis, OST maintenance, solution work, and roadmap stewardship.
+Triage feeds signal synthesis, OOKRST tree maintenance, Solution work, and roadmap stewardship.
 `compass-resolver` builds only under its own approval rules; triage never starts delivery.

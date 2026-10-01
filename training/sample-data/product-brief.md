@@ -1,6 +1,6 @@
 # Sample Product Brief — ShiftLoop
 
-> Fictional product for the Agentic PM training. Everything here is invented. Use it as the shared context for Modules 2–4. It's also a worked example of what a real `pm-config.md` desired-outcome field should look like (see Module 1).
+> Fictional product for the Agentic PM training. Everything here is invented. Use it as the shared context for Modules 2–4. It's also a worked example of what a real `pm-config.md` Outcome and headline Key Result should look like (see Module 1).
 
 ## What it is
 
@@ -18,11 +18,13 @@ ShiftLoop sells a 14-day free trial that converts to a paid monthly plan per loc
 
 The problem: **most trials never get to a published schedule.** Sales and onboarding both report that accounts which publish a first real schedule almost always convert and stick; accounts that don't, churn silently. Activation is the bottleneck, and right now it leaks badly.
 
-## The current desired outcome
+## The current goal, in OOKRST terms
+
+The team's goal is stated as a metric:
 
 > **Increase new-account activation — the percentage of trial accounts that publish their first complete weekly schedule within 7 days of signup — from 38% to 60% by the end of the quarter.**
 
-This is the root of the sample Opportunity Solution Tree and the outcome every exercise ladders up to. Note its shape (carry this back to Module 0): it's a **measurable change in customer behavior** with a baseline (38%), a target (60%), and a timeframe (this quarter) — not a feature, not "make onboarding better."
+In the OOKRST structure ([guide](../../guides/ookrst-structure.md)) that sentence splits into two levels. The **Outcome** is the behavior change, with no numbers: *trial managers publish a complete first weekly schedule within their first week* (`OUT-1`). The **Key Result** is the measurement: *7-day activation from 38% → 60% by end of quarter* (`OUT-1-KR-1`). It has a baseline, a target and a date — a measurable change in customer behavior, not a feature, not "make onboarding better." (Carry this back to Module 0.) What the tree starts *from* is the customer need behind the goal, which you derive yourself in Module 2.
 
 ### What "activated" means precisely
 
@@ -37,6 +39,6 @@ A trial account is **activated** when it has, within 7 days of signup: (a) added
 
 ## How to use this brief
 
-- **Module 2:** this desired outcome is the root of your OST. Build opportunities under it from the brief alone, then later cross-check against the signals.
-- **Module 3:** synthesize the [interviews](interviews/) and [support tickets](support-tickets.md) into opportunity clusters, and map them onto your Module 2 tree.
-- **Module 4:** pick the top opportunity, decompose its riskiest assumption, and design the cheapest test.
+- **Module 2:** start from the need behind this goal and build the tree downward (Opportunity → Outcome → KRs → Solutions → a Test) from the brief alone, then later cross-check against the signals.
+- **Module 3:** synthesize the [interviews](interviews/) and [support tickets](support-tickets.md) into opportunity clusters, and attach them to the Opportunities on your Module 2 tree.
+- **Module 4:** pick a candidate Solution under the focus KR, decompose its riskiest assumption, and design the cheapest Test.
