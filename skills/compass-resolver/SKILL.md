@@ -9,7 +9,7 @@ description: >
 # Compass Delivery Resolver
 
 Turns one exact approved build into a reviewable PR, including direct requests and
-approved work whose roadmap horizon is still `LATER`. Discovery intake, opportunity focus, solution selection, experiments,
+approved work whose roadmap horizon is still `LATER`. Discovery intake, Opportunity focus, Solution selection, Tests,
 investment gating, and roadmap commitment happen upstream. This skill does not infer
 approval from clarity, votes, or roadmap position alone.
 
@@ -82,7 +82,7 @@ pinned legacy revision or explicitly migrate; this skill does not silently reint
 For other legacy NOW work, retain the following eligibility requirements. A generic
 tracked decision is context, not an executable authorization.
 
-1. Read `pm-config.md`. Resolve `roadmap`, `ost`, and `delivery` plus the workflow
+1. Read `pm-config.md`. Resolve `roadmap`, `loop`, and `delivery` plus the workflow
    `decision_records` capability. Load `integration-routing` and the configured decision provider's
    adapter. A contract-v1 config or unavailable decision provider blocks delivery.
    When implementation direction is genuinely ambiguous, create a request through the

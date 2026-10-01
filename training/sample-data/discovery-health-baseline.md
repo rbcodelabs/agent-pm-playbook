@@ -15,9 +15,9 @@
 | When was your last synthesis session? | | Healthy / Watch / Flag |
 | How many synthesis sessions in the past 30 days? | | Healthy / Watch / Flag |
 | Days since your last Signal Ledger entry | | Healthy / Watch / Flag |
-| Days since your OST was last updated | | Healthy / Watch / Flag |
+| Days since your Loop tree was last updated | | Healthy / Watch / Flag |
 
-**Flag thresholds:** synthesis missed 2+ consecutive weeks → Flag; ledger gap >2 weeks → Flag; OST untouched 2+ weeks → Flag.
+**Flag thresholds:** synthesis missed 2+ consecutive weeks → Flag; ledger gap >2 weeks → Flag; tree untouched 2+ weeks → Flag.
 
 **Your cadence verdict (circle):** Healthy / Watch / Flag
 
@@ -48,10 +48,10 @@
 |---|---|---|
 | Any Prioritized opportunities with a single source? (name them) | | Healthy / Watch / Flag |
 | Any signal clusters with paraphrase only (no verbatim quotes)? | | Healthy / Watch / Flag |
-| Any Active opportunities with zero linked experiments? | | Healthy / Watch / Flag |
-| Any experiments in "Running" status for 4+ weeks with no result? | | Healthy / Watch / Flag |
+| Any Solutions being built (or in Testing) with no Test? And any KR with no candidate Solution? | | Healthy / Watch / Flag |
+| Any Tests in "Running" status for 4+ weeks with no result? | | Healthy / Watch / Flag |
 
-**Flag thresholds:** single-source Prioritized opp → Flag; paraphrase-only clusters → Watch; Active opp with no experiment → Watch; stale experiment 4+ weeks → Flag.
+**Flag thresholds:** single-source Prioritized opp → Flag; paraphrase-only clusters → Watch; Solution in Testing/Building with no Test → Watch; KR with no Solution → Flag; stale Test 4+ weeks → Flag.
 
 **Your evidence quality verdict (circle):** Healthy / Watch / Flag
 
@@ -66,7 +66,7 @@
 | Solutions killed in the past 90 days | | Healthy / Watch / Flag |
 | Opportunities archived in the past 90 days | | Healthy / Watch / Flag |
 | Confidence distribution on Active/Prioritized opps (Low / Medium / High %) | | Healthy / Watch / Flag |
-| Avg. solutions considered per opportunity before elimination | | Healthy / Watch / Flag |
+| Avg. Solutions considered per KR before one was chosen | | Healthy / Watch / Flag |
 
 **Flag thresholds:** zero kills and zero archives in 90 days → Flag; majority of opps at Low confidence → Watch; every opp with exactly one solution → Flag.
 
@@ -95,7 +95,7 @@
 
 ## Flag thresholds I'm setting for myself
 
-> Copy these somewhere you'll see them (calendar, weekly template, OST header). A flag only works if you see it.
+> Copy these somewhere you'll see them (calendar, weekly template, tree header). A flag only works if you see it.
 
 | Category | My flag threshold | Where I'll check it |
 |---|---|---|

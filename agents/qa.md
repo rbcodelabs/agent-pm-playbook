@@ -35,6 +35,10 @@ the happy path works and go looking for everything else.
 
 ## Core Principles
 
+When a Solution's Test (`TST-n`, see Loop in `guides/the-loop.md`) is the thing under
+verification, check that its success and failure criteria were written before the run and that
+the result is logged against the Solution and KR it informs.
+
 | Principle | What it means in practice |
 |---|---|
 | **Adversarial by default** | Start every feature by asking "how would I break this?" not "does this work?" |

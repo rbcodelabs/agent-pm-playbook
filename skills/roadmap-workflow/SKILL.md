@@ -4,7 +4,7 @@ description: >-
   Manage the product roadmap — preserve candidates in Later, rank and admit
   solutions to Next, commit delivery in Now, move items between horizons and
   report what moved, run quarterly reviews, and draft stakeholder updates. Items
-  trace to an OST solution and an OKR KR. Use when the user is adding items to the roadmap, updating status,
+  trace up the Loop chain: Solution -> KR -> Outcome -> Opportunity. Use when the user is adding items to the roadmap, updating status,
   reviewing delivery pipeline health, or preparing a roadmap communication.
 metadata:
   priority: 5
@@ -13,6 +13,7 @@ metadata:
 retrieval:
   aliases:
     - roadmap
+    - the Loop roadmap
     - roadmap item
     - delivery plan
     - now next later
@@ -50,15 +51,12 @@ retrieval:
     - release notes
     - RM-001
 chainTo:
-  - pattern: "experiment|validate|not.*validated|no.*experiment|risk|assumption"
+  - pattern: "experiment|\\btest\\b|validate|not.*validated|no.*experiment|risk|assumption"
     targetSkill: experiment-workflow
-    message: Switching to experiment workflow — the solution has an open assumption worth testing
-  - pattern: "okr|key result|\\bKR\\b|objective|which.*metric|move.*metric"
-    targetSkill: okr-workflow
-    message: Switching to OKR workflow to check KR alignment for this roadmap item
-  - pattern: "opportunity|\\bOPP-\\b|why.*exist|customer.*need|\\bOST\\b|solution.*parent"
-    targetSkill: ost-workflow
-    message: Switching to OST workflow to understand the opportunity behind this roadmap item
+    message: Switching to the Test workflow — the Solution has an open assumption worth testing
+  - pattern: "okr|key result|\\bKR\\b|outcome|objective|which.*metric|move.*metric|opportunity|\\bOPP-\\b|why.*exist|customer.*need|\\bOST\\b|ookrst|the loop|loop framework|solution.*parent"
+    targetSkill: loop-workflow
+    message: Switching to the Loop workflow to check KR alignment and understand the Opportunity and KR behind this roadmap item
 ---
 
 # Roadmap Workflow
@@ -87,13 +85,16 @@ provider and link it to the solution and roadmap record.
 ## Where the Roadmap Sits
 
 ```
-OKR KR (what we're trying to achieve)
-  └── OST Opportunity (why users need it)
-        └── OST Solution (what we'll build)
-              └── Experiment (validates the approach)
-                    └── Roadmap Item (`NEXT`/`NOW` delivery commitment)
+Opportunity (why customers need it)
+  └── Outcome (the behavior change we commit to)
+        └── Key Result (what we're trying to move)
+              └── Solution (what we'll build)
+                    ├── Test (validates the riskiest assumption)
+                    └── Roadmap Item (`NEXT`/`NOW` delivery commitment, after the investment gate)
                           └── Resolved delivery task (Compass Tasks, Linear, Jira, etc.)
 ```
+
+See [the Loop guide](../../guides/the-loop.md). A roadmap item's parent is its Solution; the KR, Outcome, and Opportunity are reached by walking up, and the chain must stay unbroken.
 
 A roadmap item is not a feature request. `LATER` preserves a deduplicated possibility.
 `NEXT` is an ordered queue within `next_limit`, normally of validated solutions. `NOW` is
@@ -139,9 +140,11 @@ title: "[Initiative name]"
 status: Now | Next | Later | Shipped | Killed
 phase: Discovery | Delivery | Infrastructure
 parent_solution: SOL-001
+parent_kr: OUT-1-KR-1
+parent_outcome: OUT-1
 parent_opportunity: OPP-001
 okr_krs:
-  - OBJ-01-KR-1
+  - OUT-1-KR-1
 target_date: YYYY-MM-DD
 shipped_date: ""
 linear_url: ""
@@ -152,9 +155,10 @@ last_updated: YYYY-MM-DD
 # RM-001: [Title]
 
 ## Context
-**OST Solution:** [[SOL-001 Solution Name]]
-**OST Opportunity:** [[OPP-001 Opportunity Name]]
-**Connected KRs:** OBJ-01-KR-1 — [KR description]
+**Solution:** [[SOL-001 Solution Name]]
+**Key Result:** OUT-1-KR-1 — [KR description]
+**Outcome:** [[OUT-1 Outcome statement]]
+**Opportunity:** [[OPP-001 Opportunity Name]]
 
 ## What We're Building
 [What the customer will be able to do, not what the team will build: "users will
@@ -170,15 +174,15 @@ receive timely alerts when [trigger], reducing the need to manually check [X]."]
 
 ## Procedure 1 — Adding a Roadmap Item
 
-1. **Find the parent solution** in the OST (`product/ost/solutions/` or the resolved
-   provider) and check its status and linked experiments. If there is no parent solution,
-   create the item in `LATER` and link or propose the OST solution in the same pass.
-2. **Pick the horizon.** Validated → `NEXT` at the rank it earns (or `NOW` if a slot, owner,
-   and date exist). Not yet validated → `LATER`, plus a drafted validation task. If you place
+1. **Find the parent Solution** in the Loop tree (`product/discovery/solutions/` or the resolved
+   provider) and check its status, parent KR, and linked Tests. If there is no parent Solution,
+   create the item in `LATER` and link or propose the Solution (under a KR) in the same pass.
+2. **Pick the horizon.** Solution gate cleared (see `investment-gate`) → `NEXT` at the rank it earns (or `NOW` if a slot, owner,
+   and date exist). Not yet validated → `LATER`, plus a drafted Test. If you place
    an unvalidated item in `NEXT` or `NOW` anyway (for example, a cheap reversible change),
    flag it as a risk in the item and the report.
 3. **Assign an ID:** highest existing RM-XXX plus one, or RM-001.
-4. **Fill the fields from what you can read** — KRs from the active OKR cycle, target date
+4. **Fill the fields from what you can read** — KRs from the Solution's ancestry in the active cycle, target date
    from the delivery provider or quarter, owner from the delivery provider. Infer what is
    missing and state it in one line.
 5. **Write the item** from the template: frontmatter, context links, customer-outcome
@@ -203,7 +207,7 @@ Never delete a shipped item — the release notes are institutional memory.
 ### Killing an item
 
 Killing removes an item from the roadmap, so it needs a human. Do the prep first, then ask
-once with a recommendation: "I'd kill RM-012 — its experiment invalidated demand (link).
+once with a recommendation: "I'd kill RM-012 — its Test invalidated demand (link).
 OK?" On approval:
 
 1. Set `status: Killed`, add a dated `## Kill Reason` section, and update `last_updated`.
@@ -244,7 +248,7 @@ Run at the start of each quarter or on request.
 
 Read every roadmap item and build a table:
 
-| ID | Title | Status | KRs | Has Target Date | Has Delivery URL | Parent Solution Validated |
+| ID | Title | Status | KR / Outcome / Opportunity chain | Has Target Date | Has Delivery URL | Parent Solution Validated |
 |----|-------|--------|-----|-----------------|------------------|--------------------------|
 
 ### Step 2: Check, fix, report
@@ -253,14 +257,14 @@ Fix what you can directly; report the rest.
 
 | # | Check | What the agent does |
 |---|---|---|
-| 1 | Orphaned items (no `parent_solution`) | Link the matching OST solution, or add one; report what was linked |
+| 1 | Orphaned items (no `parent_solution`, or a Solution whose chain stops before an Opportunity) | Link the matching Solution, or add one under the right KR; report what was linked |
 | 2 | `NOW` item without `target_date` | Set it from the delivery provider or quarter end; state the inference |
 | 3 | `NOW` item without delivery URL | Create or link the epic |
-| 4 | Unvalidated solution in `NOW` | Flag as the top risk; draft the cheapest validation test |
+| 4 | Unvalidated Solution in `NOW` | Flag as the top risk; draft the cheapest Test |
 | 5 | `NOW` over `now_limit` | Move the lowest-value excess back to `NEXT`; report which and why |
 | 6 | `NEXT` unranked, over `next_limit`, or unvalidated | Rank it; displace the excess to `LATER`; flag unvalidated items |
 | 7 | `LATER` item older than 6 months | Recommend kill or promotion; promote if evidence supports it, ask before killing |
-| 8 | Stale or wrong-objective KR links | Re-point to the correct KR in the active cycle; report each change |
+| 8 | Stale or wrong-Outcome KR links | Re-point to the correct KR in the active cycle; report each change |
 | 9 | Shipped but still `NOW`/`NEXT` | Check release evidence (merged PRs, tags, deploys) directly; mark Shipped and free the slot |
 
 Checks 8 and 9 catch silent drift: a KR created mid-cycle leaves items pointed at a closed
@@ -269,9 +273,10 @@ capacity. Do not assume `delivery-completion-watcher` already reconciled it.
 
 ### Step 3: KR coverage
 
-Group `NOW` and `NEXT` items by KR, then by Objective. Call out every KR and every Objective
-with zero roadmap items rolling up to it — an Objective can look staffed while nothing
-actually serves it.
+Group `NOW` and `NEXT` items by KR, then by Outcome. Call out every KR and every Outcome
+with zero roadmap items rolling up to it — an Outcome can look staffed while nothing
+actually serves it. Also list KRs whose Solutions have not reached the gate: those are
+discovery gaps, not roadmap gaps, and go to `loop-workflow`.
 
 ### Step 4: Report
 
@@ -288,7 +293,7 @@ actually serves it.
 [Unvalidated items in Next/Now, kill recommendations awaiting a human]
 
 ### KR Coverage
-[KRs and Objectives with item counts and gaps]
+[KRs and Outcomes with item counts and gaps]
 ```
 
 ## Procedure 4 — Scheduled Roadmap Steward
@@ -298,7 +303,7 @@ For projects with enabled `approved_build_policy`, route approved build work to
 
 Each run:
 
-1. Resolve `roadmap`, `ost`, `experiments`, `okrs`, `delivery`, `review_requests`, and
+1. Resolve `roadmap`, `loop`, `experiments` (together they cover the Loop levels), `delivery`, `review_requests`, and
    `decision_records`, then read `portfolio_policy`.
 2. Inventory the ordered `NOW`, `NEXT`, and `LATER` horizons, active validation work,
    delivery work, agent runs, branches, and pull requests. Record before-counts.
@@ -340,7 +345,7 @@ Target: [date]."
 "[Initiative] shipped on [date]. [What users can now do.] [Release link]"
 ```
 
-Pair every item with its customer outcome and connected opportunity. Link a release for
+Pair every item with its Outcome, KR, and connected Opportunity. Link a release for
 every shipped item. Name any KR with no `NOW`/`NEXT` work: "We don't have active delivery
 work against [KR] — this is a gap."
 
@@ -352,15 +357,17 @@ work against [KR] — this is a gap."
 | Appending to a full `NEXT` queue | Rank it and displace the lowest-value item to `LATER` |
 | More `NOW` items than the team can ship | Move the excess back to `NEXT` and report it |
 | Using `NEXT` as a validation queue | Keep unvalidated items in `LATER` with a validation task, or flag the risk |
-| Treating the roadmap as a backlog | Keep raw ideas in the OST; `LATER` holds deduplicated candidates only |
+| Treating the roadmap as a backlog | Keep raw ideas as Solutions in the tree; `LATER` holds deduplicated candidates only |
+| Roadmap item with no Solution, or a Solution with no Test and no cleared gate | Walk the chain; add the missing level before admitting it to `NEXT`/`NOW` |
 | Killing without a reason | Every kill gets a dated Kill Reason |
 | Waiting for approval to reorder | Reorder, then report |
 
 ## References
 
 - [Autonomy Policy](../../Autonomy%20Policy.md)
-- [Full Playbook — OST as Operating System](../../Agentic%20PM%20Playbook.md)
-- [OKR Workflow](../okr-workflow/SKILL.md)
-- [Experiment Workflow](../experiment-workflow/SKILL.md)
+- [The Loop](../../guides/the-loop.md)
+- [Full Playbook — Discovery Tree as Operating System](../../Agentic%20PM%20Playbook.md)
+- [Loop Workflow](../loop-workflow/SKILL.md)
+- [Test Workflow](../experiment-workflow/SKILL.md)
 - [Build Authorization](../build-authorization/SKILL.md)
 - [Stakeholder Status Reports](../status-report-workflow/SKILL.md)

@@ -6,7 +6,7 @@ description: >-
 retrieval:
   aliases: [pm setup, configure pm, setup playbook, pm config]
   intents: [set up the pm playbook, configure my pm environment, create pm config, update my pm configuration]
-chainTo: [okr-workflow]
+chainTo: [loop-workflow]
 ---
 
 # PM Setup
@@ -27,7 +27,7 @@ Ask one section at a time:
 4. **Workflow profile:** when workflow automation is in scope, offer the profiles from `workflow-profiles.json`; explain that product and workflow profiles compose independently.
 5. **Workflow overrides:** ask whether automation runtime, review requests, decision records, notifications, prototype artifacts, or analytics needs a different provider.
 6. **Connections:** collect identifiers and credential *locations* only for providers actually resolved. Never place a secret in `pm-config.md`.
-7. **Context:** active cycle, objective, KR, desired outcome, focus opportunity, and focus solution. Store provider-native IDs when available.
+7. **Context:** active cycle, Opportunity, Outcome, KR, and focus Solution. Store provider-native IDs when available.
 8. **Portfolio policy:** collect positive `now_limit`, `next_limit`, and
    `concurrent_validation_limit` values. Default the displacement, evidence, owner, and
    capacity guards to `true`; they are checks the agent applies and reports when it moves
@@ -50,15 +50,14 @@ Scaffold only capabilities resolved to `markdown` or `obsidian`:
 | vision | `product/vision.md` |
 | research_capture | `product/research/` |
 | insights | `product/discovery/Signal Ledger.md` |
-| okrs | `product/okrs/` |
-| ost | `product/discovery/` |
-| experiments | `product/discovery/experiments/` |
+| loop | `product/okrs/` (Outcomes, KRs, cycles) and `product/discovery/` (Opportunities and Solutions) |
+| experiments | `product/discovery/tests/` (Tests) |
 | roadmap | `product/roadmap/` |
 | reporting_archive | `product/reports/` |
 
 Do not create a path merely because an older template had one. In particular, `compass-full` creates no `product/` tree. The hybrid profile creates only Obsidian-owned vision, research, and reporting paths. JPD/Jira creates no authoritative Markdown discovery tree. An override may add or remove one scaffolded capability.
 
-When Markdown owns OKRs, OST, experiments, or roadmap, initialize the corresponding existing generated templates. When Compass owns those capabilities, create provider-native records only if the user explicitly asked setup to initialize product state; otherwise record connection metadata and active IDs.
+`loop` and `experiments` jointly resolve the Loop tree (`guides/the-loop.md`: Opportunity -> Outcome -> KR -> Solution -> Test) and must share one provider family; refuse an override that splits them, and offer to override both together. When Markdown owns the Loop tree or roadmap, initialize the corresponding existing generated templates. When Compass owns those capabilities, create provider-native records only if the user explicitly asked setup to initialize product state; otherwise record connection metadata and active IDs.
 
 ## Write and validate
 
@@ -78,7 +77,7 @@ Write `pm-config.md` from the installed `integration-routing/assets/pm-config-te
 - include a complete `delivery_completion_policy`; production verification defaults to
   required and preview success never counts as production evidence;
 - include paths only for filesystem-owned capabilities;
-- preserve the exact measurable desired outcome;
+- preserve the exact Outcome statement and its KR targets;
 - label secondary copies by role.
 
 Resolve the installed `integration-routing` skill directory and run both self-contained validators:

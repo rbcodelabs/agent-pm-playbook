@@ -1,27 +1,31 @@
 ---
-id: SOL-001
+id: SOL-1
 type: solution
 title: "[Solution hypothesis name]"
 status: Exploring
-parent_opportunity: OPP-001
+parent_kr: OUT-1-KR-1
+parent_outcome: OUT-1
+parent_opportunity: OPP-1
 riskiest_assumption: "[The assumption most likely to be wrong — the one that would kill this solution if false]"
 assumption_count: 0
-okr_cycle: Q2-2026
+cycle: Q2-2026
 created: 2026-04-01
 last_updated: 2026-04-01
 ---
 
-> [Guide: `title` names the solution direction, not the feature. "Real-time submission feedback" is better than "Add a status banner." The title should hint at the mechanism without over-specifying the implementation — solutions at this stage are hypotheses, not specs.]
+> [Guide: A Solution is the fourth level of the Loop tree (Opportunity -> Outcome -> KR -> Solution -> Test); see `guides/the-loop.md`. It has exactly ONE parent KR (`parent_kr`); `parent_outcome` and `parent_opportunity` are derived from that ancestry and recorded for readability. A Solution that serves two KRs is split, or the second KR is a secondary link. A KR needs at least 3 candidate Solutions before one is selected. `title` names the solution direction, not the feature. "Real-time submission feedback" is better than "Add a status banner." The title should hint at the mechanism without over-specifying the implementation — solutions at this stage are hypotheses, not specs.]
 
-> [Guide: `status` lifecycle: Exploring (idea, no validation) → Testing (experiment running) → Validated (experiment confirmed the riskiest assumption) → Building (in delivery) → Shipped (live) → Killed (assumption failed or opportunity deprioritized). Solutions in Killed status are never deleted — they teach the team what doesn't work.]
+> [Guide: `status` lifecycle: Exploring (idea, no validation) → Testing (a Test is running) → Validated (a Test confirmed the riskiest assumption) → Building (in delivery) → Shipped (live) → Killed (assumption failed or opportunity deprioritized). Solutions in Killed status are never deleted — they teach the team what doesn't work.]
 
 > [Guide: `riskiest_assumption` is the single belief that, if wrong, would make this entire solution worthless. Identifying this upfront determines what to test first. If you have 5 risky assumptions and can't pick one, you're not ready to commit to this solution yet.]
 
-# SOL-001: [Title]
+# SOL-1: [Title]
 
 **Status:** Exploring
-**Parent opportunity:** [[OPP-001]]
-**OKR cycle:** [[Q2-2026]]
+**Parent KR:** OUT-1-KR-1 — [KR target statement]
+**Outcome:** [[OUT-1]]
+**Opportunity:** [[OPP-1]]
+**Cycle:** [[Q2-2026]]
 **Riskiest assumption:** [paste from frontmatter]
 
 ---
@@ -34,11 +38,13 @@ last_updated: 2026-04-01
 
 ---
 
-## How This Addresses the Opportunity
+## How This Moves the KR and Addresses the Opportunity
 
-> [Guide: Connect explicitly to the parent opportunity. Explain the causal chain: if the customer's struggle is X, and this solution does Y, then Z should change. Vague connections ("this should help customers") are a red flag that the solution isn't well-grounded in the opportunity.]
+> [Guide: Connect explicitly to the parent KR and, through it, the Opportunity. Explain the causal chain: if the customer's struggle is X, and this solution does Y, then the KR should move. Vague connections ("this should help customers") are a red flag that the solution isn't well-grounded in the opportunity.]
 
-**The customer struggle (from OPP-001):** [Paste the opportunity framing]
+**The KR this moves (OUT-1-KR-1):** [Paste the KR target statement]
+
+**The customer struggle (from OPP-1):** [Paste the opportunity framing]
 
 **The mechanism:** [How this solution specifically removes or reduces that struggle]
 
@@ -48,11 +54,11 @@ last_updated: 2026-04-01
 
 ## Assumptions
 
-> [Guide: List every belief this solution depends on. At minimum: one assumption about customer desirability (will they want this?), one about usability (can they use it?), and one about impact (will it move the metric?). Rate risk and impact honestly — the riskiest + highest impact assumption becomes your first experiment. Mark the riskiest one with an asterisk.]
+> [Guide: List every belief this solution depends on. At minimum: one assumption about customer desirability (will they want this?), one about usability (can they use it?), and one about impact (will it move the metric?). Rate risk and impact honestly — the riskiest + highest impact assumption becomes your first Test. Mark the riskiest one with an asterisk.]
 
 | Assumption | Risk Level | Impact if Wrong | Test Approach |
 |---|---|---|---|
-| [Customers will notice and engage with the new feedback mechanism] * | High | Fatal | fake-door experiment |
+| [Customers will notice and engage with the new feedback mechanism] * | High | Fatal | fake-door test |
 | [Customers understand what "in review" status means without explanation] | Medium | Significant | user-interview |
 | [The feedback appears fast enough to feel real-time on slow connections] | Low | Minor | prototype test |
 
@@ -62,24 +68,24 @@ last_updated: 2026-04-01
 
 ---
 
-## Connected Experiments
+## Connected Tests
 
-> [Guide: Each row is an EXP-XXX file in `product/discovery/experiments/`. List experiments in chronological order. Show what each one tests and what it concluded. Agents append to this list as experiments are created and closed.]
+> [Guide: Each row is a TST-n file in `product/discovery/tests/`. A Solution needs at least one Test before it is built. List Tests in chronological order, with what each one tests and what it concluded. Agents append to this list as Tests are created and closed. A Test result updates this Solution's confidence; Solution progress updates the parent KR.]
 
-| Experiment | Type | Tests | Status | Result |
+| Test | Type | Assumption tested | Status | Result |
 |---|---|---|---|---|
-| [[EXP-001]] | fake-door | [Which assumption] | Planned | |
-| [[EXP-002]] | concierge | [Which assumption] | | |
+| [[TST-1]] | fake-door | [Which assumption] | Planned | |
+| [[TST-2]] | concierge | [Which assumption] | | |
 
 ---
 
 ## Kill Condition
 
-> [Guide: Define what would make you abandon this solution. This should be tied to an experiment result or a change in the parent opportunity — not to a business constraint like "if it takes too long to build." Kill conditions set before testing are the clearest sign that a team is running disciplined discovery.]
+> [Guide: Define what would make you abandon this solution. This should be tied to a Test result or a change in the parent KR or Opportunity — not to a business constraint like "if it takes too long to build." Kill conditions set before testing are the clearest sign that a team is running disciplined discovery.]
 
 This solution is killed if:
-- EXP-001 result falls below the kill threshold (see [[EXP-001]] for specifics), OR
-- OPP-001 is archived or deprioritized, OR
+- TST-1 result falls below the kill threshold (see [[TST-1]] for specifics), OR
+- OUT-1-KR-1 is dropped or OPP-1 is retired, OR
 - [Other specific condition, e.g., "a competing solution in the same opportunity scores higher on the prioritization matrix"]
 
 ---
@@ -92,6 +98,6 @@ This solution is killed if:
 
 **Reason:** [Which assumption failed, or which external factor changed]
 
-**What we learned:** [What this means for the parent opportunity — does OPP-001 still stand, or does the kill signal challenge the opportunity itself?]
+**What we learned:** [What this means for the parent opportunity — does OPP-1 still stand, or does the kill signal challenge the opportunity itself?]
 
-**Carried forward to:** [Another solution direction, or "Opportunity archived"]
+**Carried forward to:** [Another solution direction, or "Opportunity retired"]

@@ -10,6 +10,7 @@
   "license": "MIT",
   "keywords": [
     "product-management",
+    "Loop",
     "OST",
     "continuous-discovery",
     "agentic-pm",
@@ -32,7 +33,7 @@
     "./skills/agentic-pm/SKILL.md",
     "./skills/investment-gate/SKILL.md",
     "./skills/jira-workflow/SKILL.md",
-    "./skills/ost-workflow/SKILL.md",
+    "./skills/loop-workflow/SKILL.md",
     "./skills/pm-coach/SKILL.md",
     "./skills/pm-setup/SKILL.md",
     "./skills/scheduled-product-operations/SKILL.md",

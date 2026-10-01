@@ -24,25 +24,25 @@ Some exercises say "trigger the skill" — but if you're running a plain Claude 
 
 ---
 
-## Module 2 — Your First OST
+## Module 2 — Your First Loop
 
-### "Trigger the `ost-workflow` skill" — skill isn't responding
+### "Trigger the `loop-workflow` skill" — skill isn't responding
 
-See *Skill invocations* above. Manual path: apply the four-layer rules from the concept reading directly in a plain Claude thread. Ask Claude to help you surface customer needs and candidate solutions, then run the health-check table manually against the output.
+See *Skill invocations* above. Manual path: apply the five-level rules from the concept reading directly in a plain Claude thread. Ask Claude to help you surface customer needs (Opportunities), derive the Outcome and KRs, and generate candidate Solutions and a Test, then run the health-check table manually against the output.
 
 ### Part B health check — I found fewer than 4 of the 5 planted flaws
 
-Open the [facilitator key](sample-data/facilitator-key.md) and compare. The key names the exact check each flaw fails; match that to the health-check table in the concept reading. The most commonly missed flaw is a **company goal masquerading as an opportunity** (e.g., "increase revenue from enterprise accounts" — that's your goal, not a customer need). The tell: can a customer feel this as their problem? If not, it belongs elsewhere.
+Open the [facilitator key](sample-data/facilitator-key.md) and compare. The key names the exact check each flaw fails; match that to the health-check table in the concept reading. The most commonly missed flaw is the **output-framed Key Result** ("ship the new import wizard" — a launch date, not a measured change in behavior). A close second is a **company goal masquerading as an Opportunity** (e.g., "increase revenue from enterprise accounts" — that's your goal, not a customer need). The tell for the latter: can a customer feel this as their problem? If not, it belongs elsewhere.
 
 ### "Focus branch" check trivially passes for a solo-founder / single-persona product
 
-If you only have one persona and your tree is still small, the focus-branch check ("is the team working ≤ 2 branches?") passes by default. That's fine — the check is a flag for teams that spread too wide. For a small tree, the more useful question is: **which single opportunity has the most evidence and the clearest path to your outcome?** Work that one first, even if no others are competing.
+If you only have one persona and your tree is still small, the focus-branch check ("is the team working ≤ 2 Outcomes?") passes by default. That's fine — the check is a flag for teams that spread too wide. For a small tree, the more useful question is: **which single Opportunity has the most evidence and the clearest path to your Outcome and KRs?** Work that one first, even if no others are competing.
 
 ---
 
-## Module 4 — Experiments & Progressive Investment
+## Module 4 — Tests & Progressive Investment
 
-### How many people do I need for a concierge test?
+### How many people do I need for a concierge Test?
 
 The exercise says "~5 trial accounts" — here's the calibration:
 
@@ -52,7 +52,7 @@ The exercise says "~5 trial accounts" — here's the calibration:
 | Testing | 5–7 | Gate-checking whether a specific solution actually works |
 | Pre-build commitment | 7–10 | More confidence before committing engineering time |
 
-These are minimums, not targets. If you can recruit more, do. **If you can't recruit even 3**, that's a finding: the cohort may not exist, may not be motivated enough, or needs a different channel. Surface it — don't adjust N down to 1 and call it a concierge test.
+These are minimums, not targets. If you can recruit more, do. **If you can't recruit even 3**, that's a finding: the cohort may not exist, may not be motivated enough, or needs a different channel. Surface it — don't adjust N down to 1 and call it a concierge Test.
 
 ### What counts as a "kill condition" for a long-cadence product?
 
@@ -82,7 +82,7 @@ The simplest recipe:
 
 You need at least one other person with **unfiltered exposure to customer signal** — not your synthesis output, but actual customers. Options that count:
 - A contractor or designer who joins one interview per month
-- A peer founder who reviews your OST every 4–6 weeks
+- A peer founder who reviews your Loop tree every 4–6 weeks
 - An engaged customer who is on a standing monthly check-in
 - A support VA who reads tickets and surfaces patterns
 

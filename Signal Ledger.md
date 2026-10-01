@@ -9,11 +9,11 @@
 
 ## What the Signal Ledger Is
 
-The signal ledger is a running record of what you learned in each discovery session: what signals surfaced, where they came from, how severe they are, and how they map to your OST. Every synthesis session produces one entry. The ledger accumulates over weeks and months into a queryable record of your product discovery work.
+The signal ledger is a running record of what you learned in each discovery session: what signals surfaced, where they came from, how severe they are, and which Opportunity in the [Loop tree](guides/the-loop.md) they attach to. Every synthesis session produces one entry. The ledger accumulates over weeks and months into a queryable record of your product discovery work.
 
 Its job is narrow and specific: make longitudinal comparison possible. The reason you can't just rely on session notes or your own memory is that frequency trends, intensity escalations, and emerging opportunity clusters are only visible across time. A pain mentioned in two interviews in January, five in February, and nine in March is telling you something important. Without a ledger, you never see that trajectory.
 
-The ledger is not a task list, a backlog, or a transcript archive. It does not replace your OST. It is a signal record, structured consistently enough that you can paste a section of it into a prompt and ask an agent to compare it to today's synthesis. Consistency of schema across entries is what makes it useful. An entry format you only follow sometimes is barely better than nothing.
+The ledger is not a task list, a backlog, or a transcript archive. It does not replace your Loop tree. It is a signal record, structured consistently enough that you can paste a section of it into a prompt and ask an agent to compare it to today's synthesis. Consistency of schema across entries is what makes it useful. An entry format you only follow sometimes is barely better than nothing.
 
 ---
 
@@ -34,11 +34,11 @@ Every ledger entry captures the following fields. The schema is tool-agnostic �
 
 | Field | Description |
 |---|---|
-| Opportunity theme | A short label for the cluster — should match OST opportunity name if mapped |
+| Opportunity theme | A short label for the cluster — should match the Opportunity name if mapped |
 | Verbatim quotes | 2-3 direct quotes that represent the cluster |
 | Source identifiers | Which interviews, tickets, or reviews this cluster comes from |
 | Severity | Low / Medium / High / Critical (see definitions below) |
-| OST mapping | Opportunity name from the OST, or "Unmapped" |
+| Opportunity mapping | Opportunity ID and name (`OPP-n`) from the tree, or "Unmapped". Evidence attaches to the Opportunity; if it bears on a specific Solution or Test, also note that ID (`SOL-n` / `TST-n`). Never attach raw signals to a KR. |
 | Confidence | Low / Medium / High |
 
 **Severity definitions:**
@@ -77,7 +77,8 @@ Copy-paste this for each new entry. Use a horizontal rule (`---`) to separate en
   - "[quote 2]" (Source: [ID])
   - "[quote 3]" (Source: [ID])
 - **Severity:** Low | Medium | High | Critical
-- **OST mapping:** [Opportunity name] | Unmapped
+- **Opportunity mapping:** [OPP-n Opportunity name] | Unmapped
+- **Also bears on:** [SOL-n / TST-n, optional]
 - **Confidence:** Low | Medium | High
 
 #### [Opportunity theme]
@@ -85,7 +86,8 @@ Copy-paste this for each new entry. Use a horizontal rule (`---`) to separate en
   - "[quote 1]" (Source: [ID])
   - "[quote 2]" (Source: [ID])
 - **Severity:** Low | Medium | High | Critical
-- **OST mapping:** [Opportunity name] | Unmapped
+- **Opportunity mapping:** [OPP-n Opportunity name] | Unmapped
+- **Also bears on:** [SOL-n / TST-n, optional]
 - **Confidence:** Low | Medium | High
 
 ### Session Notes
@@ -104,15 +106,15 @@ Copy-paste this for each new entry. Use a horizontal rule (`---`) to separate en
 1. Complete synthesis (using the pm-signal-synthesis skill or your own prompt).
 2. Log the entry using the template above. One entry per session. Do not batch multiple sessions into one entry — date granularity matters for longitudinal analysis.
 3. Run a longitudinal check: compare this session's clusters against the prior four weeks of ledger entries. Use the longitudinal check prompt from [[Longitudinal Pattern Tracking]].
-4. Update OST mappings: if a cluster reaches Medium+ confidence and is currently Unmapped, evaluate whether it warrants a new OST opportunity branch.
+4. Update Opportunity mappings: if a cluster reaches Medium+ confidence and is currently Unmapped, create a new Opportunity (the root of a branch) or attach it to an existing one. Evidence then flows up: it raises the Opportunity's confidence, which informs the Outcomes pursuing it and the Solutions beneath them. It never flows down to override a KR.
 5. Note anything worth watching in the Session Notes field before closing.
 
 ### Monthly
 
 1. Collect the past 90 days of ledger entries.
 2. Run the monthly trends briefing prompt from [[Longitudinal Pattern Tracking]].
-3. Review output with the OST: promote high-trajectory opportunities, archive stale ones, flag intensity escalations as potential retention risks.
-4. Update OST confidence levels based on the trends briefing.
+3. Review output with the tree: promote high-trajectory Opportunities (draft an Outcome and KRs for them), archive stale ones with a reason, flag intensity escalations as potential retention risks.
+4. Update Opportunity confidence levels based on the trends briefing, and re-check the Outcomes and Solutions beneath any Opportunity whose evidence shifted.
 
 The longitudinal check prompt and the monthly trends briefing prompt both live in [[Longitudinal Pattern Tracking]] under "Sample Prompts."
 
@@ -126,7 +128,7 @@ The right implementation depends on your tooling setup:
 - **Linear + Obsidian:** The ledger lives in Obsidian as a flat markdown file. See the Linear + Obsidian section below.
 - **Markdown only:** The ledger lives in `Discovery/Signal Ledger.md`. See the markdown-only section below.
 
-All three implementations use the same schema and the same workflow. The only differences are where the file lives and how OST mappings are linked.
+All three implementations use the same schema and the same workflow. The only differences are where the file lives and how Opportunity mappings are linked.
 
 ---
 
@@ -144,7 +146,7 @@ JPD Insights are the native signal capture layer for this setup. The signal ledg
 | Opportunity theme | Insight title |
 | Verbatims | Insight description — paste 2-3 quotes, each with source ID |
 | Severity | Custom field: Severity (Low / Medium / High / Critical) |
-| OST mapping | Linked JPD Idea (opportunity), or label `unmapped` |
+| Opportunity mapping | Linked JPD Idea (Opportunity), or label `unmapped` |
 | Confidence | Custom field: Confidence (Low / Medium / High) |
 
 ### Workflow
@@ -152,37 +154,37 @@ JPD Insights are the native signal capture layer for this setup. The signal ledg
 1. After synthesis, create one Insight per signal cluster. Do not create Insights for individual quotes.
 2. Add verbatims and source identifiers to the Insight description.
 3. Apply all required labels and custom field values before saving.
-4. Link each Insight to an existing opportunity Idea if one exists. If no match, label `unmapped` and revisit at the next OST review.
-5. For longitudinal checks: use a saved JPD filter scoped to the past 30 days (or 60/90 for monthly). Filter by OST opportunity label. Paste the filtered Insight list into the longitudinal check prompt.
+4. Link each Insight to an existing Opportunity Idea if one exists. If no match, label `unmapped` and revisit at the next tree health check.
+5. For longitudinal checks: use a saved JPD filter scoped to the past 30 days (or 60/90 for monthly). Filter by Opportunity label. Paste the filtered Insight list into the longitudinal check prompt.
 6. Monthly: export the past 90 days of Insights and paste into the trends briefing prompt.
 
 ### Limitation
 
-JPD has no native longitudinal summary view. There is no built-in way to visualize frequency trends over time. The workaround is: saved filter by date range and opportunity label, then a prompt-based analysis. This is manual but functional. If you run monthly trends briefings consistently, the absence of a native view matters less.
+JPD has no native longitudinal summary view. There is no built-in way to visualize frequency trends over time. The workaround is: saved filter by date range and Opportunity label, then a prompt-based analysis. This is manual but functional. If you run monthly trends briefings consistently, the absence of a native view matters less.
 
 ---
 
 ## Linear + Obsidian Implementation
 
-Signals live in Obsidian. Opportunities, solutions, experiments, and build delivery live in Linear. The OST tree structure also lives in Obsidian as the source of truth for the narrative.
+Signals live in Obsidian. Opportunities, Outcomes, KRs, Solutions, Tests, and build delivery live in Linear. The Loop tree structure also lives in Obsidian as the source of truth for the narrative.
 
 ### File location
 
 `Discovery/Signal Ledger.md` in your Obsidian vault (relative to vault root).
 
-Create the `Discovery/` folder if it does not exist. The OST for your active initiative lives at `Discovery/OST-[initiative-name].md`.
+Create the `Discovery/` folder if it does not exist. The Loop tree for your active initiative lives at `Discovery/OST-[initiative-name].md` (the `OST-` filename prefix is a legacy name kept so existing vaults and links keep working).
 
 ### Workflow
 
 1. After synthesis, open `Discovery/Signal Ledger.md` and add a new entry at the top of the file using the template. Most-recent-first keeps the file usable without scrolling.
-2. For each signal cluster, check whether it maps to an existing OST opportunity. If yes, record the opportunity name. If no, mark Unmapped.
-3. When a cluster reaches Medium+ confidence and has appeared in at least two independent sessions, create a Linear issue labeled `[opportunity]`. Add the Linear issue ID to the ledger entry's OST mapping field (e.g., `Unmapped → PROJ-142`).
+2. For each signal cluster, check whether it maps to an existing Opportunity. If yes, record the Opportunity ID and name. If no, mark Unmapped.
+3. When a cluster reaches Medium+ confidence and has appeared in at least two independent sessions, create a Linear issue labeled `[opportunity]`. Add the Linear issue ID to the ledger entry's Opportunity mapping field (e.g., `Unmapped → PROJ-142`).
 4. For longitudinal checks: paste the relevant date range from the ledger directly into the longitudinal check prompt. No export needed.
 5. Monthly: copy the past 90 days of entries and paste into the trends briefing prompt.
 
-### Note on OST source of truth
+### Note on tree source of truth
 
-The OST markdown file in Obsidian is the canonical structure. Linear tracks the work items that flow from validated opportunities. Keep them in sync: when you create a Linear opportunity issue, update the OST file with the Linear ID so you can navigate between them.
+The Loop tree markdown file in Obsidian is the canonical structure. Linear tracks the work items that flow from Solutions that cleared their investment gate. Keep them in sync: when you create a Linear Opportunity issue, update the tree file with the Linear ID so you can navigate between them.
 
 ---
 
@@ -195,12 +197,12 @@ For teams or individuals with no dedicated PM tool. Everything lives in plain fi
 | Artifact | File path |
 |---|---|
 | Signal ledger | `Discovery/Signal Ledger.md` |
-| OST | `Discovery/OST-[initiative-name].md` |
-| Experiments | Table in the OST doc, or `Discovery/Experiments.md` if the list grows |
+| Loop tree | `Discovery/OST-[initiative-name].md` (legacy filename) |
+| Tests | Table in the tree doc, or `Discovery/Tests.md` if the list grows |
 
 ### Workflow
 
-Same as Linear + Obsidian, except there are no Linear issue IDs to link. OST mappings reference opportunity names from the OST markdown file directly. When a cluster reaches Medium+ confidence, add a new opportunity node to the OST file manually and record the opportunity name in the ledger.
+Same as Linear + Obsidian, except there are no Linear issue IDs to link. Opportunity mappings reference Opportunity IDs and names from the tree markdown file directly. When a cluster reaches Medium+ confidence, add a new Opportunity node to the tree file manually and record its ID in the ledger.
 
 For longitudinal analysis: paste the relevant ledger section into the longitudinal check prompt. The analysis works exactly the same as any other implementation. The only difference is there is no external tool to link back to.
 

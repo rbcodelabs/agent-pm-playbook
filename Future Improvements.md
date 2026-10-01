@@ -6,6 +6,15 @@
 
 ## ✅ Completed
 
+> **Terminology.** The playbook now uses one integrated Loop hierarchy (Opportunity, Outcome, Key Result, Solution, Test, with Roadmap Items hanging off Solutions); see [The Loop](guides/the-loop.md). Entries below written before that change are kept as history, with their wording updated to the Loop levels except where they name a skill id, a quoted source line, or a legacy-term migration note.
+
+### The Loop
+**Added:** 2026-10-01
+Replaces the separate OKR and OST pair with a single goal-to-learning tree: Opportunity is the root, an Outcome (the merged Objective and Desired Outcome) sits beneath it, KRs measure the Outcome, Solutions are parented by a KR, and Tests (formerly Experiments) falsify a Solution's riskiest assumption. Roadmap Items are admitted only after a Solution clears its investment gate. Defines stable IDs (`OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, `TST-n`) and the legacy mapping. The `loop-workflow` skill (merged from the former OST and OKR skills) and `experiment-workflow` cover the Loop levels.
+**File:** [The Loop](guides/the-loop.md)
+
+---
+
 ### How to Use the Agents
 **Added:** 2026-05-15
 A human-readable guide to all six agents — what each one does, when to invoke it, example natural language invocations, how orchestration and parallel execution work, and the team handoff workflow. Replaces the tool-use-only documentation that previously existed.
@@ -22,14 +31,14 @@ Full signal ledger artifact with tool-agnostic schema, copy-paste entry template
 
 ### PM Tool Integration Guide *(new — was implicit gap in Section 4)*
 **Added:** 2026-05-15
-Full tool mapping for the six OST layers across three stacks. JPD + Jira: Insights as the signal ledger layer, Opportunity/Solution/Test issue types, status workflows, experiment issue template, JPD automation rules, and an explicit Insights vs. Learnings distinction. Linear + Obsidian: layer mapping, OST as source of truth in Obsidian, Linear issue conventions, signal handoff protocol. Markdown-only: file structure, inline status/confidence tagging, weekly 10-minute review. Replaces and greatly expands Section 4 of the main playbook.
+Full tool mapping for the five Loop levels (plus Roadmap Items and the signal layer) across the supported stacks. JPD + Jira: Insights as the signal ledger layer, Opportunity/Outcome/Solution/Test issue types with an interim Key Result mapping, status workflows, Test issue template, JPD automation rules, and an explicit Insights vs. Learnings distinction. Compass: native-object mapping with the parent chain preserved. Linear + Obsidian: label and project mapping, the Loop tree doc as source of truth in Obsidian, Linear issue conventions, signal handoff protocol. Markdown-only: file structure, stable IDs, inline status/confidence tagging, weekly 10-minute review. Replaces and greatly expands Section 4 of the main playbook.
 **File:** [[PM Tool Integration Guide]]
 
 ---
 
 ### Discovery Health Metrics *(new)*
 **Added:** 2026-05-15
-Diagnostic metrics for a healthy discovery practice across four categories: cadence (synthesis frequency, ledger gaps, OST freshness), coverage (segment diversity, source type diversity, opportunity freshness, unmapped signal rate), evidence quality (confidence floor, verbatim coverage, experiment coverage, stale experiment flag), and honesty indicators (kill rate, confidence distribution, solution count per opportunity). Includes a monthly health check agent prompt. Partially addresses High Priority #2 (evidence thresholds for build commitment).
+Diagnostic metrics for a healthy discovery practice across four categories: cadence (synthesis frequency, ledger gaps, tree freshness), coverage (segment diversity, source type diversity, opportunity freshness, unmapped signal rate), evidence quality (confidence floor, verbatim coverage, Test coverage, stale Test flag), and honesty indicators (kill rate, confidence distribution, solution count per KR). Includes a monthly health check agent prompt. Partially addresses High Priority #2 (evidence thresholds for build commitment).
 **File:** [[Discovery Health Metrics]]
 
 ---
@@ -45,7 +54,7 @@ Covers the two compounding sourcing problems: no warm participant pool and no sy
 
 ### ~~1. "When Have We Discovered Enough to Build?" Framework~~ ✅ Done
 **Added:** 2026-05-15
-Fully resolved by [[Progressive Investment Framework]]. The doc replaces the binary "are we ready to build?" question with a five-stage progressive investment model (Exploring, Validating, Testing, Building, Scaling). Each stage has an explicit question being answered, evidence threshold to enter, investment ceiling, and exit condition. Includes full experiment type vocabulary (fake door, concierge, prototype, A/B, staged rollout) with examples, specific transition gate checklists, and holding-the-line language for both stakeholder pressure and engineer pressure. Includes an agent prompt for gate readiness assessment and full tool status mapping for JPD and Linear.
+Fully resolved by [[Progressive Investment Framework]]. The doc replaces the binary "are we ready to build?" question with a five-stage progressive investment model (Exploring, Validating, Testing, Building, Scaling). Each stage has an explicit question being answered, evidence threshold to enter, investment ceiling, and exit condition. Includes full Test type vocabulary (fake door, concierge, prototype, A/B, staged rollout) with examples, specific transition gate checklists, and holding-the-line language for both stakeholder pressure and engineer pressure. Includes an agent prompt for gate readiness assessment and full tool status mapping for JPD and Linear.
 
 ---
 
@@ -66,9 +75,9 @@ Fully resolved by [[Progressive Investment Framework]]. The doc replaces the bin
 ### 16. Test-Cost Economics Are Hardcoded to Human-Team Build Costs
 
 **Added:** 2026-09-13 · **Status:** Proposal — not yet doctrine
-**Area:** [[Progressive Investment Framework]], [[Test Minimalism]], `skills/investment-gate`, `skills/experiment-workflow`
+**Area:** [[Progressive Investment Framework]], [[Test Minimalism]], `skills/investment-gate`, `skills/experiment-workflow` (skill id unchanged; it covers the Test level)
 
-**Gap:** The Progressive Investment Framework is an arbitrage on a ratio — *cost of information* vs. *cost of building*. The principle is sound. But every rung of the experiment ladder is priced in **absolute human-team time units** rather than as a ratio to build cost, so the ladder is frozen at the prices that held when it was written:
+**Gap:** The Progressive Investment Framework is an arbitrage on a ratio — *cost of information* vs. *cost of building*. The principle is sound. But every rung of the Test ladder is priced in **absolute human-team time units** rather than as a ratio to build cost, so the ladder is frozen at the prices that held when it was written:
 
 | Where | Hardcoded price |
 |---|---|
@@ -91,7 +100,7 @@ The result is a partial inversion of the ladder. Rungs 2-3 (concierge, prototype
 
 So when the cheapest available test is "build it," the skill library forbids the agent from proposing it and rewards the refusal.
 
-**Note the playbook's own velocity argument now inverts.** `Test Minimalism.md:26` argues that learning velocity is the core performance variable — six experiments per quarter beats two. Re-run with current prices, that same argument favors building, because building is now often the fastest way to learn. The doc's logic is right; only its inputs are stale.
+**Note the playbook's own velocity argument now inverts.** `Test Minimalism.md:26` argues that learning velocity is the core performance variable — six Tests per quarter beats two. Re-run with current prices, that same argument favors building, because building is now often the fastest way to learn. The doc's logic is right; only its inputs are stale.
 
 **The internal contradiction.** `build-authorization` and `compass-resolver` already assume agent delivery through a tested PR under standing policy. The *delivery* layer has been repriced for AI economics; the *investment* layer still bills a build as "one focused team, time-boxed sprint" (`investment-gate/SKILL.md:85`). The two halves of the playbook disagree about what a build costs, and the gates enforce the stale number.
 
@@ -119,12 +128,12 @@ Three of the four cells currently receive treatment designed for the fourth.
 
 **Per-file edits proposed:**
 
-1. **`Progressive Investment Framework.md`** — add a *Classify before you climb* section ahead of Experiment Types, carrying the 2×2. Restate ladder costs as **ratios to build cost**, keeping absolute figures as a worked example labelled with its assumed build cost. Add a sixth experiment type, **instrumented vertical slice** (real code, flagged, small cohort, kill condition intact), positioned by cost-of-wrong rather than by rung order.
+1. **`Progressive Investment Framework.md`** — add a *Classify before you climb* section ahead of its Experiment Types section (that doc's current heading, pending rename to Test Types), carrying the 2×2. Restate ladder costs as **ratios to build cost**, keeping absolute figures as a worked example labelled with its assumed build cost. Add a sixth Test type, **instrumented vertical slice** (real code, flagged, small cohort, kill condition intact), positioned by cost-of-wrong rather than by rung order.
 2. **`Agent Skills/Test Minimalism.md`** — split the `:68` failure mode in two: *building to avoid deciding* (still a failure) vs. *building because it is genuinely the cheapest falsification* (now legitimate when cost-of-wrong is low). Rewrite eval `:86` so a skilled agent is one that **prices both options**, rather than one that always redirects away from build. Amend the `:96` ratchet to "justify the rung against cost-of-being-wrong," not "always prefer the next-lower rung."
-3. **`skills/investment-gate/SKILL.md`** — add a cost-of-wrong column to the experiment table at `:139`. Promote the `:261-266` reasoning out of Pressure Handling into **Step 2** as a first-class routing question. Add the tablestakes path to `Exploring → Validating` admitting market-expectation evidence.
-4. **`skills/experiment-workflow/SKILL.md`** — add `instrumented-slice` to the `experiment_type` enum at `:124` and to the Step 3 mapping table. Narrow `:256` so A/B-as-refinement-only no longer blocks a flagged real slice used for discovery. Promote `:200` from a prompt aside into a required ranking input.
+3. **`skills/investment-gate/SKILL.md`** — add a cost-of-wrong column to the Test table at `:139`. Promote the `:261-266` reasoning out of Pressure Handling into **Step 2** as a first-class routing question. Add the tablestakes path to `Exploring → Validating` admitting market-expectation evidence.
+4. **`skills/experiment-workflow/SKILL.md`** — add `instrumented-slice` to the `experiment_type` enum (a legacy field name for the Test type) at `:124` and to the Step 3 mapping table. Narrow `:256` so A/B-as-refinement-only no longer blocks a flagged real slice used for discovery. Promote `:200` from a prompt aside into a required ranking input.
 
-**What deliberately does not change:** kill conditions before the test starts, one assumption per experiment, verbatim data in results, no moving goalposts. None of those are build-cost-dependent, and the cheap-build regime makes kill-condition discipline *more* load-bearing, not less — building faster mainly means accumulating unkilled surface faster. The bottom rung (copy/micro-content tests) also stays exactly as-is.
+**What deliberately does not change:** kill conditions before the Test starts, one assumption per Test, verbatim data in results, no moving goalposts. None of those are build-cost-dependent, and the cheap-build regime makes kill-condition discipline *more* load-bearing, not less — building faster mainly means accumulating unkilled surface faster. The bottom rung (copy/micro-content tests) also stays exactly as-is.
 
 **Open questions for review:**
 - Who assigns cost-of-wrong, and at what point? Self-assessed by the PM invites optimism bias toward "low, just build it."
@@ -136,9 +145,9 @@ Three of the four cells currently receive treatment designed for the fourth.
 ## 🟡 Medium Priority
 
 ### 16. Automated Fixed-Cohort Coverage Metric in Compass
-**Area:** `skills/okr-workflow`, `skills/compass-workflow`, Discovery Health Metrics
-**Gap:** This run (2026-09-14) added the *procedure* for checking fixed-cohort solution coverage (e.g., "N of 7 capability groups") by hand during a health review, but there's no computed metric or Compass query that surfaces it automatically. A scheduled audit still has to enumerate the cohort and count solutions manually every time.
-**Fix:** If Compass's MCP API grows a way to tag opportunities/KRs as members of a named cohort, add a `get_cohort_coverage`-style query and wire it into the weekly OST caretaker and OKR health review flows so the 0/N count is computed, not narrated. Deferred because it requires a Compass API capability that doesn't exist yet — the playbook can only specify the procedure, not the query, today.
+**Area:** `skills/loop-workflow`, `skills/compass-workflow`, Discovery Health Metrics
+**Gap:** This run (2026-09-14) added the *procedure* for checking fixed-cohort Solution coverage (e.g., "N of 7 capability groups") by hand during a health review, but there's no computed metric or Compass query that surfaces it automatically. A scheduled audit still has to enumerate the cohort and count solutions manually every time.
+**Fix:** If Compass's MCP API grows a way to tag Opportunities/KRs as members of a named cohort, add a `get_cohort_coverage`-style query and wire it into the weekly tree caretaker (Opportunity-to-Test) and Outcome/KR health review flows so the 0/N count is computed, not narrated. Deferred because it requires a Compass API capability that doesn't exist yet — the playbook can only specify the procedure, not the query, today.
 
 ### 17. Automated Release-Evidence Reconciliation (beyond manual Gate 9 check)
 **Area:** `skills/delivery-completion-watcher`, `skills/roadmap-workflow`
@@ -146,16 +155,16 @@ Three of the four cells currently receive treatment designed for the fourth.
 **Fix:** Design a "release-evidence sweep" flow: for every Solution not yet SHIPPED whose linked roadmap item is NOW or IN_DELIVERY, search GitHub for merged PRs referencing the roadmap/solution ID regardless of whether the reciprocal Task link exists, and reconcile status. Deferred because it needs its own adapter contract and schedule (Section 8 already lists many flows still "to implement against live systems" per the doc's own status section) — this run scoped the procedure into the existing weekly Roadmap Steward instead of designing a new scheduled flow, to keep the edit targeted rather than adding new infrastructure.
 
 ### 18. Formal "Add a KR Mid-Cycle" Workflow
-**Area:** `skills/okr-workflow`
-**Gap:** `okr-workflow` has a full "Workflow 1: Create a New OKR Cycle" but no equivalent workflow for adding a KR to an *already active* cycle. The real failure (roadmap items still wired to the original KR after new KRs were created mid-cycle) happened exactly at this seam — nothing in the skill prompts a reconciliation pass over existing roadmap items when a KR is added outside the normal cycle-creation flow.
-**Fix:** Add a short "Workflow 1b — Add a KR to an Existing Cycle" that, after creating the KR, explicitly triggers `roadmap-workflow`'s Gate 8 (stale/wrong-objective KR links) against every current NOW/NEXT item. Deferred rather than folded into this run's edits because it's a new workflow section (not a guardrail fix to existing text) and deserves its own review of where mid-cycle KR creation is currently documented, if anywhere, before writing the procedure.
+**Area:** `skills/loop-workflow`
+**Gap:** `loop-workflow` (Part 3 covers the Outcome/KR layer and cycles) has a full "Workflow 1: Create a New Cycle" (creating a cycle of Outcomes and KRs) but no equivalent workflow for adding a KR to an *already active* cycle. The real failure (roadmap items still wired to the original KR after new KRs were created mid-cycle) happened exactly at this seam — nothing in the skill prompts a reconciliation pass over existing roadmap items when a KR is added outside the normal cycle-creation flow.
+**Fix:** Add a short "Workflow 1b — Add a KR to an Existing Cycle" that, after creating the KR, explicitly triggers `roadmap-workflow`'s Gate 8 (stale/wrong-Outcome KR links) against every current NOW/NEXT item, and prompts the first three candidate Solutions under the new KR. Deferred rather than folded into this run's edits because it's a new workflow section (not a guardrail fix to existing text) and deserves its own review of where mid-cycle KR creation is currently documented, if anywhere, before writing the procedure.
 
 
 
 ### 4. Bi-Weekly and Monthly Cadence Agent Prompts
 **Area:** Playbook Section 5
-**Gap:** The weekly cadence (Section 5) has an "Agent assist?" column with specific prompt types noted. But the bi-weekly and monthly cadences have no equivalent — they describe activities but give no agent prompts. These are the reflection moments where agent-assisted synthesis could save the most time (OST pruning, outcome check, pattern summary), but practitioners are left without ready-to-use prompts.
-**Fix:** Add agent prompt examples for the bi-weekly OST pruning session and the monthly outcome check, following the same format as the weekly prompt library entries.
+**Gap:** The weekly cadence (Section 5) has an "Agent assist?" column with specific prompt types noted. But the bi-weekly and monthly cadences have no equivalent — they describe activities but give no agent prompts. These are the reflection moments where agent-assisted synthesis could save the most time (tree pruning, Outcome check, pattern summary), but practitioners are left without ready-to-use prompts.
+**Fix:** Add agent prompt examples for the bi-weekly tree pruning session (all five levels) and the monthly Outcome check, following the same format as the weekly prompt library entries.
 
 ---
 
@@ -166,38 +175,38 @@ Three of the four cells currently receive treatment designed for the fourth.
 
 ---
 
-### 6. Outcome Metric Selection Criteria
+### 6. Key Result Metric Selection Criteria
 **Area:** Playbook Section 3.1
-**Gap:** Section 3.1 does well at distinguishing outcome-level metrics from output-level ones (the "Good/Bad" examples are effective). But it doesn't address how to *choose* between candidate metrics. Common PM confusions: leading vs. lagging indicators, proxy metrics and their failure modes, owned vs. shared metrics, north star vs. supporting metric. The agent workflow for outcome definition doesn't give the PM enough to stress-test their choice.
+**Gap:** Section 3.1 does well at distinguishing outcome-level metrics from output-level ones (the "Good/Bad" examples are effective). But it doesn't address how to *choose* between candidate metrics when writing the KRs of an Outcome. Common PM confusions: leading vs. lagging indicators, proxy metrics and their failure modes, owned vs. shared metrics, north star vs. supporting metric. The agent workflow for Outcome and KR definition doesn't give the PM enough to stress-test their choice.
 **Fix:** Extend Section 3.1 with a brief "Metric Selection Criteria" sub-section. Key questions: Is this metric ownable by the product team alone? Is it a leading or lagging indicator (and are you comfortable with the lag)? Does moving this metric tell you anything about customer value or only business performance? What's the risk of gaming?
 
 ---
 
-### 7. The "Gap" Between Validated Experiments and Build Commitment
+### 7. The "Gap" Between Validated Tests and Build Commitment
 **Area:** Playbook Section 3.5
-**Gap:** The experiment workflow ends with "results flow back up the tree: invalidated assumptions prune solutions; validated ones earn deeper investment." But what does "deeper investment" mean in practice? How does a PM translate a validated experiment into a build commitment? How do they communicate this decision to stakeholders? What happens when multiple experiments are all positive? The playbook leaves practitioners at the edge of a cliff.
-**Fix:** Add a "From Validated to Built" transition note at the end of Section 3.5, connecting back to Section 3.6 (Stakeholder Communication) and the five quality gate questions. Even a short decision checklist ("before moving from validated solution to build commitment, confirm...") would close this gap. Connects to High Priority #1 above — these should be built together.
+**Gap:** The Test workflow ends with "results flow back up the tree: invalidated assumptions prune Solutions; validated ones earn deeper investment." But what does "deeper investment" mean in practice? How does a PM translate a passed Test into a Roadmap Item once the Solution clears its investment gate? How do they communicate this decision to stakeholders? What happens when multiple Tests are all positive? The playbook leaves practitioners at the edge of a cliff.
+**Fix:** Add a "From Validated to Built" transition note at the end of Section 3.5, connecting back to Section 3.6 (Stakeholder Communication) and the five quality gate questions. Even a short decision checklist ("before moving from a validated Solution to a Roadmap Item, confirm...") would close this gap. Connects to High Priority #1 above — these should be built together.
 
 ---
 
 ### 8. Bias Detection Integrated Into Discovery Workflow
 **Area:** Playbook Section 3.2
-**Gap:** Bias Detection is a Layer 4 agent skill with a dedicated doc, but the main playbook's discovery workflow (Section 3.2) never prompts the PM to check for sampling bias before acting on synthesis. A PM following Section 3.2 step-by-step would synthesize interviews and update the OST without ever asking "who is in this corpus and who isn't?" This is exactly the kind of gap that produces biased OSTs in practice.
+**Gap:** Bias Detection is a Layer 4 agent skill with a dedicated doc, but the main playbook's discovery workflow (Section 3.2) never prompts the PM to check for sampling bias before acting on synthesis. A PM following Section 3.2 step-by-step would synthesize interviews and update the tree without ever asking "who is in this corpus and who isn't?" This is exactly the kind of gap that produces biased trees in practice.
 **Fix:** Add a single "corpus intake check" step to the bulk signal triage workflow in Section 3.2 — something like: "Before treating clusters as actionable, ask: Who is in this corpus? Who is missing? What would a biased corpus look like, and does this one?" Link to the Bias Detection skill for depth.
 
 ---
 
 ### 9. Customer Segment Handling
-**Area:** Playbook Section 2 / OST Layer 2
-**Gap:** The playbook treats "the customer" as monolithic. In B2B products especially, admin users and end users have fundamentally different needs and pains — and serving one may actively conflict with serving the other. There's no guidance on how to represent multiple customer segments in the OST or how to handle divergent signals across segments when prioritizing opportunities.
-**Fix:** Add a brief note in Section 2 (OST structure) on multi-segment products. At minimum: how to tag opportunities by segment, and what to do when opportunity A is critical for segment 1 but irrelevant to segment 2. A single example would go a long way.
+**Area:** Playbook Section 2 / the Opportunity level
+**Gap:** The playbook treats "the customer" as monolithic. In B2B products especially, admin users and end users have fundamentally different needs and pains — and serving one may actively conflict with serving the other. There's no guidance on how to represent multiple customer segments in the tree (each Opportunity names one segment; segments with different needs get separate Opportunities and Outcomes) or how to handle divergent signals across segments when prioritizing opportunities.
+**Fix:** Add a brief note in Section 2 (tree structure) on multi-segment products. At minimum: how to tag Opportunities by segment, and what to do when Opportunity A is critical for segment 1 but irrelevant to segment 2. A single example would go a long way.
 
 ---
 
 ### 10. Stakeholder Pushback Handling
 **Area:** Playbook Section 7 (Anti-Patterns) / Section 3.6 (Stakeholder Communication)
-**Gap:** The "Stakeholder OST" anti-pattern is identified and named (opportunities written as disguised feature requests), but the playbook offers no process for what to do when a stakeholder actively pushes back on the outcome-driven approach. Naming the anti-pattern doesn't equip PMs to handle the political reality of being told "just put it on the roadmap."
-**Fix:** Add a short "Navigating Stakeholder Pressure" note to Section 3.6 or Section 7. The key moves: ground the conversation in the shared outcome, offer the stakeholder's idea as a solution hypothesis to be tested rather than dismissed, surface what assumption testing would need to show to prioritize their request.
+**Gap:** The "Stakeholder tree" anti-pattern (originally named "Stakeholder OST") is identified (Opportunities written as disguised feature requests), but the playbook offers no process for what to do when a stakeholder actively pushes back on the outcome-driven approach. Naming the anti-pattern doesn't equip PMs to handle the political reality of being told "just put it on the roadmap."
+**Fix:** Add a short "Navigating Stakeholder Pressure" note to Section 3.6 or Section 7. The key moves: ground the conversation in the shared outcome, offer the stakeholder's idea as a Solution hypothesis to be tested rather than dismissed, surface what a Test would need to show to prioritize their request.
 
 ---
 
@@ -210,17 +219,17 @@ Three of the four cells currently receive treatment designed for the fourth.
 
 ---
 
-### 12. OST Cycle Exit Criteria
+### 12. Cycle Exit Criteria (Outcomes and KRs)
 **Area:** Playbook Section 5 / Section 2
-**Gap:** The quarterly cadence implies a 3-month OST cycle but never states this explicitly. More importantly, there's no guidance on what makes an OST cycle "done" — is it time-based? outcome-based (metric reached)? Is starting fresh always the right move, or can cycles be extended? PMs entering their third month with no metric movement don't know whether to reset or push.
-**Fix:** Add an "Exit Criteria" note to the quarterly cadence or Section 2. Define the conditions under which a cycle ends: outcome reached, outcome determined unreachable, or strategic pivot requiring a new outcome entirely.
+**Gap:** The quarterly cadence implies a 3-month cycle of Outcomes and KRs but never states this explicitly. More importantly, there's no guidance on what makes a cycle "done": is it time-based, or KR-based (targets reached)? Opportunities persist across cycles, so only Outcomes and KRs are at stake. Is starting fresh always the right move, or can cycles be extended? PMs entering their third month with no KR movement don't know whether to reset or push.
+**Fix:** Add an "Exit Criteria" note to the quarterly cadence or Section 2. Define the conditions under which a cycle ends: Outcome reached (KRs hit), Outcome determined unreachable, or strategic pivot requiring a new Outcome (and possibly a new Opportunity) entirely.
 
 ---
 
 ### 13. Getting Started Checklist Missing Tree Health Check
 **Area:** Playbook Section 8
-**Gap:** The Getting Started Checklist walks a new PM through the setup steps but doesn't include running a health check on an existing OST (for PMs who aren't starting fresh). A PM joining a team mid-cycle with an existing tree should immediately run a health check — but this isn't mentioned.
-**Fix:** Add a conditional item to the checklist: "If joining a team with an existing OST: run the tree health check prompt (bi-weekly habit) before making any changes."
+**Gap:** The Getting Started Checklist walks a new PM through the setup steps but doesn't include running a health check on an existing tree (for PMs who aren't starting fresh). A PM joining a team mid-cycle with an existing tree, including one still in the legacy OKR-and-OST shape that needs converting per the [Loop guide](guides/the-loop.md) legacy mapping, should immediately run a health check — but this isn't mentioned.
+**Fix:** Add a conditional item to the checklist: "If joining a team with an existing tree: run the tree health check prompt (bi-weekly habit) before making any changes."
 
 ---
 
@@ -233,9 +242,9 @@ Three of the four cells currently receive treatment designed for the fourth.
 
 ### 15. Audience Translation Workflow in Main Playbook
 **Area:** Playbook Section 3.6
-**Gap:** Audience Translation is a Layer 4 agent skill with a dedicated doc, but the main playbook's stakeholder communication section (3.6) only has two generic prompts (weekly status and roadmap narrative). There's no mention of adapting OST evidence for different audiences — engineering, design, executives — even though this is a frequent PM need.
-**Fix:** Add a brief "Audience Translation" note to Section 3.6 linking to the skill, with one example prompt showing how the same OST evidence is framed differently for an executive vs. an engineering team.
+**Gap:** Audience Translation is a Layer 4 agent skill with a dedicated doc, but the main playbook's stakeholder communication section (3.6) only has two generic prompts (weekly status and roadmap narrative). There's no mention of adapting tree evidence for different audiences — engineering, design, executives — even though this is a frequent PM need.
+**Fix:** Add a brief "Audience Translation" note to Section 3.6 linking to the skill, with one example prompt showing how the same tree evidence is framed differently for an executive vs. an engineering team.
 
 ---
 
-*Last reviewed: 2026-09-13*
+*Last reviewed: 2026-10-01*

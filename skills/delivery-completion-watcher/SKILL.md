@@ -15,7 +15,7 @@ This flow is separate from the delivery resolver: the resolver creates a PR and 
 
 ## Capability preflight
 
-Read `pm-config.md` and resolve `roadmap`, `ost`, `delivery`, `insights`,
+Read `pm-config.md` and resolve `roadmap`, `loop`, `delivery`, `insights`,
 `automation_runtime`, `decision_records`, and `notifications`. Read the configured
 `delivery_completion_policy`. Missing production verification or launch policy blocks a
 shipped claim; it never defaults to success.
@@ -56,7 +56,7 @@ For one linked delivery unit, record:
 - PR URL/state, merge actor/time/commit, and required checks;
 - preview and production deployment identities and status;
 - feature-specific production smoke result;
-- linked Roadmap Item, Solution, Opportunity, experiment, and release/launch policy;
+- linked Roadmap Item and its Loop chain (Solution, parent KR, Outcome, Opportunity, and any open Test), plus release/launch policy;
 - whether the provider can update every required lifecycle field;
 - `NOW` counts before any capacity-releasing transition.
 
@@ -93,7 +93,8 @@ passing feature smoke test:
 3. Move the linked Solution to `SHIPPED` when the authoritative provider supports it.
 4. Write the PR, merge commit, checks, deployment, smoke evidence, mutations, and receipt
    key to the Task and Solution discussion/decision record.
-5. When an item leaves `NOW`, dispatch a capacity-change event to the roadmap steward. The
+5. Walk up the chain without fabricating movement: flag the Solution's parent KR for its next check-in (a shipped Solution is not a moved KR; never set KR values or Outcome status from a release), close any Test that was measuring the shipped behavior only from observed evidence, and note the release on the Opportunity so post-ship signals attach there. Where the chain is broken (no KR, no Opportunity), record that as a synchronization warning.
+6. When an item leaves `NOW`, dispatch a capacity-change event to the roadmap steward. The
    event contains before/after counts; it never promotes another item.
 
 An unsupported Solution-status operation is a visible synchronization warning in the

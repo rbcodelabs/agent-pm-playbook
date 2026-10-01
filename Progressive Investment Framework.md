@@ -9,8 +9,16 @@
 > [!note] Gates are assessments, not blocks
 > Per the [[Autonomy Policy]], agents check these criteria honestly and act on the result:
 > advance the stage when criteria are met; when they are not, say so plainly, record the
-> risk, and draft the cheapest test. Archiving a solution, recruiting participants, and
+> risk, and draft the cheapest Test. Archiving a Solution, recruiting participants, and
 > spending money still need a human.
+
+> [!note] What the gates gate
+> In the [Loop hierarchy](guides/the-loop.md) (Opportunity → Outcome → KR → Solution → Test,
+> with Roadmap Items hanging off a Solution), investment gating decides when a **Solution**
+> may advance. Evidence accumulates on the **Opportunity**; the Outcome and KR say what the
+> Solution must move; **Tests** are how a Solution earns each gate. A Roadmap Item is
+> admitted only after its Solution clears the Testing → Building gate. Before any Solution
+> exists, the stage describes the Opportunity (Exploring, Validating).
 
 ---
 
@@ -20,7 +28,7 @@ Teams get stuck because they treat build commitment as a single binary decision.
 
 **Moving too fast:** A stakeholder pushes for a feature, the team does a few interviews, someone says "users want this," and it goes into the sprint. Six weeks of engineering later, nobody uses it.
 
-**Moving too slow:** A team discovers a real opportunity, ideates good solutions, but can't agree on whether they have "enough" evidence to commit. Discovery work keeps accumulating. Nothing ships.
+**Moving too slow:** A team discovers a real Opportunity, ideates good Solutions, but can't agree on whether they have "enough" evidence to commit. Discovery work keeps accumulating. Nothing ships.
 
 The fix is replacing the binary question with a progression of smaller questions — each one cheaper and faster to answer than the final build commitment. You never ask "should we build this?" all at once. You ask five smaller questions in sequence, each one building on the last.
 
@@ -32,27 +40,27 @@ Each stage has a specific question it answers, a minimum evidence threshold to e
 
 | Stage | Question being answered | To enter this stage | Investment ceiling | Exit condition |
 |---|---|---|---|---|
-| **Exploring** | Is this a real customer problem? | 1 verbatim quote from a real user | Discovery time only. No build. | 2+ independent sources with consistent underlying need |
-| **Validating** | Is this problem widespread and worth solving? | 2+ independent sources, customer-voice framing | Discovery time + solution ideation | 3+ solutions explored, riskiest assumption named and ranked |
-| **Testing** | Does our proposed solution work? | Riskiest assumption named, kill condition written before the test starts | Cheapest test that answers the question (see experiment types below) | Riskiest assumption passed the test. Kill condition not triggered. |
-| **Building** | Does the built thing move the metric? | 1+ validated experiment connected to the active outcome | One focused team, time-boxed sprint | Real usage data showing metric movement (not test data) |
-| **Scaling** | Should we invest to grow this? | Metric movement confirmed with real users | Full investment | Metric target reached, or strategic decision to extend the cycle |
+| **Exploring** | Is this a real customer problem? (stage of the Opportunity) | 1 verbatim quote from a real user, attached to the Opportunity | Discovery time only. No build. | 2+ independent sources with consistent underlying need |
+| **Validating** | Is this problem widespread and worth solving, and what would capturing it change? (Opportunity; Outcome and KRs drafted) | 2+ independent sources, customer-voice framing | Discovery time + Solution ideation | Outcome with 2–3 KRs; 3+ Solutions under a KR explored; the leading Solution's riskiest assumption named and ranked |
+| **Testing** | Does our proposed Solution work? (stage of the Solution) | Riskiest assumption named, kill condition written before the Test starts | Cheapest Test that answers the question (see Test types below) | Riskiest assumption passed the test. Kill condition not triggered. |
+| **Building** | Does the built thing move the KR? | 1+ passed Test on the Solution, whose parent KR is in the active cycle | One focused team, time-boxed sprint | Real usage data showing metric movement (not test data) |
+| **Scaling** | Should we invest to grow this? | KR movement confirmed with real users | Full investment | KR target reached, or strategic decision to extend the cycle |
 
-The investment ceiling matters as much as the evidence threshold: a sprint team on something still in Testing, or a fake door on something real users already validated, both spend the wrong amount.
+The investment ceiling matters as much as the evidence threshold: a sprint team on a Solution still in Testing, or a fake door on something real users already validated, both spend the wrong amount.
 
 ---
 
-## Experiment Types
+## Test Types
 
-Testing is the stage teams understand the least, because "run an experiment" usually gets interpreted as "build a feature and measure it." That is the most expensive experiment type. There are five cheaper options that come first.
+Testing is the stage teams understand the least, because "run a test" usually gets interpreted as "build a feature and measure it." That is the most expensive kind of Test. There are five cheaper options that come first. Each is a **Test** on one Solution assumption, with success and failure criteria written before it runs, and its result is logged against the KR the Solution moves.
 
-Listed from cheapest to most expensive. Always use the cheapest experiment that can answer the question.
+Listed from cheapest to most expensive. Always use the cheapest Test that can answer the question.
 
 ---
 
 ### 0. Copy & Micro-Content Test
 
-**What it is:** The cheapest possible test. You are not validating a solution — you are choosing between two or three concrete wordings, labels, or small UI elements (a headline, a CTA button, an email subject line, an error message, an empty-state illustration). This rung exists because teams routinely treat these decisions as internal debates instead of testable questions.
+**What it is:** The cheapest possible test. You are not validating a Solution — you are choosing between two or three concrete wordings, labels, or small UI elements (a headline, a CTA button, an email subject line, an error message, an empty-state illustration). This rung exists because teams routinely treat these decisions as internal debates instead of testable questions.
 
 **What it answers:** Which version of this specific piece of content or element performs better with real users — not whether the underlying feature or flow has value. That question is already settled; this is refinement, not discovery.
 
@@ -62,7 +70,7 @@ Listed from cheapest to most expensive. Always use the cheapest experiment that 
 
 **Investment:** Hours to a day. No engineering beyond a string swap or a simple randomizer. No recruiting pipeline — real users you already have, not a research panel.
 
-**Watch out for:** This rung is not a substitute for the assumption ladder below. If the disagreement is really about whether the feature itself should exist, or what the feature should do, that is a demand or value assumption — use a fake door or concierge test instead. Copy tests answer "which wording wins," not "does anyone want this."
+**Watch out for:** This rung is not a substitute for the assumption ladder (the other Test types below). If the disagreement is really about whether the feature itself should exist, or what the feature should do, that is a demand or value assumption — use a fake door or concierge test instead. Copy tests answer "which wording wins," not "does anyone want this."
 
 ---
 
@@ -84,9 +92,9 @@ Listed from cheapest to most expensive. Always use the cheapest experiment that 
 
 ### 2. Concierge
 
-**What it is:** You manually deliver the solution for a small number of users — pretending the technology exists. A human does the work that software would eventually do.
+**What it is:** You manually deliver the Solution for a small number of users — pretending the technology exists. A human does the work that software would eventually do.
 
-**What it answers:** Does the solution actually work for real users? Are they willing to engage with it repeatedly? Is the core value hypothesis correct?
+**What it answers:** Does the Solution actually work for real users? Are they willing to engage with it repeatedly? Is the core value hypothesis correct?
 
 **How it works:** Recruit 3-8 users. Manually provide the outcome your feature would produce. Watch what they do with it. Observe what breaks.
 
@@ -134,7 +142,7 @@ Listed from cheapest to most expensive. Always use the cheapest experiment that 
 
 **What it answers:** Does this hold up at scale? Are there failure modes that only appear with real users and real data?
 
-**Investment:** Ongoing. This is not a discovery experiment — it is a release strategy. By this stage you have already answered the core product questions.
+**Investment:** Ongoing. This is not a discovery Test — it is a release strategy. By this stage you have already answered the core product questions.
 
 **Watch out for:** Using staged rollout as a substitute for earlier-stage validation. "We'll learn from the rollout" is not a testing strategy — it means you are committing engineering resources to something you have not validated.
 
@@ -146,62 +154,62 @@ Projects using `approved_build_policy` reuse one explicit human approval of exac
 through a tested PR with the [Approved Build workflow](skills/build-authorization/SKILL.md).
 Merge and production retain separate authority.
 
-Each checkpoint is a question answered with evidence, not a gut check or a consensus vote. An unmet criterion is reported as a named risk with the cheapest next test; it does not freeze the work.
+Each checkpoint is a question answered with evidence, not a gut check or a consensus vote. An unmet criterion is reported as a named risk with the cheapest next Test; it does not freeze the work. Each gate advances one Solution (or, for the first two gates, the Opportunity it addresses), and the result is recorded on that record.
 
 ### Exploring → Validating
 
 - Do you have 2 or more independent sources with the same underlying customer need?
-- Is the opportunity expressed in customer language, not solution language?
-- Does it connect to the team's active desired outcome?
+- Is the Opportunity expressed in customer language, not solution language, with the evidence attached to it?
+- Does it name a segment, and can you state the Outcome (a customer-behavior change) that capturing it requires, with 2–3 KRs in the active cycle?
 
-If any of these is no, the opportunity is still Exploring. Gather more signal.
+If any of these is no, the Opportunity is still Exploring. Gather more signal.
 
 ### Validating → Testing
 
-- Have you considered 3 or more distinct solutions to this opportunity? (Not committed to one — considered.)
-- Have you identified the riskiest assumption the solution depends on?
+- Have you considered 3 or more distinct Solutions under the KR they would move? (Not committed to one — considered.)
+- Have you identified the riskiest assumption the leading Solution depends on?
 - Have you written a kill condition: the specific result that would make you stop?
 
-Write the kill condition before the test starts. "We'll evaluate results when they come in" is not a kill condition; if none exists, draft one.
+Write the kill condition before the Test starts. "We'll evaluate results when they come in" is not a kill condition; if none exists, draft one.
 
 ### Testing → Building
 
-- Did the riskiest assumption pass the test?
-- Was the kill condition triggered? (If yes, say so plainly and recommend archiving the solution with the reason.)
-- Is the solution still connected to the team's active desired outcome?
+- Did the riskiest assumption pass its Test?
+- Was the kill condition triggered? (If yes, say so plainly and recommend archiving the Solution with the reason.)
+- Is the Solution's parent KR, and the Outcome above it, still active in the current cycle?
 - Has the team agreed on what the MVP is — the smallest version that delivers the core value?
 
-If any of these is no, recommend another test or archiving. Building anyway carries the open assumption as a recorded risk.
+If any of these is no, recommend another Test or archiving. Building anyway carries the open assumption as a recorded risk. Clearing this gate is what admits a Roadmap Item for the Solution; a Solution with no cleared gate cannot reach the roadmap.
 
 ### Building → Scaling
 
-- Do you have real usage data (not test data) showing the solution moves the target metric?
+- Do you have real usage data (not test data) showing the Solution moves its parent KR?
 - Have you confirmed no significant failure modes in the live rollout?
-- Is the metric movement large enough and consistent enough to justify deeper investment?
+- Is the KR movement large enough and consistent enough to justify deeper investment?
 
-"Users like it" is not metric movement. You need the number the team said it would move, moving in the direction you predicted, with enough data to trust the signal.
+"Users like it" is not KR movement. You need the number the team said it would move, moving in the direction you predicted, with enough data to trust the signal.
 
 ---
 
 ## Handling Pressure
 
-Pressure to skip stages comes from two directions. In both cases, name the tradeoff and offer the faster test; the team decides.
+Pressure to skip stages comes from two directions. In both cases, name the tradeoff and offer the faster Test; the team decides.
 
 ### Stakeholder pressure (from above)
 
-Stakeholders pushing to ship are usually solving for speed or visibility. Offer the test that answers faster than a full build.
+Stakeholders pushing to ship are usually solving for speed or visibility. Offer the Test that answers faster than a full build.
 
 **When a stakeholder says "just build it":**
 
-> "We can get an answer in [X days] with a [fake door / concierge / prototype] — that's faster than a sprint and it tells us whether to commit the engineering time. If the test validates it, we move immediately. If it doesn't, we just saved [N] weeks. Want me to design the test?"
+> "We can get an answer in [X days] with a [fake door / concierge / prototype] Test — that's faster than a sprint and it tells us whether to commit the engineering time. If the test validates it, we move immediately. If it doesn't, we just saved [N] weeks. Want me to design the test?"
 
 **When a stakeholder says "we've been in discovery too long":**
 
-> "We're at [stage]. The specific question we still need to answer is [question]. Once we have that, we move. The test takes [X days]. What would make you comfortable that we've answered it?"
+> "We're at [stage]. The specific question we still need to answer is [question]. Once we have that, we move. The Test takes [X days]. What would make you comfortable that we've answered it?"
 
 **When a stakeholder says "I already know users want this":**
 
-> "Let's run the fake door to confirm that — it takes three days and if you're right, we have data to back the decision. If there's a wrinkle in the demand signal, better to know now. Either way, we're faster."
+> "Let's run the fake door Test to confirm that — it takes three days and if you're right, we have data to back the decision. If there's a wrinkle in the demand signal, better to know now. Either way, we're faster."
 
 ---
 
@@ -211,7 +219,7 @@ Engineers who want to build are not wrong. Point that energy at the smallest rea
 
 **When an engineer says "let's just build it and see":**
 
-> "What's the riskiest assumption here? If we're wrong about [assumption], how much of what we build becomes wasted work? Let's design the test to be as build-like as possible so you get to ship something real."
+> "What's the riskiest assumption here? If we're wrong about [assumption], how much of what we build becomes wasted work? Let's design the Test to be as build-like as possible so you get to ship something real."
 
 **When the team says "the prototype is good enough, let's ship":**
 
@@ -219,7 +227,7 @@ Engineers who want to build are not wrong. Point that energy at the smallest rea
 
 **When the team says "we've been testing forever":**
 
-> "Have we written the kill condition yet? Once we agree on what failure looks like, we run the test, read the result, and we're done. The test doesn't end when we feel good — it ends when the condition is met. What should the kill condition be?"
+> "Have we written the kill condition yet? Once we agree on what failure looks like, we run the Test, read the result, and we're done. The Test doesn't end when we feel good — it ends when the condition is met. What should the kill condition be?"
 
 **When the team can't agree on copy, wording, or a small UI element:**
 
@@ -229,27 +237,27 @@ Engineers who want to build are not wrong. Point that energy at the smallest rea
 
 ## How This Maps to Your PM Tool
 
-The stages above map directly to the status workflows in [[PM Tool Integration Guide]].
+The stages above map directly to the status workflows in [[PM Tool Integration Guide]]. Whatever the provider, preserve the Loop parent chain and stable IDs (`OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, `TST-n`); see [The Loop](guides/the-loop.md).
 
 **JPD + Jira:**
 
 | Stage | JPD Status | Notes |
 |---|---|---|
 | Exploring | Exploring | Opportunity added, evidence gathering underway |
-| Validating | Validating | 2+ sources confirmed, solution ideation begun |
-| Testing | Testing | Experiment running. Kill condition logged in Jira experiment issue. |
+| Validating | Validating | 2+ sources confirmed; Outcome and KRs drafted; Solution ideation begun |
+| Testing | Testing | Test running. Kill condition logged in the Jira issue that represents the Test. |
 | Building | Building | Linked to Jira sprint stories |
-| Scaling | Shipped + new cycle | Metric confirmed. Begin scaling investment or new OST cycle. |
+| Scaling | Shipped + new cycle | KR movement confirmed. Begin scaling investment or a new cycle. |
 
 **Linear + Obsidian:**
 
 | Stage | Linear Status | Notes |
 |---|---|---|
 | Exploring | Exploring | Opportunity issue created, ledger entries linked |
-| Validating | Exploring | Still in Linear Exploring — update OST confidence to Medium |
-| Testing | Testing | Experiment issue created as child of solution issue |
+| Validating | Exploring | Still in Linear Exploring — update the Opportunity's confidence to Medium |
+| Testing | Testing | Test issue created as child of the Solution issue |
 | Building | In Progress | Linked sprint stories |
-| Scaling | Done | Metric confirmed. Archive or extend. |
+| Scaling | Done | KR movement confirmed. Archive or extend. |
 
 ---
 
@@ -258,7 +266,7 @@ The stages above map directly to the status workflows in [[PM Tool Integration G
 Use this at any transition gate to get a structured readiness assessment:
 
 ```
-Assess whether this opportunity is ready to move from [current stage] to [next stage].
+Assess whether this Solution (or, for the first two gates, this Opportunity) is ready to move from [current stage] to [next stage].
 
 Current stage: [Exploring / Validating / Testing / Building]
 Target stage: [Validating / Testing / Building / Scaling]
@@ -269,17 +277,18 @@ For the transition, check:
 3. If we moved to the next stage without resolving that, what is the specific risk?
 4. What is the cheapest way to resolve the open question before moving?
 
-OST opportunity: [PASTE]
-Signal ledger entries: [PASTE relevant entries]
-Current experiment status: [PASTE if in Testing]
+Opportunity, Outcome, KR and Solution (with IDs): [PASTE]
+Signal ledger entries on the Opportunity: [PASTE relevant entries]
+Current Test status: [PASTE if in Testing]
 ```
 
 ---
 
 ## Connected Docs
 
-- [[Agentic PM Playbook]] — Section 3.5 (Assumption Mapping and Experiment Design)
-- [[Discovery Health Metrics]] — evidence quality thresholds that feed into the gate criteria
+- [[Agentic PM Playbook]] — Section 3.5 (Assumption Mapping and Test Design; older copies may title it "Experiment Design")
+- [[Discovery Health Metrics]] — tree health and evidence quality thresholds that feed into the gate criteria
 - [[Signal Ledger]] — the source of signal counts and confidence levels used at each gate
 - [[PM Tool Integration Guide]] — status workflow mapping for JPD and Linear
 - [[Agentic PM — Agent Capability Framework]] — Test Minimalism and Null Hypothesis Awareness skills
+- [The Loop](guides/the-loop.md) — the levels, parent rules, and IDs these gates operate on

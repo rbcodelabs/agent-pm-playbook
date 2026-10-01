@@ -1,9 +1,11 @@
 # PM Tool Integration Guide
 
-> A practical reference for mapping the full OST workflow into your PM tool stack. This guide replaces and expands Section 4 of the [[Agentic PM Playbook]].
+> A practical reference for mapping the full Loop workflow (Opportunity, Outcome, Key Result, Solution, Test, with Roadmap Items hanging off Solutions) into your PM tool stack. The structure itself is defined in the [Loop guide](guides/the-loop.md); this guide only maps it to tools. It replaces and expands Section 4 of the [[Agentic PM Playbook]].
 
-**Last updated:** 2026-06-04
-**See also:** [[Signal Ledger]], [[Agentic PM — Agent Capability Framework]], [[How to Use the Agents]]
+**Last updated:** 2026-10-01
+**See also:** [[Signal Ledger]], [[Agentic PM — Agent Capability Framework]], [[How to Use the Agents]], [The Loop](guides/the-loop.md)
+
+> **Legacy terminology.** Earlier versions of this guide used the OKR-then-OST model (Objective, Desired Outcome, Experiment). In Loop, Objective and Desired Outcome are one **Outcome**, Experiment is a **Test**, and the Opportunity is the tree's root. Legacy terms appear below only in migration notes, skill ids, capability keys, and provider-native object names (for example a tool's own "Objective" type), and each is flagged where it appears.
 
 ---
 
@@ -11,45 +13,54 @@
 
 Regardless of which tools you use, the product system requires a home for each capability. `pm-config.md` selects a named profile and optional per-capability overrides using the canonical [integration-routing contract](skills/integration-routing/SKILL.md). If any capability lacks a clear, single home, state fragments and becomes unreliable.
 
-The required capability keys are `vision`, `research_capture`, `insights`, `okrs`, `ost`, `experiments`, `roadmap`, `delivery`, and `reporting_archive`. Named profiles are starting points, not stack mandates: `compass-full`, `compass-obsidian-linear`, `markdown-linear`, and `jpd-jira`.
+The required capability keys are `vision`, `research_capture`, `insights`, `loop`, `experiments`, `roadmap`, `delivery`, and `reporting_archive`. `loop` = Opportunities, Outcomes, Key Results, cycles, check-ins, and Solutions plus the parent chain linking all five levels; `experiments` = Tests, and must resolve to the same provider as `loop`. Named profiles are starting points, not stack mandates: `compass-full`, `compass-obsidian-linear`, `markdown-linear`, and `jpd-jira`.
 
-| OST Layer | What it is | "Done" means |
+| Loop Level | What it is | "Done" means |
 |---|---|---|
-| **Desired Outcome** | The single product metric the team owns for this cycle | Specific, measurable, owned by one team, agreed by stakeholders |
-| **Signals** | Raw discovery inputs: quotes, tickets, survey responses, behavioral data | Logged with source, date, segment, and confidence; linked to the active outcome |
-| **Opportunities** | Validated customer needs, pains, or desires that could move the outcome | Expressed in customer voice, backed by 2+ independent evidence sources, linked to the active desired outcome |
-| **Solutions** | Hypotheses for addressing an opportunity | At least 3 per opportunity before any are eliminated; riskiest assumption named |
-| **Experiments** | Tests of the riskiest assumption in a specific solution | Has a written kill condition and success metric before the test starts |
-| **Build items** | Committed delivery work against a validated solution | Traceable to a validated solution; solution linked to an opportunity |
+| **Opportunity** | A bounded, evidence-backed customer need or market opening; the root of the tree | Expressed in customer voice, backed by 2+ independent evidence sources (or tagged `weak`), names a segment, is not a solution in disguise |
+| **Outcome** | The customer-behavior change that capturing the Opportunity requires (one sentence, no numbers) | Behavior-framed, owned by one team, traces to exactly one Opportunity, has 2-3 KRs |
+| **Key Result** | The measurable signal that the Outcome is happening | Baseline, target, and date recorded (or baseline `TBD` with a task); outcome-measuring, at most 3 per Outcome |
+| **Solution** | A candidate way to move a KR | At least 3 per KR before any are eliminated; exactly one parent KR; riskiest assumption named |
+| **Test** | A minimum experiment on one Solution assumption | Written success and kill conditions before the test starts; result logged against the KR it informs |
+| **Roadmap Item / build items** | Committed delivery work, admitted only after the Solution clears its investment gate | Traceable to a cleared Solution and, through it, to the KR, Outcome, and Opportunity |
 
-**The single most important principle:** pick one authoritative home per layer and do not let it drift. Teams routinely end up with opportunities in Linear, JPD, Notion, and a Miro board simultaneously. When that happens, no one trusts any of them. The OST tree structure especially must have exactly one source of truth.
+**Signals** (raw discovery inputs: quotes, tickets, survey responses, behavioral data) are not a tree level. They attach to Opportunities, or to the Solution or Test they bear on, and are logged with source, date, segment, and confidence. They are never attached to KRs.
+
+**Parent chain and stable IDs.** Every record has exactly one parent: Outcome to Opportunity, KR to Outcome, Solution to KR, Test to Solution. Every adapter must preserve that chain and the stable ID of each record. Markdown identifiers are `OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, and `TST-n`; other providers keep their native IDs and store the Loop ID in a field or label where practical. Where a provider cannot represent a level natively, the adapter states an interim mapping (a label, issue type, or custom field plus an explicit parent link) and never silently flattens the hierarchy.
+
+**The single most important principle:** pick one authoritative home per level and do not let it drift. Teams routinely end up with opportunities in Linear, JPD, Notion, and a Miro board simultaneously. When that happens, no one trusts any of them. The tree structure especially must have exactly one source of truth.
+
+**Migrating legacy data.** Convert deliberately, following the legacy mapping in the [Loop guide](guides/the-loop.md): each legacy Desired Outcome (or Objective) becomes an Outcome, each Opportunity beneath it becomes a candidate parent Opportunity, Solutions re-parent to the KR the Opportunity most directly moves, and Experiments become Tests. Record the old identifier in the new record before retiring the old one.
 
 ---
 
 ## 2. JPD + Jira
 
-Jira Product Discovery (JPD) is the most native fit for this workflow. JPD was purpose-built for the discovery layers; Jira handles delivery. The boundary is clear: JPD owns the OST artifact, Jira owns build work.
+Jira Product Discovery (JPD) is the most native fit for the discovery levels; Jira handles delivery. The boundary is clear: JPD owns the Loop tree, Jira owns build work.
 
-### Layer Mapping
+### Level Mapping
 
-| OST Layer | JPD / Jira Construct | Notes |
+| Loop Level | JPD / Jira Construct | Notes |
 |---|---|---|
-| Desired Outcome | JPD Goal | One active Goal per initiative. Archive previous Goals when the outcome changes — don't delete them. |
+| Opportunity | JPD Opportunity (issue type) | The tree root: no parent. Link all supporting Insights. Carries the `OPP-n` ID in a label or field. |
+| Outcome | JPD Goal (or an `Outcome` issue type if Goals are unavailable) | Parent link to exactly one Opportunity. Archive Outcomes when the behavior change is reached or abandoned; do not delete. |
+| Key Result | Interim: `Key Result` issue type (or custom fields: baseline, target, date, current) linked to its Outcome | JPD has no native KR level. Use the `OUT-n-KR-n` ID in a field and keep the Outcome link explicit; 2-3 per Outcome. |
+| Solution | JPD Solution (issue type) with a parent link to a Key Result | Keep at least 3 per KR until assumption testing narrows the field. Because JPD hierarchy is shallow, store the parent KR in a link field and mirror its ID in a `Parent ID` field. |
+| Test | JPD Test (issue type), child of a Solution | Use the Test field template below. Link results via the Learnings tab. |
+| Roadmap Item / build items | JPD delivery ideas and Jira stories and tasks | Admit only after the Solution clears its investment gate; link to the Solution before moving to a sprint. |
 | Signals | JPD Insights | The signal ledger lives here. See [[Signal Ledger]] for tagging convention. |
-| Opportunities | JPD Opportunity (issue type) | Link to parent Goal. Link all supporting Insights. |
-| Solutions | JPD Solution (issue type), child of an Opportunity | Keep multiple per opportunity until assumption testing narrows the field. |
-| Experiments | JPD Test (issue type), child of a Solution | Use the experiment field template below. Link results via the Learnings tab. |
-| Build items | Jira stories and tasks in a delivery sprint | Link to the validated Solution before moving to sprint. |
+
+If your JPD is configured with a single generic Ideas type, use the labels `opportunity`, `outcome`, `key-result`, `solution`, and `test` plus the `Parent ID` field to carry the level and parent chain.
 
 ### A Note on Insights vs. Learnings
 
 JPD has two distinct signal-related concepts that are easy to conflate:
 
-**Insights** are standalone entries for raw customer signals — quotes, tickets, interview moments. They exist independently, can be linked to multiple Opportunities or Solutions, and are queryable in aggregate. This is the signal ledger layer. Insights are inputs to discovery.
+**Insights** are standalone entries for raw customer signals: quotes, tickets, interview moments. They exist independently, can be linked to multiple Opportunities, Solutions, or Tests, and are queryable in aggregate. This is the signal ledger layer. Insights are inputs to discovery.
 
-**The Learnings tab** appears on individual Opportunities, Solutions, and Tests. It surfaces Insights linked to that item, plus notes and conclusions from test results. Learnings are outputs from discovery — what the team concluded after running an experiment or reviewing evidence.
+**The Learnings tab** appears on individual Opportunities, Solutions, and Tests. It surfaces Insights linked to that item, plus notes and conclusions from test results. Learnings are outputs from discovery: what the team concluded after running a Test or reviewing evidence.
 
-The rule: use Insights for signals, use Learnings for conclusions. Never log raw customer quotes directly onto the Learnings tab — they belong as Insights that get linked to the relevant item.
+The rule: use Insights for signals, use Learnings for conclusions. Never log raw customer quotes directly onto the Learnings tab; they belong as Insights that get linked to the relevant item.
 
 ### JPD Insight Tagging Convention
 
@@ -60,8 +71,8 @@ Every Insight logged in JPD should carry these fields. This is your signal ledge
 | Source type | `interview`, `support-ticket`, `review`, `survey`, `sales-call`, `nps` |
 | Segment | Customer segment name (match your standard segmentation) |
 | Severity | `high`, `medium`, `low` |
-| OST mapping | Linked Idea (opportunity or solution) |
-| Confidence | `high`, `medium`, `low`, `hypothesis` — use the [[Signal Ledger]] confidence criteria |
+| Tree mapping | Linked Opportunity (or, when specific, the Solution or Test it bears on) |
+| Confidence | `high`, `medium`, `low`, `hypothesis`; use the [[Signal Ledger]] confidence criteria |
 
 Never log an Insight without a source type and segment. An unattributed signal is not evidence.
 
@@ -73,11 +84,11 @@ Never log an Insight without a source type and segment. An unattributed signal i
 Exploring → Validating → Prioritized → Active → Archived
 ```
 
-- **Exploring:** Signal exists but fewer than 2 independent sources. Don't add solutions yet.
-- **Validating:** Actively gathering evidence. May run discovery interviews against this opportunity.
-- **Prioritized:** Meets the evidence bar (2+ sources, customer-voice framing, connected to active outcome). Ready for solution ideation.
-- **Active:** Team is exploring solutions or running experiments against this opportunity.
-- **Archived:** Opportunity invalidated or deprioritized. Keep it — a killed branch is a learning.
+- **Exploring:** Signal exists but fewer than 2 independent sources. Don't add Outcomes or Solutions yet.
+- **Validating:** Actively gathering evidence. May run discovery interviews against this Opportunity.
+- **Prioritized:** Meets the evidence bar (2+ sources, customer-voice framing, named segment). Ready to be given an Outcome with 2-3 KRs.
+- **Active:** At least one Outcome is being pursued: its KRs have Solutions and Tests in flight. Outcome health (pursuing, sustained, retired) rolls up to this status.
+- **Archived:** Opportunity invalidated or deprioritized. Keep it; a killed branch is a learning.
 
 **Solutions:**
 
@@ -86,13 +97,13 @@ Exploring → Testing → Validated → Building → Shipped | Killed
 ```
 
 - **Exploring:** Hypothesis named, assumptions not yet mapped.
-- **Testing:** Experiment running or designed and ready to run.
-- **Validated:** Riskiest assumption passed the test. Cleared for build investment.
-- **Building:** Active delivery work in Jira. Solution Idea linked to sprint stories.
+- **Testing:** A Test is running or designed and ready to run.
+- **Validated:** Riskiest assumption passed its Test and the investment gate is cleared. Cleared for build investment.
+- **Building:** Active delivery work in Jira. Solution linked to sprint stories.
 - **Shipped:** In production. Link to the Jira release.
-- **Killed:** Assumption failed the test. Archive with reason — don't delete.
+- **Killed:** Assumption failed its Test. Archive with reason; don't delete.
 
-### Jira Experiment Issue Template
+### Jira Test Issue Template
 
 Create a Jira issue type or description template with these fields:
 
@@ -110,33 +121,33 @@ Kill condition:
 [Specific and measurable. What result would make us stop?]
 
 Result:
-[Fill in after the experiment runs.]
+[Fill in after the Test runs. Note the KR it informs.]
 
 Next action:
-[Proceed / Kill / Iterate — with rationale.]
+[Proceed / Kill / Iterate, with rationale.]
 ```
 
-The kill condition must be filled in before the experiment starts. If it isn't, the experiment isn't ready to run.
+The kill condition must be filled in before the Test starts. If it isn't, the Test isn't ready to run.
 
 ### JPD Automation Rules
 
 Set these up once and run them as a background health check:
 
-- **Orphaned solutions:** Flag any Idea labeled `solution` with no linked `opportunity` Idea. A solution without a parent is a feature request in disguise.
-- **Unmapped signals:** Flag Insights with no linked Idea after 14 days. A signal that hasn't been mapped to an opportunity within two weeks is probably getting lost.
-- **Stale exploration:** Weekly digest of Ideas in `Exploring` status with no linked experiment after 21 days. If an opportunity has been "exploring" for three weeks with no test running, it needs a decision: commit to validating or archive it.
+- **Orphaned solutions:** Flag any Solution with no linked parent KR. A Solution without a parent is a feature request in disguise.
+- **Uncovered KRs:** Flag any KR with no Solution, and any Outcome with fewer than 2 or more than 3 KRs.
+- **Rootless Outcomes:** Flag any Outcome with no linked Opportunity.
+- **Unmapped signals:** Flag Insights with no linked Opportunity after 14 days. A signal that hasn't been mapped within two weeks is probably getting lost.
+- **Stale exploration:** Weekly digest of Opportunities and Solutions in `Exploring` status with no linked Test after 21 days. If something has been "exploring" for three weeks with no Test running, it needs a decision: commit to validating or archive it.
 
 ### Note on Issue Type Configuration
 
-If your JPD is configured with separate Opportunity, Solution, and Test issue types (the recommended setup), no label workaround is needed — the issue type IS the distinction. The automation rules above still apply: orphaned Solutions (no parent Opportunity), unmapped Insights, and stale Exploring status are all worth flagging regardless of whether you use issue types or labels.
-
-If your JPD uses a single generic Ideas type, use the `opportunity` / `solution` / `test` label convention to make the distinction, and enforce it with the orphaned-solution automation above.
+If your JPD is configured with separate Opportunity, Outcome, Solution, and Test issue types (the recommended setup, with Key Result as an issue type or field set), no label workaround is needed: the issue type IS the distinction. The automation rules above still apply regardless of whether you use issue types or labels.
 
 ---
 
 ## 3. Compass
 
-Compass can be the complete product operating system. In the `compass-full` profile it owns vision and product documents, research capture, synthesized insights, OKRs, OST objects, experiments, roadmap, and delivery through Compass Tasks. Hybrid profiles may assign only some of those capabilities to Compass.
+Compass can be the complete product operating system. In the `compass-full` profile it owns vision and product documents, research capture, synthesized insights, Outcomes and Key Results, the Opportunity-to-Test tree, roadmap, and delivery through Compass Tasks. Hybrid profiles may assign only some of those capabilities to Compass.
 
 With the `compass-native-review` workflow profile, both `review_requests` and
 `decision_records` resolve to `compass_decisions`. Agents use `request_decision`,
@@ -148,18 +159,23 @@ versioned prototypes and link them to Solutions and Decisions.
 **Production URL:** https://compass.rbcodelabs.com
 **Delivery work:** Compass Tasks in `compass-full`; Linear or Jira only when the `delivery` capability resolves there.
 
-### Layer Mapping
+### Level Mapping
 
-| OST Layer | Compass Construct | Notes |
+Compass object and tool names predate Loop and some are provider-native names (Objective, Experiment, `create_experiment`, and so on). The mapping below is the adapter contract: the left column is the playbook level, the right column is the Compass object that carries it.
+
+| Loop Level | Compass Construct | Notes |
 |---|---|---|
-| Desired Outcome | Key Result (connected to an Objective in an active OKR Cycle) | One KR = one desired outcome. Link every opportunity to a KR. |
-| Signals | Research + FeedbackItem + linked Opportunities | Compass can own both raw research and structured insight; a hybrid profile may route raw capture elsewhere. |
-| Opportunities | Opportunity | Customer-voice framing; link to a KR on creation. |
-| Solutions | Solution (child of Opportunity) | Add 3+ per opportunity before narrowing. |
-| Assumptions | Assumption (child of Solution) | Tag with risk level: HIGH / MEDIUM / LOW. |
-| Experiments | Experiment (linked to an Assumption) | Must have a written kill condition before moving to RUNNING. |
+| Opportunity | Opportunity | The tree root. Customer-voice framing, evidence linked. |
+| Outcome | Compass **Objective** (provider-native name) in an active cycle | One Objective record carries one Outcome: the single merged object that replaces the old Objective-plus-Desired-Outcome pair. Link it to its parent Opportunity (`link_opportunity_to_objective`). |
+| Key Result | Key Result under the Outcome's Objective | 2-3 per Outcome. Link the Opportunity to the KR as well (`link_opportunity_to_kr`) so the ancestry is queryable from either side. |
+| Solution | Solution linked to its parent KR (`link_solution_to_key_result`) | Add 3+ per KR before narrowing. Compass may still show the Solution beneath an Opportunity; treat the KR link as the single Loop parent and the Opportunity as ancestry. Do not link one Solution to two KRs as parents. |
+| Assumption | Assumption (child of Solution) | Tag with risk level: HIGH / MEDIUM / LOW. |
+| Test | Compass **Experiment** (provider-native name), linked to an Assumption | Must have a written kill condition before moving to RUNNING. |
 | Prototypes | Artifact (linked to Solutions and Decisions) | Publish self-contained HTML as a versioned Artifact; use Docs for narrative context, not as a pointer to a machine-local prototype. |
-| Build items | Compass Tasks or configured external tracker | Resolve `delivery` separately and link tasks to the RoadmapItem and validated Solution. |
+| Roadmap Item / build items | Roadmap Item, Compass Tasks, or configured external tracker | Resolve `delivery` separately and link tasks to the Roadmap Item and the cleared Solution. |
+| Signals | Research + FeedbackItem + linked Opportunities | Compass can own both raw research and structured insight; a hybrid profile may route raw capture elsewhere. |
+
+Compass stores its own record IDs; where a custom field is available, set the Loop ID (`OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, `TST-n`) through `set_custom_field_value` so the parent chain reads the same across providers.
 
 ### Status Workflows
 
@@ -168,40 +184,44 @@ versioned prototypes and link them to Solutions and Decisions.
 EXPLORING → VALIDATING → PRIORITIZED → ACTIVE → ARCHIVED
 ```
 
-- **EXPLORING:** Signal exists but fewer than 2 independent sources. Do not add solutions yet.
+- **EXPLORING:** Signal exists but fewer than 2 independent sources. Do not add Outcomes or Solutions yet.
 - **VALIDATING:** Actively gathering evidence. At least 1 strong signal logged.
-- **PRIORITIZED:** Evidence bar met: 2+ independent sources, customer-voice framing, linked to active KR.
-- **ACTIVE:** Team is exploring solutions or running experiments.
-- **ARCHIVED:** Invalidated or deprioritized. Keep it -- a killed branch is a learning.
+- **PRIORITIZED:** Evidence bar met: 2+ independent sources, customer-voice framing, named segment. Ready to be given an Outcome.
+- **ACTIVE:** At least one Outcome is being pursued; its Solutions and Tests are in flight.
+- **ARCHIVED:** Invalidated or deprioritized. Keep it; a killed branch is a learning.
 
 **Solutions:**
 ```
 IDEA → VALIDATED → IN_DELIVERY → SHIPPED | KILLED
 ```
 
-**Experiments:**
+**Tests (Compass Experiments):**
 ```
 DESIGNING → RUNNING → COMPLETE | KILLED
 ```
 
-The kill condition must be written before moving to RUNNING. `conclude_experiment` (PROCEED / KILL / ITERATE) auto-updates the linked Assumption status -- do not manually set assumption status.
+The kill condition must be written before moving to RUNNING. `conclude_experiment` (PROCEED / KILL / ITERATE) auto-updates the linked Assumption status; do not manually set assumption status.
 
-### OKR Setup
+### Outcome and KR Setup
 
-Create one OKR Cycle per planning period. Each Objective can have multiple Key Results. Key Results serve as the desired outcome anchors for opportunities.
+Create one cycle per planning period. Each Outcome (an Objective record) is created under the cycle, linked to its parent Opportunity, and given 2-3 Key Results. Solutions then attach to the KRs.
 
 ```
-create_okr_cycle(workspaceId, name, startDate, endDate)  → cycleId
-create_objective(workspaceId, cycleId, title)             → objectiveId
-add_key_result(objectiveId, title, target, unit)          → keyResultId
-log_checkin(keyResultId, value, note)                     -- update progress
+create_okr_cycle(workspaceId, name, startDate, endDate)   → cycleId
+create_objective(workspaceId, cycleId, title)              → outcomeId (Compass Objective)
+link_opportunity_to_objective(opportunityId, outcomeId)    -- parent Opportunity
+add_key_result(outcomeId, title, target, unit)             → keyResultId
+link_solution_to_key_result(solutionId, keyResultId)       -- Solution's single parent
+log_checkin(keyResultId, value, note)                      -- update progress
 ```
+
+(The tool names `create_okr_cycle`, `create_objective`, and `create_experiment` are Compass-native; they create the cycle, Outcome, and Test records respectively.)
 
 ### Roadmap
 
-The Compass roadmap is a NOW / NEXT / LATER kanban. Items are created by promoting a validated Solution (`promote_to_roadmap`) or creating them directly (`add_to_roadmap`). Each item can link to a Solution, Opportunity, Key Result, Experiment, or Squad.
+The Compass roadmap is a NOW / NEXT / LATER kanban. Items hang off a Solution and are created by promoting a Solution that has cleared its investment gate (`promote_to_roadmap`) or creating them directly (`add_to_roadmap`). Each item links to its Solution and, through it, to the KR, Outcome, and Opportunity; it can also link to a Test or Squad.
 
-Delivery lives in the provider resolved for `delivery`. With Compass Tasks, keep execution and strategy linked natively. With Linear or Jira, reference the Compass RoadmapItem and Solution IDs in the external epic or issue.
+Delivery lives in the provider resolved for `delivery`. With Compass Tasks, keep execution and strategy linked natively. With Linear or Jira, reference the Compass Roadmap Item and Solution IDs in the external epic or issue.
 
 ### Signal Layer
 
@@ -213,7 +233,7 @@ With `compass-full`, capture interview notes, support reviews, and quotes in Com
 **Direct FeedbackItem logging:**
 For public-facing signals (portal submissions, NPS), Compass captures them natively at `/portal/{org}/{ws}/feedback`. Use `list_feedback` to review and link to Opportunities.
 
-The rule: write to the resolved authoritative provider and link synthesized insights to Opportunities. Any secondary copy must be labeled as an inbox, export, cache, or snapshot.
+The rule: write to the resolved authoritative provider and link synthesized insights to Opportunities (or the Solution or Test they bear on). Any secondary copy must be labeled as an inbox, export, cache, or snapshot.
 
 ### MCP API for Agents
 
@@ -223,70 +243,78 @@ Compass exposes a Streamable HTTP MCP endpoint at `https://compass.rbcodelabs.co
 
 Unlike JPD, Compass has no native automation engine. Use Claude (via MCP) as the automation layer:
 
-- **Weekly snapshot:** call `get_workspace_summary` + `list_opportunities` + `list_experiments("RUNNING")` at the start of each week to generate a health check.
-- **Orphaned solutions:** after any session, verify all ACTIVE opportunities have at least one non-KILLED solution.
-- **Stale DESIGNING experiments:** flag any experiment in DESIGNING status for more than one session -- the kill condition was never written.
-- **OKR check-ins:** call `log_checkin` for each active KR at the cadence the team agrees on (weekly is the default).
+- **Weekly snapshot:** call `get_workspace_summary` + `list_opportunities` + `list_experiments("RUNNING")` (the Tests in flight) at the start of each week to generate a tree health check across all five levels.
+- **Coverage gaps:** after any session, verify every active KR has at least one non-KILLED Solution (aim for 3+ before narrowing), every Outcome has 2-3 KRs, and every Outcome has a parent Opportunity.
+- **Orphaned solutions:** flag any Solution with no parent KR.
+- **Stale DESIGNING Tests:** flag any Test in DESIGNING status for more than one session; the kill condition was never written.
+- **KR check-ins:** call `log_checkin` for each active KR at the cadence the team agrees on (weekly is the default). Check-ins move up the tree: Test results update Solution confidence, and KR movement updates Outcome health and Opportunity status.
 
 ---
 
 ## 4. Linear + Obsidian
 
-Linear handles all work tracking. Obsidian holds the discovery artifacts because Linear has no native discovery layer. The boundary is equally clear: Linear owns issues and statuses, Obsidian owns the OST tree structure and signal ledger.
+Linear handles all work tracking. Obsidian holds the discovery artifacts because Linear has no native discovery layer. The boundary is equally clear: Linear owns issues and statuses, Obsidian owns the Loop tree structure and signal ledger.
 
-### Layer Mapping
+### Level Mapping
 
-| OST Layer | Construct | Location |
+Linear lacks native Opportunity, Outcome, KR, and Test levels, so this stack uses labels and a project, with the parent chain recorded explicitly in the tree document and in each issue's description.
+
+| Loop Level | Construct | Location |
 |---|---|---|
-| Desired Outcome | Project description + pinned cycle goal | Linear project |
+| Opportunity | Linear issue, label: `opportunity` (root: no parent issue) | Linear, ID referenced in the tree doc |
+| Outcome | Linear project (one per Outcome); description holds the Outcome statement, owner, cycle, and parent `OPP-n` | Linear project |
+| Key Result | Linear issue, label: `key-result`, in the Outcome's project (interim: Linear has no KR object); carries baseline, target, date | Linear |
+| Solution | Linear issue, label: `solution`, parent: the KR issue | Linear |
+| Test | Linear issue, label: `test`, parent: the Solution issue | Linear |
+| Roadmap Item / build items | Linear stories and tasks, linked to the cleared Solution | Linear |
 | Signals | Signal ledger entries | Obsidian: `Discovery/Signal Ledger.md` |
-| Opportunities | Linear issue, label: `opportunity` | Linear, ID referenced in OST doc |
-| Solutions | Linear issue, label: `solution`, parent: opportunity issue | Linear |
-| Experiments | Linear issue, label: `experiment`, parent: solution issue | Linear |
-| Build items | Linear stories and tasks, linked to validated solution | Linear |
-| OST tree structure | OST document — **source of truth** | Obsidian: `Discovery/OST-[initiative].md` |
+| Tree structure | Loop tree document: **source of truth** | Obsidian: `Discovery/Loop-[initiative].md` |
 
-The Obsidian OST doc is the single source of truth for the tree structure. Linear issue IDs appear in the OST doc as references, but the tree hierarchy lives in Obsidian. Linear statuses reflect current work state; Obsidian reflects current thinking.
+The Obsidian tree doc is the single source of truth for the structure. Linear issue IDs appear in it as references, but the hierarchy (Opportunity, Outcome, KR, Solution, Test) lives in Obsidian. Linear statuses reflect current work state; Obsidian reflects current thinking. Every Linear issue description names its parent's Loop ID so the chain survives if the issue is moved.
 
 ### Linear Issue Convention for Opportunities
 
 - **Label:** `opportunity`
 - **Title format:** `[Opportunity] Users struggle to X when Y`
 - **Description:**
-  - Customer voice statement (the opportunity, not a solution)
-  - Evidence summary: source count, source types, date range
+  - Customer voice statement (the need, not a solution)
+  - Evidence summary: source count, source types, date range, segment
   - Confidence level: High / Medium / Low / Hypothesis
   - Link to Obsidian ledger entries (use the session date as anchor)
 
 ### Linear Status Workflow
 
-All discovery issues (opportunities, solutions, experiments) share this workflow:
+All discovery issues (opportunities, KR coverage, solutions, tests) share this workflow:
 
 ```
 Exploring → Testing → Validated → Building → Shipped | Archived
 ```
 
-Map these to Linear's default statuses or create a custom workflow per the Linear docs. The status labels must match between Linear and the Obsidian OST doc — when they drift, the OST becomes unreliable.
+Map these to Linear's default statuses or create a custom workflow per the Linear docs. The status labels must match between Linear and the Obsidian tree doc; when they drift, the tree becomes unreliable.
 
-### Obsidian OST Document
+### Obsidian Loop Tree Document
 
-Update the OST doc weekly. The format mirrors the tree structure directly:
+Update the tree doc weekly. The format mirrors the hierarchy directly:
 
 ```markdown
-# OST: [Initiative Name]
+# Loop: [Initiative Name]
 
-## Desired Outcome
-[Metric, target, cycle, owner]
-
-### Opportunity: [Customer voice statement] [Exploring | Validating | Active | Archived]
-Evidence: [N sources — types and dates]
+## Opportunity OPP-1: [Customer voice statement] [Exploring | Validating | Active | Archived]
+Evidence: [N sources, types and dates]
+Segment: [Name]
 Confidence: Medium
 Linear: PROJ-42
 
-#### Solution: [Hypothesis name] [Exploring | Testing | Validated | Killed]
+### Outcome OUT-1: [Behavior change, one sentence] [Cycle, owner]
+Linear project: [name]
+
+#### Key Result OUT-1-KR-1: [Measurable signal] [Baseline → target by date]
+Linear: PROJ-48
+
+##### Solution SOL-1: [Hypothesis name] [Exploring | Testing | Validated | Killed]
 Linear: PROJ-55
 
-##### Experiment: [What we're testing] [Running | Complete]
+###### Test TST-1: [What we're testing] [Running | Complete]
 Assumption: [State it]
 Kill condition: [State it]
 Result: [Fill in after]
@@ -298,11 +326,11 @@ Linear: PROJ-61
 Linear has no native signal capture. Use this handoff protocol:
 
 1. Log all raw signals in `Discovery/Signal Ledger.md` in Obsidian, using the standard synthesis format from the [[Signal Ledger]] doc.
-2. When a signal cluster reaches medium confidence (2+ independent sources, consistent underlying need, connected to the active outcome), create the Linear opportunity issue.
+2. When a signal cluster reaches medium confidence (2+ independent sources, consistent underlying need, named segment), create the Linear Opportunity issue.
 3. In the Linear issue description, back-reference the ledger entry by session date.
 4. In the Obsidian ledger entry, forward-reference the Linear issue ID.
 
-Never create a Linear opportunity issue before you have at least one verbatim quote logged in the ledger. The quote is the gate.
+Never create a Linear Opportunity issue before you have at least one verbatim quote logged in the ledger. The quote is the gate.
 
 ---
 
@@ -319,7 +347,7 @@ An extension of the Linear + Obsidian stack that solves its core limitation: Obs
 ### Architecture
 
 ```
-Obsidian vault (Rick's editing interface)
+Obsidian vault (the PM's editing interface)
     ↕ bidirectional vault bridge
 Git repo: product/ folder (team-accessible canonical store)
     ↔ GitHub PRs (team edits, reviews, change history)
@@ -329,20 +357,20 @@ The vault bridge syncs changes in both directions. Edits made in Obsidian propag
 
 ---
 
-### Layer Mapping
+### Level Mapping
 
-| OST Layer | Construct | Location |
+| Loop Level | Construct | Location |
 |---|---|---|
-| Desired Outcome | `product/vision.md` — north star metric section | Git repo (bridged) |
+| Opportunity | Linear issue, label: `opportunity` + `product/loop.md` | Linear + repo (bridged) |
+| Outcome | `product/loop.md` Outcome node + Linear project; the north-star framing lives in `product/vision.md` | Git repo (bridged) + Linear |
+| Key Result | `product/loop.md` KR node + Linear issue, label: `key-result` (interim) | Git repo (bridged) + Linear |
+| Solution | Linear issue, label: `solution`, parent: KR issue | Linear |
+| Test | Linear issue, label: `test`, parent: solution | Linear |
+| Roadmap Item / build items | Linear stories and tasks, linked to the cleared Solution; `product/roadmap.md` | Linear + repo (bridged) |
 | Signals (structured) | `product/signals/Signal Ledger.md` | Git repo (bridged) |
-| Signals (raw capture) | Session notes in Obsidian `Discovery/` | Vault only — not bridged |
-| Opportunities | Linear issue, label: `opportunity` + `product/ost.md` | Linear + repo (bridged) |
-| Solutions | Linear issue, label: `solution`, parent: opportunity | Linear |
-| Experiments | Linear issue, label: `experiment`, parent: solution | Linear |
-| Build items | Linear stories and tasks, linked to validated solution | Linear |
-| OST tree structure | `product/ost.md` — **source of truth** | Git repo (bridged) |
+| Signals (raw capture) | Session notes in Obsidian `Discovery/` | Vault only, not bridged |
+| Tree structure | `product/loop.md`: **source of truth** | Git repo (bridged) |
 | ICP | `product/icp.md` | Git repo (bridged) |
-| Roadmap | `product/roadmap.md` | Git repo (bridged) |
 
 ---
 
@@ -352,9 +380,9 @@ One `product/` folder per repo, committed to the main branch:
 
 ```
 product/
-  vision.md          # North star, metric, team, strategic bets
+  vision.md          # North star, team, strategic bets
   icp.md             # Ideal customer profile, segments, anti-ICP
-  ost.md             # OST tree structure — source of truth
+  loop.md          # Loop tree structure — source of truth
   roadmap.md         # Shipped, active, and planned work
   signals/
     Signal Ledger.md # Structured synthesis entries (see below)
@@ -370,9 +398,8 @@ Create one bridge per product using the vault-bridges Obsidian plugin:
 
 | Bridge name | Repo path | Vault path |
 |---|---|---|
-| Golden Wealth | `~/projects/golden-wealth-app/product/` | `Products/Golden Wealth/` |
-| HipTrip | `~/projects/hip-trip-marketing-site/product/` | `Products/HipTrip/` |
-| Helio | `~/projects/helio/product/` | `Products/Helio/` |
+| Example Product A | `<repo-a>/product/` | `Products/Example Product A/` |
+| Example Product B | `<repo-b>/product/` | `Products/Example Product B/` |
 
 Set `autoSync: true` so the vault pulls from the repo on Obsidian open. Changes made in Obsidian can be pushed back to the repo and opened as a PR directly from the plugin.
 
@@ -380,11 +407,11 @@ Set `autoSync: true` so the vault pulls from the repo on Obsidian open. Changes 
 
 ### How the Team Interacts With Product Docs
 
-**Rick (vault-first):** Opens and edits `Products/[Product]/ost.md` in Obsidian. The bridge syncs changes back to the repo. Rick can open a PR from the plugin or push directly to main for low-stakes updates.
+**PM (vault-first):** Opens and edits `Products/[Product]/loop.md` in Obsidian. The bridge syncs changes back to the repo. The PM can open a PR from the plugin or push directly to main for low-stakes updates.
 
-**Teammate (repo-first):** Clones the repo and edits `product/ost.md` in VS Code or GitHub. Opens a PR for review. On the next bridge pull, the change appears in Rick's vault.
+**Teammate (repo-first):** Clones the repo and edits `product/loop.md` in VS Code or GitHub. Opens a PR for review. On the next bridge pull, the change appears in the PM's vault.
 
-**Both:** Linear for opportunities, solutions, experiments, and delivery work. The OST in `product/ost.md` references Linear IDs; Linear issues link back to the OST doc.
+**Both:** Linear for opportunities, key-result issues, solutions, tests, and delivery work. The tree in `product/loop.md` references Linear IDs; Linear issues link back to the tree doc.
 
 No Notion license. No Confluence. No "let me find that doc." Product strategy lives where the code does.
 
@@ -410,51 +437,55 @@ The workflow: capture raw signals in `Discovery/` in Obsidian. After synthesis, 
 
 ### Linear Integration
 
-Same as the base Linear + Obsidian stack (section 4), with one change: the OST source of truth lives in the repo's `product/ost.md`, not in an Obsidian-only file. This means team members can read and propose changes to the OST tree structure via PR, not just Rick.
+Same as the base Linear + Obsidian stack (section 4), with one change: the tree source of truth lives in the repo's `product/loop.md`, not in an Obsidian-only file. This means team members can read and propose changes to the Loop tree structure via PR, not just the PM.
 
 Follow the same signal-to-opportunity handoff protocol:
 
 1. Log raw signals vault-only.
 2. After synthesis, commit the structured entry to `product/signals/Signal Ledger.md`.
-3. When a cluster reaches medium confidence (2+ independent sources), create the Linear opportunity issue.
-4. Update `product/ost.md` with the new opportunity node and the Linear ID.
-5. In the Linear issue description, link back to the OST doc and the signal ledger entry date.
+3. When a cluster reaches medium confidence (2+ independent sources), create the Linear Opportunity issue.
+4. Update `product/loop.md` with the new Opportunity node (`OPP-n`) and the Linear ID.
+5. In the Linear issue description, link back to the tree doc and the signal ledger entry date.
 
 ---
 
 ## 6. Markdown Only
 
-For teams with no dedicated PM tool, or individuals bootstrapping a discovery practice. Everything lives in markdown files. The tradeoff: no automation, no status workflows, no linking infrastructure. The compensation: a weekly 10-minute manual review.
+For teams with no dedicated PM tool, or individuals bootstrapping a discovery practice. Everything lives in markdown files. The tradeoff: no automation, no status workflows, no linking infrastructure. The compensation: a weekly 10-minute manual review. Markdown is the only provider where every level has a native identifier: `OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, `TST-n`.
 
 ### File Structure
 
 ```
 Discovery/
-  Signal Ledger.md           # All synthesis sessions, chronological
-  OST-[initiative-name].md   # The tree: outcome → opportunities → solutions → experiments
-  Experiments.md             # Optional: consolidated experiment tracking table
+  Signal Ledger.md             # All synthesis sessions, chronological
+  Loop-[initiative-name].md  # The tree: opportunity → outcome → key results → solutions → tests
+  Tests.md                     # Optional: consolidated Test tracking table
 ```
 
-Keep one OST file per initiative. If you merge multiple initiatives into one file, the tree structure collapses and priorities blur.
+Keep one tree file per initiative. If you merge multiple initiatives into one file, the tree structure collapses and priorities blur.
 
-### OST Document Structure
+### Tree Document Structure
 
-Use heading levels to represent the tree hierarchy directly:
+Use heading levels to represent the hierarchy directly. Each heading carries its stable ID so parents can be referenced from anywhere:
 
 ```markdown
-## Desired Outcome
-[Metric, target, and cycle]
-
-### Opportunity: [Customer voice] [Exploring] [Low confidence]
+## Opportunity OPP-1: [Customer voice] [Exploring] [Low confidence]
 Evidence: [Source, date]
+Segment: [Name]
 Verbatim: "[Quote]"
 
-#### Solution: [Hypothesis] [Exploring]
+### Outcome OUT-1: [Behavior change, one sentence] [Cycle, owner]
+
+#### Key Result OUT-1-KR-1: [Measurable signal] [Baseline → target by date]
+
+##### Solution SOL-1: [Hypothesis] [Exploring]
+Parent: OUT-1-KR-1
 Riskiest assumption: [State it]
 
-##### Experiment: [Test name] [Not started | Running | Complete]
+###### Test TST-1: [Test name] [Not started | Running | Complete]
+Parent: SOL-1
 Kill condition: [State it before starting]
-Result: [Fill in after]
+Result: [Fill in after; note the KR it informs]
 ```
 
 **Inline status tags:** Use bracketed labels in the heading: `[Exploring]`, `[Testing]`, `[Validated]`, `[Killed]`. They're searchable and visible without opening a tool.
@@ -465,11 +496,11 @@ Result: [Fill in after]
 
 Without automation, this is your only health-check mechanism. Do it on a fixed day:
 
-1. Open the OST doc. Scan every node with a status.
+1. Open the tree doc. Scan every node with a status.
 2. Update any status that changed since last week.
-3. Flag any opportunity that's been `[Exploring]` for more than 3 weeks with no evidence added.
-4. Flag any solution in `[Testing]` with no experiment record.
-5. Check the signal ledger: any signals from the last two weeks that haven't been mapped to the OST?
+3. Flag any Opportunity that's been `[Exploring]` for more than 3 weeks with no evidence added.
+4. Flag any KR with no Solution, any Outcome without 2-3 KRs, and any Solution in `[Testing]` with no Test record.
+5. Check the signal ledger: any signals from the last two weeks that haven't been mapped to an Opportunity?
 
 The whole review should take under 15 minutes. If it takes longer, the tree is too wide.
 
@@ -479,17 +510,21 @@ The whole review should take under 15 minutes. If it takes longer, the tree is t
 
 These apply regardless of tool stack.
 
-**One source of truth per layer.** Don't let opportunities exist as separate records in both Obsidian and JPD. Pick the home before you start and enforce it.
+**One source of truth per level.** Don't let Opportunities exist as separate records in both Obsidian and JPD. Pick the home before you start and enforce it.
 
-**Signals predate opportunities.** Never create an opportunity record before you have at least one verbatim quote. The quote is the evidence; the opportunity is the interpretation of the evidence.
+**One parent each, preserved everywhere.** Outcome to Opportunity, KR to Outcome, Solution to KR, Test to Solution. Whatever the provider's native hierarchy looks like, the Loop parent chain and stable IDs survive; an interim label or field mapping is documented, never a silent flattening.
 
-**The signal-to-opportunity handoff requires medium confidence.** That means: 2 or more independent sources, a consistent underlying need across sources, and a clear connection to the active desired outcome. A single strong interview quote is not enough.
+**Signals predate opportunities.** Never create an Opportunity record before you have at least one verbatim quote. The quote is the evidence; the Opportunity is the interpretation of the evidence.
 
-**Experiments must have a kill condition before they start.** The kill condition lives in the experiment record — not in someone's head, not in a Slack message. If the experiment record has no kill condition, the experiment is not ready to start.
+**The signal-to-opportunity handoff requires medium confidence.** That means: 2 or more independent sources, a consistent underlying need across sources, and a named segment. A single strong interview quote is not enough (it may be recorded as a `weak` Opportunity with cheap validation).
 
-**Dead branches get archived, not deleted.** A killed solution or archived opportunity is a learning. Delete it and you lose the institutional memory of what you tried and why it didn't work. Archive with a one-sentence reason.
+**Solutions hang off KRs, and roadmap items hang off cleared Solutions.** A Solution is parented by exactly one KR; a Roadmap Item exists only after its Solution clears its investment gate.
 
-**OST health checks are tool-agnostic.** Run the tree health check from the [[Agentic PM — Agent Capability Framework]] monthly, regardless of which tool you use. The questions are the same; the interface to answer them is the only thing that differs.
+**Tests must have a kill condition before they start.** The kill condition lives in the Test record, not in someone's head or a Slack message. If the Test record has no kill condition, the Test is not ready to start.
+
+**Dead branches get archived, not deleted.** A killed Solution or archived Opportunity is a learning. Delete it and you lose the institutional memory of what you tried and why it didn't work. Archive with a one-sentence reason.
+
+**Tree health checks are tool-agnostic.** Run the tree health check from the [[Agentic PM — Agent Capability Framework]] monthly across all five levels, regardless of which tool you use. The questions are the same; the interface to answer them is the only thing that differs.
 
 ---
 

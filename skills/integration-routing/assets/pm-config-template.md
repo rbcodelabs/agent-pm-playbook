@@ -30,9 +30,10 @@ provider_overrides: {}
 | vision | [provider] |
 | research_capture | [provider] |
 | insights | [provider] |
-| okrs | [provider] |
-| ost | [provider] |
+| loop | [provider] |
 | experiments | [provider] |
+
+<!-- loop + experiments jointly resolve the Loop tree (Opportunity -> Outcome -> KR -> Solution -> Test; see guides/the-loop.md). They must share one provider family so the parent chain is never split across systems. Override both together or neither. -->
 | roadmap | [provider] |
 | delivery | [provider] |
 | reporting_archive | [provider] |

@@ -50,6 +50,10 @@ proceeding.
 
 ## Core Principles
 
+Shipping is the last step of a Loop chain (`guides/the-loop.md`): after release, report
+which Solution (`SOL-n`) and KR (`OUT-n-KR-n`) the shipped work serves so delivery state can reconcile
+up the tree.
+
 | Principle | What it means in practice |
 |---|---|
 | **Safest merge first** | Start with smallest, most isolated, cleanest CI. Build confidence before merging anything risky. |

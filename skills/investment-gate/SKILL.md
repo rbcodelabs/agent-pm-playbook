@@ -1,8 +1,8 @@
 ---
 name: investment-gate
 description: >-
-  Investment Gate Assessment — assess whether a product opportunity or solution
-  is ready to advance to the next stage of the Progressive Investment Framework
+  Investment Gate Assessment — assess whether a product Opportunity or Solution
+  (the gate attaches to a Solution and its Loop chain) is ready to advance to the next stage of the Progressive Investment Framework
   (Exploring → Validating → Testing → Building → Scaling). Checks evidence
   thresholds, gate criteria, and recommends the cheapest path forward. Use when
   the team is asking "do we have enough to move forward?" or "are we ready to
@@ -23,6 +23,8 @@ retrieval:
     - move to next stage
     - progressive investment
     - stage gate
+    - the Loop gate
+    - solution gate
   intents:
     - are we ready to build this?
     - do we have enough evidence to move forward?
@@ -45,14 +47,18 @@ retrieval:
     - kill condition
     - investment ceiling
     - experiment type
+    - test type
+    - Solution
+    - Key Result
+    - the Loop framework
     - riskiest assumption
 chainTo:
   - pattern: "more.*signal|more.*evidence|more.*research|gather.*signal|interview|transcript"
     targetSkill: pm-signal-synthesis
     message: Switching to signal synthesis to gather the evidence needed to clear this gate
-  - pattern: "opportunity.*framing|reframe|solution.*masquerad|OST|tree"
-    targetSkill: ost-workflow
-    message: Switching to OST workflow to address the opportunity framing issue first
+  - pattern: "opportunity.*framing|reframe|solution.*masquerad|OST|OOKRST|the loop|loop framework|tree|orphan"
+    targetSkill: loop-workflow
+    message: Switching to the Loop tree workflow to fix the Opportunity framing or broken chain first
   - pattern: "coach|strategy|philosophy|broader|what should we|how should we"
     targetSkill: agentic-pm
     message: Switching to PM coaching for broader strategic guidance
@@ -79,9 +85,11 @@ push for movement nor hold it back.
 |---|---|---|
 | **Exploring** | Is this a real customer problem? | Discovery time only. No build. |
 | **Validating** | Is this problem widespread enough to act on? | Discovery time + solution ideation |
-| **Testing** | Does our proposed solution work? | Cheapest experiment that answers the question |
+| **Testing** | Does our proposed Solution work? | Cheapest Test that answers the question |
 | **Building** | Does the built thing move the metric? | One focused team, time-boxed |
 | **Scaling** | Should we invest to grow this? | Full investment |
+
+The gate decides whether a **Solution** (a child of a KR in the Loop tree) may advance; the Opportunity's evidence and the KR's link carry through the chain. Roadmap admission requires a Solution that has cleared the gate for the stage the roadmap horizon implies. See [the Loop guide](../../guides/the-loop.md).
 
 Skipping a stage bets build effort on an untested assumption. That can be a reasonable
 call; make it visible as a named risk.
@@ -92,30 +100,31 @@ call; make it visible as a named risk.
 
 ### Exploring → Validating
 - [ ] 2 or more independent sources share the same underlying customer need
-- [ ] The opportunity is framed in customer language, not solution language
-- [ ] The opportunity connects to the team's active desired outcome
+- [ ] The Opportunity is framed in customer language, not solution language
+- [ ] The Opportunity has a segment named and cited evidence (or is tagged `weak`)
+- [ ] The Opportunity is parented by an active Outcome, or one is derived in the same pass
 
 If not met: name the missing signals and source types, and start gathering them.
 
 ### Validating → Testing
-- [ ] At least 3 distinct solutions have been considered (not committed — considered)
+- [ ] The parent KR has at least 3 distinct Solutions considered (not committed — considered)
 - [ ] The riskiest assumption has been named and ranked among the alternatives
-- [ ] A kill condition has been written: the specific result that would stop this solution
+- [ ] A kill condition has been written on the first Test: the specific result that would stop this Solution
 
 A test without a kill condition invites rationalized results. If it is missing, draft one
 yourself and state it with the verdict.
 
 ### Testing → Building
-- [ ] The riskiest assumption passed the test (success condition met)
+- [ ] The riskiest assumption passed its Test (success condition met)
 - [ ] The kill condition was NOT triggered
-- [ ] The solution is still connected to the team's active desired outcome
+- [ ] The Solution's chain is intact: parent KR in the active cycle, Outcome, and Opportunity
 - [ ] The MVP scope has been defined: the smallest version that delivers the core value
 
-If the kill condition was triggered, say so plainly and recommend archiving the solution
+If the kill condition was triggered, say so plainly and recommend archiving the Solution
 with the reason. Archiving is destructive, so the human confirms it.
 
 ### Building → Scaling
-- [ ] Real usage data (not test data) shows the solution moves the target metric
+- [ ] Real usage data (not test data) shows the Solution moves its parent KR
 - [ ] No significant failure modes detected in the live rollout
 - [ ] The metric movement is large enough and consistent enough to justify deeper investment
 
@@ -123,9 +132,9 @@ with the reason. Archiving is destructive, so the human confirms it.
 
 ---
 
-## Experiment Types
+## Test Types
 
-Recommend the cheapest type that answers the specific question.
+(Formerly "experiment types".) Recommend the cheapest type that answers the specific question.
 
 | Type | Answers | Cost | When to use |
 |---|---|---|---|
@@ -143,17 +152,17 @@ internal debate about wording means a cheap test was skipped.
 
 ## Workflow
 
-1. **Establish context** from the OST, signal ledger, and experiment records: current and
-   target stage, the opportunity in customer voice, source count and confidence, and any
-   test results and kill condition. Infer what is missing and state the inference.
+1. **Establish context** from the Loop tree, signal ledger, and Test records: the Solution and
+   its chain (KR, Outcome, Opportunity), current and target stage, the Opportunity in customer
+   voice, source count and confidence, and any Test results and kill condition. Infer what is missing and state the inference.
 2. **Check every criterion** for the transition: Met, Partial, or Not met. Partial is not
    Met. For each gap, name what is missing and the cheapest way to close it.
 3. **Give the verdict:**
    - **Ready** — advance the stage in the resolved provider and report it, with risks to watch.
    - **Conditionally Ready** — one gap with a fast fix (e.g., write the kill condition).
      Close it yourself if you can, then advance.
-   - **Not Ready** — list each gap, record the risk on the opportunity or solution, and
-     draft the cheapest test. If the team proceeds anyway, the recorded risk travels with it.
+   - **Not Ready** — list each gap, record the risk on the Opportunity or Solution, and
+     draft the cheapest Test. If the team proceeds anyway, the recorded risk travels with it.
 4. **Take the next action** — one specific step: the test you drafted, the condition you
    closed, or the first step of the next stage.
 
@@ -164,7 +173,7 @@ internal debate about wording means a cheap test was skipped.
 ```
 ## Investment Gate Assessment
 
-**Opportunity:** [name]
+**Solution:** [name]  ·  **KR:** [id]  ·  **Outcome:** [id]  ·  **Opportunity:** [name]
 **Stage:** [current] → [target]
 **Verdict:** Ready | Conditionally Ready | Not Ready
 
@@ -178,7 +187,7 @@ internal debate about wording means a cheap test was skipped.
 **[Gap]** — missing: [specific] · cheapest fix: [action] · time: [estimate]
 
 ### Done / Next
-[What you changed (stage advanced, test drafted, risk recorded) and the one next step]
+[What you changed (stage advanced, Test drafted, risk recorded) and the one next step]
 ```
 
 ---
@@ -200,6 +209,7 @@ team decide:
 ## References
 
 - [Autonomy Policy](../../Autonomy%20Policy.md)
+- [The Loop](../../guides/the-loop.md)
 - [Progressive Investment Framework](../../Progressive%20Investment%20Framework.md)
 - [Discovery Health Metrics](../../Discovery%20Health%20Metrics.md)
 - [Signal Ledger](../../Signal%20Ledger.md)

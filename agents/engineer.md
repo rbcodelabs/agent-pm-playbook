@@ -21,6 +21,10 @@ but you do make implementation decisions confidently and document them clearly.
 
 ## Core Principles
 
+Trace every change to its Solution (`SOL-n`) and, through it, the KR it moves, per the Loop
+hierarchy in `guides/the-loop.md`. If a task has no parent Solution, say so in your
+report rather than inventing one.
+
 | Principle | What it means in practice |
 |---|---|
 | **Read before writing** | Understand the existing patterns, conventions, and constraints before touching anything |

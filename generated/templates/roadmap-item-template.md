@@ -4,11 +4,12 @@ type: roadmap-item
 title: "[Initiative name]"
 status: Now
 phase: Delivery
-parent_solution: SOL-001
-parent_opportunity: OPP-001
-okr_krs:
-  - OBJ-01-KR-1
-  - OBJ-01-KR-2
+parent_solution: SOL-1
+parent_kr: OUT-1-KR-1
+parent_outcome: OUT-1
+parent_opportunity: OPP-1
+secondary_krs:
+  - OUT-1-KR-2
 target_date: 2026-06-30
 shipped_date: ""
 linear_url: ""
@@ -20,14 +21,14 @@ last_updated: 2026-04-01
 
 > [Guide: `phase` distinguishes the nature of the work: Discovery (validating an opportunity or solution — not building the full thing) | Delivery (building a validated solution) | Infrastructure (technical investment that enables future delivery). This matters for planning: Discovery items should be small and time-boxed; Delivery items should have acceptance criteria; Infrastructure items need a "enables X" justification.]
 
-> [Guide: `okr_krs` is a list of KR IDs from the active OKR cycle. Every roadmap item must connect to at least one KR. If you can't connect a Now item to a KR, either the KR is missing or the item shouldn't be Now.]
+> [Guide: A Roadmap Item is delivery under the Loop tree (see `guides/the-loop.md`). It is admitted only after its Solution (`parent_solution`) clears its investment gate. `parent_kr` is the KR the Solution moves (`OUT-n-KR-n`) and is inherited from the Solution; `secondary_krs` lists any additional KRs it informs. If you can't connect a Now item to a KR, either the KR is missing or the item shouldn't be Now.]
 
 # RM-001: [Title]
 
 **Status:** Now
 **Phase:** Delivery
 **Target date:** 2026-06-30
-**OKR cycle:** [[Q2-2026]]
+**Cycle:** [[Q2-2026]]
 
 ---
 
@@ -35,13 +36,15 @@ last_updated: 2026-04-01
 
 > [Guide: The three-line elevator pitch for this item: what customer problem does it solve, what validated solution is it implementing, and which KR does it move. A new engineer joining the team should be able to read this and understand why this exists without reading any other document.]
 
-**Customer opportunity addressed:** [[OPP-001]] — [Opportunity title]
+**Customer opportunity addressed:** [[OPP-1]] — [Opportunity title]
 
-**Validated solution being built:** [[SOL-001]] — [Solution title]
+**Outcome:** [[OUT-1]] — [Outcome statement]
 
-**Connected KRs:**
-- OBJ-01-KR-1: [KR description — paste the target statement]
-- OBJ-01-KR-2: [KR description — paste the target statement]
+**Validated solution being built:** [[SOL-1]] — [Solution title]
+
+**KR moved:**
+- OUT-1-KR-1 (parent): [paste the target statement]
+- OUT-1-KR-2 (secondary, optional): [paste the target statement]
 
 **Why now:** [One sentence explaining the prioritization decision. What validated evidence or business context puts this in Now rather than Next or Later?]
 
@@ -73,11 +76,11 @@ last_updated: 2026-04-01
 
 ## Dependencies
 
-> [Guide: List anything this item depends on that could cause a delay. Be specific: "Depends on EXP-002 closing successfully" is useful; "Depends on engineering" is not. If a dependency is blocking, the item should move from Now to Next until it's resolved.]
+> [Guide: List anything this item depends on that could cause a delay. Be specific: "Depends on TST-2 closing successfully" is useful; "Depends on engineering" is not. If a dependency is blocking, the item should move from Now to Next until it's resolved.]
 
 | Dependency | Status | Owner | Blocking? |
 |---|---|---|---|
-| [[EXP-001]] validated | Closed — succeeded | | No |
+| [[TST-1]] validated | Closed — succeeded | | No |
 | [Other roadmap item or external factor] | | | |
 
 ---
@@ -98,7 +101,7 @@ last_updated: 2026-04-01
 
 ## Killed
 
-> [Guide: Fill this in only if status moves to Killed. State why clearly — if the parent solution was killed, say so. If the business priority shifted, say so. Future teams will use this context to avoid re-prioritizing the same item without new information.]
+> [Guide: Fill this in only if status moves to Killed. State why clearly — if the parent Solution was killed, say so. If the business priority shifted, say so. Future teams will use this context to avoid re-prioritizing the same item without new information.]
 
 **Killed on:** [YYYY-MM-DD]
 

@@ -17,8 +17,8 @@ There are two layers here, and conflating them is what makes setup feel heavy. K
 | Piece | Layer | What it is | Which shift it serves |
 |---|---|---|---|
 | Claude Code | **Required** | The host you run the agents and skills in | The whole model — this is the engine |
-| The agents + PM skills (via `setup.sh`) | **Required** | 6 agents (pm, architect, engineer, qa, reviewer, release-manager) + PM skills (`pm-coach`, `pm-setup`, `ost-workflow`, `pm-signal-synthesis`, `investment-gate`, …) | *PM as judgment holder* — agents produce artifacts, you decide |
-| `pm-config.md` (via `pm-setup`) | **Required** | Your config: notes system, tracker (or "none"), current desired outcome | Everything — every skill reads this |
+| The agents + PM skills (via `setup.sh`) | **Required** | 6 agents (pm, architect, engineer, qa, reviewer, release-manager) + PM skills (`pm-coach`, `pm-setup`, `loop-workflow`, `pm-signal-synthesis`, `investment-gate`, …) | *PM as judgment holder* — agents produce artifacts, you decide |
+| `pm-config.md` (via `pm-setup`) | **Required** | Your config: notes system, tracker (or "none"), current outcome and headline Key Result | Everything — every skill reads this |
 | Obsidian + Claude Threads | Recommended | A notes home with Claude in the loop | *Continuous discovery* — signal and synthesis in one place |
 | Issue-tracker integration (Linear / Jira / JPD) | Optional | Work items sync between tracker and notes | *Outcomes* — work items stay traceable. **Skip if you track work in plain notes.** |
 | Vault Bridges | Optional | A live link between your product's repo/docs folder and your notes | *Continuous discovery* — product context one search away |
@@ -41,7 +41,7 @@ By the end of this module you will be able to:
 
 ## Concept reading
 
-The one idea worth holding: **`pm-config.md` is the routing spine.** Every PM skill resolves each capability to exactly one authoritative provider, plus the current desired outcome. The manifest does not duplicate provider state. You generate or migrate it with `pm-setup`.
+The one idea worth holding: **`pm-config.md` is the routing spine.** Every PM skill resolves each capability to exactly one authoritative provider, plus the current Outcome and its headline Key Result. The manifest does not duplicate provider state. You generate or migrate it with `pm-setup`.
 
 **Go deeper:** [README](../README.md) for the project overview, [PM Tool Integration Guide](../PM%20Tool%20Integration%20Guide.md) for tracker-specific setup (Linear, Jira, JPD, or Markdown-only), and [How to Use the Agents](../How%20to%20Use%20the%20Agents.md) for what each agent does.
 
@@ -97,12 +97,12 @@ claude                # this opens a Claude Code session in the current director
 In the session, invoke the setup skill:
 
 ```
-Run the pm-setup skill to select an integration profile, configure capability providers, and set my current desired outcome.
+Run the pm-setup skill to select an integration profile, configure capability providers, and set my current Outcome and headline Key Result.
 ```
 
 Answer its questions. Two notes:
 - Pick the profile closest to your real stack: full Compass, Compass/Obsidian/Linear, Markdown/Linear, or JPD/Jira. Per-capability overrides handle exceptions.
-- For **current desired outcome**, give the measurable behavior change you're managing toward (Module 0 standard), **not** a feature. This is the single most important field — everything downstream inherits it.
+- For **current Outcome**, give the customer-behavior change you're managing toward, in one sentence with no numbers (Module 0 standard), **not** a feature; put the measurement (baseline, target, date) in the headline **Key Result**. This is the single most important field — everything downstream inherits it.
 
 **Verify:** `pm-config.md` names a profile and resolves all nine capabilities to exactly one provider. Confirm it created only folders owned by Markdown/Obsidian capabilities; `compass-full` creates no product-state folder tree.
 
@@ -118,7 +118,7 @@ Help me frame what I learned from a couple of customer conversations this week.
 
 #### Step 4 — Confirm the core is real
 
-Re-read your `pm-config.md` one more time and confirm the `desired outcome` field is a measurable behavior change, not a feature.
+Re-read your `pm-config.md` one more time and confirm the Outcome field is a behavior change (not a feature) and the headline Key Result is measurable.
 
 **Verify:** you could hand `pm-config.md` to a colleague and they'd know what behavior your product is trying to change.
 
@@ -144,7 +144,7 @@ Re-read your `pm-config.md` one more time and confirm the `desired outcome` fiel
 ## Success criteria
 
 - [ ] `setup.sh` completed and the agents + PM skills are available after a restart.
-- [ ] `pm-config.md` exists and its `desired outcome` is a measurable behavior change (Module-0 standard), not a feature.
+- [ ] `pm-config.md` exists, its Outcome is a behavior change (Module-0 standard) rather than a feature, and its headline Key Result has a baseline, target and date.
 - [ ] `pm-coach` responds *as a coach* in a thread — it asks about outcomes/evidence.
 - [ ] You made a deliberate decision about each optional stack piece (set up or skipped on purpose) — a skipped tracker with "N/A" recorded counts as done.
 - [ ] You produced a friction log (even if it's "no friction").
@@ -159,7 +159,7 @@ Re-read your `pm-config.md` one more time and confirm the `desired outcome` fiel
 | Skills/agents don't appear ("unknown skill") | Claude Code not restarted, or symlinks skipped | Restart Claude Code. Re-run `./setup.sh --force` if a previous install left stale entries. If it persists, log it with the exact command and output. |
 | You tried the `claude plugins` command and the syntax was wrong | Plugin CLI differs by version; repo manifest is a subset | Use the `setup.sh` path — it's the supported full install. Note the discrepancy in your friction log. |
 | `pm-coach` answers generically | No `pm-config.md`, or it's empty/stale | Re-run `pm-setup`; the coach anchors to your config. |
-| `desired outcome` is a feature ("ship onboarding v2") | Module-0 lesson didn't carry over | Rewrite as a measurable behavior change ("raise day-2 activation from X% to Y%"). Every skill inherits this. |
+| Outcome is a feature ("ship onboarding v2") | Module-0 lesson didn't carry over | Rewrite the Outcome as a behavior change ("new users get through setup on their own") and put the number in a Key Result ("raise day-2 activation from X% to Y%"). Every skill inherits this. |
 | You feel blocked because you don't have Linear / a code repo | Treating an optional piece as required | The tracker and vault bridge are optional. Record "N/A" and continue — the core is all the course needs. |
 | You "just got it working" but skipped the friction log | Defeats the smoke-test purpose | Reconstruct it now. The next adopter and the public install path depend on what you hit. |
 
@@ -167,6 +167,6 @@ Re-read your `pm-config.md` one more time and confirm the `desired outcome` fiel
 
 ## Next
 
-Core's live. Time to build the structure the whole operating model hangs on — your first Opportunity Solution Tree.
+Core's live. Time to build the structure the whole operating model hangs on — your first Loop tree (Opportunity → Outcome → Key Result → Solution → Test).
 
-→ **[Module 2: Your First OST](module-2-your-first-ost.md)**
+→ **[Module 2: Your First Loop](module-2-your-first-loop.md)**

@@ -2,8 +2,9 @@
 name: compass-workflow
 description: >-
   Manage Compass during a discovery or PM session. Handles MCP API calls to
-  update opportunity/solution/assumption status, log experiment results, promote
-  validated work to the roadmap, and keep the OST tree current. Use whenever
+  update Opportunity/Solution/assumption status, log Test (experiment) results, promote
+  validated work to the roadmap, and keep the Loop tree
+  (Opportunity -> Outcome -> KR -> Solution -> Test) current. Use whenever
   Claude is doing discovery or delivery work against a Compass-backed product --
   update Compass inline as work progresses, never batch at the end.
 metadata:
@@ -17,6 +18,8 @@ retrieval:
     - compass workflow
     - update compass
     - log experiment
+    - log test result
+    - the Loop in compass
     - promote to roadmap
     - opportunity status
     - compass discovery
@@ -26,24 +29,30 @@ retrieval:
     - move opportunity to validating
     - promote this solution to the roadmap
     - what's our OST look like in Compass
+    - what's our Loop tree look like in Compass
     - sync compass with what we built
     - get a product snapshot from compass
     - add an opportunity to compass
     - mark assumption validated
     - create an experiment in compass
+    - create a test for this solution in compass
   entities:
     - Compass
     - opportunity
     - solution
     - assumption
     - experiment
+    - Test
+    - Outcome
+    - Key Result
+    - the Loop framework
     - roadmap
     - OKR
     - workspace
 chainTo:
-  - pattern: "ost|opportunity solution tree|tree health|prioritiz"
-    targetSkill: ost-workflow
-    message: Switching to OST workflow for tree-level discovery work
+  - pattern: "ost|ookrst|the loop|loop framework|opportunity solution tree|tree health|prioritiz"
+    targetSkill: loop-workflow
+    message: Switching to the Loop tree workflow for tree-level discovery work
   - pattern: "signal|interview|transcript|feedback|synthesis"
     targetSkill: pm-signal-synthesis
     message: Switching to signal synthesis to process research inputs
@@ -52,19 +61,44 @@ chainTo:
 # Compass Workflow
 
 Rules for how Claude manages Compass during a discovery or delivery session.
-Compass is a native OST platform: it owns opportunities, solutions, assumptions,
-experiments, OKRs, roadmap, feedback, and docs in one tool with an MCP API for
-agentic access.
+Compass is a native discovery platform: it owns Opportunities, Solutions, assumptions,
+experiments (the Test level), OKRs, roadmap, feedback, and docs in one tool with an MCP API for
+agentic access. The playbook's hierarchy is the Loop
+([structure guide](../../guides/the-loop.md)), and Compass is mid-migration to it.
 
 Compass may also own vision, raw research, synthesized insights, and engineering
 delivery through Compass Docs, research/feedback records, and Compass Tasks. It owns only the
 capabilities resolved to a Compass provider in `pm-config.md`; never assume that
 every Compass-connected product uses the full stack.
 
+## Mapping Loop onto Compass
+
+Behave provider-neutrally: map each Loop level to whatever native Compass object exists
+today, and never flatten the chain to fit a missing object.
+
+| Loop level | Compass mapping |
+|---|---|
+| Opportunity | Native opportunity; feedback and insights attach here |
+| Outcome | The native Outcome/objective object where it exists; until then the OKR objective that carries the customer-behavior statement |
+| Key Result | Native key result in the active OKR cycle |
+| Solution | Native solution; record its parent KR through whatever native link exists |
+| Test | Native experiment, tied to the Solution's assumption |
+
+Rules that hold during the migration:
+
+- The adapter must preserve the parent chain Opportunity -> Outcome -> KR -> Solution -> Test.
+  Where a level or link is not yet native, use the interim mapping the connected tool catalog
+  supports (a link, label, or custom field) or state the exact unsupported operation; do not
+  simulate it in the response.
+- Where today's tool takes an Opportunity as a Solution's parent, still name the parent KR in the
+  Solution's description or link so the KR parentage survives, and report the gap.
+- Read the connected catalog to see which levels are native in this workspace; never assume.
+- Keep Compass stable IDs; add the Loop role to the report, not to the ID.
+
 ## Autonomy
 
 Act, then report ([Autonomy Policy](../../Autonomy%20Policy.md)). Creating and linking
-records, adding solutions, logging and concluding experiments, status changes, and
+records, adding Solutions, logging and concluding Tests (native experiments), status changes, and
 check-ins are reversible: make them inline and report what changed. A human is needed
 first only to archive or kill something with work behind it, to publish anything
 customers see, or to ship to production. Missing context: infer, state it in one line,
@@ -83,7 +117,7 @@ offer `pm-setup` at the end.
 
 **Update Compass inline as work progresses -- never batch at the end of a session.**
 
-Update an opportunity's status as soon as the evidence moves it. Batching produces
+Update an Opportunity's status as soon as the evidence moves it. Batching produces
 stale state and breaks the product snapshot.
 
 ---
@@ -142,10 +176,10 @@ EXPLORING → VALIDATING → PRIORITIZED → ACTIVE → ARCHIVED
 
 | Status | When to apply |
 |---|---|
-| **EXPLORING** | Signal exists; fewer than 2 independent sources. Do not add solutions yet. |
+| **EXPLORING** | Signal exists; fewer than 2 independent sources. Do not add Solutions yet. |
 | **VALIDATING** | Actively gathering evidence. At least 1 strong signal logged. |
-| **PRIORITIZED** | Evidence bar met: 2+ independent sources, customer-voice framing, connected to active KR. |
-| **ACTIVE** | Team is exploring solutions or running experiments against this opportunity. |
+| **PRIORITIZED** | Evidence bar met: 2+ independent sources, customer-voice framing, connected to an active Outcome and KR. |
+| **ACTIVE** | Team is exploring Solutions or running Tests against this Opportunity's Outcome and KRs. |
 | **ARCHIVED** | Invalidated or deprioritized. Archive, never delete; confirm with a human first if work sits behind it. |
 
 ### Solutions
@@ -156,7 +190,7 @@ IDEA → VALIDATED → IN_DELIVERY → SHIPPED | KILLED
 | Status | When to apply |
 |---|---|
 | **IDEA** | Hypothesis named; assumptions not yet mapped. |
-| **VALIDATED** | Riskiest assumption passed its experiment. Cleared for build. |
+| **VALIDATED** | Riskiest assumption passed its Test. Cleared for build. |
 | **IN_DELIVERY** | Active engineering work in the resolved delivery provider (Compass Tasks, Linear, Jira, etc.). |
 | **SHIPPED** | In production. |
 | **KILLED** | Assumption failed the test. Record the reason; a human confirms the kill when work sits behind it. |
@@ -169,7 +203,7 @@ UNTESTED → TESTING → VALIDATED | INVALIDATED
 Use `conclude_experiment` rather than editing assumption status; Compass updates the
 linked assumption automatically.
 
-### Experiments
+### Experiments (the Test level)
 ```
 DESIGNING → RUNNING → COMPLETE | KILLED | NOT_PURSUED
 ```
@@ -178,7 +212,7 @@ DESIGNING → RUNNING → COMPLETE | KILLED | NOT_PURSUED
 |---|---|
 | **DESIGNING** | Hypothesis and method defined; kill condition not yet written. |
 | **RUNNING** | Kill condition written; test is live. Never start RUNNING without one. |
-| **COMPLETE** | Experiment finished; result logged; conclusion (PROCEED/KILL/ITERATE) recorded. |
+| **COMPLETE** | Test finished; result logged; conclusion (PROCEED/KILL/ITERATE) recorded. |
 | **KILLED** | Abandoned mid-run. Log reason before killing. |
 | **NOT_PURSUED** | A deliberate decision not to run it — opportunity cost, timing, or reprioritization, not a failed test. Own terminal status, distinct from KILLED. Leaves the linked Assumption `UNTESTED`; a `reason` is required. |
 
@@ -210,16 +244,16 @@ authorization. Opportunity/Solution lifecycle status is reporting, never worker 
 1. Retrieve the MCP API key from the secrets manager
 2. Call `list_workspaces` to get the workspaceId
 3. Call `get_workspace_summary` to get current counts and active OKR cycle
-4. Call `list_experiments(workspaceId, "RUNNING")` -- know what's live before adding more
+4. Call `list_experiments(workspaceId, "RUNNING")` -- know which Tests are live before adding more
 5. Review `list_opportunities(workspaceId, "ACTIVE")` -- know the current focus
 
 ### During a session
 
 **When processing signals:**
 - If a signal confirms an existing opportunity → call `update_opportunity_status` if evidence bar now met
-- If signals point to a new opportunity → call `create_opportunity`, link to the active KR
+- If signals point to a new Opportunity → call `create_opportunity`, link it to the Outcome/KR it serves (signals attach to Opportunities, never to KRs)
 
-**When an experiment concludes:**
+**When a Test (experiment) concludes:**
 - Call `log_experiment_result` with the observation note and any metric/value
 - Call `conclude_experiment` with PROCEED, KILL, ITERATE, or NOT_PURSUED + rationale
   (`reason` is required for NOT_PURSUED)
@@ -233,17 +267,18 @@ authorization. Opportunity/Solution lifecycle status is reporting, never worker 
 - Update the solution status to IN_DELIVERY when engineering starts
 
 **When adding new discovery items:**
-- `create_opportunity` with a KR link whenever a new opportunity reaches EXPLORING
-- `add_solution` before evaluating which solution to pursue (always add 3+ before narrowing)
-- `add_assumption` for the riskiest assumption in each solution before designing experiments
-- `create_experiment` in DESIGNING status; only move to RUNNING once kill condition is written
+- `create_opportunity` with a KR link whenever a new Opportunity reaches EXPLORING
+- `add_solution` before evaluating which Solution to pursue (always add 3+ per KR before narrowing)
+- `add_assumption` for the riskiest assumption in each Solution before designing Tests
+- `create_experiment` (the Test) in DESIGNING status, tied to the assumption; only move to RUNNING once kill condition is written
 
 ### Ending a session
 
 - Verify every touched item has an accurate status
-- Link any EXPLORING opportunity with no KR to the most plausible KR and report the link
-- **Check zero-solution coverage workspace-wide**, not just touched items: every ACTIVE or
-  PRIORITIZED opportunity needs at least one non-KILLED solution. Scheduled checks (weekly
+- Link any EXPLORING Opportunity with no Outcome/KR to the most plausible one and report the link
+- **Check orphans and zero-solution coverage workspace-wide**, not just touched items: every ACTIVE or
+  PRIORITIZED Opportunity needs at least one non-KILLED Solution, every KR needs Solutions, and
+  every Test needs a Solution assumption. Scheduled checks (weekly
   audit, OKR health review) run this too, since per-session checks miss what nobody opened.
   0/N of a fixed KR cohort is urgent.
 - Close any gap by adding candidate solutions with `add_solution`. Authoring candidates is
@@ -260,14 +295,15 @@ authorization. Opportunity/Solution lifecycle status is reporting, never worker 
 list_workspaces(orgSlug)
 get_workspace_summary(workspaceId)
 list_okr_cycles(workspaceId)
-get_okr_cycle(cycleId)           -- objectives + KR progress
+get_okr_cycle(cycleId)           -- Outcomes/objectives + KR progress
 list_opportunities(workspaceId)  -- full pipeline
-list_experiments(workspaceId, "RUNNING")
+list_experiments(workspaceId, "RUNNING")   -- live Tests
 list_roadmap_items(workspaceId)  -- NOW/NEXT/LATER
 list_feedback(workspaceId, "OPEN")
 ```
 
 ### Discovery: full path from signal to roadmap
+(Today's calls; the Solution's parent KR is recorded per the mapping above.)
 ```
 create_opportunity(workspaceId, title, description, keyResultId)  → opportunityId
 update_opportunity_status(opportunityId, "VALIDATING")
@@ -312,13 +348,14 @@ home for vision and durable narratives when the `vision` capability resolves to
 `compass_docs`.
 
 ### OKR check-in
+A check-in propagates up the tree: after `log_checkin`, report the effect on the KR's Outcome and on the Opportunity's status.
 ```
 list_okr_cycles(workspaceId)
 get_okr_cycle(cycleId)           -- see current/target for all KRs
 log_checkin(keyResultId, value, note)
 ```
 
-### Turn feedback into an opportunity
+### Turn feedback into an Opportunity
 ```
 list_feedback(workspaceId)        -- find high-vote items
 create_opportunity(workspaceId, title, description)
@@ -332,10 +369,12 @@ update_opportunity_status(opportunityId, "VALIDATING")
 
 | Anti-pattern | Why it's wrong |
 |---|---|
-| Moving experiment to RUNNING without a kill condition | The kill condition is the gate. An experiment without one has no definition of done. |
+| Moving a Test (experiment) to RUNNING without a kill condition | The kill condition is the gate. A Test without one has no definition of done. |
+| Flattening the chain (a Solution with no KR, a KR with no Outcome) | Preserve every parent link or report the exact unsupported operation. |
+| Attaching raw signals to a KR | Signals attach to Opportunities, or to the Solution or Test they bear on. |
 | Adding only one solution per opportunity | Breadth before depth: three minimum before eliminating any. |
 | Leaving an opportunity at zero solutions | Nothing to select between, so it and its KR can't move. Generate candidates now. |
-| Creating an opportunity with no KR link | Unlinked opportunities are feature requests in disguise. Link the most plausible KR. |
+| Creating an Opportunity with no Outcome/KR link | Unlinked Opportunities are feature requests in disguise. Link the most plausible Outcome/KR. |
 | Manually updating assumption status | Use `conclude_experiment` -- the API auto-updates the linked assumption. Manual edits break traceability. |
 | Batching Compass updates at session end | Status drifts during the session; the product snapshot becomes unreliable. |
 | Deleting killed experiments or archived opportunities | Killed work is institutional memory. Archive with a reason. |
@@ -367,5 +406,6 @@ value in `pm-config.md`.
 
 - [Compass URL and Data Model](https://compass.rbcodelabs.com)
 - [PM Tool Integration Guide -- Compass section](../../PM Tool Integration Guide.md)
-- [OST Workflow skill](../ost-workflow/SKILL.md)
-- [OKR Workflow skill](../okr-workflow/SKILL.md)
+- [The Loop](../../guides/the-loop.md)
+- [Loop Workflow skill](../loop-workflow/SKILL.md)
+- [Test Workflow skill](../experiment-workflow/SKILL.md)

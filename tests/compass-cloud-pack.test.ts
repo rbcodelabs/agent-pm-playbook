@@ -34,8 +34,7 @@ test("Compass cloud pack follows the v1 manifest and file contract", () => {
     "experiment-workflow",
     "integration-routing",
     "investment-gate",
-    "okr-workflow",
-    "ost-workflow",
+    "loop-workflow",
     "pm-coach",
     "pm-signal-synthesis",
     "roadmap-workflow",
@@ -70,9 +69,9 @@ test("interpretation and health checks do not imply mutation authority", () => {
   assert.match(experiment, /separate explicit user request to (?:persist|log|conclude)/i);
   assert.match(experiment, /interpreting.*read-only/i);
 
-  const ost = readFileSync(join(packRoot, "skills/ost-workflow/SKILL.md"), "utf8");
-  assert.match(ost, /explicit user request before (?:archiving|changing).*status/i);
-  assert.match(ost, /health check.*read-only/i);
+  const loop = readFileSync(join(packRoot, "skills/loop-workflow/SKILL.md"), "utf8");
+  assert.match(loop, /explicit user request before (?:archiving|changing).*status/i);
+  assert.match(loop, /health check.*read-only/i);
 });
 
 test("cloud skills rely only on host-owned Compass context and tools", () => {

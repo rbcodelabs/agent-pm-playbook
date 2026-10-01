@@ -60,15 +60,27 @@ in Sections 8 and 11.
 ## 1. The Target System
 
 ```text
-Strategy and metrics → desired outcome → signals → opportunities → focus
-  → solution directions → assumptions → experiments → investment decision
-  → roadmap placement → design and delivery → release and adoption
-  → outcome movement → new signals and changed beliefs
+Strategy and metrics → signals → Opportunity → Outcome → Key Results
+  → Solution directions (per KR) → assumptions → Tests → investment gate
+  → Roadmap Item → design and delivery → release and adoption
+  → KR and Outcome movement → new signals and changed beliefs
 ```
+
+The loop runs over the single Loop hierarchy defined in the
+[Loop guide](guides/the-loop.md): Opportunity (root), Outcome, Key Result,
+Solution, Test, with Roadmap Items hanging off Solutions after the investment gate. Every
+flow below reads and writes one or more of those levels and preserves the parent chain
+(Outcome → Opportunity, KR → Outcome, Solution → KR, Test → Solution) and the stable IDs.
+
+> **Legacy terminology.** The earlier OKR-then-OST model (Objective, Desired Outcome,
+> Experiment) is gone from this document except where it names a retired term for
+> routing or search and in provider-native object names. The `loop-workflow` and
+> `experiment-workflow` skills cover the Loop levels, and the `loop` and
+> `experiments` routing keys in `pm-config.md` resolve them. Where this document says "tree" it means all five levels.
 
 The scheduled system performs the collection, synthesis, preparation, maintenance,
 prioritization, and verification in that loop, and makes the reversible calls itself:
-focus, direction, horizon placement, statuses, scores. The human reads the trail and
+Opportunity focus, Solution direction, horizon placement, statuses, scores. The human reads the trail and
 corrects it, and supplies approval only where an action cannot be undone.
 
 ```text
@@ -105,8 +117,12 @@ The system never hardcodes where reviews, decisions, prototypes, notifications, 
 live. `pm-config.md` is the routing manifest.
 
 **Integration routing** resolves authoritative product capabilities: `vision`,
-`research_capture`, `insights`, `okrs`, `ost`, `experiments`, `roadmap`, `delivery`, and
-`reporting_archive`. **Workflow routing** resolves the services that move work between
+`research_capture`, `insights`, `loop`, `experiments`, `roadmap`, `delivery`, and
+`reporting_archive`. `loop` covers Opportunities, Outcomes, KRs, cycles, check-ins, Solutions,
+and the parent chain across all five levels; `experiments` covers Tests and must resolve to the
+same provider as `loop`. A provider that cannot hold a level natively states its interim mapping (label, issue
+type, or custom field) and keeps the parent chain; see the
+[PM Tool Integration Guide](PM%20Tool%20Integration%20Guide.md). **Workflow routing** resolves the services that move work between
 those objects and the people or agents operating on them:
 
 | Workflow capability | Owns |
@@ -118,7 +134,7 @@ those objects and the people or agents operating on them:
 | `prototype_artifacts` | Versioned storyboards, wireframes, interactive previews, and spikes |
 | `product_analytics` | Metric definitions, exposure data, adoption, and outcome measurements |
 
-Product and workflow stacks vary independently: Compass may own the OST while Obsidian
+Product and workflow stacks vary independently: Compass may own the tree while Obsidian
 presents review requests, a runtime schedules jobs, a chat tool notifies, a repository
 hosts prototypes, and a warehouse supplies metrics.
 
@@ -200,7 +216,7 @@ Each flow declares its dependencies so preflight is mechanical:
 
 ```yaml
 requires:
-  product_capabilities: [ost, experiments]
+  product_capabilities: [loop, experiments]  # the Loop tree (Opportunities through Solutions), Tests
   workflow_capabilities: [review_requests, decision_records, notifications]
 optional:
   workflow_capabilities: [prototype_artifacts, product_analytics]
@@ -279,29 +295,30 @@ continues regardless.
 
 ## 6. Early-Idea Concept and Prototype Loop
 
-Early ideas should not stall as bare titles. When an opportunity becomes `PRIORITIZED`,
-new evidence materially changes an active solution set, or a health check finds an
-opportunity or KR with **zero** solutions, the **solution studio** produces three
-meaningfully different directions:
+Early ideas should not stall as bare titles. When an Opportunity's Outcome and KRs are set
+(the Opportunity is `PRIORITIZED` and has been given an Outcome), new evidence materially
+changes a KR's Solution set, or a health check finds a KR (or cohort item) with **zero**
+Solutions, the **solution studio** produces three meaningfully different directions for that
+KR (a KR needs at least three candidate Solutions before any is selected):
 
 - **Minimum intervention:** the smallest change that could improve the outcome.
 - **Recommended direction:** the best balance of value, evidence, risk, and effort.
 - **Assumption challenger:** a direction based on a different belief about the problem.
 
 For each: customer before/after, the cheapest prototype that makes it inspectable, scope,
-outcome connection, evidence, riskiest assumption, cheapest test, delivery shape, and
-tradeoff. A weak single signal gets a tagged-weak opportunity and cheap validation, not a
-full concept set.
+the KR it moves and how it addresses the Opportunity, evidence, riskiest assumption, cheapest
+Test, delivery shape, and tradeoff. A weak single signal gets a tagged-weak Opportunity and cheap validation, not an
+Outcome with a full concept set.
 
 Prototype fidelity, lowest that makes the choice real: narrative scenario → storyboard or
 wireframe → clickable prototype → concierge simulation → technical spike (only when
 feasibility is the main risk). A prototype is a decision aid, never evidence of validation.
 
-The agent then **picks the direction to test**, creates or selects the `IDEA` solution,
+The agent then **picks the direction to test**, creates or selects the `IDEA` Solution (parented by the KR it moves),
 starts assumption mapping, and reports the choice with its reasoning. The human can
 redirect with an edit. A direction choice becomes a review only when the human has asked to
-own it or the test itself is irreversible (it contacts customers, recruits participants, or
-spends money). Choosing a direction does not validate the solution or authorize production
+own it or the Test itself is irreversible (it contacts customers, recruits participants, or
+spends money). Choosing a direction does not validate the Solution or authorize production
 code.
 
 ## 7. Where a Human Is Needed
@@ -313,13 +330,13 @@ real rather than a duplicate of work already under way.
 
 | Irreversible category | Typical PM step | Agent does first | Human decides |
 |---|---|---|---|
-| Destroying something | Archive/delete opportunities, solutions, feedback, or roadmap items; kill a branch with work; overwrite data | Evidence and a list of exactly what goes | Archive/delete, keep, or defer |
-| Reaching outside the team | Customer replies, surveys, announcements, published release notes, stakeholder updates, experiments that users see | Complete draft and audience | Send, revise, or hold |
+| Destroying something | Archive/delete Opportunities, Outcomes, KRs, Solutions, Tests, feedback, or Roadmap Items; kill a branch with work; overwrite data | Evidence and a list of exactly what goes | Archive/delete, keep, or defer |
+| Reaching outside the team | Customer replies, surveys, announcements, published release notes, stakeholder updates, Tests that users see | Complete draft and audience | Send, revise, or hold |
 | Shipping to production | Merge and release | Verification evidence, rollout and rollback plan | Merge/release under its own authority |
 | Spending money or human time | Paid tools, research participants, assigning delivery work to people | Cost, timebox, and expected learning | Approve, trim, or decline |
 
-The agent decides and reports everything else, including outcome candidates, opportunity
-admission and focus, concept direction, riskiest assumption, experiment design and
+The agent decides and reports everything else, including Outcome and KR candidates,
+Opportunity admission and focus, concept direction, riskiest assumption, Test design and
 interpretation, investment-stage changes, `LATER`/`NEXT`/`NOW` placement, design approach,
 and scale/iterate/stop recommendations. The human corrects by editing.
 
@@ -349,9 +366,9 @@ checked every run. Event subscriptions can react faster; reconcile their receipt
 | Flow | Trigger | Output or action |
 |---|---|---|
 | Signal capture | New transcript, feedback, support export, review, or sales note | Attributed raw signal in the resolved provider |
-| Interview synthesis | Transcript arrival | Needs, quotes, intensity, contradictions, OST mappings |
+| Interview synthesis | Transcript arrival | Needs, quotes, intensity, contradictions, mappings to Opportunities (and the Solutions or Tests a quote bears on) |
 | Decision router | Review request changes to `decided` | Tracking-only: validated outcome report and stop; action-capable: validated transition and dispatch under existing authority |
-| Experiment result collector | Result source updates or end date arrives | Raw results, threshold comparison, recorded interpretation |
+| Test result collector | Result source updates or end date arrives | Raw results, threshold comparison, recorded interpretation; updates the Solution's confidence and the KR it informs |
 | Delivery completion watcher | PR, CI, preview, deployment, or merge changes state | Reconcile Tasks, launch/shipped state, Solution state, receipts, smoke findings, capacity event |
 | Adoption watcher | Exposure or metric event available | Early adoption and safety assessment |
 
@@ -359,21 +376,40 @@ checked every run. Event subscriptions can react faster; reconcile their receipt
 
 | Flow | Purpose |
 |---|---|
-| Feedback triage | Empty the open-feedback queue: link, create and score opportunities, adjust priority, close noise |
+| Feedback triage | Empty the open-feedback queue: link evidence to and create and score Opportunities, adjust priority, close noise |
 | Signal synthesis | Cluster passive feedback; update the signal ledger and evidence counts |
-| OST caretaker | Fix weak, duplicate, stale, contradictory, and unmapped branches; **generate candidates immediately for any opportunity or cohort item with zero solutions** |
-| Experiment watchdog | Add missing kill conditions, chase overdue results, close stalled experiments |
-| Roadmap steward | Rebalance `NOW/NEXT/LATER` against validation, capacity, and KR coverage, **including stale or wrong-objective KR links and solutions that shipped without a status update** |
+| Tree caretaker (`loop-workflow`) | Fix weak, duplicate, stale, contradictory, and unmapped branches across all five levels and enforce the tree quality gates below; **generate candidates immediately for any KR or cohort item with zero Solutions** |
+| Test watchdog (`experiment-workflow`) | Add missing kill conditions, chase overdue results, close stalled Tests |
+| Roadmap steward | Rebalance `NOW/NEXT/LATER` against validation, capacity, and KR coverage, **including stale or wrong-Outcome KR links and Solutions that shipped without a status update**; a Roadmap Item exists only for a Solution that cleared its investment gate |
 | Delivery orchestrator | Work only on approved or policy-authorized items under the delivery workflow's rules |
 | Delivery completion catch-up | Reconcile Tasks left `IN_REVIEW` after a missed webhook |
-| Outcome learner | Connect releases to adoption and outcome movement |
+| Outcome learner | Connect releases to adoption, KR movement, and Outcome health; roll Outcome health up to the Opportunity status (pursuing, sustained, retired) |
 | Stakeholder update | Keep the evidence-linked draft current; sending it is a review request |
 | Review notifier and digest | Deliver new requests, the single reminder, and the digest |
 | Automation health | Detect failed sources, credentials, stale locks, duplicate claims, partial writes |
 
-Strategic health (pruning and reranking, outcomes and OKRs, discovery-health metrics,
+Strategic health (pruning and reranking, Outcomes and KRs, discovery-health metrics,
 calibration, retrospectives) is also inspected every run; cycle boundaries and reporting
-deadlines shape the action, never the inspection. Human rituals may keep their cadence.
+deadlines shape the action, never the inspection. A cycle scopes which Outcomes and KRs are
+active; Opportunities persist across cycles, and Solutions and Tests carry over until
+resolved. Human rituals may keep their cadence.
+
+### Tree quality gates
+
+The caretaker, watchdog, and steward apply these gates mechanically on every run and fix or
+report what fails (the full definitions are in the
+[Loop guide](guides/the-loop.md)):
+
+| Level | Gate |
+|---|---|
+| Opportunity | Has cited evidence (or is tagged `weak`); names a segment; is a need, not a solution in disguise |
+| Outcome | Behavior-framed, no numbers or outputs; exactly one parent Opportunity; 2-3 KRs |
+| Key Result | Measures an outcome, not an output; baseline recorded or `TBD` with a task; at most 3 per Outcome |
+| Solution | Exactly one parent KR; assumptions listed; riskiest assumption named; at least 3 candidates per KR before any is selected |
+| Test | Falsifiable, scoped to one assumption, success and kill conditions written before it runs; result logged against the KR it informs |
+| Roadmap Item | Hangs off a Solution that cleared its investment gate; traces to a KR, Outcome, and Opportunity |
+
+An at-risk KR means working its Solutions and Tests harder, not adding Roadmap Items.
 
 ### Delivery completion watcher
 
@@ -418,17 +454,17 @@ Any state → BLOCKED_DATA | SUPERSEDED | EXPIRED | FAILED_RETRYABLE | FAILED_FI
 Each transition records trigger and run ID, source IDs and versions, artifacts read and
 created, changes made, reasoning and confidence, any decision and reviewer, next
 transition, and errors and retry count. Idempotency keys combine product, workflow, source
-object, source version, and transition; a retry never manufactures a second opportunity,
-experiment, roadmap item, or review request.
+object, source version, and transition; a retry never manufactures a second Opportunity,
+Test, Roadmap Item, or review request.
 
 ## 10. Changes to the Existing Compass Jobs
 
-**Compass Feedback Triage** acts fully: capture, classify, deduplicate, link evidence,
-create opportunities (single-source ones tagged weak), score, move opportunity status, and
-adjust existing roadmap priority when evidence warrants, then report. Closing noise is a
-status change; deletion is a review request. Intake alone does not create solutions,
-solution plans, or new roadmap items from a single fresh signal; that belongs to solution
-and roadmap work. Bugs follow the configured severity policy.
+**Compass Feedback Triage** acts fully: capture, classify, deduplicate, link evidence to
+Opportunities, create Opportunities (single-source ones tagged weak), score, move Opportunity
+status, and adjust existing roadmap priority when evidence warrants, then report. Closing noise is a
+status change; deletion is a review request. Intake alone does not create Outcomes, Solutions,
+solution plans, or new Roadmap Items from a single fresh signal; that belongs to Outcome/KR,
+Solution, and roadmap work. Bugs follow the configured severity policy.
 
 **Compass Delivery Resolver** (formerly Auto-Resolver) builds only approved or
 policy-authorized items under its own rules. It does not turn raw feedback into `NOW` work
@@ -444,8 +480,8 @@ the roadmap steward keeps the queue moving.
    ladder, and agent-selected directions routed to assumption mapping.
 3. **Keep the roadmap honest.** Separate stewardship from delivery; validation in `LATER`
    apart from capacity-ranked `NEXT`; `VALIDATED` plus exact rank and named displacement;
-   experiment and outcome monitoring.
-4. **Close the learning loop.** Connect exposure and metrics to shipped solutions and KRs,
+   Test and Outcome monitoring.
+4. **Close the learning loop.** Connect exposure and metrics to shipped Solutions, KRs, and Outcomes,
    scale/iterate/stop recommendations, calibration, and an audit of whether agent choices
    and human corrections produced the expected outcomes.
 
@@ -456,11 +492,12 @@ the roadmap steward keeps the queue moving.
 - Every pending request is irreversible, carries a recommendation, and is answerable in a
   minute or two.
 - No production build begins without the required evidence and approval trail.
-- Every shipped solution traces back to an experiment, assumption, opportunity, and outcome,
-  and is later assessed for adoption and outcome movement.
+- Every shipped Solution traces back through a Test and assumption to its KR, Outcome, and
+  Opportunity, and is later assessed for adoption and KR and Outcome movement.
 - The system gets quieter when there is no work.
-- No opportunity, KR, or cohort item sits at zero solutions for more than a week.
-- No roadmap item rolls up to a stale or wrong-objective KR, and no shipped solution still
+- No KR or cohort item sits at zero Solutions for more than a week, and no Outcome sits
+  without 2-3 KRs or without a parent Opportunity.
+- No Roadmap Item rolls up to a stale or wrong-Outcome KR, and no shipped Solution still
   occupies `NOW` because its status was never reconciled.
 
 ## 13. Open Design Questions

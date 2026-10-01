@@ -7,11 +7,11 @@ This guide installs the optional Obsidian + Claude Threads workspace used by pro
 
 | Tool | What it does for you |
 |---|---|
-| **Obsidian** | Your PM notes home — OST, Signal Ledger, daily synthesis, everything searchable |
+| **Obsidian** | Your PM notes home — Loop tree, Signal Ledger, daily synthesis, everything searchable |
 | **Claude Threads plugin** | Claude running inside Obsidian — threaded conversations that see your notes |
 | **Vault Bridges plugin** | A live link from your product repo (or docs folder) into your vault |
-| **Issue tracker connection** | Your Linear or JIRA work items surfaced alongside your OST |
-| **Agent PM skills** | The 6 agents + PM skills (ost-workflow, pm-signal-synthesis, etc.) installed in Claude Code |
+| **Issue tracker connection** | Your Linear or JIRA work items surfaced alongside your Loop tree (Opportunity → Outcome → KR → Solution → Test) |
+| **Agent PM skills** | The 6 agents + PM skills (loop-workflow, pm-signal-synthesis, etc.) installed in Claude Code |
 
 ---
 
@@ -123,7 +123,7 @@ Vault Bridges creates a **bidirectional link** between a local folder (a product
 
 ## Step 5 — Install the Claude Code agent skills
 
-The agents and skills (ost-workflow, pm-signal-synthesis, investment-gate, etc.) run in Claude Code, not in Obsidian. If you haven't done this yet:
+The agents and skills (loop-workflow, pm-signal-synthesis, investment-gate, etc.) run in Claude Code, not in Obsidian. If you haven't done this yet:
 
 ```bash
 git clone https://github.com/rbcodelabs/agent-pm-playbook
@@ -143,10 +143,10 @@ Restart Claude Code afterward (`exit` then `claude` again). Confirm by opening a
 With Claude Code running inside your product workspace folder:
 
 ```
-Run the pm-setup skill to select an integration profile, configure capability providers, and set my current desired outcome.
+Run the pm-setup skill to select an integration profile, configure capability providers, and set my current Outcome and Key Results.
 ```
 
-Answer its questions — especially `desired outcome` (a measurable behavior change, not a feature). This writes the routing manifest and scaffolds only Markdown/Obsidian-owned capabilities.
+Answer its questions — especially the current Outcome (a customer-behavior change, not a feature) and its 2–3 measurable Key Results. See [The Loop](the-loop.md) for the levels and IDs. This writes the routing manifest and scaffolds only Markdown/Obsidian-owned capabilities.
 
 ---
 
@@ -162,14 +162,14 @@ Here's what "using the stack" actually looks like day-to-day:
 
 **4. Run a quick synthesis.** Paste or describe the signals:
 ```
-Synthesize this batch of customer signals into OST-ready opportunity clusters:
+Synthesize this batch of customer signals into Opportunity clusters, attaching the evidence to each Opportunity:
 [paste tickets / quotes / review excerpts]
 ```
-The pm-signal-synthesis skill will cluster them, tag confidence, flag contradictions, and suggest OST mappings.
+The pm-signal-synthesis skill will cluster them, tag confidence, flag contradictions, and suggest which existing Opportunity (`OPP-n`) each maps to.
 
-**5. Update the OST in its provider.** The synthesis skill resolves `ost` from `pm-config.md` and updates Compass, JPD, or Markdown/Obsidian as configured.
+**5. Update the tree in its provider.** The synthesis skill resolves the tree capability (its config key is `loop`) from `pm-config.md` and updates Compass, JPD, or Markdown/Obsidian as configured.
 
-**6. Done.** One Signal Ledger entry, one OST update, 10 minutes of judgment work. That's the weekly heartbeat.
+**6. Done.** One Signal Ledger entry, one tree update, 10 minutes of judgment work. That's the weekly heartbeat.
 
 ---
 
