@@ -1,6 +1,6 @@
-# Sample Seed OOKRST Tree — ShiftLoop
+# Sample Seed Loop Tree — ShiftLoop
 
-> A **deliberately flawed** OOKRST tree (Opportunity → Outcome → Key Result → Solution → Test) for training. It is *not* a model answer — it has planted structural mistakes for Module 2's health-check exercise to catch (and for Module 3 to clean up when mapping in real signals). Do not copy this as a template. The facilitator key lists the planted flaws; don't read it until after you've done the health check yourself. Structure rules: [OOKRST Structure guide](../../guides/ookrst-structure.md).
+> A **deliberately flawed** Loop tree (Opportunity → Outcome → Key Result → Solution → Test) for training. It is *not* a model answer — it has planted structural mistakes for Module 2's health-check exercise to catch (and for Module 3 to clean up when mapping in real signals). Do not copy this as a template. The facilitator key lists the planted flaws; don't read it until after you've done the health check yourself. Structure rules: [Loop guide](../../guides/the-loop.md).
 
 ## The tree
 

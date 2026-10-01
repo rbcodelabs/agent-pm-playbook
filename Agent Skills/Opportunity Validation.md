@@ -4,13 +4,13 @@
 
 **Layer:** 2 — Tree Integrity & Maintenance
 **Companion:** [[Agentic PM — Agent Capability Framework]]
-**Structure:** `guides/ookrst-structure.md`. The Opportunity (`OPP-n`) is the root of the tree. Outcomes, KRs, Solutions and Tests all trace back to one.
+**Structure:** `guides/the-loop.md`. The Opportunity (`OPP-n`) is the root of the tree. Outcomes, KRs, Solutions and Tests all trace back to one.
 
 ---
 
 ## What This Skill Is
 
-Opportunity validation is the agent's ability to apply consistent quality criteria to every candidate Opportunity before it becomes the root of a branch, and to audit existing Opportunities that may have slipped in without meeting those criteria. In the OOKRST model the Opportunity is the top of the hierarchy: a bounded, evidence-backed customer need or market opening worth pursuing. Everything beneath it (the Outcome the team commits to, the KRs that measure it, the Solutions that move them, the Tests that check the Solutions) inherits its legitimacy from this one record. If the root is a stakeholder wish, the whole branch is.
+Opportunity validation is the agent's ability to apply consistent quality criteria to every candidate Opportunity before it becomes the root of a branch, and to audit existing Opportunities that may have slipped in without meeting those criteria. In the Loop model the Opportunity is the top of the hierarchy: a bounded, evidence-backed customer need or market opening worth pursuing. Everything beneath it (the Outcome the team commits to, the KRs that measure it, the Solutions that move them, the Tests that check the Solutions) inherits its legitimacy from this one record. If the root is a stakeholder wish, the whole branch is.
 
 An Opportunity earns its place in the tree by satisfying three conditions together: it is a need and not a feature (expressed in the customer's voice, in behavioral language), it names a segment (whose need this is), and it is backed by evidence, at least two independent sources, or tagged `weak` until it has them. Passing two out of three is not a pass. A `weak` Opportunity may be recorded so the signal isn't lost, but the tag is visible, the evidence gap is a task, and no Outcome should be committed against it until the second independent source arrives.
 

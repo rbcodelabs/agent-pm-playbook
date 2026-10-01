@@ -56,7 +56,7 @@ For one linked delivery unit, record:
 - PR URL/state, merge actor/time/commit, and required checks;
 - preview and production deployment identities and status;
 - feature-specific production smoke result;
-- linked Roadmap Item and its OOKRST chain (Solution, parent KR, Outcome, Opportunity, and any open Test), plus release/launch policy;
+- linked Roadmap Item and its Loop chain (Solution, parent KR, Outcome, Opportunity, and any open Test), plus release/launch policy;
 - whether the provider can update every required lifecycle field;
 - `NOW` counts before any capacity-releasing transition.
 

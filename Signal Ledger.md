@@ -9,11 +9,11 @@
 
 ## What the Signal Ledger Is
 
-The signal ledger is a running record of what you learned in each discovery session: what signals surfaced, where they came from, how severe they are, and which Opportunity in the [OOKRST tree](guides/ookrst-structure.md) they attach to. Every synthesis session produces one entry. The ledger accumulates over weeks and months into a queryable record of your product discovery work.
+The signal ledger is a running record of what you learned in each discovery session: what signals surfaced, where they came from, how severe they are, and which Opportunity in the [Loop tree](guides/the-loop.md) they attach to. Every synthesis session produces one entry. The ledger accumulates over weeks and months into a queryable record of your product discovery work.
 
 Its job is narrow and specific: make longitudinal comparison possible. The reason you can't just rely on session notes or your own memory is that frequency trends, intensity escalations, and emerging opportunity clusters are only visible across time. A pain mentioned in two interviews in January, five in February, and nine in March is telling you something important. Without a ledger, you never see that trajectory.
 
-The ledger is not a task list, a backlog, or a transcript archive. It does not replace your OOKRST tree. It is a signal record, structured consistently enough that you can paste a section of it into a prompt and ask an agent to compare it to today's synthesis. Consistency of schema across entries is what makes it useful. An entry format you only follow sometimes is barely better than nothing.
+The ledger is not a task list, a backlog, or a transcript archive. It does not replace your Loop tree. It is a signal record, structured consistently enough that you can paste a section of it into a prompt and ask an agent to compare it to today's synthesis. Consistency of schema across entries is what makes it useful. An entry format you only follow sometimes is barely better than nothing.
 
 ---
 
@@ -166,13 +166,13 @@ JPD has no native longitudinal summary view. There is no built-in way to visuali
 
 ## Linear + Obsidian Implementation
 
-Signals live in Obsidian. Opportunities, Outcomes, KRs, Solutions, Tests, and build delivery live in Linear. The OOKRST tree structure also lives in Obsidian as the source of truth for the narrative.
+Signals live in Obsidian. Opportunities, Outcomes, KRs, Solutions, Tests, and build delivery live in Linear. The Loop tree structure also lives in Obsidian as the source of truth for the narrative.
 
 ### File location
 
 `Discovery/Signal Ledger.md` in your Obsidian vault (relative to vault root).
 
-Create the `Discovery/` folder if it does not exist. The OOKRST tree for your active initiative lives at `Discovery/OST-[initiative-name].md` (the `OST-` filename prefix is a legacy name kept so existing vaults and links keep working).
+Create the `Discovery/` folder if it does not exist. The Loop tree for your active initiative lives at `Discovery/OST-[initiative-name].md` (the `OST-` filename prefix is a legacy name kept so existing vaults and links keep working).
 
 ### Workflow
 
@@ -184,7 +184,7 @@ Create the `Discovery/` folder if it does not exist. The OOKRST tree for your ac
 
 ### Note on tree source of truth
 
-The OOKRST tree markdown file in Obsidian is the canonical structure. Linear tracks the work items that flow from Solutions that cleared their investment gate. Keep them in sync: when you create a Linear Opportunity issue, update the tree file with the Linear ID so you can navigate between them.
+The Loop tree markdown file in Obsidian is the canonical structure. Linear tracks the work items that flow from Solutions that cleared their investment gate. Keep them in sync: when you create a Linear Opportunity issue, update the tree file with the Linear ID so you can navigate between them.
 
 ---
 
@@ -197,7 +197,7 @@ For teams or individuals with no dedicated PM tool. Everything lives in plain fi
 | Artifact | File path |
 |---|---|
 | Signal ledger | `Discovery/Signal Ledger.md` |
-| OOKRST tree | `Discovery/OST-[initiative-name].md` (legacy filename) |
+| Loop tree | `Discovery/OST-[initiative-name].md` (legacy filename) |
 | Tests | Table in the tree doc, or `Discovery/Tests.md` if the list grows |
 
 ### Workflow

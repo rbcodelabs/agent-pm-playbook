@@ -1,6 +1,6 @@
 # Integration Profile Scenarios
 
-Each scenario verifies setup plus the same insight → OOKRST tree (Opportunity → Outcome → KR → Solution → Test) → roadmap → delivery trace. Methodology remains identical; only provider persistence changes.
+Each scenario verifies setup plus the same insight → Loop tree (Opportunity → Outcome → KR → Solution → Test) → roadmap → delivery trace. Methodology remains identical; only provider persistence changes.
 
 ## compass-full
 
@@ -8,7 +8,7 @@ Setup resolves every product capability to Compass, with delivery routed to Comp
 
 ## compass-obsidian-linear
 
-Setup scaffolds only the Obsidian-owned vision, research capture, and reporting archive paths. A raw note in Obsidian yields a structured Compass insight, which links through the Compass OOKRST tree (Opportunity to Test) and roadmap; delivery becomes a linked Linear issue. Neither system receives a duplicate authoritative record.
+Setup scaffolds only the Obsidian-owned vision, research capture, and reporting archive paths. A raw note in Obsidian yields a structured Compass insight, which links through the Compass Loop tree (Opportunity to Test) and roadmap; delivery becomes a linked Linear issue. Neither system receives a duplicate authoritative record.
 
 ## markdown-linear
 
@@ -18,7 +18,7 @@ Setup scaffolds Markdown paths for vision, research, insights, OKRs (Outcomes an
 
 Setup records JPD and Jira connection metadata without creating authoritative Markdown discovery files. A JPD Insight links to the JPD Opportunity, Outcome, KR, Solution, Test, and roadmap view; delivery becomes a linked Jira issue.
 
-## OOKRST split-provider scenario
+## Loop split-provider scenario
 
 Starting from `compass-full`, an override of only `ost: markdown` would put Opportunities and Solutions in Markdown while Outcomes, KRs, and Tests stay in Compass, splitting the parent chain. Setup rejects it and offers to override `okrs`, `ost`, and `experiments` together. The reusable profile is unchanged.
 

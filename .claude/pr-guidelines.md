@@ -7,7 +7,7 @@ Before opening a PR:
 1. Run `npm test` and confirm all contract and scenario tests pass.
 2. Run `npm run validate` and confirm both product and workflow profiles validate.
 3. Check changed Markdown links and headings manually.
-4. For workflow changes, trace at least one scenario from insight → OOKRST (Opportunity → Outcome → KR → Solution → Test) → roadmap → delivery and confirm every write uses the resolved provider.
+4. For workflow changes, trace at least one scenario from insight → Loop (Opportunity → Outcome → KR → Solution → Test) → roadmap → delivery and confirm every write uses the resolved provider.
 5. Confirm generated templates agree with the canonical contract and profile JSON.
 6. Confirm no skill silently treats a snapshot/export/cache/inbox as authoritative.
 7. Complete the framework portability and privacy review below before publishing or

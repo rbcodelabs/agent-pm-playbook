@@ -3,12 +3,12 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 export const CAPABILITIES = ["vision", "research_capture", "insights", "okrs", "ost", "experiments", "roadmap", "delivery", "reporting_archive"] as const;
-// OOKRST (Opportunity -> Outcome -> KR -> Solution -> Test, see guides/ookrst-structure.md) is one tree.
+// Loop (Opportunity -> Outcome -> KR -> Solution -> Test, see guides/the-loop.md) is one tree.
 // The capability keys `okrs` (Outcomes + KRs), `ost` (Opportunities + Solutions + assumptions) and
 // `experiments` (Tests) jointly resolve it, so they must share one provider family; otherwise the
 // parent chain would be split across systems. A family is the provider id up to its first underscore
 // (compass_okrs and compass_discovery are both "compass"; jpd_goals and jpd are both "jpd").
-export const OOKRST_CAPABILITIES = ["okrs", "ost", "experiments"] as const;
+export const LOOP_CAPABILITIES = ["okrs", "ost", "experiments"] as const;
 export const REQUIRED_PROFILES = ["compass-full", "compass-obsidian-linear", "markdown-linear", "jpd-jira"] as const;
 type Capability = (typeof CAPABILITIES)[number];
 type Providers = Record<Capability, string>;
@@ -18,13 +18,13 @@ export function providerFamily(provider: string): string {
   return provider.trim().split("_")[0];
 }
 
-export function splitOokrstProviders(providers: Partial<Record<string, string>>): string[] {
+export function splitLoopProviders(providers: Partial<Record<string, string>>): string[] {
   const families = new Set<string>();
-  for (const capability of OOKRST_CAPABILITIES) {
+  for (const capability of LOOP_CAPABILITIES) {
     const provider = providers[capability];
     if (provider?.trim()) families.add(providerFamily(provider));
   }
-  return families.size > 1 ? [...OOKRST_CAPABILITIES].map((capability) => `${capability}=${providers[capability]}`) : [];
+  return families.size > 1 ? [...LOOP_CAPABILITIES].map((capability) => `${capability}=${providers[capability]}`) : [];
 }
 
 export function loadProfiles(path: string): ProfilesFile {
@@ -43,8 +43,8 @@ export function validateProfiles(input: ProfilesFile): string[] {
     for (const capability of CAPABILITIES) {
       if (!profile.providers?.[capability]?.trim()) errors.push(`${name}: missing provider for ${capability}`);
     }
-    const split = splitOokrstProviders(profile.providers ?? {});
-    if (split.length) errors.push(`${name}: okrs, ost, and experiments must share one provider so the OOKRST parent chain is not split (${split.join(", ")})`);
+    const split = splitLoopProviders(profile.providers ?? {});
+    if (split.length) errors.push(`${name}: okrs, ost, and experiments must share one provider so the Loop parent chain is not split (${split.join(", ")})`);
     for (const capability of Object.keys(profile.providers ?? {})) {
       if (!CAPABILITIES.includes(capability as Capability)) errors.push(`${name}: unknown capability ${capability}`);
     }
@@ -60,8 +60,8 @@ export function resolveProviders(input: ProfilesFile, profileName: string, overr
     if (!overrides[capability]?.trim()) throw new Error(`Provider override cannot be empty: ${capability}`);
   }
   const resolved = { ...profile.providers, ...overrides } as Providers;
-  if (splitOokrstProviders(resolved).length) {
-    throw new Error("okrs, ost, and experiments must resolve to one provider so the OOKRST parent chain is not split; override all three together");
+  if (splitLoopProviders(resolved).length) {
+    throw new Error("okrs, ost, and experiments must resolve to one provider so the Loop parent chain is not split; override all three together");
   }
   return resolved;
 }

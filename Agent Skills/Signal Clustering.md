@@ -1,6 +1,6 @@
 # Signal Clustering
 
-> The skill of grouping disparate customer signals — from interviews, support tickets, NPS comments, app reviews — into coherent Opportunities, the root level of the OOKRST tree, without collapsing nuance or forcing premature abstraction.
+> The skill of grouping disparate customer signals — from interviews, support tickets, NPS comments, app reviews — into coherent Opportunities, the root level of the Loop tree, without collapsing nuance or forcing premature abstraction.
 
 **Layer:** 1 — Synthesis & Signal Processing
 **Companion:** [[Agentic PM — Agent Capability Framework]]
@@ -9,7 +9,7 @@
 
 ## What This Skill Is
 
-Signal clustering is what happens between raw synthesis and the OOKRST tree (see the [OOKRST structure guide](../guides/ookrst-structure.md)). Individual signals — a quote from an interview, a support ticket pattern, a recurring NPS comment — are not themselves Opportunities. An Opportunity is a theme: a need or pain that appears across multiple independent sources with enough consistency to warrant investigation. It is the root of the tree (`OPP-n`), and everything below it — Outcome, Key Result, Solution, Test — exists to capture it. Clustering is the process of building those themes from the signal corpus, and it is harder than it looks.
+Signal clustering is what happens between raw synthesis and the Loop tree (see the [Loop guide](../guides/the-loop.md)). Individual signals — a quote from an interview, a support ticket pattern, a recurring NPS comment — are not themselves Opportunities. An Opportunity is a theme: a need or pain that appears across multiple independent sources with enough consistency to warrant investigation. It is the root of the tree (`OPP-n`), and everything below it — Outcome, Key Result, Solution, Test — exists to capture it. Clustering is the process of building those themes from the signal corpus, and it is harder than it looks.
 
 The challenge is that clustering requires holding ambiguity actively, not resolving it prematurely. When an agent reads twenty support tickets and five interview fragments, it is under structural pressure — from the prompt, from the task framing, from the nature of language models — to produce clean categories. But real customer signals are messy. The same underlying need shows up in five different framings. Two signals look similar on the surface but reflect different root causes. Some signals don't belong anywhere yet and need to be held open. A good clustering process results in a set of candidate Opportunities where the agent can say: "These seven signals seem to be pointing at the same underlying need." A bad one results in a set of labels that the signals were sorted into, whether or not they fit.
 
@@ -111,7 +111,7 @@ The strong version gives the PM the evidence they need to evaluate the cluster t
 **Clustering prompt:**
 
 ```
-You are clustering customer signals for a product team using the OOKRST hierarchy (Opportunity → Outcome → Key Result → Solution → Test). Clusters become Opportunities, the root level.
+You are clustering customer signals for a product team using the Loop hierarchy (Opportunity → Outcome → Key Result → Solution → Test). Clusters become Opportunities, the root level.
 
 Your job:
 1. Read all signals in the corpus below.
@@ -130,7 +130,7 @@ Signal corpus: [PASTE SIGNALS HERE]
 **Tree mapping prompt (second pass):**
 
 ```
-You have produced the following candidate clusters from a fresh signal corpus. Now compare them to the current OOKRST tree.
+You have produced the following candidate clusters from a fresh signal corpus. Now compare them to the current Loop tree.
 
 For each candidate cluster:
 1. Does it map cleanly to an existing Opportunity (OPP-n)? If so, which one, and does the new signal strengthen or complicate it?
@@ -173,4 +173,4 @@ Flag your three weakest cluster memberships — the individual signal-to-cluster
 
 [[Confidence Tagging]] — Cluster-level confidence is one of the most important places this skill is exercised.
 
-The `ost-workflow` skill id is unchanged for compatibility; it now covers the Opportunity, Solution, and Test levels of the OOKRST tree, and is where a cluster that passes validation is registered as an `OPP-n`.
+The `ost-workflow` skill id is unchanged for compatibility; it now covers the Opportunity, Solution, and Test levels of the Loop tree, and is where a cluster that passes validation is registered as an `OPP-n`.

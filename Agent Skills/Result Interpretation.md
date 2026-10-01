@@ -4,7 +4,7 @@
 
 **Layer:** 3 — Test & Assumption Reasoning
 **Companion:** [[Agentic PM — Agent Capability Framework]] · [[Autonomy Policy]]
-**Structure:** `guides/ookrst-structure.md`. A Test (`TST-n`) result is logged on the Test, updates its Solution (`SOL-n`), and from there informs the KR, Outcome and Opportunity above it.
+**Structure:** `guides/the-loop.md`. A Test (`TST-n`) result is logged on the Test, updates its Solution (`SOL-n`), and from there informs the KR, Outcome and Opportunity above it.
 
 ---
 

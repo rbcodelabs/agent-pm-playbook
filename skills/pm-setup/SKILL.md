@@ -58,7 +58,7 @@ Scaffold only capabilities resolved to `markdown` or `obsidian`:
 
 Do not create a path merely because an older template had one. In particular, `compass-full` creates no `product/` tree. The hybrid profile creates only Obsidian-owned vision, research, and reporting paths. JPD/Jira creates no authoritative Markdown discovery tree. An override may add or remove one scaffolded capability.
 
-`okrs`, `ost`, and `experiments` jointly resolve the OOKRST tree (`guides/ookrst-structure.md`: Opportunity -> Outcome -> KR -> Solution -> Test) and must share one provider family; refuse an override that splits them, and offer to override all three together. When Markdown owns the OOKRST tree or roadmap, initialize the corresponding existing generated templates. When Compass owns those capabilities, create provider-native records only if the user explicitly asked setup to initialize product state; otherwise record connection metadata and active IDs.
+`okrs`, `ost`, and `experiments` jointly resolve the Loop tree (`guides/the-loop.md`: Opportunity -> Outcome -> KR -> Solution -> Test) and must share one provider family; refuse an override that splits them, and offer to override all three together. When Markdown owns the Loop tree or roadmap, initialize the corresponding existing generated templates. When Compass owns those capabilities, create provider-native records only if the user explicitly asked setup to initialize product state; otherwise record connection metadata and active IDs.
 
 ## Write and validate
 

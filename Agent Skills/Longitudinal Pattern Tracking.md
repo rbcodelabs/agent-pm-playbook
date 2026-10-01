@@ -11,7 +11,7 @@
 
 Longitudinal pattern tracking is the hardest skill in Layer 1 because it operates across a dimension that agents structurally struggle with: time. Every other synthesis skill operates on signals in front of the agent right now. Longitudinal tracking requires the agent to hold memory of what was said six weeks ago, notice that similar things are being said now but with different frequency or intensity, and surface that drift as a signal in its own right. Frequency is data. Intensity shift is data. A need that wasn't mentioned at all last quarter but is now appearing in every third interview is telling you something important — but only if someone is tracking it.
 
-The OOKRST hierarchy (see the [OOKRST structure guide](../guides/ookrst-structure.md)) gives this skill a clear shape, because its levels live on different clocks:
+The Loop hierarchy (see the [Loop structure guide](../guides/the-loop.md)) gives this skill a clear shape, because its levels live on different clocks:
 
 - **Opportunities (`OPP-n`) persist across cycles.** They are the long-lived record of a customer need, and the main subject of longitudinal tracking. Their evidence accumulates, strengthens, fades, or changes character over many cycles.
 - **Outcomes (`OUT-n`) and Key Results (`OUT-n-KR-n`) belong to a cycle.** A cycle (for example a quarter) scopes which Outcomes and KRs are active. When a cycle closes, its Outcomes and KRs close with it; a later cycle may commit a new Outcome against the same Opportunity. Comparing the Outcomes and KR readings that were attempted against one Opportunity across cycles is itself a longitudinal finding.

@@ -1,8 +1,14 @@
-# OOKRST Structure — the playbook's single goal-to-learning hierarchy
+# The Loop — the playbook's single goal-to-learning hierarchy
 
-OOKRST replaces the separate OKR → OST pair with **one integrated tree**. Every
-piece of product work traces to the opportunity that justified it and to the test that
-will tell us whether it worked.
+**The Loop** (Opportunity → Outcome → KR → Solution → Test → back to Opportunity; technical
+expansion: OOKRST) replaces the separate OKR → OST pair with **one integrated tree that
+closes on itself**. Every piece of product work traces to the opportunity that justified it
+and to the test that will tell us whether it worked, and every Test result flows back up
+the tree and into the Opportunities, so what we learn decides what we pursue next.
+
+> **Previously called the OOKRST structure.** Earlier versions of the playbook used that
+> name (file `guides/ookrst-structure.md`). The five objects and the one-parent rule are
+> unchanged; the Loop adds the explicit feedback rules in [Closing the loop](#closing-the-loop).
 
 ```
 Opportunity   — a bounded, evidence-backed customer need or market opening worth pursuing
@@ -12,6 +18,9 @@ Opportunity   — a bounded, evidence-backed customer need or market opening wor
                     ├── Test   — the cheapest experiment that could falsify the solution's riskiest assumption
                     └── Roadmap Item   — delivery, admitted only after the Solution clears its investment gate
 ```
+
+A Test is not the end of the chain. Its result feeds back up the tree and into Opportunities (see
+[Closing the loop](#closing-the-loop)), which is why this is a loop and not a one-way funnel.
 
 ## Levels
 
@@ -30,13 +39,30 @@ Opportunity   — a bounded, evidence-backed customer need or market opening wor
 3. **No orphans.** A KR with no Solution is a coverage gap. A Solution with no Test and no clearing investment gate cannot reach the roadmap. A Test not tied to a Solution assumption is not a Test.
 4. **Cycle scope.** A cycle (e.g., a quarter) scopes which Outcomes and KRs are active. Opportunities persist across cycles; Outcomes and KRs belong to a cycle; Solutions and Tests carry over until resolved.
 5. **At-risk KR means work the Solutions and Tests harder**, not add roadmap items.
-6. **Check-ins move up the tree.** A Test result updates its Solution's confidence; Solution progress and metric readings update the KR; KR movement updates Outcome health; Outcome health updates the Opportunity's status (pursuing / sustained / retired).
+6. **Check-ins move up the tree, and the loop closes.** A Test result updates its Solution's confidence; Solution progress and metric readings update the KR; KR movement updates Outcome health; Outcome health updates the Opportunity's status (pursuing / sustained / retired).
 7. **Evidence flows up, not down.** Signals attach to Opportunities (and, when specific, to the Solution or Test they bear on). Do not attach raw signals to KRs.
 8. **Archive, don't delete.** Retire branches with a reason so dead ideas keep teaching.
 
+## Closing the loop
+
+The five levels are the structure; the feedback rules are what make it a loop. Apply them
+every time a Test concludes, a check-in lands, or new evidence arrives, and say which rule
+you applied.
+
+| Trigger | Feedback |
+|---|---|
+| **Test fails or is inconclusive** | Record what it taught. Then do one of: reopen the parent Opportunity for re-framing; re-score the Opportunity (its evidence or size changed); or spawn new Opportunities the result exposed. The Solution is killed, iterated, or re-tested, never silently left running. |
+| **Test passes** | Promote the Solution (confidence up; it may now clear its investment gate) and update the parent KR's evidence line and status. |
+| **KR stalls or is missed** | Go back and re-examine the Outcome: is it still the right behavior change, is the KR measuring it, is the Opportunity still real? Work the existing Solutions and Tests harder first (rule 5), but do not keep optimizing a KR whose Outcome no longer holds. |
+| **New signal at any step** | An interview, ticket, metric surprise, or Test side-finding enters as an **Opportunity** (or attaches to an existing one). It is never attached to a KR and never skips the tree. |
+| **Outcome health changes** | Update the Opportunity's status (pursuing / sustained / retired), which decides whether the next cycle opens new Outcomes under it. |
+
+The loop: Opportunity → Outcome → KR → Solution → Test → (result) → Opportunity. Archive
+rather than delete (rule 8) so dead branches keep teaching.
+
 ## Mapping from the legacy OKR → OST model
 
-| Legacy term | OOKRST term |
+| Legacy term | Loop term |
 |---|---|
 | OKR Objective | Outcome |
 | OST Desired Outcome | Outcome (same object — no longer a separate root linked to a KR) |

@@ -6,12 +6,12 @@
 
 ## ✅ Completed
 
-> **Terminology.** The playbook now uses one integrated OOKRST hierarchy (Opportunity, Outcome, Key Result, Solution, Test, with Roadmap Items hanging off Solutions); see [OOKRST Structure](guides/ookrst-structure.md). Entries below written before that change are kept as history, with their wording updated to the OOKRST levels except where they name a skill id, a quoted source line, or a legacy-term migration note.
+> **Terminology.** The playbook now uses one integrated Loop hierarchy (Opportunity, Outcome, Key Result, Solution, Test, with Roadmap Items hanging off Solutions); see [The Loop](guides/the-loop.md). Entries below written before that change are kept as history, with their wording updated to the Loop levels except where they name a skill id, a quoted source line, or a legacy-term migration note.
 
-### OOKRST Structure
+### The Loop
 **Added:** 2026-10-01
-Replaces the separate OKR and OST pair with a single goal-to-learning tree: Opportunity is the root, an Outcome (the merged Objective and Desired Outcome) sits beneath it, KRs measure the Outcome, Solutions are parented by a KR, and Tests (formerly Experiments) falsify a Solution's riskiest assumption. Roadmap Items are admitted only after a Solution clears its investment gate. Defines stable IDs (`OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, `TST-n`) and the legacy mapping. Skill ids (`ost-workflow`, `okr-workflow`, `experiment-workflow`) are unchanged and now cover the OOKRST levels.
-**File:** [OOKRST Structure](guides/ookrst-structure.md)
+Replaces the separate OKR and OST pair with a single goal-to-learning tree: Opportunity is the root, an Outcome (the merged Objective and Desired Outcome) sits beneath it, KRs measure the Outcome, Solutions are parented by a KR, and Tests (formerly Experiments) falsify a Solution's riskiest assumption. Roadmap Items are admitted only after a Solution clears its investment gate. Defines stable IDs (`OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, `TST-n`) and the legacy mapping. Skill ids (`ost-workflow`, `okr-workflow`, `experiment-workflow`) are unchanged and now cover the Loop levels.
+**File:** [The Loop](guides/the-loop.md)
 
 ---
 
@@ -31,7 +31,7 @@ Full signal ledger artifact with tool-agnostic schema, copy-paste entry template
 
 ### PM Tool Integration Guide *(new — was implicit gap in Section 4)*
 **Added:** 2026-05-15
-Full tool mapping for the five OOKRST levels (plus Roadmap Items and the signal layer) across the supported stacks. JPD + Jira: Insights as the signal ledger layer, Opportunity/Outcome/Solution/Test issue types with an interim Key Result mapping, status workflows, Test issue template, JPD automation rules, and an explicit Insights vs. Learnings distinction. Compass: native-object mapping with the parent chain preserved. Linear + Obsidian: label and project mapping, the OOKRST tree doc as source of truth in Obsidian, Linear issue conventions, signal handoff protocol. Markdown-only: file structure, stable IDs, inline status/confidence tagging, weekly 10-minute review. Replaces and greatly expands Section 4 of the main playbook.
+Full tool mapping for the five Loop levels (plus Roadmap Items and the signal layer) across the supported stacks. JPD + Jira: Insights as the signal ledger layer, Opportunity/Outcome/Solution/Test issue types with an interim Key Result mapping, status workflows, Test issue template, JPD automation rules, and an explicit Insights vs. Learnings distinction. Compass: native-object mapping with the parent chain preserved. Linear + Obsidian: label and project mapping, the Loop tree doc as source of truth in Obsidian, Linear issue conventions, signal handoff protocol. Markdown-only: file structure, stable IDs, inline status/confidence tagging, weekly 10-minute review. Replaces and greatly expands Section 4 of the main playbook.
 **File:** [[PM Tool Integration Guide]]
 
 ---
@@ -228,7 +228,7 @@ Three of the four cells currently receive treatment designed for the fourth.
 
 ### 13. Getting Started Checklist Missing Tree Health Check
 **Area:** Playbook Section 8
-**Gap:** The Getting Started Checklist walks a new PM through the setup steps but doesn't include running a health check on an existing tree (for PMs who aren't starting fresh). A PM joining a team mid-cycle with an existing tree, including one still in the legacy OKR-and-OST shape that needs converting per the [OOKRST Structure](guides/ookrst-structure.md) legacy mapping, should immediately run a health check — but this isn't mentioned.
+**Gap:** The Getting Started Checklist walks a new PM through the setup steps but doesn't include running a health check on an existing tree (for PMs who aren't starting fresh). A PM joining a team mid-cycle with an existing tree, including one still in the legacy OKR-and-OST shape that needs converting per the [Loop guide](guides/the-loop.md) legacy mapping, should immediately run a health check — but this isn't mentioned.
 **Fix:** Add a conditional item to the checklist: "If joining a team with an existing tree: run the tree health check prompt (bi-weekly habit) before making any changes."
 
 ---

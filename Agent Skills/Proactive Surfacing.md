@@ -1,9 +1,9 @@
 # Proactive Surfacing
 
-> The skill of identifying and surfacing information the PM didn't ask for but would want to know — tree-health issues at any of the five OOKRST levels and cycle-scoped KR risk — calibrated to avoid noise while catching things that would otherwise compound silently.
+> The skill of identifying and surfacing information the PM didn't ask for but would want to know — tree-health issues at any of the five Loop levels and cycle-scoped KR risk — calibrated to avoid noise while catching things that would otherwise compound silently.
 
 **Layer:** 4 — Judgment, Escalation & Metacognition
-**Companion:** [[Agentic PM — Agent Capability Framework]] · [OOKRST Structure](../guides/ookrst-structure.md)
+**Companion:** [[Agentic PM — Agent Capability Framework]] · [The Loop](../guides/the-loop.md)
 
 ---
 

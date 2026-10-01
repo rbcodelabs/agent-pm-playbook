@@ -20,7 +20,7 @@ cycle: Q2-2026
 created: 2026-04-01
 ---
 
-> [Guide: A Test is the fifth and lowest level of the OOKRST tree (Opportunity -> Outcome -> KR -> Solution -> Test); see `guides/ookrst-structure.md`. It has exactly ONE parent Solution (`parent_solution`); the KR, Outcome, and Opportunity are derived from that ancestry and recorded for readability. A Test not tied to a Solution assumption is not a Test. `test_type` must be one of: fake-door | concierge | prototype | ab-test | staged-rollout | user-interview. Pick the type that generates signal fastest with least build cost. `kill_condition_set` must be true before the Test starts — if this is false when status moves to Running, something is wrong. `result` stays blank until the Test closes.]
+> [Guide: A Test is the fifth and lowest level of the Loop tree (Opportunity -> Outcome -> KR -> Solution -> Test); see `guides/the-loop.md`. It has exactly ONE parent Solution (`parent_solution`); the KR, Outcome, and Opportunity are derived from that ancestry and recorded for readability. A Test not tied to a Solution assumption is not a Test. `test_type` must be one of: fake-door | concierge | prototype | ab-test | staged-rollout | user-interview. Pick the type that generates signal fastest with least build cost. `kill_condition_set` must be true before the Test starts — if this is false when status moves to Running, something is wrong. `result` stays blank until the Test closes.]
 
 > [Guide: `assumption` is the single belief most likely to be wrong. "Customers will pay for X" not "We should build X." One assumption per Test. If you have two assumptions, run two Tests. `success_condition` and `kill_condition` are defined before running — never after. They must be measurable, not subjective.]
 

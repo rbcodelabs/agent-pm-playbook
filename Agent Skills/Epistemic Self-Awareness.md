@@ -1,9 +1,9 @@
 # Epistemic Self-Awareness
 
-> The meta-skill of knowing what good PM work looks like well enough to critique the agent's own outputs — applying Torres/Cagan frameworks and the OOKRST quality gates as filters rather than as generation templates.
+> The meta-skill of knowing what good PM work looks like well enough to critique the agent's own outputs — applying Torres/Cagan frameworks and the Loop quality gates as filters rather than as generation templates.
 
 **Layer:** 4 — Judgment, Escalation & Metacognition
-**Companion:** [[Agentic PM — Agent Capability Framework]] · [OOKRST Structure](../guides/ookrst-structure.md)
+**Companion:** [[Agentic PM — Agent Capability Framework]] · [The Loop](../guides/the-loop.md)
 
 ---
 
@@ -11,7 +11,7 @@
 
 Epistemic self-awareness is the capacity to step outside one's own output and evaluate it against an external quality standard — and to do this reliably, not just when prompted. It is the difference between an agent that generates Opportunity statements and an agent that knows what makes an Opportunity statement good vs. bad, and applies that knowledge as a filter on its own work before delivering it.
 
-In the PM context, the relevant quality standard is the Torres/Cagan framework as operationalized in the OOKRST tree, where each level has its own gate:
+In the PM context, the relevant quality standard is the Torres/Cagan framework as operationalized in the Loop tree, where each level has its own gate:
 
 - **Opportunity:** stated in customer language, a need rather than a feature, evidenced (or tagged `weak`), names a segment, scoped to be addressable without foreclosing the solution space.
 - **Outcome:** one sentence, behavior-framed, no numbers, no output ("launch X"), traces to exactly one Opportunity, has 2-3 KRs.
@@ -101,7 +101,7 @@ Agent's self-review:
 
 ## How to Develop It
 
-**Build framework criteria into system prompts as quality checklists.** For each output type (Opportunity statement, Outcome, KR, Solution, Test brief, synthesis cluster, result interpretation), define the explicit quality criteria the agent should check against before delivering the output. Torres's Opportunity criteria, the OOKRST gates for each level, the failure criterion requirement for Tests, the confidence tag requirement for clusters — make these checklists, not implicit standards.
+**Build framework criteria into system prompts as quality checklists.** For each output type (Opportunity statement, Outcome, KR, Solution, Test brief, synthesis cluster, result interpretation), define the explicit quality criteria the agent should check against before delivering the output. Torres's Opportunity criteria, the Loop gates for each level, the failure criterion requirement for Tests, the confidence tag requirement for clusters — make these checklists, not implicit standards.
 
 **Require a self-review step as part of the output format.** Structure prompts so the agent must produce: [first draft] → [self-review] → [revised output]. The self-review should be visible, not internal. This makes the review process auditable and prevents it from being skipped.
 

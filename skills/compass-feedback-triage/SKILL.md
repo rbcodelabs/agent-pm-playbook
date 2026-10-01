@@ -2,7 +2,7 @@
 name: compass-feedback-triage
 description: >
   Processes all OPEN feedback items in the Compass workspace and acts fully on each:
-  dedup/link to an existing Opportunity (the root of the OOKRST tree; feedback is a signal and attaches there), create an Opportunity (single-source ones tagged
+  dedup/link to an existing Opportunity (the root of the Loop tree; feedback is a signal and attaches there), create an Opportunity (single-source ones tagged
   weak), score it, adjust opportunity status and roadmap priority when the evidence
   warrants, or close noise — then reports what changed. Keeps the OPEN feedback queue
   empty. Use from the product-operations checklist or manually when feedback has piled up.
@@ -29,7 +29,7 @@ archiving feedback and replying to customers are irreversible; send those throug
    rare irreversible action. Irreversible requests go to the configured decision provider;
    a recorded decision does not expand this workflow's existing authority boundary or turn
    feedback into implementation permission.
-2. Load the `compass` skill for the MCP tool catalog and data model if not already loaded. Compass is mid-migration to OOKRST: feedback attaches to Opportunities, and the Opportunity's Outcome and KRs sit above it in the chain. Use the native objects that exist and do not flatten the chain.
+2. Load the `compass` skill for the MCP tool catalog and data model if not already loaded. Compass is mid-migration to the Loop: feedback attaches to Opportunities, and the Opportunity's Outcome and KRs sit above it in the chain. Use the native objects that exist and do not flatten the chain.
 3. Resolve the organization and workspace ID from the configured Compass connection; match
    the configured workspace, never an unrelated one by name or list position.
 
@@ -78,7 +78,7 @@ c. Act:
    feedback agent: [reason]")`. Closing is a status change; never delete.
 
 Be decisive. When borderline, create a weak opportunity rather than closing: every real
-signal should be represented as an Opportunity in the OOKRST tree.
+signal should be represented as an Opportunity in the Loop tree.
 
 ## Report
 
@@ -93,5 +93,5 @@ creates no report.
 
 ## Downstream
 
-Triage feeds signal synthesis, OOKRST tree maintenance, Solution work, and roadmap stewardship.
+Triage feeds signal synthesis, Loop tree maintenance, Solution work, and roadmap stewardship.
 `compass-resolver` builds only under its own approval rules; triage never starts delivery.

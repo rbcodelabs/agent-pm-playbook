@@ -2,7 +2,7 @@
 name: investment-gate
 description: >-
   Investment Gate Assessment — assess whether a product Opportunity or Solution
-  (the gate attaches to a Solution and its OOKRST chain) is ready to advance to the next stage of the Progressive Investment Framework
+  (the gate attaches to a Solution and its Loop chain) is ready to advance to the next stage of the Progressive Investment Framework
   (Exploring → Validating → Testing → Building → Scaling). Checks evidence
   thresholds, gate criteria, and recommends the cheapest path forward. Use when
   the team is asking "do we have enough to move forward?" or "are we ready to
@@ -23,7 +23,7 @@ retrieval:
     - move to next stage
     - progressive investment
     - stage gate
-    - OOKRST gate
+    - the Loop gate
     - solution gate
   intents:
     - are we ready to build this?
@@ -50,15 +50,15 @@ retrieval:
     - test type
     - Solution
     - Key Result
-    - OOKRST
+    - the Loop framework
     - riskiest assumption
 chainTo:
   - pattern: "more.*signal|more.*evidence|more.*research|gather.*signal|interview|transcript"
     targetSkill: pm-signal-synthesis
     message: Switching to signal synthesis to gather the evidence needed to clear this gate
-  - pattern: "opportunity.*framing|reframe|solution.*masquerad|OST|OOKRST|tree|orphan"
+  - pattern: "opportunity.*framing|reframe|solution.*masquerad|OST|OOKRST|the loop|loop framework|tree|orphan"
     targetSkill: ost-workflow
-    message: Switching to the OOKRST tree workflow to fix the Opportunity framing or broken chain first
+    message: Switching to the Loop tree workflow to fix the Opportunity framing or broken chain first
   - pattern: "coach|strategy|philosophy|broader|what should we|how should we"
     targetSkill: agentic-pm
     message: Switching to PM coaching for broader strategic guidance
@@ -89,7 +89,7 @@ push for movement nor hold it back.
 | **Building** | Does the built thing move the metric? | One focused team, time-boxed |
 | **Scaling** | Should we invest to grow this? | Full investment |
 
-The gate decides whether a **Solution** (a child of a KR in the OOKRST tree) may advance; the Opportunity's evidence and the KR's link carry through the chain. Roadmap admission requires a Solution that has cleared the gate for the stage the roadmap horizon implies. See [the OOKRST structure guide](../../guides/ookrst-structure.md).
+The gate decides whether a **Solution** (a child of a KR in the Loop tree) may advance; the Opportunity's evidence and the KR's link carry through the chain. Roadmap admission requires a Solution that has cleared the gate for the stage the roadmap horizon implies. See [the Loop guide](../../guides/the-loop.md).
 
 Skipping a stage bets build effort on an untested assumption. That can be a reasonable
 call; make it visible as a named risk.
@@ -152,7 +152,7 @@ internal debate about wording means a cheap test was skipped.
 
 ## Workflow
 
-1. **Establish context** from the OOKRST tree, signal ledger, and Test records: the Solution and
+1. **Establish context** from the Loop tree, signal ledger, and Test records: the Solution and
    its chain (KR, Outcome, Opportunity), current and target stage, the Opportunity in customer
    voice, source count and confidence, and any Test results and kill condition. Infer what is missing and state the inference.
 2. **Check every criterion** for the transition: Met, Partial, or Not met. Partial is not
@@ -209,7 +209,7 @@ team decide:
 ## References
 
 - [Autonomy Policy](../../Autonomy%20Policy.md)
-- [OOKRST Structure](../../guides/ookrst-structure.md)
+- [The Loop](../../guides/the-loop.md)
 - [Progressive Investment Framework](../../Progressive%20Investment%20Framework.md)
 - [Discovery Health Metrics](../../Discovery%20Health%20Metrics.md)
 - [Signal Ledger](../../Signal%20Ledger.md)

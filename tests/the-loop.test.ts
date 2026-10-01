@@ -2,17 +2,17 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
-const GUIDE = "guides/ookrst-structure.md";
+const GUIDE = "guides/the-loop.md";
 const read = (path: string) => readFileSync(path, "utf8");
 
-test("the canonical OOKRST guide defines all five levels and ID schemes", () => {
+test("the canonical Loop guide defines all five levels and ID schemes", () => {
   assert.ok(existsSync(GUIDE));
   const guide = read(GUIDE);
   for (const term of ["Opportunity", "Outcome", "Key Result", "Solution", "Test"]) assert.match(guide, new RegExp(term));
   for (const id of ["OPP-n", "OUT-n", "OUT-n-KR-n", "SOL-n", "TST-n"]) assert.ok(guide.includes(id), id);
 });
 
-test("generated templates carry every OOKRST level with parent links", () => {
+test("generated templates carry every Loop level with parent links", () => {
   const dir = "generated/templates";
   assert.ok(!existsSync(`${dir}/experiment-file-template.md`), "experiment template was renamed to test-file-template.md");
   const opp = read(`${dir}/opportunity-file-template.md`);
@@ -39,8 +39,8 @@ test("generated templates carry every OOKRST level with parent links", () => {
   assert.match(rm, /^parent_solution: SOL-/m);
   assert.match(rm, /^parent_kr: OUT-\d+-KR-\d+/m);
   for (const contents of [opp, cycle, sol, tst, rm]) {
-    assert.match(contents, /OOKRST/);
-    assert.match(contents, /guides\/ookrst-structure\.md/);
+    assert.match(contents, /Loop/);
+    assert.match(contents, /guides\/the-loop\.md/);
     assert.doesNotMatch(contents, /\bEXP-\d|OBJ-\d|desired_outcome|ost-summary/);
   }
 });
@@ -49,18 +49,28 @@ test("manifest and tests reference no stale experiment template", () => {
   assert.doesNotMatch(read("generated/skill-manifest.json"), /experiment-file-template/);
 });
 
-test("key skills and agents reference OOKRST", () => {
+test("key skills and agents reference Loop", () => {
   for (const path of ["skills/okr-workflow/SKILL.md", "skills/ost-workflow/SKILL.md", "skills/experiment-workflow/SKILL.md", "skills/roadmap-workflow/SKILL.md", "agents/pm.md"]) {
-    assert.match(read(path), /OOKRST/, path);
+    assert.match(read(path), /Loop/, path);
   }
-  assert.match(read("agents/pm.md"), /guides\/ookrst-structure\.md/);
+  assert.match(read("agents/pm.md"), /guides\/the-loop\.md/);
 });
 
-test("integration routing documents the OOKRST rule and keeps legacy capability keys", () => {
+test("integration routing documents the Loop rule and keeps legacy capability keys", () => {
   const routing = read("skills/integration-routing/SKILL.md");
-  assert.match(routing, /OOKRST/);
-  assert.match(routing, /guides\/ookrst-structure\.md/);
+  assert.match(routing, /Loop/);
+  assert.match(routing, /guides\/the-loop\.md/);
   assert.match(routing, /`okrs`, `ost`, and `experiments`/);
-  assert.match(read("skills/integration-routing/assets/pm-config-template.md"), /OOKRST/);
-  assert.match(read("skills/pm-setup/SKILL.md"), /OOKRST/);
+  assert.match(read("skills/integration-routing/assets/pm-config-template.md"), /Loop/);
+  assert.match(read("skills/pm-setup/SKILL.md"), /Loop/);
+});
+
+test("the Loop guide closes the loop and keeps the previous OOKRST name searchable", () => {
+  const guide = read(GUIDE);
+  assert.match(guide, /## Closing the loop/);
+  assert.match(guide, /Previously called the OOKRST structure/);
+  for (const path of ["skills/ost-workflow/SKILL.md", "skills/okr-workflow/SKILL.md", "skills/experiment-workflow/SKILL.md", "Agentic PM Playbook.md"]) {
+    assert.match(read(path), /Closing the loop|Close the loop/, path);
+  }
+  assert.ok(!existsSync("guides/ookrst-structure.md"));
 });

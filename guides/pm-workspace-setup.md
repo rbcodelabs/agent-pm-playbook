@@ -7,10 +7,10 @@ This guide installs the optional Obsidian + Claude Threads workspace used by pro
 
 | Tool | What it does for you |
 |---|---|
-| **Obsidian** | Your PM notes home — OOKRST tree, Signal Ledger, daily synthesis, everything searchable |
+| **Obsidian** | Your PM notes home — Loop tree, Signal Ledger, daily synthesis, everything searchable |
 | **Claude Threads plugin** | Claude running inside Obsidian — threaded conversations that see your notes |
 | **Vault Bridges plugin** | A live link from your product repo (or docs folder) into your vault |
-| **Issue tracker connection** | Your Linear or JIRA work items surfaced alongside your OOKRST tree (Opportunity → Outcome → KR → Solution → Test) |
+| **Issue tracker connection** | Your Linear or JIRA work items surfaced alongside your Loop tree (Opportunity → Outcome → KR → Solution → Test) |
 | **Agent PM skills** | The 6 agents + PM skills (ost-workflow, okr-workflow, pm-signal-synthesis, etc.) installed in Claude Code |
 
 ---
@@ -123,7 +123,7 @@ Vault Bridges creates a **bidirectional link** between a local folder (a product
 
 ## Step 5 — Install the Claude Code agent skills
 
-The agents and skills (ost-workflow, okr-workflow, pm-signal-synthesis, investment-gate, etc.; skill ids keep their historical names but cover the OOKRST levels) run in Claude Code, not in Obsidian. If you haven't done this yet:
+The agents and skills (ost-workflow, okr-workflow, pm-signal-synthesis, investment-gate, etc.; skill ids keep their historical names but cover the Loop levels) run in Claude Code, not in Obsidian. If you haven't done this yet:
 
 ```bash
 git clone https://github.com/rbcodelabs/agent-pm-playbook
@@ -146,7 +146,7 @@ With Claude Code running inside your product workspace folder:
 Run the pm-setup skill to select an integration profile, configure capability providers, and set my current Outcome and Key Results.
 ```
 
-Answer its questions — especially the current Outcome (a customer-behavior change, not a feature) and its 2–3 measurable Key Results. See [OOKRST Structure](ookrst-structure.md) for the levels and IDs. This writes the routing manifest and scaffolds only Markdown/Obsidian-owned capabilities.
+Answer its questions — especially the current Outcome (a customer-behavior change, not a feature) and its 2–3 measurable Key Results. See [The Loop](the-loop.md) for the levels and IDs. This writes the routing manifest and scaffolds only Markdown/Obsidian-owned capabilities.
 
 ---
 

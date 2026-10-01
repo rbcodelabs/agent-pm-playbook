@@ -17,7 +17,7 @@ You are not yet measuring outcomes from the operating model; you are measuring w
 **Signs it's working:**
 - [ ] Weekly synthesis sessions are happening without requiring willpower — they're on the calendar and protected
 - [ ] The Signal Ledger has dated entries every 1–2 weeks
-- [ ] The OOKRST tree has been updated based on new signal (not just re-read): evidence attached to Opportunities, not floating
+- [ ] The Loop tree has been updated based on new signal (not just re-read): evidence attached to Opportunities, not floating
 - [ ] `pm-config.md` has a real Outcome with 2–3 measurable KRs — a customer-behavior change, not a feature
 - [ ] At least one thing has been *deprioritized* because it didn't trace to an active KR
 
@@ -103,7 +103,7 @@ Three signals that the operating model needs adjustment (not abandonment):
 
 ## Reference
 
-- [OOKRST Structure](ookrst-structure.md) — the levels, parent rules, and IDs the checks below refer to
+- [The Loop](the-loop.md) — the levels, parent rules, and IDs the checks below refer to
 - [Discovery Health Metrics](../Discovery%20Health%20Metrics.md) — the five diagnostic categories and flag thresholds
 - [Discovery Health Baseline template](../training/sample-data/discovery-health-baseline.md) — fill this in at 30 and 90 days to track movement
 - [Module 6: Cadences & Health](../training/module-6-cadences-and-health.md) — how to install the rhythms

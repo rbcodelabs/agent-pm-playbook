@@ -64,7 +64,7 @@ after blockers, and leave unfinished work visible. Do not create or modify sched
 
 Read `pm-config.md`, resolve providers, and read the previous checklist and active runs
 through the configured `automation_runtime`, which owns run state. The checklist is a
-receipt linking authoritative objects, never a second OOKRST tree, roadmap, or decision store. If
+receipt linking authoritative objects, never a second Loop tree, roadmap, or decision store. If
 durable run state is unavailable, inspect what is readable, report the limitation, and skip
 only mutations that need receipts or ownership checks.
 
@@ -89,8 +89,8 @@ Clearing them first keeps the run from piling new work on its own unresolved ite
 | Area | Inspect on every run | Work route when actionable |
 |---|---|---|
 | Assigned tasks | Open tasks assigned to the agent identity (`list_tasks` with the agent assignee filter), excluding those covered by Authorized delivery or Decisions | Resolve directly or through the matching domain skill ([okr-workflow](../okr-workflow/SKILL.md), [experiment-workflow](../experiment-workflow/SKILL.md), [investment-gate](../investment-gate/SKILL.md)); close the task with the outcome |
-| Feedback and research | New/open feedback, unprocessed transcripts, source attribution, unlinked evidence, contradictions | [pm-signal-synthesis](../pm-signal-synthesis/SKILL.md); [compass-feedback-triage](../compass-feedback-triage/SKILL.md) when insights and the OOKRST tree (`ost`) resolve to Compass |
-| OOKRST tree: Opportunities and Outcomes | Weak, duplicate, stale, unmapped, or orphaned branches (Opportunity with no Outcome, Outcome with no KR); evidence changes; focus and pruning candidates | [ost-workflow](../ost-workflow/SKILL.md): restructure, refocus, and deprioritize directly; deletion or archival is a review request |
+| Feedback and research | New/open feedback, unprocessed transcripts, source attribution, unlinked evidence, contradictions | [pm-signal-synthesis](../pm-signal-synthesis/SKILL.md); [compass-feedback-triage](../compass-feedback-triage/SKILL.md) when insights and the Loop tree (`ost`) resolve to Compass |
+| Loop tree: Opportunities and Outcomes | Weak, duplicate, stale, unmapped, or orphaned branches (Opportunity with no Outcome, Outcome with no KR); evidence changes; focus and pruning candidates | [ost-workflow](../ost-workflow/SKILL.md): restructure, refocus, and deprioritize directly; deletion or archival is a review request |
 | Solutions and assumptions | KRs with fewer than 3 Solutions, Solutions with no parent KR or no Test, changed concept directions, untested assumptions, investment readiness | [investment-gate](../investment-gate/SKILL.md); advance or hold stages directly and report |
 | Tests | Missing success/kill conditions, Tests not tied to a Solution assumption or KR, overdue results, stalled Tests, new or contradictory results | [experiment-workflow](../experiment-workflow/SKILL.md); record and interpret results directly; launches that reach users or spend money are review requests |
 | Roadmap and capacity | Complete NOW/NEXT/LATER queues, validation, ownership, dependencies, capacity, active-work collisions | [roadmap-workflow](../roadmap-workflow/SKILL.md): reprioritize and move items between horizons directly, including its build-policy route where enabled |

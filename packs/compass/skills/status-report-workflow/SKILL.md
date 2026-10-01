@@ -7,7 +7,7 @@ description: Produce a read-only product status report from the active Compass w
 
 This workflow is read-only. Use the host-injected active workspace and host-provided Compass MCP tools to read roadmap, OKRs (Outcomes and key results), the discovery tree (Opportunities, Solutions, Tests), feedback, and delivery tasks that the host makes available.
 
-Use the seven days ending today unless the user specifies another window, and state exact dates. Report Roadmap and Outcome/KR Movement, Discovery Health across the OOKRST levels (including orphans and coverage gaps), Delivery Snapshot, Data Gaps, Decisions Needed, and Follow-ups. Cite stable Compass IDs and distinguish recorded facts from recommendations.
+Use the seven days ending today unless the user specifies another window, and state exact dates. Report Roadmap and Outcome/KR Movement, Discovery Health across the Loop levels (including orphans and coverage gaps), Delivery Snapshot, Data Gaps, Decisions Needed, and Follow-ups. Cite stable Compass IDs and distinguish recorded facts from recommendations.
 
 When a source or time-window comparison is unsupported, write `DATA UNAVAILABLE (reason)` for that section and continue. Never infer movement from current state alone.
 

@@ -1,11 +1,11 @@
 # PM Tool Integration Guide
 
-> A practical reference for mapping the full OOKRST workflow (Opportunity, Outcome, Key Result, Solution, Test, with Roadmap Items hanging off Solutions) into your PM tool stack. The structure itself is defined in the [OOKRST Structure guide](guides/ookrst-structure.md); this guide only maps it to tools. It replaces and expands Section 4 of the [[Agentic PM Playbook]].
+> A practical reference for mapping the full Loop workflow (Opportunity, Outcome, Key Result, Solution, Test, with Roadmap Items hanging off Solutions) into your PM tool stack. The structure itself is defined in the [Loop guide](guides/the-loop.md); this guide only maps it to tools. It replaces and expands Section 4 of the [[Agentic PM Playbook]].
 
 **Last updated:** 2026-10-01
-**See also:** [[Signal Ledger]], [[Agentic PM — Agent Capability Framework]], [[How to Use the Agents]], [OOKRST Structure](guides/ookrst-structure.md)
+**See also:** [[Signal Ledger]], [[Agentic PM — Agent Capability Framework]], [[How to Use the Agents]], [The Loop](guides/the-loop.md)
 
-> **Legacy terminology.** Earlier versions of this guide used the OKR-then-OST model (Objective, Desired Outcome, Experiment). In OOKRST, Objective and Desired Outcome are one **Outcome**, Experiment is a **Test**, and the Opportunity is the tree's root. Legacy terms appear below only in migration notes, skill ids, capability keys, and provider-native object names (for example a tool's own "Objective" type), and each is flagged where it appears.
+> **Legacy terminology.** Earlier versions of this guide used the OKR-then-OST model (Objective, Desired Outcome, Experiment). In Loop, Objective and Desired Outcome are one **Outcome**, Experiment is a **Test**, and the Opportunity is the tree's root. Legacy terms appear below only in migration notes, skill ids, capability keys, and provider-native object names (for example a tool's own "Objective" type), and each is flagged where it appears.
 
 ---
 
@@ -13,9 +13,9 @@
 
 Regardless of which tools you use, the product system requires a home for each capability. `pm-config.md` selects a named profile and optional per-capability overrides using the canonical [integration-routing contract](skills/integration-routing/SKILL.md). If any capability lacks a clear, single home, state fragments and becomes unreliable.
 
-The required capability keys are `vision`, `research_capture`, `insights`, `okrs`, `ost`, `experiments`, `roadmap`, `delivery`, and `reporting_archive`. The keys `okrs`, `ost`, and `experiments` are legacy contract names kept so existing configurations stay valid; read them as the OOKRST layers they now cover: `okrs` = Outcomes, Key Results, and cycles; `ost` = Opportunities and Solutions plus the parent chain linking all five levels; `experiments` = Tests. Named profiles are starting points, not stack mandates: `compass-full`, `compass-obsidian-linear`, `markdown-linear`, and `jpd-jira`.
+The required capability keys are `vision`, `research_capture`, `insights`, `okrs`, `ost`, `experiments`, `roadmap`, `delivery`, and `reporting_archive`. The keys `okrs`, `ost`, and `experiments` are legacy contract names kept so existing configurations stay valid; read them as the Loop layers they now cover: `okrs` = Outcomes, Key Results, and cycles; `ost` = Opportunities and Solutions plus the parent chain linking all five levels; `experiments` = Tests. Named profiles are starting points, not stack mandates: `compass-full`, `compass-obsidian-linear`, `markdown-linear`, and `jpd-jira`.
 
-| OOKRST Level | What it is | "Done" means |
+| Loop Level | What it is | "Done" means |
 |---|---|---|
 | **Opportunity** | A bounded, evidence-backed customer need or market opening; the root of the tree | Expressed in customer voice, backed by 2+ independent evidence sources (or tagged `weak`), names a segment, is not a solution in disguise |
 | **Outcome** | The customer-behavior change that capturing the Opportunity requires (one sentence, no numbers) | Behavior-framed, owned by one team, traces to exactly one Opportunity, has 2-3 KRs |
@@ -26,21 +26,21 @@ The required capability keys are `vision`, `research_capture`, `insights`, `okrs
 
 **Signals** (raw discovery inputs: quotes, tickets, survey responses, behavioral data) are not a tree level. They attach to Opportunities, or to the Solution or Test they bear on, and are logged with source, date, segment, and confidence. They are never attached to KRs.
 
-**Parent chain and stable IDs.** Every record has exactly one parent: Outcome to Opportunity, KR to Outcome, Solution to KR, Test to Solution. Every adapter must preserve that chain and the stable ID of each record. Markdown identifiers are `OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, and `TST-n`; other providers keep their native IDs and store the OOKRST ID in a field or label where practical. Where a provider cannot represent a level natively, the adapter states an interim mapping (a label, issue type, or custom field plus an explicit parent link) and never silently flattens the hierarchy.
+**Parent chain and stable IDs.** Every record has exactly one parent: Outcome to Opportunity, KR to Outcome, Solution to KR, Test to Solution. Every adapter must preserve that chain and the stable ID of each record. Markdown identifiers are `OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, and `TST-n`; other providers keep their native IDs and store the Loop ID in a field or label where practical. Where a provider cannot represent a level natively, the adapter states an interim mapping (a label, issue type, or custom field plus an explicit parent link) and never silently flattens the hierarchy.
 
 **The single most important principle:** pick one authoritative home per level and do not let it drift. Teams routinely end up with opportunities in Linear, JPD, Notion, and a Miro board simultaneously. When that happens, no one trusts any of them. The tree structure especially must have exactly one source of truth.
 
-**Migrating legacy data.** Convert deliberately, following the legacy mapping in the [OOKRST Structure guide](guides/ookrst-structure.md): each legacy Desired Outcome (or Objective) becomes an Outcome, each Opportunity beneath it becomes a candidate parent Opportunity, Solutions re-parent to the KR the Opportunity most directly moves, and Experiments become Tests. Record the old identifier in the new record before retiring the old one.
+**Migrating legacy data.** Convert deliberately, following the legacy mapping in the [Loop guide](guides/the-loop.md): each legacy Desired Outcome (or Objective) becomes an Outcome, each Opportunity beneath it becomes a candidate parent Opportunity, Solutions re-parent to the KR the Opportunity most directly moves, and Experiments become Tests. Record the old identifier in the new record before retiring the old one.
 
 ---
 
 ## 2. JPD + Jira
 
-Jira Product Discovery (JPD) is the most native fit for the discovery levels; Jira handles delivery. The boundary is clear: JPD owns the OOKRST tree, Jira owns build work.
+Jira Product Discovery (JPD) is the most native fit for the discovery levels; Jira handles delivery. The boundary is clear: JPD owns the Loop tree, Jira owns build work.
 
 ### Level Mapping
 
-| OOKRST Level | JPD / Jira Construct | Notes |
+| Loop Level | JPD / Jira Construct | Notes |
 |---|---|---|
 | Opportunity | JPD Opportunity (issue type) | The tree root: no parent. Link all supporting Insights. Carries the `OPP-n` ID in a label or field. |
 | Outcome | JPD Goal (or an `Outcome` issue type if Goals are unavailable) | Parent link to exactly one Opportunity. Archive Outcomes when the behavior change is reached or abandoned; do not delete. |
@@ -161,21 +161,21 @@ versioned prototypes and link them to Solutions and Decisions.
 
 ### Level Mapping
 
-Compass object and tool names predate OOKRST and some are provider-native names (Objective, Experiment, `create_experiment`, and so on). The mapping below is the adapter contract: the left column is the playbook level, the right column is the Compass object that carries it.
+Compass object and tool names predate Loop and some are provider-native names (Objective, Experiment, `create_experiment`, and so on). The mapping below is the adapter contract: the left column is the playbook level, the right column is the Compass object that carries it.
 
-| OOKRST Level | Compass Construct | Notes |
+| Loop Level | Compass Construct | Notes |
 |---|---|---|
 | Opportunity | Opportunity | The tree root. Customer-voice framing, evidence linked. |
 | Outcome | Compass **Objective** (provider-native name) in an active cycle | One Objective record carries one Outcome: the single merged object that replaces the old Objective-plus-Desired-Outcome pair. Link it to its parent Opportunity (`link_opportunity_to_objective`). |
 | Key Result | Key Result under the Outcome's Objective | 2-3 per Outcome. Link the Opportunity to the KR as well (`link_opportunity_to_kr`) so the ancestry is queryable from either side. |
-| Solution | Solution linked to its parent KR (`link_solution_to_key_result`) | Add 3+ per KR before narrowing. Compass may still show the Solution beneath an Opportunity; treat the KR link as the single OOKRST parent and the Opportunity as ancestry. Do not link one Solution to two KRs as parents. |
+| Solution | Solution linked to its parent KR (`link_solution_to_key_result`) | Add 3+ per KR before narrowing. Compass may still show the Solution beneath an Opportunity; treat the KR link as the single Loop parent and the Opportunity as ancestry. Do not link one Solution to two KRs as parents. |
 | Assumption | Assumption (child of Solution) | Tag with risk level: HIGH / MEDIUM / LOW. |
 | Test | Compass **Experiment** (provider-native name), linked to an Assumption | Must have a written kill condition before moving to RUNNING. |
 | Prototypes | Artifact (linked to Solutions and Decisions) | Publish self-contained HTML as a versioned Artifact; use Docs for narrative context, not as a pointer to a machine-local prototype. |
 | Roadmap Item / build items | Roadmap Item, Compass Tasks, or configured external tracker | Resolve `delivery` separately and link tasks to the Roadmap Item and the cleared Solution. |
 | Signals | Research + FeedbackItem + linked Opportunities | Compass can own both raw research and structured insight; a hybrid profile may route raw capture elsewhere. |
 
-Compass stores its own record IDs; where a custom field is available, set the OOKRST ID (`OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, `TST-n`) through `set_custom_field_value` so the parent chain reads the same across providers.
+Compass stores its own record IDs; where a custom field is available, set the Loop ID (`OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, `TST-n`) through `set_custom_field_value` so the parent chain reads the same across providers.
 
 ### Status Workflows
 
@@ -253,13 +253,13 @@ Unlike JPD, Compass has no native automation engine. Use Claude (via MCP) as the
 
 ## 4. Linear + Obsidian
 
-Linear handles all work tracking. Obsidian holds the discovery artifacts because Linear has no native discovery layer. The boundary is equally clear: Linear owns issues and statuses, Obsidian owns the OOKRST tree structure and signal ledger.
+Linear handles all work tracking. Obsidian holds the discovery artifacts because Linear has no native discovery layer. The boundary is equally clear: Linear owns issues and statuses, Obsidian owns the Loop tree structure and signal ledger.
 
 ### Level Mapping
 
 Linear lacks native Opportunity, Outcome, KR, and Test levels, so this stack uses labels and a project, with the parent chain recorded explicitly in the tree document and in each issue's description.
 
-| OOKRST Level | Construct | Location |
+| Loop Level | Construct | Location |
 |---|---|---|
 | Opportunity | Linear issue, label: `opportunity` (root: no parent issue) | Linear, ID referenced in the tree doc |
 | Outcome | Linear project (one per Outcome); description holds the Outcome statement, owner, cycle, and parent `OPP-n` | Linear project |
@@ -268,9 +268,9 @@ Linear lacks native Opportunity, Outcome, KR, and Test levels, so this stack use
 | Test | Linear issue, label: `test`, parent: the Solution issue | Linear |
 | Roadmap Item / build items | Linear stories and tasks, linked to the cleared Solution | Linear |
 | Signals | Signal ledger entries | Obsidian: `Discovery/Signal Ledger.md` |
-| Tree structure | OOKRST tree document: **source of truth** | Obsidian: `Discovery/OOKRST-[initiative].md` |
+| Tree structure | Loop tree document: **source of truth** | Obsidian: `Discovery/Loop-[initiative].md` |
 
-The Obsidian tree doc is the single source of truth for the structure. Linear issue IDs appear in it as references, but the hierarchy (Opportunity, Outcome, KR, Solution, Test) lives in Obsidian. Linear statuses reflect current work state; Obsidian reflects current thinking. Every Linear issue description names its parent's OOKRST ID so the chain survives if the issue is moved.
+The Obsidian tree doc is the single source of truth for the structure. Linear issue IDs appear in it as references, but the hierarchy (Opportunity, Outcome, KR, Solution, Test) lives in Obsidian. Linear statuses reflect current work state; Obsidian reflects current thinking. Every Linear issue description names its parent's Loop ID so the chain survives if the issue is moved.
 
 ### Linear Issue Convention for Opportunities
 
@@ -292,12 +292,12 @@ Exploring → Testing → Validated → Building → Shipped | Archived
 
 Map these to Linear's default statuses or create a custom workflow per the Linear docs. The status labels must match between Linear and the Obsidian tree doc; when they drift, the tree becomes unreliable.
 
-### Obsidian OOKRST Tree Document
+### Obsidian Loop Tree Document
 
 Update the tree doc weekly. The format mirrors the hierarchy directly:
 
 ```markdown
-# OOKRST: [Initiative Name]
+# Loop: [Initiative Name]
 
 ## Opportunity OPP-1: [Customer voice statement] [Exploring | Validating | Active | Archived]
 Evidence: [N sources, types and dates]
@@ -359,17 +359,17 @@ The vault bridge syncs changes in both directions. Edits made in Obsidian propag
 
 ### Level Mapping
 
-| OOKRST Level | Construct | Location |
+| Loop Level | Construct | Location |
 |---|---|---|
-| Opportunity | Linear issue, label: `opportunity` + `product/ookrst.md` | Linear + repo (bridged) |
-| Outcome | `product/ookrst.md` Outcome node + Linear project; the north-star framing lives in `product/vision.md` | Git repo (bridged) + Linear |
-| Key Result | `product/ookrst.md` KR node + Linear issue, label: `key-result` (interim) | Git repo (bridged) + Linear |
+| Opportunity | Linear issue, label: `opportunity` + `product/loop.md` | Linear + repo (bridged) |
+| Outcome | `product/loop.md` Outcome node + Linear project; the north-star framing lives in `product/vision.md` | Git repo (bridged) + Linear |
+| Key Result | `product/loop.md` KR node + Linear issue, label: `key-result` (interim) | Git repo (bridged) + Linear |
 | Solution | Linear issue, label: `solution`, parent: KR issue | Linear |
 | Test | Linear issue, label: `test`, parent: solution | Linear |
 | Roadmap Item / build items | Linear stories and tasks, linked to the cleared Solution; `product/roadmap.md` | Linear + repo (bridged) |
 | Signals (structured) | `product/signals/Signal Ledger.md` | Git repo (bridged) |
 | Signals (raw capture) | Session notes in Obsidian `Discovery/` | Vault only, not bridged |
-| Tree structure | `product/ookrst.md`: **source of truth** | Git repo (bridged) |
+| Tree structure | `product/loop.md`: **source of truth** | Git repo (bridged) |
 | ICP | `product/icp.md` | Git repo (bridged) |
 
 ---
@@ -382,7 +382,7 @@ One `product/` folder per repo, committed to the main branch:
 product/
   vision.md          # North star, team, strategic bets
   icp.md             # Ideal customer profile, segments, anti-ICP
-  ookrst.md          # OOKRST tree structure — source of truth
+  loop.md          # Loop tree structure — source of truth
   roadmap.md         # Shipped, active, and planned work
   signals/
     Signal Ledger.md # Structured synthesis entries (see below)
@@ -407,11 +407,11 @@ Set `autoSync: true` so the vault pulls from the repo on Obsidian open. Changes 
 
 ### How the Team Interacts With Product Docs
 
-**PM (vault-first):** Opens and edits `Products/[Product]/ookrst.md` in Obsidian. The bridge syncs changes back to the repo. The PM can open a PR from the plugin or push directly to main for low-stakes updates.
+**PM (vault-first):** Opens and edits `Products/[Product]/loop.md` in Obsidian. The bridge syncs changes back to the repo. The PM can open a PR from the plugin or push directly to main for low-stakes updates.
 
-**Teammate (repo-first):** Clones the repo and edits `product/ookrst.md` in VS Code or GitHub. Opens a PR for review. On the next bridge pull, the change appears in the PM's vault.
+**Teammate (repo-first):** Clones the repo and edits `product/loop.md` in VS Code or GitHub. Opens a PR for review. On the next bridge pull, the change appears in the PM's vault.
 
-**Both:** Linear for opportunities, key-result issues, solutions, tests, and delivery work. The tree in `product/ookrst.md` references Linear IDs; Linear issues link back to the tree doc.
+**Both:** Linear for opportunities, key-result issues, solutions, tests, and delivery work. The tree in `product/loop.md` references Linear IDs; Linear issues link back to the tree doc.
 
 No Notion license. No Confluence. No "let me find that doc." Product strategy lives where the code does.
 
@@ -437,14 +437,14 @@ The workflow: capture raw signals in `Discovery/` in Obsidian. After synthesis, 
 
 ### Linear Integration
 
-Same as the base Linear + Obsidian stack (section 4), with one change: the tree source of truth lives in the repo's `product/ookrst.md`, not in an Obsidian-only file. This means team members can read and propose changes to the OOKRST tree structure via PR, not just the PM.
+Same as the base Linear + Obsidian stack (section 4), with one change: the tree source of truth lives in the repo's `product/loop.md`, not in an Obsidian-only file. This means team members can read and propose changes to the Loop tree structure via PR, not just the PM.
 
 Follow the same signal-to-opportunity handoff protocol:
 
 1. Log raw signals vault-only.
 2. After synthesis, commit the structured entry to `product/signals/Signal Ledger.md`.
 3. When a cluster reaches medium confidence (2+ independent sources), create the Linear Opportunity issue.
-4. Update `product/ookrst.md` with the new Opportunity node (`OPP-n`) and the Linear ID.
+4. Update `product/loop.md` with the new Opportunity node (`OPP-n`) and the Linear ID.
 5. In the Linear issue description, link back to the tree doc and the signal ledger entry date.
 
 ---
@@ -458,7 +458,7 @@ For teams with no dedicated PM tool, or individuals bootstrapping a discovery pr
 ```
 Discovery/
   Signal Ledger.md             # All synthesis sessions, chronological
-  OOKRST-[initiative-name].md  # The tree: opportunity → outcome → key results → solutions → tests
+  Loop-[initiative-name].md  # The tree: opportunity → outcome → key results → solutions → tests
   Tests.md                     # Optional: consolidated Test tracking table
 ```
 
@@ -512,7 +512,7 @@ These apply regardless of tool stack.
 
 **One source of truth per level.** Don't let Opportunities exist as separate records in both Obsidian and JPD. Pick the home before you start and enforce it.
 
-**One parent each, preserved everywhere.** Outcome to Opportunity, KR to Outcome, Solution to KR, Test to Solution. Whatever the provider's native hierarchy looks like, the OOKRST parent chain and stable IDs survive; an interim label or field mapping is documented, never a silent flattening.
+**One parent each, preserved everywhere.** Outcome to Opportunity, KR to Outcome, Solution to KR, Test to Solution. Whatever the provider's native hierarchy looks like, the Loop parent chain and stable IDs survive; an interim label or field mapping is documented, never a silent flattening.
 
 **Signals predate opportunities.** Never create an Opportunity record before you have at least one verbatim quote. The quote is the evidence; the Opportunity is the interpretation of the evidence.
 

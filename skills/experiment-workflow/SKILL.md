@@ -2,7 +2,7 @@
 name: experiment-workflow
 description: >-
   Design, run, and close out Tests — the assumption-validation level of the
-  OOKRST hierarchy (Opportunity -> Outcome -> KR -> Solution -> Test), formerly
+  Loop (formerly OOKRST) hierarchy (Opportunity -> Outcome -> KR -> Solution -> Test), formerly
   called experiments. Use when the user needs to test a Solution assumption,
   log test results, review active test health, or decide what to do after a
   test completes.
@@ -14,7 +14,7 @@ retrieval:
   aliases:
     - test
     - tests
-    - OOKRST test
+    - the Loop test
     - solution test
     - experiment
     - experiments
@@ -54,7 +54,7 @@ retrieval:
     - Test
     - Solution
     - Key Result
-    - OOKRST
+    - the Loop framework
     - experiment
     - assumption
     - kill condition
@@ -75,9 +75,9 @@ chainTo:
   - pattern: "validated|solution.*passes|proceed.*roadmap|move.*roadmap|build this|ready to build"
     targetSkill: investment-gate
     message: Switching to investment gate to assess whether this validated solution is ready to move to build
-  - pattern: "kill.*solution|archive.*solution|solution.*dead|solution.*failed|\\bost\\b|ookrst|opportunity.*tree"
+  - pattern: "kill.*solution|archive.*solution|solution.*dead|solution.*failed|\\bost\\b|ookrst|the loop|loop framework|opportunity.*tree"
     targetSkill: ost-workflow
-    message: Switching to the OOKRST tree workflow to update the tree and archive the killed Solution
+    message: Switching to the Loop tree workflow to update the tree and archive the killed Solution
   - pattern: "coach|philosophy|strategy|broader|how should we think about|what should we"
     targetSkill: agentic-pm
     message: Switching to PM coaching for broader strategic guidance on tests and discovery
@@ -85,7 +85,7 @@ chainTo:
 
 # Test Workflow (experiment-workflow)
 
-A **Test** is the fifth level of the OOKRST hierarchy ([structure guide](../../guides/ookrst-structure.md)): the cheapest experiment that could falsify one assumption of one Solution, with success and failure criteria written before it runs and its result logged against the KR it informs. This skill's name stays `experiment-workflow` and it still answers "experiment" requests; the record is now called a Test.
+A **Test** is the fifth level of the Loop hierarchy ([structure guide](../../guides/the-loop.md)): the cheapest experiment that could falsify one assumption of one Solution, with success and failure criteria written before it runs and its result logged against the KR it informs. This skill's name stays `experiment-workflow` and it still answers "experiment" requests; the record is now called a Test.
 
 ## Autonomy
 
@@ -295,6 +295,7 @@ A result is not finished until it has moved up (structure rule 6):
 1. Update the Solution's confidence and its assumption status (validated / invalidated / untested).
 2. Add the Test and what it showed to the parent KR's evidence line (see `okr-workflow` Workflow 2, Step 4), without attaching raw signals to the KR.
 3. If the result is new customer evidence about the underlying need, attach it to the Opportunity or ask `pm-signal-synthesis` to.
+4. Close the loop. A passed Test promotes the Solution and updates the KR. A failed or inconclusive Test reopens or re-scores the parent Opportunity, or spawns new Opportunities the result exposed. Side-findings enter as Opportunities. See [Closing the loop](../../guides/the-loop.md#closing-the-loop).
 
 ---
 
@@ -374,7 +375,7 @@ Name these when you see them and fix them:
 
 ## References
 
-- [OOKRST Structure](../../guides/ookrst-structure.md)
+- [The Loop](../../guides/the-loop.md)
 - [Progressive Investment Framework](../../Progressive%20Investment%20Framework.md)
 - [Discovery Tree as Operating System](../../Agentic%20PM%20Playbook.md)
 - [Test Minimalism](../../Agent%20Skills/Test%20Minimalism.md)

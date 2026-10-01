@@ -1,6 +1,6 @@
 # Transcript Synthesis
 
-> The skill of extracting customer needs, pains, and desires from interview transcripts — preserving verbatim evidence, distinguishing surface complaint from underlying need, and mapping signals to the OOKRST tree (Opportunities first, Solutions and Tests where a signal is specific to them) without forcing them.
+> The skill of extracting customer needs, pains, and desires from interview transcripts — preserving verbatim evidence, distinguishing surface complaint from underlying need, and mapping signals to the Loop tree (Opportunities first, Solutions and Tests where a signal is specific to them) without forcing them.
 
 **Layer:** 1 — Synthesis & Signal Processing
 **Companion:** [[Agentic PM — Agent Capability Framework]]
@@ -9,7 +9,7 @@
 
 ## What This Skill Is
 
-Transcript synthesis is the entry point for all customer-grounded PM work. It is the process of reading a raw interview transcript and producing a structured set of signals — needs, pains, desires, and behaviors — that can inform, update, or challenge the current OOKRST tree (see the [OOKRST structure guide](../guides/ookrst-structure.md)). In an agentic context, the agent reads the transcript, identifies signal-bearing moments, and outputs a structured synthesis document that a PM can review and act on without having to re-read every word of the source.
+Transcript synthesis is the entry point for all customer-grounded PM work. It is the process of reading a raw interview transcript and producing a structured set of signals — needs, pains, desires, and behaviors — that can inform, update, or challenge the current Loop tree (see the [Loop structure guide](../guides/the-loop.md)). In an agentic context, the agent reads the transcript, identifies signal-bearing moments, and outputs a structured synthesis document that a PM can review and act on without having to re-read every word of the source.
 
 The skill has three distinct sub-tasks that agents routinely conflate. The first is observation: identifying the specific moments in a transcript where a customer reveals something meaningful about their experience, behavior, or unmet need. This requires recognizing signal in natural language — not every sentence is signal-bearing, and the ones that are often don't announce themselves. The second is preservation: capturing what the customer actually said, in their actual words, before any interpretation happens. The third is interpretation: offering a reading of what the observation might mean for the tree — with that interpretation clearly separated from the raw quote, and held with appropriate tentativeness.
 
@@ -94,7 +94,7 @@ The strong version gives the PM everything they need to evaluate the signal them
 **Synthesis prompt:**
 
 ```
-You are synthesizing a customer interview transcript for a product team using the OOKRST hierarchy (Opportunity → Outcome → Key Result → Solution → Test).
+You are synthesizing a customer interview transcript for a product team using the Loop hierarchy (Opportunity → Outcome → Key Result → Solution → Test).
 
 Your job has four steps, in this order:
 1. OBSERVE: Identify the specific moments in the transcript where the customer reveals a need, pain, behavior, or desire. Quote verbatim.
@@ -154,4 +154,4 @@ Read this transcript and identify any moments where the customer requests a spec
 
 [[Epistemic Self-Awareness]] — The meta-skill that underlies good synthesis: knowing the difference between what you observed and what you concluded.
 
-The `ost-workflow` skill id is unchanged for compatibility; it now covers the Opportunity, Solution, and Test levels of the OOKRST tree, and is where synthesized signals are registered once mapped.
+The `ost-workflow` skill id is unchanged for compatibility; it now covers the Opportunity, Solution, and Test levels of the Loop tree, and is where synthesized signals are registered once mapped.

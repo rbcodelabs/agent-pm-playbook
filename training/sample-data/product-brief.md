@@ -18,13 +18,13 @@ ShiftLoop sells a 14-day free trial that converts to a paid monthly plan per loc
 
 The problem: **most trials never get to a published schedule.** Sales and onboarding both report that accounts which publish a first real schedule almost always convert and stick; accounts that don't, churn silently. Activation is the bottleneck, and right now it leaks badly.
 
-## The current goal, in OOKRST terms
+## The current goal, in the Loop terms
 
 The team's goal is stated as a metric:
 
 > **Increase new-account activation — the percentage of trial accounts that publish their first complete weekly schedule within 7 days of signup — from 38% to 60% by the end of the quarter.**
 
-In the OOKRST structure ([guide](../../guides/ookrst-structure.md)) that sentence splits into two levels. The **Outcome** is the behavior change, with no numbers: *trial managers publish a complete first weekly schedule within their first week* (`OUT-1`). The **Key Result** is the measurement: *7-day activation from 38% → 60% by end of quarter* (`OUT-1-KR-1`). It has a baseline, a target and a date — a measurable change in customer behavior, not a feature, not "make onboarding better." (Carry this back to Module 0.) What the tree starts *from* is the customer need behind the goal, which you derive yourself in Module 2.
+In the Loop structure ([guide](../../guides/the-loop.md)) that sentence splits into two levels. The **Outcome** is the behavior change, with no numbers: *trial managers publish a complete first weekly schedule within their first week* (`OUT-1`). The **Key Result** is the measurement: *7-day activation from 38% → 60% by end of quarter* (`OUT-1-KR-1`). It has a baseline, a target and a date — a measurable change in customer behavior, not a feature, not "make onboarding better." (Carry this back to Module 0.) What the tree starts *from* is the customer need behind the goal, which you derive yourself in Module 2.
 
 ### What "activated" means precisely
 

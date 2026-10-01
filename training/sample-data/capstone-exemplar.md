@@ -6,7 +6,7 @@
 
 ## About Parcel
 
-Parcel is a monthly artisan food subscription box. Solo founder. ~200 active subscribers. Goal: **raise month-3 retention from 42% to 65%**, which in the OOKRST tree is split into an Outcome (*subscribers keep their subscription past the third box*, `OUT-1`) and its headline Key Result (`OUT-1-KR-1`: month-3 retention 42% → 65% by end of quarter). No issue tracker — work tracked in Markdown notes. No engineering team; the founder handles the Shopify storefront and a monthly email.
+Parcel is a monthly artisan food subscription box. Solo founder. ~200 active subscribers. Goal: **raise month-3 retention from 42% to 65%**, which in the Loop tree is split into an Outcome (*subscribers keep their subscription past the third box*, `OUT-1`) and its headline Key Result (`OUT-1-KR-1`: month-3 retention 42% → 65% by end of quarter). No issue tracker — work tracked in Markdown notes. No engineering team; the founder handles the Shopify storefront and a monthly email.
 
 ---
 

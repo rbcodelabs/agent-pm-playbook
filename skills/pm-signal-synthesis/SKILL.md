@@ -2,7 +2,7 @@
 name: pm-signal-synthesis
 description: >-
   Synthesize raw product signals — interviews, support tickets, surveys, sales
-  calls — into structured Opportunities that attach to the OOKRST tree (signals attach to Opportunities, and to the Solution or Test they bear on, never to KRs). Use when the user has
+  calls — into structured Opportunities that attach to the Loop tree (signals attach to Opportunities, and to the Solution or Test they bear on, never to KRs). Use when the user has
   research or customer data to process and needs clustered insights with
   confidence tagging.
 metadata:
@@ -37,9 +37,9 @@ retrieval:
     - signal cluster
     - opportunity theme
 chainTo:
-  - pattern: "opportunity solution tree|\\bOST\\b|\\bOOKRST\\b|add to.*tree|update.*tree"
+  - pattern: "opportunity solution tree|\\bOST\\b|\\bOOKRST\\b|\\bthe loop\\b|\\bloop framework\\b|add to.*tree|update.*tree"
     targetSkill: ost-workflow
-    message: Switching to the OOKRST tree workflow to map synthesized signals onto Opportunities
+    message: Switching to the Loop tree workflow to map synthesized signals onto Opportunities
 ---
 
 # PM Signal Synthesis
@@ -50,7 +50,7 @@ Act, then report ([Autonomy Policy](../../Autonomy%20Policy.md)). Clustering, ta
 
 ## Provider Preflight
 
-Read `pm-config.md` and resolve `research_capture` for inputs and `insights` for synthesized output through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Use exactly one authoritative provider per capability; label secondary artifacts `inbox`, `export`, `cache`, or `snapshot`. With no config, work from context, name the defaults you used, and offer `pm-setup` at the end. For Compass insights, invoke `compass-workflow`, create granular feedback/insight records, and link them to OOKRST objects inline (Opportunity first; Solution or Test where the signal bears on one).
+Read `pm-config.md` and resolve `research_capture` for inputs and `insights` for synthesized output through the named `integration_profile` plus `provider_overrides`, following the installed [integration-routing contract](../integration-routing/SKILL.md). Use exactly one authoritative provider per capability; label secondary artifacts `inbox`, `export`, `cache`, or `snapshot`. With no config, work from context, name the defaults you used, and offer `pm-setup` at the end. For Compass insights, invoke `compass-workflow`, create granular feedback/insight records, and link them to the Loop objects inline (Opportunity first; Solution or Test where the signal bears on one).
 
 Clustering, confidence, contradiction, and bias rules are invariant. The Signal Ledger format is only the Markdown/Obsidian adapter; otherwise persist provider-native insight records.
 
@@ -85,7 +85,7 @@ Surface contradictions; don't smooth them over.
 ### Step 4 — Check Longitudinal Patterns
 Against prior rounds: which clusters are strengthening, weakening, or new? Trend direction matters as much as strength.
 
-### Step 5 — Apply to the OOKRST Tree
+### Step 5 — Apply to the Loop Tree
 Check for duplicates, then per cluster. Signals attach to **Opportunities** (the root of the tree); when a signal bears on a specific Solution's assumption or a Test, also link it there. Never attach raw signals to a KR or Outcome. If a new Opportunity has no Outcome yet, say so and hand off to `ost-workflow` Step 3 to derive one.
 - **Update existing** — attach the evidence to the known Opportunity
 - **Add new** — create the Opportunity with its confidence tag and named segment

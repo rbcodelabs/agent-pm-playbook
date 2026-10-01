@@ -30,7 +30,7 @@ it is a failure that is harder to see.
 
 **Everything else: just do it, then tell the human what you did.** That includes:
 
-- Framing Opportunities and Outcomes, adding or restructuring branches of the OOKRST tree, writing Solution candidates
+- Framing Opportunities and Outcomes, adding or restructuring branches of the Loop tree, writing Solution candidates
 - Designing Tests, writing assumptions, recording and interpreting Test results
 - Reprioritizing the roadmap and moving items between Later, Next, and Now (a Solution must first clear its investment gate)
 - Scoring, linking, deduplicating, and changing the status of product records
@@ -42,7 +42,7 @@ Every one of these can be undone with an edit. Asking first only adds delay.
 ## Missing information is a reason to infer, not to stop
 
 - **Don't ask a question you could answer by reading.** Check the config, the tracker, the
-  OOKRST tree, the repository, and the conversation first.
+  Loop tree, the repository, and the conversation first.
 - **When you still don't know, make the best inference, state it in one line, and proceed.**
   "Assuming the Outcome is trial-to-paid conversion (from the Q3 Outcomes and KRs); tell me
   if not." A wrong guess stated plainly is cheap to correct. A stalled session is not.

@@ -15,7 +15,7 @@
 | When was your last synthesis session? | | Healthy / Watch / Flag |
 | How many synthesis sessions in the past 30 days? | | Healthy / Watch / Flag |
 | Days since your last Signal Ledger entry | | Healthy / Watch / Flag |
-| Days since your OOKRST tree was last updated | | Healthy / Watch / Flag |
+| Days since your Loop tree was last updated | | Healthy / Watch / Flag |
 
 **Flag thresholds:** synthesis missed 2+ consecutive weeks → Flag; ledger gap >2 weeks → Flag; tree untouched 2+ weeks → Flag.
 

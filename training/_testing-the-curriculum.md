@@ -8,7 +8,7 @@ The author of a module is the worst person to test it. They unconsciously fill e
 
 The **agent-as-learner** harness closes that gap cheaply: spawn a fresh agent that sees **only one module file** plus a **brand-new product it has never seen**, tell it to do the exercise for real, and have it report both the artifact it produced *and* every place the doc failed it. A fresh agent with no playbook context is a far more honest "naive learner" than the author. It costs minutes and needs no human pilot.
 
-> **Naming note:** the run logs below are historical and use the module names as they were then — Module 2 was "Your First OST" and Module 4 "Experiments & Investment." The curriculum has since moved to the OOKRST structure (Module 2 is now "Your First OOKRST Tree", Module 4 "Tests & Progressive Investment"). **Modules 0, 2, 3, 4, 5 and the capstone have been rewritten and have not been re-run through this harness**; do that before the next cohort.
+> **Naming note:** the run logs below are historical and use the module names as they were then — Module 2 was "Your First OST" and Module 4 "Experiments & Investment." The curriculum has since moved to the Loop structure (Module 2 is now "Your First Loop", Module 4 "Tests & Progressive Investment"). **Modules 0, 2, 3, 4, 5 and the capstone have been rewritten and have not been re-run through this harness**; do that before the next cohort.
 
 ## The method
 
@@ -16,7 +16,7 @@ The **agent-as-learner** harness closes that gap cheaply: spawn a fresh agent th
 2. **One agent per module.** Each agent reads **only** its module file (and any file the module *explicitly* tells a learner to open). It must not read the rest of the playbook, the skills, or other modules' answer keys.
 3. **Make it do the exercise for real** on the new product, then check itself against the module's own Success criteria.
 4. **Require a structured report:** (A) the artifact, compactly; (B) a **friction log** — every unclear/missing/assumed/hard-coded-to-the-sample spot, each with a suggested fix; (C) a **generalization gap** note — does the module tell a learner what to do on their *own* product?; (D) a one-word **verdict**: Clean / Minor friction / Blocked.
-5. **Respect dependencies.** Modules that consume a prior module's artifact must be fed that artifact. Run independent modules in parallel; chain the dependent ones. (Module 0, 1, 2 are independent; Module 3 needs Module 2's OOKRST tree.)
+5. **Respect dependencies.** Modules that consume a prior module's artifact must be fed that artifact. Run independent modules in parallel; chain the dependent ones. (Module 0, 1, 2 are independent; Module 3 needs Module 2's Loop tree.)
 6. **Synthesize and fix.** Collect verdicts, cluster the cross-cutting findings (they matter more than any single-module nit), apply fixes, and — ideally — re-run the harness against the fixed modules to confirm closure.
 
 ### Reusable agent prompt (template)

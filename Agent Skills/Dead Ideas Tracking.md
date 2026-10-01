@@ -4,7 +4,7 @@
 
 **Layer:** 2 — Tree Integrity & Maintenance
 **Companion:** [[Agentic PM — Agent Capability Framework]]
-**Structure:** `guides/ookrst-structure.md`. The archive-don't-delete rule is what this skill puts to work: retired branches stay in the tree's history with a reason, so dead ideas keep teaching.
+**Structure:** `guides/the-loop.md`. The archive-don't-delete rule is what this skill puts to work: retired branches stay in the tree's history with a reason, so dead ideas keep teaching.
 
 ---
 

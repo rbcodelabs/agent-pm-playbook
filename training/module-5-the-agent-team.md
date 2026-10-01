@@ -33,7 +33,7 @@ By the end of this module you will be able to:
 
 | Agent | Does | Does and reports | Asks you first |
 |---|---|---|---|
-| **pm** | Discovery, OOKRST tree, signal synthesis, user stories, Test briefs | Synthesis, tree updates and restructuring, prioritization, stories, Test design and interpretation | Archiving a branch with work behind it; anything customers see; recruiting participants |
+| **pm** | Discovery, Loop tree, signal synthesis, user stories, Test briefs | Synthesis, tree updates and restructuring, prioritization, stories, Test design and interpretation | Archiving a branch with work behind it; anything customers see; recruiting participants |
 | **architect** | System design, ADRs, schema review, tech evaluation | ADRs, design docs, diagrams, schema memos | New tech the team hasn't used; breaking changes to an interface |
 | **engineer** | Implements features, fixes bugs, refactors, debugs | Implementation, including reasonable readings of ambiguous specs | Scope materially larger than the spec |
 | **qa** | Test strategy, test writing, edge-case hunting | Test plans and tests within the spec | Gaps that suggest the spec itself is wrong |

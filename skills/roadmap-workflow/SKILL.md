@@ -4,7 +4,7 @@ description: >-
   Manage the product roadmap — preserve candidates in Later, rank and admit
   solutions to Next, commit delivery in Now, move items between horizons and
   report what moved, run quarterly reviews, and draft stakeholder updates. Items
-  trace up the OOKRST chain: Solution -> KR -> Outcome -> Opportunity. Use when the user is adding items to the roadmap, updating status,
+  trace up the Loop chain: Solution -> KR -> Outcome -> Opportunity. Use when the user is adding items to the roadmap, updating status,
   reviewing delivery pipeline health, or preparing a roadmap communication.
 metadata:
   priority: 5
@@ -13,7 +13,7 @@ metadata:
 retrieval:
   aliases:
     - roadmap
-    - OOKRST roadmap
+    - the Loop roadmap
     - roadmap item
     - delivery plan
     - now next later
@@ -57,9 +57,9 @@ chainTo:
   - pattern: "okr|key result|\\bKR\\b|outcome|objective|which.*metric|move.*metric"
     targetSkill: okr-workflow
     message: Switching to the Outcome/KR workflow to check KR alignment for this roadmap item
-  - pattern: "opportunity|\\bOPP-\\b|why.*exist|customer.*need|\\bOST\\b|ookrst|solution.*parent"
+  - pattern: "opportunity|\\bOPP-\\b|why.*exist|customer.*need|\\bOST\\b|ookrst|the loop|loop framework|solution.*parent"
     targetSkill: ost-workflow
-    message: Switching to the OOKRST tree workflow to understand the Opportunity and KR behind this roadmap item
+    message: Switching to the Loop tree workflow to understand the Opportunity and KR behind this roadmap item
 ---
 
 # Roadmap Workflow
@@ -97,7 +97,7 @@ Opportunity (why customers need it)
                           └── Resolved delivery task (Compass Tasks, Linear, Jira, etc.)
 ```
 
-See [the OOKRST structure guide](../../guides/ookrst-structure.md). A roadmap item's parent is its Solution; the KR, Outcome, and Opportunity are reached by walking up, and the chain must stay unbroken.
+See [the Loop guide](../../guides/the-loop.md). A roadmap item's parent is its Solution; the KR, Outcome, and Opportunity are reached by walking up, and the chain must stay unbroken.
 
 A roadmap item is not a feature request. `LATER` preserves a deduplicated possibility.
 `NEXT` is an ordered queue within `next_limit`, normally of validated solutions. `NOW` is
@@ -177,7 +177,7 @@ receive timely alerts when [trigger], reducing the need to manually check [X]."]
 
 ## Procedure 1 — Adding a Roadmap Item
 
-1. **Find the parent Solution** in the OOKRST tree (`product/discovery/solutions/` or the resolved
+1. **Find the parent Solution** in the Loop tree (`product/discovery/solutions/` or the resolved
    provider) and check its status, parent KR, and linked Tests. If there is no parent Solution,
    create the item in `LATER` and link or propose the Solution (under a KR) in the same pass.
 2. **Pick the horizon.** Solution gate cleared (see `investment-gate`) → `NEXT` at the rank it earns (or `NOW` if a slot, owner,
@@ -306,7 +306,7 @@ For projects with enabled `approved_build_policy`, route approved build work to
 
 Each run:
 
-1. Resolve `roadmap`, `ost`, `experiments`, `okrs` (capability keys unchanged; together they cover the OOKRST levels), `delivery`, `review_requests`, and
+1. Resolve `roadmap`, `ost`, `experiments`, `okrs` (capability keys unchanged; together they cover the Loop levels), `delivery`, `review_requests`, and
    `decision_records`, then read `portfolio_policy`.
 2. Inventory the ordered `NOW`, `NEXT`, and `LATER` horizons, active validation work,
    delivery work, agent runs, branches, and pull requests. Record before-counts.
@@ -368,10 +368,10 @@ work against [KR] — this is a gap."
 ## References
 
 - [Autonomy Policy](../../Autonomy%20Policy.md)
-- [OOKRST Structure](../../guides/ookrst-structure.md)
+- [The Loop](../../guides/the-loop.md)
 - [Full Playbook — Discovery Tree as Operating System](../../Agentic%20PM%20Playbook.md)
 - [OKR (Outcome/KR) Workflow](../okr-workflow/SKILL.md)
-- [OOKRST Tree Workflow](../ost-workflow/SKILL.md)
+- [Loop Tree Workflow](../ost-workflow/SKILL.md)
 - [Test Workflow](../experiment-workflow/SKILL.md)
 - [Build Authorization](../build-authorization/SKILL.md)
 - [Stakeholder Status Reports](../status-report-workflow/SKILL.md)

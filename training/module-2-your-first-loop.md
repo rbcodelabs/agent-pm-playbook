@@ -1,19 +1,19 @@
-# Module 2: Your First OOKRST Tree
+# Module 2: Your First Loop
 
 **Time:** 1 day
 **Coding required:** No.
 **Prerequisite:** [Module 1](module-1-environment-setup.md) (working environment) and a product brief — the [ShiftLoop sample brief](sample-data/product-brief.md) for practice, or your own product's brief if you're going straight to the real thing (see the *bring-your-own-product* note below).
-**You will produce:** An OOKRST tree for ShiftLoop — one Opportunity, the Outcome it justifies, that Outcome's Key Results, and candidate Solutions with a Test — plus a health check that catches the planted flaws in the provided seed tree.
+**You will produce:** A Loop tree for ShiftLoop — one Opportunity, the Outcome it justifies, that Outcome's Key Results, and candidate Solutions with a Test — plus a health check that catches the planted flaws in the provided seed tree.
 
 ---
 
 ## Why this module
 
-In Module 0 you traced one feature backward to an outcome. An **OOKRST tree** is that trace, scaled up and made permanent: **O**pportunity → **O**utcome → **K**ey **R**esult → **S**olution → **T**est. Every piece of product work traces upward to the customer need that justified it and downward to the test that will tell you whether it worked. It is the *operating system* of agentic PM — the single artifact every other activity reads from and writes to. Signals attach to it (Module 3), Tests hang off it (Module 4), and roadmap items that don't trace to it don't get built.
+In Module 0 you traced one feature backward to an outcome. A **Loop tree** is that trace, scaled up and made permanent: **O**pportunity → **O**utcome → **K**ey **R**esult → **S**olution → **T**est. Every piece of product work traces upward to the customer need that justified it and downward to the test that will tell you whether it worked. It is the *operating system* of agentic PM — the single artifact every other activity reads from and writes to. Signals attach to it (Module 3), Tests hang off it (Module 4), and roadmap items that don't trace to it don't get built.
 
 Get the structure right and everything downstream stays honest. Get it wrong — a solution smuggled in as an opportunity, an outcome that quietly serves a different need, a Key Result that is really a launch date — and every decision built on it inherits the error. So this module is as much about *detecting bad structure* as building good structure.
 
-The canonical definition lives in the [OOKRST Structure guide](../guides/ookrst-structure.md). This module teaches you to use it.
+The canonical definition lives in the [Loop guide](../guides/the-loop.md). This module teaches you to use it.
 
 ---
 
@@ -74,7 +74,7 @@ For ShiftLoop: *"Managers struggle to get their existing team and their staff's 
 
 **3+ red flags = the tree needs a reset before any new work.**
 
-**Go deeper:** the [OOKRST Structure guide](../guides/ookrst-structure.md), the [`ost-workflow` skill](../skills/ost-workflow/SKILL.md) (the full build + health-check + prioritization procedure), [Agentic PM Playbook](../Agentic%20PM%20Playbook.md), and [Tree Health Checks](../Agent%20Skills/Tree%20Health%20Checks.md).
+**Go deeper:** the [Loop guide](../guides/the-loop.md), the [`ost-workflow` skill](../skills/ost-workflow/SKILL.md) (the full build + health-check + prioritization procedure), [Agentic PM Playbook](../Agentic%20PM%20Playbook.md), and [Tree Health Checks](../Agent%20Skills/Tree%20Health%20Checks.md).
 
 ---
 
@@ -90,7 +90,7 @@ Two parts: **build** a clean tree, then **diagnose** a broken one. The diagnosis
 
 **Steps:**
 
-1. In a thread, trigger the skill: *"Build an OOKRST tree for `<product>`. Start from the opportunity; the current goal is in the product brief."* *(Sample run: "Build an OOKRST tree for ShiftLoop…")*
+1. In a thread, trigger the skill: *"Build a Loop tree for `<product>`. Start from the opportunity; the current goal is in the product brief."* *(Sample run: "Build a Loop tree for ShiftLoop…")*
 
    > **No `ost-workflow` skill?** If you're working without the skill active, apply the five-level structure directly: describe your product and goal in a plain Claude thread, then ask it to help you surface customer needs (Opportunities) and walk down to Outcome, KRs, Solutions and a Test. The skill enforces good structure automatically — without it, *you're* the enforcer. Re-read the rules and the health-check table above and check your own work at each step.
 2. **Start from needs, not the goal.** Surface **at least 5 candidate Opportunities**, each framed as a customer need with context. Pull them from your personas — for ShiftLoop that's managers, the buyer, and staff; for a single-persona product it's all from that one user. Resist writing solutions.
@@ -101,11 +101,11 @@ Two parts: **build** a clean tree, then **diagnose** a broken one. The diagnosis
 7. **Name the riskiest assumption** of one Solution and write one Test (`TST-1`) to falsify it — just the assumption and a one-line test idea; Module 4 does the full design.
 8. Save the tree where your notes live (per `pm-config.md`).
 
-**Deliverable:** a saved OOKRST tree — ≥5 need-framed candidate Opportunities, one root Opportunity carrying an Outcome, 2–3 KRs, ≥3 Solutions under the focus KR, and one Test.
+**Deliverable:** a saved Loop tree — ≥5 need-framed candidate Opportunities, one root Opportunity carrying an Outcome, 2–3 KRs, ≥3 Solutions under the focus KR, and one Test.
 
 ### Part B — Health-check the seed tree (≈ 45 min)
 
-**Setup:** Now open the [seed OOKRST tree](sample-data/seed-ookrst.md). It is **deliberately broken**. Do *not* open the [facilitator key](sample-data/facilitator-key.md) yet.
+**Setup:** Now open the [seed Loop tree](sample-data/seed-loop.md). It is **deliberately broken**. Do *not* open the [facilitator key](sample-data/facilitator-key.md) yet.
 
 **Steps:**
 

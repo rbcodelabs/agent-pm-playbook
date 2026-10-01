@@ -21,7 +21,7 @@ By the end of this module you will be able to:
 
 - Name the four shifts that separate agentic PM from traditional PM, and say which one you're weakest on.
 - Distinguish an **outcome** (a change in customer behavior, measured by Key Results) from **output** (a thing you shipped).
-- Trace any roadmap item backward through the OOKRST chain (Solution → Key Result → Outcome → Opportunity) — and recognize when that chain is broken.
+- Trace any roadmap item backward through the Loop chain (Solution → Key Result → Outcome → Opportunity) — and recognize when that chain is broken.
 - Explain why discovery is *continuous and weekly*, not a quarterly sprint.
 - Describe the PM's real job in this model: holding judgment, not producing artifacts.
 
@@ -49,9 +49,9 @@ This whole system is one operating model with four shifts. Everything you'll lea
 
 The trap: outputs feel like progress because they're visible and shippable. Outcomes feel slippery because they depend on customers, who are not under your control. The discipline of this operating model is to keep your attention on the slippery thing.
 
-### The chain you'll build all course: OOKRST
+### The chain you'll build all course: the Loop
 
-The playbook ties goals and discovery into one tree: **Opportunity → Outcome → Key Result → Solution → Test.** A *Solution* is a candidate way to move a *Key Result*; a *Test* is the cheapest way to check a Solution's riskiest assumption. Today you climb that tree upward from a feature; in Module 2 you build it downward from a customer need. The canonical definition is the [OOKRST Structure guide](../guides/ookrst-structure.md).
+The playbook ties goals and discovery into one tree: **Opportunity → Outcome → Key Result → Solution → Test.** A *Solution* is a candidate way to move a *Key Result*; a *Test* is the cheapest way to check a Solution's riskiest assumption. Today you climb that tree upward from a feature; in Module 2 you build it downward from a customer need. The canonical definition is the [Loop guide](../guides/the-loop.md).
 
 ### Continuous discovery, not sprint discovery
 
@@ -61,7 +61,7 @@ Continuous discovery means you touch customer signal **every week** — an inter
 
 ### The PM as judgment holder
 
-Here's the reframe that unsettles people: **in this model, you produce far fewer documents.** The agents draft the OOKRST tree, cluster the signals, write the user story, design the test harness. What's left for you?
+Here's the reframe that unsettles people: **in this model, you produce far fewer documents.** The agents draft the Loop tree, cluster the signals, write the user story, design the test harness. What's left for you?
 
 The decisions. Which opportunity is worth pursuing. Whether the evidence is strong enough to advance. What the riskiest assumption is. When to kill an idea. Whether "the data says X" actually holds up. None of that is artifact production — all of it is judgment. If that feels like *less* work, you're misreading it. It's less typing and far more thinking, and the thinking is the part that was always actually your job.
 
@@ -69,7 +69,7 @@ The decisions. Which opportunity is worth pursuing. Whether the evidence is stro
 
 The traditional "are we ready to build?" question is binary and usually answered by whoever is most confident in the room. Progressive Investment replaces it with stages — roughly **Exploring → Validating → Testing → Building → Scaling** — each with an evidence threshold. The question is never "build, yes or no?" It's "what stage is this at, and what is the *cheapest* test that earns the right to advance?" You'll operate this directly in Module 4.
 
-**Go deeper (optional — not needed to do this module):** [Agentic PM Playbook](../Agentic%20PM%20Playbook.md) — the *Philosophy* and tree-as-operating-system sections; the [OOKRST Structure guide](../guides/ookrst-structure.md) defines the five levels. The [Progressive Investment Framework](../Progressive%20Investment%20Framework.md) covers the staged-investment model in full; you'll come back to it in Module 4. Everything you need for today's exercise is on this page.
+**Go deeper (optional — not needed to do this module):** [Agentic PM Playbook](../Agentic%20PM%20Playbook.md) — the *Philosophy* and tree-as-operating-system sections; the [Loop guide](../guides/the-loop.md) defines the five levels. The [Progressive Investment Framework](../Progressive%20Investment%20Framework.md) covers the staged-investment model in full; you'll come back to it in Module 4. Everything you need for today's exercise is on this page.
 
 ---
 
@@ -88,7 +88,7 @@ No tools. Just you, one real feature, and an honest pen.
 5. **Sanity-check ownership.** Does the Outcome ladder up to a business or product goal your team actually owns? (A quarterly OKR if you have them; an ongoing funnel metric like activation or retention if you don't — both are fine.) If you can't name it, note that.
 6. **Check the evidence at each rung.** For the Key Result, Outcome and Opportunity, ask: *what evidence do I have that this is real?* Customer signal, data, a quote — or just a hunch? Mark each rung **evidenced** or **assumed**. (Steps 1–4 build the four rungs of the chain; the last two steps annotate them.)
 
-**Deliverable:** A short written chain — `Solution → Key Result → Outcome → Opportunity` — with each rung marked *evidenced* or *assumed*. Keep it. You'll recognize this shape again in Module 2: it's one branch of an OOKRST tree, read bottom-up.
+**Deliverable:** A short written chain — `Solution → Key Result → Outcome → Opportunity` — with each rung marked *evidenced* or *assumed*. Keep it. You'll recognize this shape again in Module 2: it's one branch of a Loop tree, read bottom-up.
 
 ---
 

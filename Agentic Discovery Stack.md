@@ -2,13 +2,13 @@
 
 > The complete Obsidian + Linear replacement for Jira Product Discovery. Built for agentic teams doing continuous discovery without a separate SaaS tool.
 
-**See also:** [[Agentic PM Playbook]] for philosophy and workflows. [[Agentic PM — Agent Capability Framework]] for skill definitions. [OOKRST Structure](guides/ookrst-structure.md) for the level definitions, rules, and ID formats this stack implements.
+**See also:** [[Agentic PM Playbook]] for philosophy and workflows. [[Agentic PM — Agent Capability Framework]] for skill definitions. [The Loop](guides/the-loop.md) for the level definitions, rules, and ID formats this stack implements.
 
 ---
 
 ## What This Is
 
-This document describes the full agentic-JPD-equivalent system: a set of skills, file structures, and Obsidian Bases views that replicate everything Jira Product Discovery does — and puts goals and discovery in one integrated tree (OOKRST) rather than a separate OKR layer bolted onto a separate tree.
+This document describes the full agentic-JPD-equivalent system: a set of skills, file structures, and Obsidian Bases views that replicate everything Jira Product Discovery does — and puts goals and discovery in one integrated tree (Loop) rather than a separate OKR layer bolted onto a separate tree.
 
 Every JPD construct has a direct equivalent here. All state lives in Markdown files in your product vault folder, queryable by Obsidian Bases. All workflows are driven by named skills. Nothing requires a separate SaaS subscription. This is the Markdown/Obsidian adapter; other providers map the same five levels to their own objects (see [PM Tool Integration Guide](PM%20Tool%20Integration%20Guide.md)).
 
@@ -44,7 +44,7 @@ Opportunity is the root. Each level has its own skill coverage, file template, a
 | Board / Kanban | Obsidian Bases | `[Product] Discovery Board.base` | n/a |
 | Roadmap view | Roadmap Bases | `[Product] Roadmap.base` | `roadmap-workflow` |
 
-Skill ids keep their legacy names. `okr-workflow` covers the Outcome and Key Result levels plus cycle scoping; `ost-workflow` covers the tree-wide OOKRST structure (Opportunity, Solution, Test, and the tree health check); `experiment-workflow` covers Test design and results.
+Skill ids keep their legacy names. `okr-workflow` covers the Outcome and Key Result levels plus cycle scoping; `ost-workflow` covers the tree-wide Loop structure (Opportunity, Solution, Test, and the tree health check); `experiment-workflow` covers Test design and results.
 
 ---
 
@@ -88,7 +88,7 @@ product/
   okrs/
     Q3-2026.md                        # Cycle file (one per cycle): holds the Outcomes and their KRs, each with a parent Opportunity
   discovery/
-    tree-summary.md                   # OOKRST tree narrative (human-readable)
+    tree-summary.md                   # Loop tree narrative (human-readable)
     Signal Ledger.md                  # Signal synthesis sessions log
     opportunities/
       OPP-001-[slug].md               # Opportunity files (the root level)
@@ -174,4 +174,4 @@ After 4-6 weeks of this rhythm, the tree will start surfacing patterns you didn'
 
 ## Legacy terminology
 
-Earlier versions of this stack used the OKR → OST hierarchy (Objective → Key Result → Desired Outcome → Opportunity → Solution → Experiment) with `EXP-nnn` experiment files and an `ost-summary.md`. Those level names are retired: Objective and Desired Outcome merged into Outcome, Opportunity became the root, Solutions are parented by a KR, and Experiment is now Test. The skill ids `ost-workflow` and `okr-workflow` are unchanged. Existing data can be converted using the mapping in the [OOKRST Structure guide](guides/ookrst-structure.md#mapping-from-the-legacy-okr--ost-model).
+Earlier versions of this stack used the OKR → OST hierarchy (Objective → Key Result → Desired Outcome → Opportunity → Solution → Experiment) with `EXP-nnn` experiment files and an `ost-summary.md`. Those level names are retired: Objective and Desired Outcome merged into Outcome, Opportunity became the root, Solutions are parented by a KR, and Experiment is now Test. The skill ids `ost-workflow` and `okr-workflow` are unchanged. Existing data can be converted using the mapping in the [Loop guide](guides/the-loop.md#mapping-from-the-legacy-okr--ost-model).

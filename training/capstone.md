@@ -21,7 +21,7 @@ Run one full turn of the cycle, end to end. Lean on the skills and agents you le
 
 1. **Collect real signals.** Gather a real batch this week — interviews, support tickets, reviews, NPS, sales notes. Not last quarter's research; this week's. *(No minimum volume required, but a single source or single method is a Low confidence ceiling no matter how strong the signal feels — flag it in your ledger entry. Aim for at least 2 sources or 2 methods; 3–5 interviews plus a batch of tickets is a solid capstone corpus.)*
 2. **Synthesize** (Module 3). Cluster by need, tag confidence, surface contradictions, write a real Signal Ledger entry.
-3. **Update your OOKRST tree** (Module 2). Map the clusters onto your Opportunities (add / update / challenge), keep the whole tree structurally honest from Opportunity down to Test, and confirm a focus branch.
+3. **Update your Loop tree** (Module 2). Map the clusters onto your Opportunities (add / update / challenge), keep the whole tree structurally honest from Opportunity down to Test, and confirm a focus branch.
 4. **Decompose one assumption and test it cheaply** (Module 4). Take a candidate Solution under your focus KR, name its riskiest assumption, design the *cheapest* Test (`TST-n`), write the kill condition first, and — if feasible in the window — run it. *(The rubric scores Test **design**, not whether the test ran in the capstone window. A well-designed test with a pre-written kill condition scores the same whether or not you had time to execute it.)*
 5. **Run the Solution through a gate** (Module 4). Get an honest investment-gate verdict and the cheapest next action.
 6. **(Optional) Hand off to the team** (Module 5). If a Solution survived, run it to user stories / a design brief and note where your judgment was required.
@@ -34,7 +34,7 @@ You don't have to reach "Building." You *do* have to run a complete, honest loop
 ## What to submit
 
 - Your **Signal Ledger entry** for the week (real sources, real verbatims).
-- The **OOKRST tree** before and after (Opportunity, Outcome, KRs, Solutions, Tests with their IDs), so the update is visible.
+- The **Loop tree** before and after (Opportunity, Outcome, KRs, Solutions, Tests with their IDs), so the update is visible.
 - A one-page **Test brief**: the Solution and parent KR, riskiest assumption, chosen Test type + why, success + kill conditions.
 - The **investment-gate verdict** with its next action.
 - A short **reflection** (½ page): where the evidence was thin, what you're still unsure about, and what you'd do next.

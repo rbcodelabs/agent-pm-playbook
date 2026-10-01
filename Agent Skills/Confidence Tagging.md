@@ -1,9 +1,9 @@
 # Confidence Tagging
 
-> The practice of explicitly signaling what the agent is certain about, uncertain about, and what evidence would change its conclusion — attached to every substantive output and carried at each level of the OOKRST tree where it applies.
+> The practice of explicitly signaling what the agent is certain about, uncertain about, and what evidence would change its conclusion — attached to every substantive output and carried at each level of the Loop tree where it applies.
 
 **Layer:** 4 — Judgment, Escalation & Metacognition
-**Companion:** [[Agentic PM — Agent Capability Framework]] · [OOKRST Structure](../guides/ookrst-structure.md)
+**Companion:** [[Agentic PM — Agent Capability Framework]] · [The Loop](../guides/the-loop.md)
 
 ---
 
@@ -11,7 +11,7 @@
 
 Confidence tagging is the discipline of making epistemic state visible. Every synthesis, cluster, Opportunity draft, Test brief, or recommendation the agent produces carries an implicit claim about how reliable that output is. Confidence tagging makes that claim explicit rather than leaving the PM to guess whether a pattern is built on 30 data points or 3. It transforms vague outputs into calibrated ones.
 
-In the OOKRST tree, confidence is not one number. Different levels are supported by different kinds of evidence, so each carries its own tag:
+In the Loop tree, confidence is not one number. Different levels are supported by different kinds of evidence, so each carries its own tag:
 
 | Level | What the confidence tag expresses | What it is built from |
 |---|---|---|

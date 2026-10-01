@@ -1,16 +1,16 @@
 # Tree Health Checks
 
-> The agent's practice of proactively auditing the OOKRST tree (Opportunity, Outcome, Key Result, Solution, Test) for structural problems without being asked, and surfacing degradation before it compounds.
+> The agent's practice of proactively auditing the Loop tree (Opportunity, Outcome, Key Result, Solution, Test) for structural problems without being asked, and surfacing degradation before it compounds.
 
 **Layer:** 2 — Tree Integrity & Maintenance
 **Companion:** [[Agentic PM — Agent Capability Framework]]
-**Structure:** `guides/ookrst-structure.md` defines the levels, structural rules and IDs (`OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, `TST-n`) this skill audits.
+**Structure:** `guides/the-loop.md` defines the levels, structural rules and IDs (`OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, `TST-n`) this skill audits.
 
 ---
 
 ## What This Skill Is
 
-Tree health checks are the OOKRST equivalent of a linting pass: a systematic scan, across all five levels, for structural problems that don't announce themselves but quietly corrupt the tree's usefulness over time. The skill is not about responding to PM queries about the tree's state. It is about the agent proactively generating an unsolicited health report on a regular cadence and surfacing specific, actionable issues. An agent that only answers questions about the tree is a reference tool. An agent that can audit it is a steward.
+Tree health checks are the Loop equivalent of a linting pass: a systematic scan, across all five levels, for structural problems that don't announce themselves but quietly corrupt the tree's usefulness over time. The skill is not about responding to PM queries about the tree's state. It is about the agent proactively generating an unsolicited health report on a regular cadence and surfacing specific, actionable issues. An agent that only answers questions about the tree is a reference tool. An agent that can audit it is a steward.
 
 The audit checks the tree against its structural rules:
 
@@ -115,7 +115,7 @@ The weak version provides no specifics, no actionable items, and no way to know 
 
 ## How to Develop It
 
-**Enumerate the nine signals explicitly in the system prompt.** Don't rely on the agent to infer what "health" means in an OOKRST context. List the signals (zombie Tests, orphans, fan-out violations, outcome drift, evidence on KRs, stale branches, weak-evidence Opportunities, stalled Solutions, roadmap response to at-risk KRs), define the threshold for each, and specify the expected output format.
+**Enumerate the nine signals explicitly in the system prompt.** Don't rely on the agent to infer what "health" means in a Loop context. List the signals (zombie Tests, orphans, fan-out violations, outcome drift, evidence on KRs, stale branches, weak-evidence Opportunities, stalled Solutions, roadmap response to at-risk KRs), define the threshold for each, and specify the expected output format.
 
 **Give the agent a health report template.** Structure reduces variance. A template that specifies sections (fan-out violations, zombie Tests, orphans, etc.) and requires "no issues found" to be stated explicitly for clean signals is much more reliable than an open-ended "tell me how the tree looks."
 
@@ -128,7 +128,7 @@ The weak version provides no specifics, no actionable items, and no way to know 
 ## Sample Prompts
 
 **Bi-weekly health check prompt:**
-> "Run a health check on the following OOKRST tree. Check each of these nine signals: (1) zombie Tests, running with no update in 14+ days or no kill condition defined; (2) orphans, meaning any record without its required parent (Outcome without Opportunity, KR without Outcome, Solution without KR, Test without Solution); (3) fan-out violations: Outcome with fewer than 2 or more than 3 KRs, KR with fewer than 3 candidate Solutions, Solution heading to build with no Test; (4) outcome drift, meaning an Outcome or KR that no longer answers its Opportunity, or Solutions and Tests that no longer move their KR; (5) evidence attached to KRs instead of Opportunities; (6) stale branches, with no update in 14+ days in an area that should be active; (7) weak-evidence Opportunities, single source and not yet upgraded; (8) stalled Solutions, in 'exploring' status for 2+ cycles with no linked Test; (9) at-risk KRs answered with roadmap items instead of Solutions and Tests. For each issue found, name the specific record ID, describe the problem, and suggest a next action. For each signal with no issues, confirm 'no issues found.'"
+> "Run a health check on the following Loop tree. Check each of these nine signals: (1) zombie Tests, running with no update in 14+ days or no kill condition defined; (2) orphans, meaning any record without its required parent (Outcome without Opportunity, KR without Outcome, Solution without KR, Test without Solution); (3) fan-out violations: Outcome with fewer than 2 or more than 3 KRs, KR with fewer than 3 candidate Solutions, Solution heading to build with no Test; (4) outcome drift, meaning an Outcome or KR that no longer answers its Opportunity, or Solutions and Tests that no longer move their KR; (5) evidence attached to KRs instead of Opportunities; (6) stale branches, with no update in 14+ days in an area that should be active; (7) weak-evidence Opportunities, single source and not yet upgraded; (8) stalled Solutions, in 'exploring' status for 2+ cycles with no linked Test; (9) at-risk KRs answered with roadmap items instead of Solutions and Tests. For each issue found, name the specific record ID, describe the problem, and suggest a next action. For each signal with no issues, confirm 'no issues found.'"
 
 **Kill condition audit prompt:**
 > "Review all currently running Tests in this tree. For each one, confirm: (1) Is there a stated success metric? (2) Is there a stated kill condition, meaning a result that would cause us to abandon the Solution or assumption? (3) When was the last update? Flag any Test missing either the success metric or the kill condition, regardless of recency."
@@ -152,4 +152,4 @@ The weak version provides no specifics, no actionable items, and no way to know 
 
 [[Epistemic Self-Awareness]] — The meta-skill underlying health checks: the agent must know what a healthy tree looks like well enough to recognize an unhealthy one, and be confident enough to surface bad news without softening it.
 
-**Related skills by id:** `ost-workflow` and `okr-workflow` keep their ids for compatibility. Both cover the OOKRST levels (the former the Opportunity and Solution side, the latter the Outcome and KR side); the health check reads the tree they maintain as one structure.
+**Related skills by id:** `ost-workflow` and `okr-workflow` keep their ids for compatibility. Both cover the Loop levels (the former the Opportunity and Solution side, the latter the Outcome and KR side); the health check reads the tree they maintain as one structure.

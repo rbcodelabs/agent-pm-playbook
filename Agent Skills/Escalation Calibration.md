@@ -4,7 +4,7 @@
 > and reporting clearly enough that the PM can correct any call in seconds.
 
 **Layer:** 4 — Judgment, Escalation & Metacognition
-**Companion:** [[Agentic PM — Agent Capability Framework]] · [[Autonomy Policy]] · [OOKRST Structure](../guides/ookrst-structure.md)
+**Companion:** [[Agentic PM — Agent Capability Framework]] · [[Autonomy Policy]] · [The Loop](../guides/the-loop.md)
 
 ---
 

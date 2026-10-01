@@ -1,11 +1,11 @@
 ---
 name: okr-workflow
 description: >-
-  Manage the Outcome and Key Result layer and the cycle of the OOKRST
-  hierarchy (Opportunity -> Outcome -> KR -> Solution -> Test) — use when the
+  Manage the Outcome and Key Result layer and the cycle of the Loop
+  (formerly OOKRST) hierarchy (Opportunity -> Outcome -> KR -> Solution -> Test) — use when the
   user is setting up a new OKR cycle, logging a check-in against a Key Result,
   reviewing OKR health, connecting Outcomes and KRs to their Opportunity and
-  Solutions, converting legacy OKR/OST data to OOKRST, or archiving a completed
+  Solutions, converting legacy OKR/OST data to the Loop, or archiving a completed
   cycle. Also activates when the user asks whether discovery work is aligned to
   a KR, or wants to know which KRs are at risk.
 metadata:
@@ -16,7 +16,7 @@ retrieval:
   aliases:
     - OKR
     - OKRs
-    - OOKRST
+    - the Loop framework
     - outcome
     - outcomes
     - objective
@@ -42,7 +42,7 @@ retrieval:
     - which KRs are at risk
     - connect this KR to discovery
     - connect this outcome to an opportunity
-    - convert my OKRs and OST to OOKRST
+    - convert my OKRs and OST to the Loop
     - archive the OKR cycle
     - are my OKRs outcome-focused
     - what should I work on to move this KR
@@ -53,7 +53,7 @@ retrieval:
     - Key Result
     - KR
     - OKR cycle
-    - OOKRST
+    - the Loop framework
     - Opportunity
     - Solution
     - check-in
@@ -63,9 +63,9 @@ retrieval:
     - desired outcome
     - OST
 chainTo:
-  - pattern: "opportunity.*tree|\\bOST\\b|\\bOOKRST\\b|desired outcome|discovery|opportunity|solution|connect.*KR"
+  - pattern: "opportunity.*tree|\\bOST\\b|\\bOOKRST\\b|\\bthe loop\\b|\\bloop framework\\b|desired outcome|discovery|opportunity|solution|connect.*KR"
     targetSkill: ost-workflow
-    message: Switching to the OOKRST tree workflow to connect this Outcome and KR to Opportunities and Solutions
+    message: Switching to the Loop tree workflow to connect this Outcome and KR to Opportunities and Solutions
   - pattern: "experiment|\\btest\\b|assumption test|validate|test.*KR|what.*could.*move"
     targetSkill: experiment-workflow
     message: Switching to the Test workflow to design tests that could move this KR
@@ -74,9 +74,9 @@ chainTo:
     message: Switching to roadmap workflow to connect roadmap items to KR progress
 ---
 
-# OKR Workflow — the Outcome and KR Layer of OOKRST
+# OKR Workflow — the Outcome and KR Layer of the Loop
 
-The canonical definition of the five levels, structural rules, legacy mapping, and IDs is [the OOKRST structure guide](../../guides/ookrst-structure.md). This skill owns the middle of that tree (Outcome and Key Result) and the cycle that scopes them. `ost-workflow` owns the tree-wide workflow; `experiment-workflow` owns Tests.
+The canonical definition of the five levels, structural rules, legacy mapping, and IDs is [the Loop guide](../../guides/the-loop.md). This skill owns the middle of that tree (Outcome and Key Result) and the cycle that scopes them. `ost-workflow` owns the tree-wide workflow; `experiment-workflow` owns Tests.
 
 ## Autonomy
 
@@ -196,9 +196,10 @@ A check-in does not stop at the KR:
 1. Fold any Test results and Solution progress logged since the last check-in into the KR's `**Evidence this KR is moving:**` line, naming the Solution (`SOL-n`) and Test (`TST-n`) IDs.
 2. Recompute the Outcome's status from its KRs (the worst KR drives it unless the others clearly compensate; say which rule you applied).
 3. If every KR under an Outcome is Achieved, or the Outcome has clearly stopped moving, update the parent Opportunity's status (pursuing / sustained / retired) and report it.
+4. Close the loop: a Test that passed updates the KR; a failed or inconclusive Test that changed what we know about the need goes back to the Opportunity (reopen, re-score, or spawn new ones).
 
 ### Step 5 - Act on risk
-If At Risk or Off Track, report the gap to target (absolute and %), cycle elapsed %, whether the trajectory reaches the target, and which Solutions and Tests are in play. If the trajectory misses and no Tests are running, chain to `ost-workflow` or `experiment-workflow` and start the work.
+If At Risk or Off Track, report the gap to target (absolute and %), cycle elapsed %, whether the trajectory reaches the target, and which Solutions and Tests are in play. If the trajectory misses and no Tests are running, chain to `ost-workflow` or `experiment-workflow` and start the work. If the KR has stalled or been missed despite Solutions and Tests in play, go back and re-examine the Outcome and its Opportunity (is the behavior change still right, is the KR measuring it?) instead of adding more Solutions. See [Closing the loop](../../guides/the-loop.md#closing-the-loop).
 
 ---
 
@@ -305,16 +306,16 @@ Change `status: Active` to `status: Completed`. Update each parent Opportunity's
 
 ---
 
-## Workflow 6: Convert Legacy OKR/OST Data to OOKRST
+## Workflow 6: Convert Legacy OKR/OST Data to the Loop
 
-Use when a workspace still holds the legacy OKR -> OST shape (Objectives with KRs, separate OST roots called Desired Outcomes, Experiments). Follow the mapping in [the structure guide](../../guides/ookrst-structure.md) deliberately, and preserve existing IDs and links as aliases so history stays traceable.
+Use when a workspace still holds the legacy OKR -> OST shape (Objectives with KRs, separate OST roots called Desired Outcomes, Experiments). Follow the mapping in [the structure guide](../../guides/the-loop.md) deliberately, and preserve existing IDs and links as aliases so history stays traceable.
 
 1. **Inventory.** List Objectives, KRs, Desired Outcomes, Opportunities, Solutions, and Experiments with their current parents.
 2. **Merge Objective and Desired Outcome.** Each legacy Desired Outcome (the OST root, linked to a KR) and the Objective above that KR become one Outcome. Where several Objectives share one Desired Outcome or the reverse, keep one Outcome per distinct behavior change and record the merge rationale in one line.
 3. **Re-root Opportunities.** Each Opportunity that sat under a Desired Outcome becomes a candidate Opportunity parent of that Outcome. Merge duplicates with a one-line rationale; where one Outcome now has several Opportunities, either keep the most evidenced as parent and record the rest as secondary links, or split into more than one Outcome per the fan-out rule.
 4. **Re-parent Solutions** to the KR the Opportunity most directly moves, keeping the Opportunity reachable through ancestry. A Solution that moves two KRs is split or given a secondary link.
 5. **Rename Experiments to Tests**, keeping each tied to its Solution's assumption and informing KR.
-6. **Re-key IDs** to the OOKRST scheme (`OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, `TST-n`), keeping legacy IDs (`OBJ-0N`, `EXP-NNN`) in an `aliases` or `legacy_id` field.
+6. **Re-key IDs** to the Loop scheme (`OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, `TST-n`), keeping legacy IDs (`OBJ-0N`, `EXP-NNN`) in an `aliases` or `legacy_id` field.
 7. **Run the tree health check** (`ost-workflow`) and report orphans and coverage gaps the conversion exposed.
 
 Report the old-to-new mapping table. Conversion is reversible while legacy records still exist; do not delete them in the same run.
@@ -382,8 +383,8 @@ Handoff to `experiment-workflow`:
 
 ## References
 
-- [OOKRST Structure](../../guides/ookrst-structure.md)
+- [The Loop](../../guides/the-loop.md)
 - [Full Playbook - Goals Layer](../../Agentic%20PM%20Playbook.md)
-- [OOKRST Tree Workflow](../ost-workflow/SKILL.md)
+- [Loop Tree Workflow](../ost-workflow/SKILL.md)
 - [Investment Gate](../investment-gate/SKILL.md)
 - [PM Setup](../pm-setup/SKILL.md)

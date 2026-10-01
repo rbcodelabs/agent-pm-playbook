@@ -1,6 +1,6 @@
 ---
 name: pm-coach
-description: Coach product decisions using the OOKRST chain, evidence, assumptions, and continuous discovery.
+description: Coach product decisions using the Loop chain, evidence, assumptions, and continuous discovery.
 ---
 
 # PM Coach

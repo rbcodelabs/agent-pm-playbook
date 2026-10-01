@@ -28,7 +28,7 @@ You do **not** need to be technical. Modules 0–4 and 6 require no coding. Modu
 
 | From (traditional PM) | To (agentic PM) |
 |---|---|
-| Output and roadmap features | Outcomes, with every work item traced through one tree: Opportunity → Outcome → Key Result → Solution → Test ([OOKRST](../guides/ookrst-structure.md)) |
+| Output and roadmap features | Outcomes, with every work item traced through one tree: Opportunity → Outcome → Key Result → Solution → Test ([Loop](../guides/the-loop.md)) |
 | Quarterly research sprints | Continuous weekly discovery; signals processed the same week |
 | PM as document producer | PM as judgment holder; agents produce artifacts, PM decides |
 | Binary "ready to build?" gates | Progressive Investment: staged evidence thresholds |
@@ -45,7 +45,7 @@ Work the modules in order. Each builds on the artifact the previous one produced
 |---|---|---|---|---|
 | **0** | [The Operating Model](module-0-operating-model.md) | Half day | No | A backward trace from a real feature to its (missing) outcome |
 | **1** | [Environment Setup](module-1-environment-setup.md) | Half day | A little | A working environment + `pm-config.md` |
-| **2** | [Your First OOKRST Tree](module-2-your-first-ookrst-tree.md) | 1 day | No | A health-checked OOKRST tree (Opportunity → Outcome → KR → Solution → Test) |
+| **2** | [Your First Loop](module-2-your-first-loop.md) | 1 day | No | A health-checked Loop tree (Opportunity → Outcome → KR → Solution → Test) |
 | **3** | [Signal Synthesis](module-3-signal-synthesis.md) | 1 day | No | Clustered, evidence-tagged Opportunities attached to the tree |
 | **4** | [Tests & Progressive Investment](module-4-tests-and-investment.md) | 1 day | No | One assumption decomposed, leanest Test designed, gated |
 | **5** | [The Agent Team](module-5-the-agent-team.md) | 1 day | Delegation only | One Solution run from story → design brief |
@@ -72,7 +72,7 @@ Every module follows the same template (see [`_module-template.md`](_module-temp
 
 ## The sample dataset
 
-Modules 2–4 operate on a shared fictional product so the exercises are concrete and repeatable. See [`sample-data/`](sample-data/) for the product brief, interview transcripts, support tickets, and a seed OOKRST tree. (The fictional product is deliberately boring and relatable — a B2B SaaS scheduling tool — so nobody's real product leaks into the exercises.)
+Modules 2–4 operate on a shared fictional product so the exercises are concrete and repeatable. See [`sample-data/`](sample-data/) for the product brief, interview transcripts, support tickets, and a seed Loop tree. (The fictional product is deliberately boring and relatable — a B2B SaaS scheduling tool — so nobody's real product leaks into the exercises.)
 
 The capstone is the moment you drop the sample data and run the whole loop on *your* product.
 

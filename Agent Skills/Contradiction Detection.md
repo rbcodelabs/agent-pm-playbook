@@ -1,6 +1,6 @@
 # Contradiction Detection
 
-> The skill of recognizing when new evidence directly conflicts with an existing claim anywhere in the OOKRST tree — an Opportunity framing, an Outcome, a Key Result reading, a Solution assumption, or a Test result — and surfacing that conflict explicitly, then carrying it up the tree, rather than silently absorbing the signal.
+> The skill of recognizing when new evidence directly conflicts with an existing claim anywhere in the Loop tree — an Opportunity framing, an Outcome, a Key Result reading, a Solution assumption, or a Test result — and surfacing that conflict explicitly, then carrying it up the tree, rather than silently absorbing the signal.
 
 **Layer:** 1 — Synthesis & Signal Processing
 **Companion:** [[Agentic PM — Agent Capability Framework]]
@@ -9,7 +9,7 @@
 
 ## What This Skill Is
 
-Contradiction detection is the discipline of holding the existing OOKRST tree (see the [OOKRST structure guide](../guides/ookrst-structure.md)) in active memory and comparing every new signal against it — not just to find where the signal fits, but to notice where it doesn't fit, and to name that non-fit explicitly. An agent that only adds to the tree and never challenges it is not a discovery partner. It is a confirmation machine. It makes the tree look well-evidenced while gradually decoupling it from what customers actually experience.
+Contradiction detection is the discipline of holding the existing Loop tree (see the [Loop structure guide](../guides/the-loop.md)) in active memory and comparing every new signal against it — not just to find where the signal fits, but to notice where it doesn't fit, and to name that non-fit explicitly. An agent that only adds to the tree and never challenges it is not a discovery partner. It is a confirmation machine. It makes the tree look well-evidenced while gradually decoupling it from what customers actually experience.
 
 The skill requires three things simultaneously. First, the agent must hold a representation of the current tree — not just as a list of records, but as a set of implicit claims, level by level:
 
@@ -152,7 +152,7 @@ Do not try to reconcile the tension. Describe it and defer the resolution to the
 **Structural tree audit prompt:**
 
 ```
-Review the current OOKRST tree structure (not the signals — the tree itself) and flag any structural contradictions:
+Review the current Loop tree structure (not the signals — the tree itself) and flag any structural contradictions:
 
 1. Records with no parent (Outcome with no Opportunity, KR with no Outcome, Solution with no KR, Test with no Solution assumption)
 2. Opportunities with no supporting signals added in the past 30 days, despite active discovery
@@ -182,4 +182,4 @@ For each structural issue, describe what it is and what the PM should decide.
 
 [[Epistemic Self-Awareness]] — The meta-skill that underlies contradiction detection: the agent must be willing to challenge its own prior synthesis, not just new inputs.
 
-The `ost-workflow` and `okr-workflow` skill ids are unchanged for compatibility; between them they cover all five OOKRST levels, and contradictions found here route to whichever covers the affected level.
+The `ost-workflow` and `okr-workflow` skill ids are unchanged for compatibility; between them they cover all five Loop levels, and contradictions found here route to whichever covers the affected level.

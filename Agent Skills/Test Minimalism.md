@@ -4,7 +4,7 @@
 
 **Layer:** 3 — Test & Assumption Reasoning
 **Companion:** [[Agentic PM — Agent Capability Framework]]
-**Structure:** `guides/ookrst-structure.md`. A Test (`TST-n`) hangs off exactly one Solution (`SOL-n`), is scoped to one assumption of that Solution, and its result is logged against the KR the Solution is trying to move.
+**Structure:** `guides/the-loop.md`. A Test (`TST-n`) hangs off exactly one Solution (`SOL-n`), is scoped to one assumption of that Solution, and its result is logged against the KR the Solution is trying to move.
 
 ---
 
@@ -12,7 +12,7 @@
 
 Test minimalism is the discipline of working backward from a specific question ("what is the minimum we need to learn to decide whether to keep investing in this Solution?") and designing a Test that answers only that question, nothing else. It is aggressive scope reduction applied to Test design. It is not about cutting corners. It is about matching Test complexity to the state of knowledge. Early in a Solution's life, when almost everything is unproven, a two-week fake door gives more decision-relevant signal than a six-week A/B test of a fully built feature.
 
-In the OOKRST model a Test is never free-floating. It exists to put one assumption of one Solution at risk. Every Solution carries a list of assumptions with the riskiest one named, and the Solution needs at least one Test before it is built. Test minimalism picks the cheapest Test that could falsify that riskiest assumption. The acceptance criteria (what counts as success, what counts as failure, what kills the Solution) are written before the Test runs, so the result can't be argued into whatever shape is convenient.
+In the Loop model a Test is never free-floating. It exists to put one assumption of one Solution at risk. Every Solution carries a list of assumptions with the riskiest one named, and the Solution needs at least one Test before it is built. Test minimalism picks the cheapest Test that could falsify that riskiest assumption. The acceptance criteria (what counts as success, what counts as failure, what kills the Solution) are written before the Test runs, so the result can't be argued into whatever shape is convenient.
 
 The key cognitive move is backward design. Most agents (and many PMs) design Tests forward: they start with the Solution, then ask "how do we test this?" This reliably produces over-engineered Tests: A/B tests when a concierge pilot would work, fully coded prototypes when paper sketches would work, live tests when a five-person usability session would work. Backward design starts with the decision: "What would cause us to keep investing in this Solution? What would cause us to archive it?" Then it asks: "What is the smallest piece of evidence that would move us in one direction or the other?" Then it designs the Test that generates that evidence.
 

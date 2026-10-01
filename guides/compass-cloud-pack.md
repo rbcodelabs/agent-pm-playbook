@@ -22,7 +22,7 @@ The cloud skills use only the host-provided Compass MCP tools. They do not disco
 
 ## Included workflows
 
-The pack includes PM coaching and orchestration, Compass context routing, OOKRST tree maintenance (Opportunity, Outcome, KR, Solution, Test), signal synthesis, test design, investment gates, roadmap management, and weekly status reporting. Delivery automation, release operations, engineering workflows, local setup, scheduled jobs, and third-party integrations remain in the local Playbook edition and are not included.
+The pack includes PM coaching and orchestration, Compass context routing, Loop tree maintenance (Opportunity, Outcome, KR, Solution, Test), signal synthesis, test design, investment gates, roadmap management, and weekly status reporting. Delivery automation, release operations, engineering workflows, local setup, scheduled jobs, and third-party integrations remain in the local Playbook edition and are not included.
 
 Status reporting is read-only. The complete assistant response and Compass conversation history are its only v1 archive; it creates no separate report object.
 

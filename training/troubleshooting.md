@@ -24,7 +24,7 @@ Some exercises say "trigger the skill" — but if you're running a plain Claude 
 
 ---
 
-## Module 2 — Your First OOKRST Tree
+## Module 2 — Your First Loop
 
 ### "Trigger the `ost-workflow` skill" — skill isn't responding
 
@@ -82,7 +82,7 @@ The simplest recipe:
 
 You need at least one other person with **unfiltered exposure to customer signal** — not your synthesis output, but actual customers. Options that count:
 - A contractor or designer who joins one interview per month
-- A peer founder who reviews your OOKRST tree every 4–6 weeks
+- A peer founder who reviews your Loop tree every 4–6 weeks
 - An engaged customer who is on a standing monthly check-in
 - A support VA who reads tickets and surfaces patterns
 

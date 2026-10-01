@@ -10,11 +10,11 @@ The playbook ships six specialized agents, each with a defined role and tools. A
 
 ### Product Manager (`pm`)
 
-**What it does:** Product discovery, OOKRST tree work, signal synthesis, user stories, test design. Has direct access to your Obsidian vault and writes artifacts there.
+**What it does:** Product discovery, Loop tree work, signal synthesis, user stories, test design. Has direct access to your Obsidian vault and writes artifacts there.
 
 **When to spawn it:**
 - You have interview transcripts, tickets, or feedback to synthesize
-- You want to build or update the OOKRST tree (Opportunity → Outcome → KR → Solution → Test)
+- You want to build or update the Loop tree (Opportunity → Outcome → KR → Solution → Test)
 - You need user stories or acceptance criteria written
 - You want to design a Test brief
 
@@ -22,14 +22,14 @@ The playbook ships six specialized agents, each with a defined role and tools. A
 ```
 "Synthesize the three interviews I did this week into Opportunities and attach the evidence."
 
-"Review the current OOKRST tree for Acme Notes and fix any structural problems."
+"Review the current Loop tree for Acme Notes and fix any structural problems."
 
 "Write user stories for the beneficiary invite flow."
 
 "Design a Test for the riskiest assumption in our onboarding Solution."
 ```
 
-**What it works out itself:** Whether an OOKRST tree exists, the Outcome and KR you're working toward, and the discovery phase — from your config, tracker, and conversation. It states anything it inferred.
+**What it works out itself:** Whether a Loop tree exists, the Outcome and KR you're working toward, and the discovery phase — from your config, tracker, and conversation. It states anything it inferred.
 
 **What it does without asking:** Synthesis, tree updates including new or restructured branches, prioritization, Test design and result interpretation, user stories. **Asks first:** archiving a branch with work behind it, anything customers see, recruiting research participants.
 
@@ -177,7 +177,7 @@ Just say what you want and Claude routes it to the right agent; explicit delegat
 
 "Have the reviewer audit src/auth while the QA agent writes tests for the invite flow."
 
-"Have the PM agent review the OOKRST tree and fix any structural issues."
+"Have the PM agent review the Loop tree and fix any structural issues."
 ```
 
 ### Parallel agents

@@ -1,6 +1,6 @@
 ---
 name: investment-gate
-description: Assess evidence and risk before advancing a Compass Solution (or its Opportunity) up the OOKRST chain.
+description: Assess evidence and risk before advancing a Compass Solution (or its Opportunity) up the Loop chain.
 ---
 
 # Investment Gate

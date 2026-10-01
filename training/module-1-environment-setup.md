@@ -167,6 +167,6 @@ Re-read your `pm-config.md` one more time and confirm the Outcome field is a beh
 
 ## Next
 
-Core's live. Time to build the structure the whole operating model hangs on — your first OOKRST tree (Opportunity → Outcome → Key Result → Solution → Test).
+Core's live. Time to build the structure the whole operating model hangs on — your first Loop tree (Opportunity → Outcome → Key Result → Solution → Test).
 
-→ **[Module 2: Your First OOKRST Tree](module-2-your-first-ookrst-tree.md)**
+→ **[Module 2: Your First Loop](module-2-your-first-loop.md)**

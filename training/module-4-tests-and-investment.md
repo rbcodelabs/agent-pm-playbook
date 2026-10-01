@@ -2,7 +2,7 @@
 
 **Time:** 1 day
 **Coding required:** No.
-**Prerequisite:** [Module 3](module-3-signal-synthesis.md) — an evidenced OOKRST tree with a clear focus branch. You'll work a candidate Solution under the focus KR.
+**Prerequisite:** [Module 3](module-3-signal-synthesis.md) — an evidenced Loop tree with a clear focus branch. You'll work a candidate Solution under the focus KR.
 **You will produce:** A focus Solution's riskiest assumption decomposed, the *cheapest* Test (`TST-n`) that could falsify it (with a kill condition written **before** the test), and an investment-gate verdict telling you what stage you're at and what clears the next gate.
 
 ---
@@ -45,7 +45,7 @@ Skipping a stage means betting build resources on an assumption that hasn't been
 
 ### Test minimalism — the four Test types, cheapest first
 
-"Run a test" usually gets misread as "build the feature and measure it." That's the *most expensive* option. Three cheaper ones come first. In the OOKRST tree, each of these is a **Test** (`TST-n`), parented by exactly one Solution and scoped to one assumption; its result is logged against the KR it informs. **Always use the cheapest test that can answer the question.**
+"Run a test" usually gets misread as "build the feature and measure it." That's the *most expensive* option. Three cheaper ones come first. In the Loop tree, each of these is a **Test** (`TST-n`), parented by exactly one Solution and scoped to one assumption; its result is logged against the KR it informs. **Always use the cheapest test that can answer the question.**
 
 | Type | Answers | Cost |
 |---|---|---|
@@ -60,7 +60,7 @@ Match the test to the riskiest assumption. If the assumption is about *demand*, 
 
 Before a test starts, write the specific result that would **stop** this solution. A team that hasn't written its kill condition isn't ready to test — it's ready to *rationalize results*. "Users seemed to like it" is not a result. A number crossing a line you set in advance is.
 
-**Go deeper:** [`investment-gate` skill](../skills/investment-gate/SKILL.md) (the full gate criteria + output format), [Progressive Investment Framework](../Progressive%20Investment%20Framework.md) (the five stages and Test types in depth), the [OOKRST Structure guide](../guides/ookrst-structure.md) (where Tests sit in the tree), [Assumption Decomposition](../Agent%20Skills/Assumption%20Decomposition.md), and [Test Minimalism](../Agent%20Skills/Test%20Minimalism.md).
+**Go deeper:** [`investment-gate` skill](../skills/investment-gate/SKILL.md) (the full gate criteria + output format), [Progressive Investment Framework](../Progressive%20Investment%20Framework.md) (the five stages and Test types in depth), the [Loop guide](../guides/the-loop.md) (where Tests sit in the tree), [Assumption Decomposition](../Agent%20Skills/Assumption%20Decomposition.md), and [Test Minimalism](../Agent%20Skills/Test%20Minimalism.md).
 
 ---
 

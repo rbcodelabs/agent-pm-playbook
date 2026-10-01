@@ -4,7 +4,7 @@
 
 **Layer:** 3 — Test & Assumption Reasoning
 **Companion:** [[Agentic PM — Agent Capability Framework]]
-**Structure:** `guides/ookrst-structure.md`. A Test (`TST-n`) is falsifiable by definition: it targets one assumption of one Solution, and its success and failure criteria are written before it runs.
+**Structure:** `guides/the-loop.md`. A Test (`TST-n`) is falsifiable by definition: it targets one assumption of one Solution, and its success and failure criteria are written before it runs.
 
 ---
 
@@ -22,7 +22,7 @@ This skill is closely related to the PM judgment layer of the Agentic PM model. 
 
 Tests without well-defined failure conditions do not generate learning. They generate confirmation. Teams that run Tests without explicit failure conditions reliably interpret ambiguous results as positive, keep Solutions alive longer than they should, and ship features that do not move the KR. This pattern is sometimes called "success theater": running Tests that are designed, consciously or not, to be impossible to fail.
 
-In the OOKRST tree this failure travels upward. A Test result sets the confidence on its Solution; Solution progress informs the KR; the KR informs the Outcome; the Outcome informs the status of the Opportunity. A Test that can't fail pushes false confidence at every level above it. The KR looks like it has a promising Solution when it has an untested one, and the tree's fan-out rule (at least three candidates, each with a Test) is satisfied in form and empty in substance.
+In the Loop tree this failure travels upward. A Test result sets the confidence on its Solution; Solution progress informs the KR; the KR informs the Outcome; the Outcome informs the status of the Opportunity. A Test that can't fail pushes false confidence at every level above it. The KR looks like it has a promising Solution when it has an untested one, and the tree's fan-out rule (at least three candidates, each with a Test) is satisfied in form and empty in substance.
 
 Agents are particularly prone to this failure mode because they are trained to be helpful and to support the user's goals. Structuring a Test so it could embarrass the user's favorite Solution feels uncooperative. But in discovery practice, an agent that cannot help design Tests that could fail is actively harmful: it gives the PM false confidence in the validity of results. An agent that only designs Tests structured to confirm is not a discovery assistant. It is a rationalization engine.
 

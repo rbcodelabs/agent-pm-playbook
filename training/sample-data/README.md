@@ -1,6 +1,6 @@
 # Sample Dataset — ShiftLoop
 
-> **Status: built (Build #2).** One coherent fictional product whose brief, signals, and seed OOKRST tree all point at the same Outcome and headline Key Result. Modules 2–4 run on this so every learner works from identical material and exercises are repeatable and reviewable. The capstone is where you drop this and run on your *real* product. Modules 0 and 1 don't need it.
+> **Status: built (Build #2).** One coherent fictional product whose brief, signals, and seed Loop tree all point at the same Outcome and headline Key Result. Modules 2–4 run on this so every learner works from identical material and exercises are repeatable and reviewable. The capstone is where you drop this and run on your *real* product. Modules 0 and 1 don't need it.
 
 ## The fictional product
 
@@ -17,7 +17,7 @@
 | [`interviews/interview-02-devon.md`](interviews/interview-02-devon.md) | Ops director / **buyer** — different lens (cost, compliance); contradicts managers on the app and the auto-scheduler | Module 3 |
 | [`interviews/interview-03-priya.md`](interviews/interview-03-priya.md) | Small-store manager — fast setup, loves the auto-scheduler, pain is collecting staff availability; raises the off-topic tips request | Module 3 |
 | [`support-tickets.md`](support-tickets.md) | 21 tickets across themes, with planted noise, contradictions, and a near-duplicate | Module 3 (clustering, contradiction detection, confidence tagging) |
-| [`seed-ookrst.md`](seed-ookrst.md) | A partial, **deliberately flawed** OOKRST tree — solution-as-opportunity, an Outcome that drifts from its Opportunity, an orphaned Solution, a Solution that skips the KR level, an output-framed KR | Module 2 (health-check practice); Module 3 (cleaning the tree with real signals) |
+| [`seed-loop.md`](seed-loop.md) | A partial, **deliberately flawed** Loop tree — solution-as-opportunity, an Outcome that drifts from its Opportunity, an orphaned Solution, a Solution that skips the KR level, an output-framed KR | Module 2 (health-check practice); Module 3 (cleaning the tree with real signals) |
 | [`facilitator-key.md`](facilitator-key.md) | ⚠️ Answer sheet — planted seed-tree flaws, signal clusters, the two contradictions, noise. **Do exercises first.** | Facilitators / self-check after Modules 2–3 |
 
 ## What's planted (high level — full keys live in each file)
@@ -31,7 +31,7 @@
 
 ## Design constraints honored
 
-- Real mistakes seeded into the seed OOKRST tree (a clean tree teaches nothing).
+- Real mistakes seeded into the seed Loop tree (a clean tree teaches nothing).
 - Signals deliberately contradict, with varied evidence strength.
 - Processable in a single session (3 interviews + ~20 tickets) so learners feel the "4 hours → 20 minutes" collapse without drowning.
 - One coherent thread: brief, tree, and signals are all the same product, so a learner can carry one artifact from Module 2 through Module 4.

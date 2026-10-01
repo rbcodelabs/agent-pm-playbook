@@ -3,7 +3,7 @@
 > The skill of reframing the same finding, evidence, or tree state (Opportunity, Outcome, KR, Solution, Test) for different stakeholder audiences — shifting vocabulary, emphasis, and implied decision without altering the underlying finding or its confidence level.
 
 **Layer:** 4 — Judgment, Escalation & Metacognition
-**Companion:** [[Agentic PM — Agent Capability Framework]] · [OOKRST Structure](../guides/ookrst-structure.md)
+**Companion:** [[Agentic PM — Agent Capability Framework]] · [The Loop](../guides/the-loop.md)
 
 ---
 

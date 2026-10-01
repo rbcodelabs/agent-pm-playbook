@@ -13,7 +13,7 @@ created: 2026-04-01
 last_updated: 2026-04-01
 ---
 
-> [Guide: The Opportunity is the ROOT of the OOKRST tree (Opportunity -> Outcome -> KR -> Solution -> Test); see `guides/ookrst-structure.md`. It has no parent. It persists across cycles and fans out to one or more child Outcomes (`OUT-n`). `title` must be phrased as a customer need or struggle, not a solution. "Customers struggle to understand their plan status during onboarding" is an opportunity. "Add a progress indicator" is a solution — it belongs in a SOL file. If you're tempted to put a feature name here, reframe it first.]
+> [Guide: The Opportunity is the ROOT of the Loop tree (Opportunity -> Outcome -> KR -> Solution -> Test); see `guides/the-loop.md`. It has no parent. It persists across cycles and fans out to one or more child Outcomes (`OUT-n`). `title` must be phrased as a customer need or struggle, not a solution. "Customers struggle to understand their plan status during onboarding" is an opportunity. "Add a progress indicator" is a solution — it belongs in a SOL file. If you're tempted to put a feature name here, reframe it first.]
 
 > [Guide: `status` lifecycle: Exploring (just identified, little evidence) → Validating (gathering evidence) → Prioritized (chosen as focus, strong evidence) → Pursuing (an Outcome is active) → Sustained (outcome achieved, monitoring) → Retired (deprioritized or invalidated). Never delete — retire with a reason so the team doesn't re-discover the same dead end.]
 

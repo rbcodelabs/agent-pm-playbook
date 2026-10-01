@@ -66,15 +66,15 @@ Strategy and metrics → signals → Opportunity → Outcome → Key Results
   → KR and Outcome movement → new signals and changed beliefs
 ```
 
-The loop runs over the single OOKRST hierarchy defined in the
-[OOKRST Structure guide](guides/ookrst-structure.md): Opportunity (root), Outcome, Key Result,
+The loop runs over the single Loop hierarchy defined in the
+[Loop guide](guides/the-loop.md): Opportunity (root), Outcome, Key Result,
 Solution, Test, with Roadmap Items hanging off Solutions after the investment gate. Every
 flow below reads and writes one or more of those levels and preserves the parent chain
 (Outcome → Opportunity, KR → Outcome, Solution → KR, Test → Solution) and the stable IDs.
 
 > **Legacy terminology.** The earlier OKR-then-OST model (Objective, Desired Outcome,
 > Experiment) is gone from this document except in skill ids (`ost-workflow`,
-> `okr-workflow`, `experiment-workflow`, which keep their ids and now cover the OOKRST
+> `okr-workflow`, `experiment-workflow`, which keep their ids and now cover the Loop
 > levels), the `okrs`/`ost`/`experiments` routing keys in `pm-config.md`, and
 > provider-native object names. Where this document says "tree" it means all five levels.
 
@@ -399,7 +399,7 @@ resolved. Human rituals may keep their cadence.
 
 The caretaker, watchdog, and steward apply these gates mechanically on every run and fix or
 report what fails (the full definitions are in the
-[OOKRST Structure guide](guides/ookrst-structure.md)):
+[Loop guide](guides/the-loop.md)):
 
 | Level | Gate |
 |---|---|

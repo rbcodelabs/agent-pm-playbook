@@ -3,7 +3,7 @@ name: compass-workflow
 description: >-
   Manage Compass during a discovery or PM session. Handles MCP API calls to
   update Opportunity/Solution/assumption status, log Test (experiment) results, promote
-  validated work to the roadmap, and keep the OOKRST tree
+  validated work to the roadmap, and keep the Loop tree
   (Opportunity -> Outcome -> KR -> Solution -> Test) current. Use whenever
   Claude is doing discovery or delivery work against a Compass-backed product --
   update Compass inline as work progresses, never batch at the end.
@@ -19,7 +19,7 @@ retrieval:
     - update compass
     - log experiment
     - log test result
-    - OOKRST in compass
+    - the Loop in compass
     - promote to roadmap
     - opportunity status
     - compass discovery
@@ -29,7 +29,7 @@ retrieval:
     - move opportunity to validating
     - promote this solution to the roadmap
     - what's our OST look like in Compass
-    - what's our OOKRST tree look like in Compass
+    - what's our Loop tree look like in Compass
     - sync compass with what we built
     - get a product snapshot from compass
     - add an opportunity to compass
@@ -45,14 +45,14 @@ retrieval:
     - Test
     - Outcome
     - Key Result
-    - OOKRST
+    - the Loop framework
     - roadmap
     - OKR
     - workspace
 chainTo:
-  - pattern: "ost|ookrst|opportunity solution tree|tree health|prioritiz"
+  - pattern: "ost|ookrst|the loop|loop framework|opportunity solution tree|tree health|prioritiz"
     targetSkill: ost-workflow
-    message: Switching to the OOKRST tree workflow for tree-level discovery work
+    message: Switching to the Loop tree workflow for tree-level discovery work
   - pattern: "signal|interview|transcript|feedback|synthesis"
     targetSkill: pm-signal-synthesis
     message: Switching to signal synthesis to process research inputs
@@ -63,20 +63,20 @@ chainTo:
 Rules for how Claude manages Compass during a discovery or delivery session.
 Compass is a native discovery platform: it owns Opportunities, Solutions, assumptions,
 experiments (the Test level), OKRs, roadmap, feedback, and docs in one tool with an MCP API for
-agentic access. The playbook's hierarchy is OOKRST
-([structure guide](../../guides/ookrst-structure.md)), and Compass is mid-migration to it.
+agentic access. The playbook's hierarchy is the Loop
+([structure guide](../../guides/the-loop.md)), and Compass is mid-migration to it.
 
 Compass may also own vision, raw research, synthesized insights, and engineering
 delivery through Compass Docs, research/feedback records, and Compass Tasks. It owns only the
 capabilities resolved to a Compass provider in `pm-config.md`; never assume that
 every Compass-connected product uses the full stack.
 
-## Mapping OOKRST onto Compass
+## Mapping Loop onto Compass
 
-Behave provider-neutrally: map each OOKRST level to whatever native Compass object exists
+Behave provider-neutrally: map each Loop level to whatever native Compass object exists
 today, and never flatten the chain to fit a missing object.
 
-| OOKRST level | Compass mapping |
+| Loop level | Compass mapping |
 |---|---|
 | Opportunity | Native opportunity; feedback and insights attach here |
 | Outcome | The native Outcome/objective object where it exists; until then the OKR objective that carries the customer-behavior statement |
@@ -93,7 +93,7 @@ Rules that hold during the migration:
 - Where today's tool takes an Opportunity as a Solution's parent, still name the parent KR in the
   Solution's description or link so the KR parentage survives, and report the gap.
 - Read the connected catalog to see which levels are native in this workspace; never assume.
-- Keep Compass stable IDs; add the OOKRST role to the report, not to the ID.
+- Keep Compass stable IDs; add the Loop role to the report, not to the ID.
 
 ## Autonomy
 
@@ -406,7 +406,7 @@ value in `pm-config.md`.
 
 - [Compass URL and Data Model](https://compass.rbcodelabs.com)
 - [PM Tool Integration Guide -- Compass section](../../PM Tool Integration Guide.md)
-- [OOKRST Structure](../../guides/ookrst-structure.md)
-- [OOKRST Tree Workflow skill](../ost-workflow/SKILL.md)
+- [The Loop](../../guides/the-loop.md)
+- [Loop Tree Workflow skill](../ost-workflow/SKILL.md)
 - [OKR (Outcome/KR) Workflow skill](../okr-workflow/SKILL.md)
 - [Test Workflow skill](../experiment-workflow/SKILL.md)

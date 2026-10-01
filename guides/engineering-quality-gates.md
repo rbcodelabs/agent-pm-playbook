@@ -4,8 +4,8 @@ This guide covers the structural enforcement layer that makes quality checks imp
 
 **Time to set up:** ~15 minutes per project.
 
-> [!note] Where these gates sit in OOKRST
-> These are *delivery* gates. They apply to work that has already cleared the **investment gate** ([Progressive Investment Framework](../Progressive%20Investment%20Framework.md)), i.e. a Roadmap Item hanging off a Solution in the [OOKRST tree](ookrst-structure.md) (Opportunity → Outcome → KR → Solution → Test). The investment gate decides whether a Solution advances; these gates decide whether its code is fit to merge and ship. Neither replaces the other.
+> [!note] Where these gates sit in the Loop
+> These are *delivery* gates. They apply to work that has already cleared the **investment gate** ([Progressive Investment Framework](../Progressive%20Investment%20Framework.md)), i.e. a Roadmap Item hanging off a Solution in the [Loop tree](the-loop.md) (Opportunity → Outcome → KR → Solution → Test). The investment gate decides whether a Solution advances; these gates decide whether its code is fit to merge and ship. Neither replaces the other.
 
 ---
 

@@ -6,7 +6,7 @@ end_date: 2026-06-30
 status: Active
 ---
 
-> [Guide: This is the Outcome and Key Result level of the OOKRST tree (Opportunity -> Outcome -> KR -> Solution -> Test). Canonical definition: `guides/ookrst-structure.md`. `cycle` uses the format Q[1-4]-YYYY or H[1-2]-YYYY. `status` moves through Draft -> Active -> Closed. Never have more than one Active cycle per product at a time. Opportunities persist across cycles; Outcomes and KRs belong to this cycle.]
+> [Guide: This is the Outcome and Key Result level of the Loop tree (Opportunity -> Outcome -> KR -> Solution -> Test). Canonical definition: `guides/the-loop.md`. `cycle` uses the format Q[1-4]-YYYY or H[1-2]-YYYY. `status` moves through Draft -> Active -> Closed. Never have more than one Active cycle per product at a time. Opportunities persist across cycles; Outcomes and KRs belong to this cycle.]
 
 # Outcome/KR Cycle: Q2-2026
 

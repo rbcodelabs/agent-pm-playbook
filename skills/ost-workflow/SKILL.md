@@ -1,8 +1,8 @@
 ---
 name: ost-workflow
 description: >-
-  Build, review, and maintain the OOKRST tree (Opportunity -> Outcome -> KR ->
-  Solution -> Test), the playbook's successor to the Opportunity Solution Tree
+  Build, review, and maintain the Loop tree (Opportunity -> Outcome -> KR ->
+  Solution -> Test), the playbook's successor to the Opportunity Solution Tree (OST; also called the Loop framework or, formerly, OOKRST)
   — use when the user is constructing the tree from an Opportunity, adding
   Solutions or Tests under a KR, running a tree health check across all five
   levels, checking for orphans and coverage gaps, or prioritizing which branch
@@ -13,8 +13,8 @@ metadata:
     - https://github.com/richardbowman/agent-pm-playbook
 retrieval:
   aliases:
-    - OOKRST
-    - OOKRST tree
+    - the Loop framework
+    - Loop tree
     - OST
     - opportunity solution tree
     - opportunity tree
@@ -23,7 +23,7 @@ retrieval:
     - tree health
     - discovery tree
   intents:
-    - build the OOKRST tree
+    - build the Loop tree
     - build an OST
     - start from an opportunity and derive the outcome and KRs
     - review my opportunity solution tree
@@ -36,7 +36,7 @@ retrieval:
     - validate my opportunity
     - my tree needs work
   entities:
-    - OOKRST
+    - the Loop framework
     - Opportunity
     - Outcome
     - Key Result
@@ -67,9 +67,9 @@ chainTo:
     message: Switching to PM coaching for broader strategic guidance
 ---
 
-# OOKRST Tree Workflow
+# Loop Tree Workflow
 
-This is the tree-wide workflow for the integrated hierarchy defined in [the OOKRST structure guide](../../guides/ookrst-structure.md) (the source of truth for levels, rules, legacy mapping, and IDs). It replaces the separate Opportunity Solution Tree: the skill keeps its name `ost-workflow` and still answers "OST" requests, but the unit of work is now the five-level tree. Cycle management and check-ins live in `okr-workflow`; Test design lives in `experiment-workflow`.
+This is the tree-wide workflow for the integrated hierarchy defined in [the Loop guide](../../guides/the-loop.md) (the source of truth for levels, rules, legacy mapping, and IDs). It replaces the separate Opportunity Solution Tree: the skill keeps its name `ost-workflow` and still answers "OST" requests, but the unit of work is now the five-level tree. Cycle management and check-ins live in `okr-workflow`; Test design lives in `experiment-workflow`.
 
 ## Autonomy
 
@@ -81,7 +81,7 @@ Read `pm-config.md` and resolve the `ost` capability through the named `integrat
 
 The methodology below is provider-neutral. Markdown file language applies to the Markdown/Obsidian adapter only; otherwise map each level to the nearest native object, keep stable IDs, and preserve the parent chain. Do not flatten the hierarchy: if a provider cannot represent a level natively, state the interim mapping (label, custom field) and keep going. Where the `ost` and `okrs` capabilities resolve to different providers, the tree still has one authoritative parent chain; name which provider owns each level.
 
-## OOKRST Structure
+## The Loop
 
 ```
 Opportunity (N)   — bounded, evidence-backed customer need or market opening
@@ -156,6 +156,15 @@ Run these on any review, then fix what you can in the same pass. A review that r
 
 A zero-Solution KR is a dead end with an active label: nothing moves until a candidate exists. Close the gap the run you find it. With 3+ red flags, restructure the tree and report the changes.
 
+## Closing the Loop
+
+A Test result is not the end of the chain; it feeds back up the tree and into Opportunities (see [Closing the loop](../../guides/the-loop.md#closing-the-loop)):
+
+- **Failed or inconclusive Test:** reopen or re-score the parent Opportunity, or spawn new Opportunities the result exposed; kill, iterate, or re-test the Solution.
+- **Passed Test:** promote the Solution and update the parent KR (chain to `okr-workflow`).
+- **Stalled or missed KR:** re-examine the Outcome and its Opportunity before adding more Solutions.
+- **New signal at any step:** add it as an Opportunity (or attach it to an existing one), never to a KR.
+
 ## Prioritizing Within the Tree
 
 Score each candidate branch 1-3 on evidence strength, KR connection, and now-ability (testable this cycle with available resources). At the Solution level, add risk and effort. Show the matrix, set the top 1-2 as focus, and give the rationale. State the evidence age and KR link you assumed.
@@ -176,7 +185,7 @@ Score each candidate branch 1-3 on evidence strength, KR connection, and now-abi
 
 ## References
 
-- [OOKRST Structure](../../guides/ookrst-structure.md)
+- [The Loop](../../guides/the-loop.md)
 - [Full Playbook - Discovery Tree as Operating System](../../Agentic%20PM%20Playbook.md)
 - [Tree Health Checks](../../Agent%20Skills/Tree%20Health%20Checks.md)
 - [Opportunity Validation](../../Agent%20Skills/Opportunity%20Validation.md)

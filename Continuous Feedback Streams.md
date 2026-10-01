@@ -128,9 +128,9 @@ Research platforms (UserTesting, Respondent, User Interviews, etc.) are valuable
 
 ---
 
-## Connecting Streams to the OOKRST Tree
+## Connecting Streams to the Loop Tree
 
-Both interview signals and passive feedback flow into the same [[Signal Ledger]]. The tree doesn't care about source type. An Opportunity is an Opportunity whether it surfaced in an interview or across 40 NPS comments. Evidence attaches to the **Opportunity** (the root of the [OOKRST tree](guides/ookrst-structure.md)) and flows up from there; when a signal bears on a specific Solution or Test, it attaches there too. Do not attach raw feedback to a KR.
+Both interview signals and passive feedback flow into the same [[Signal Ledger]]. The tree doesn't care about source type. An Opportunity is an Opportunity whether it surfaced in an interview or across 40 NPS comments. Evidence attaches to the **Opportunity** (the root of the [Loop tree](guides/the-loop.md)) and flows up from there; when a signal bears on a specific Solution or Test, it attaches there too. Do not attach raw feedback to a KR.
 
 What matters operationally:
 

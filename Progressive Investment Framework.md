@@ -13,7 +13,7 @@
 > spending money still need a human.
 
 > [!note] What the gates gate
-> In the [OOKRST hierarchy](guides/ookrst-structure.md) (Opportunity → Outcome → KR → Solution → Test,
+> In the [Loop hierarchy](guides/the-loop.md) (Opportunity → Outcome → KR → Solution → Test,
 > with Roadmap Items hanging off a Solution), investment gating decides when a **Solution**
 > may advance. Evidence accumulates on the **Opportunity**; the Outcome and KR say what the
 > Solution must move; **Tests** are how a Solution earns each gate. A Roadmap Item is
@@ -237,7 +237,7 @@ Engineers who want to build are not wrong. Point that energy at the smallest rea
 
 ## How This Maps to Your PM Tool
 
-The stages above map directly to the status workflows in [[PM Tool Integration Guide]]. Whatever the provider, preserve the OOKRST parent chain and stable IDs (`OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, `TST-n`); see [OOKRST Structure](guides/ookrst-structure.md).
+The stages above map directly to the status workflows in [[PM Tool Integration Guide]]. Whatever the provider, preserve the Loop parent chain and stable IDs (`OPP-n`, `OUT-n`, `OUT-n-KR-n`, `SOL-n`, `TST-n`); see [The Loop](guides/the-loop.md).
 
 **JPD + Jira:**
 
@@ -291,4 +291,4 @@ Current Test status: [PASTE if in Testing]
 - [[Signal Ledger]] — the source of signal counts and confidence levels used at each gate
 - [[PM Tool Integration Guide]] — status workflow mapping for JPD and Linear
 - [[Agentic PM — Agent Capability Framework]] — Test Minimalism and Null Hypothesis Awareness skills
-- [OOKRST Structure](guides/ookrst-structure.md) — the levels, parent rules, and IDs these gates operate on
+- [The Loop](guides/the-loop.md) — the levels, parent rules, and IDs these gates operate on

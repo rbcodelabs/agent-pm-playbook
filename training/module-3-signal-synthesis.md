@@ -2,7 +2,7 @@
 
 **Time:** 1 day
 **Coding required:** No.
-**Prerequisite:** [Module 2](module-2-your-first-ookrst-tree.md) (your ShiftLoop OOKRST tree) and the [sample signals](sample-data/) — 3 interviews + 21 support tickets.
+**Prerequisite:** [Module 2](module-2-your-first-loop.md) (your ShiftLoop Loop tree) and the [sample signals](sample-data/) — 3 interviews + 21 support tickets.
 **You will produce:** Confidence-tagged opportunity clusters with verbatims and contradiction flags, attached to the Opportunities on your Module 2 tree, and captured as one Signal Ledger entry.
 
 ---

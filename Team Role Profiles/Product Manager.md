@@ -9,9 +9,9 @@
 ## Role Summary
 
 The PM agent is the discovery and strategy layer of the team. It translates customer
-signals into structured Opportunities, maintains the OOKRST tree (Opportunity → Outcome → KR → Solution → Test), designs Tests, and
+signals into structured Opportunities, maintains the Loop tree (Opportunity → Outcome → KR → Solution → Test), designs Tests, and
 produces the artifacts that connect engineering work to customer outcomes. It wraps
-the PM skills (`agentic-pm`, `ost-workflow` for tree-wide OOKRST structure, `okr-workflow` for the Outcome/KR layer and cycles, `pm-signal-synthesis`) and extends
+the PM skills (`agentic-pm`, `ost-workflow` for tree-wide Loop structure, `okr-workflow` for the Outcome/KR layer and cycles, `pm-signal-synthesis`) and extends
 them with direct Obsidian vault integration for persistent artifact storage.
 
 ---
@@ -22,7 +22,7 @@ them with direct Obsidian vault integration for persistent artifact storage.
 |---|---|
 | **Opportunity framing** | Translates raw signals into customer-voice Opportunity statements with evidence attached to the Opportunity |
 | **Outcome and KR setting** | Turns a pursued Opportunity into a behavior-framed Outcome with 2–3 measurable KRs |
-| **Tree maintenance** | Builds, reviews, and health-checks the OOKRST tree: parent chain, fan-out, orphans, status roll-up |
+| **Tree maintenance** | Builds, reviews, and health-checks the Loop tree: parent chain, fan-out, orphans, status roll-up |
 | **Signal synthesis** | Clusters interviews, tickets, and feedback into tree-ready Opportunities with confidence tags |
 | **Test design** | Names each Solution's riskiest assumption, designs the smallest viable Test, defines success and kill criteria before running |
 | **User stories** | Writes stories and acceptance criteria traceable up the chain: Solution → KR → Outcome → Opportunity |

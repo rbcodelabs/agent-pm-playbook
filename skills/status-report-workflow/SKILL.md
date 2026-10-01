@@ -2,11 +2,11 @@
 name: status-report-workflow
 description: >-
   Generate a weekly product status report by resolving roadmap, OKRs (Outcomes and KRs),
-  discovery (the OOKRST tree), delivery, and archive providers independently from pm-config.md.
+  discovery (the Loop tree), delivery, and archive providers independently from pm-config.md.
 metadata:
   priority: 4
 retrieval:
-  aliases: [status report, weekly status, weekly update, product status, OOKRST status]
+  aliases: [status report, weekly status, weekly update, product status, Loop status]
   intents: [generate a weekly status report, what happened this week, give me a status update]
 chainTo:
   - pattern: "roadmap item|move.*horizon|promote to roadmap"
@@ -68,7 +68,7 @@ report includes discovery health. Query each authoritative provider once.
   insights relevant to each resolved capability. Diff stable IDs/statuses
   against the previous snapshot; never invent timestamp-based movement.
 - **Markdown/Obsidian providers:** read only configured capability paths. Do not
-  assume filenames such as `roadmap.md`, `ost.md`, or `okrs/*.md` (these are legacy example names; the OOKRST tree may live in any of them).
+  assume filenames such as `roadmap.md`, `ost.md`, or `okrs/*.md` (these are legacy example names; the Loop tree may live in any of them).
 - **JPD or another provider:** use its native goals, insights, discovery, and
   roadmap objects for the capabilities it owns.
 - **Unavailable provider:** mark only that capability **DATA UNAVAILABLE
@@ -115,7 +115,7 @@ Write the report to `reporting_archive` as a labeled `snapshot`:
 - Unavailable archive: do not redirect to the current directory or a vault;
   report the blocked write and preserve the rendered response in conversation.
 
-Use these sections: Roadmap & Outcome/KR Movement, Discovery Health (all five OOKRST levels), Engineering
+Use these sections: Roadmap & Outcome/KR Movement, Discovery Health (all five Loop levels), Engineering
 Activity, Delivery Snapshot, Traffic/Usage Metrics, Data Gaps, and Follow-ups.
 
 ## Step 7 — Provider-specific archive follow-through

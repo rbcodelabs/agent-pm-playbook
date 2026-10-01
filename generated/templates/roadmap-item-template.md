@@ -21,7 +21,7 @@ last_updated: 2026-04-01
 
 > [Guide: `phase` distinguishes the nature of the work: Discovery (validating an opportunity or solution — not building the full thing) | Delivery (building a validated solution) | Infrastructure (technical investment that enables future delivery). This matters for planning: Discovery items should be small and time-boxed; Delivery items should have acceptance criteria; Infrastructure items need a "enables X" justification.]
 
-> [Guide: A Roadmap Item is delivery under the OOKRST tree (see `guides/ookrst-structure.md`). It is admitted only after its Solution (`parent_solution`) clears its investment gate. `parent_kr` is the KR the Solution moves (`OUT-n-KR-n`) and is inherited from the Solution; `secondary_krs` lists any additional KRs it informs. If you can't connect a Now item to a KR, either the KR is missing or the item shouldn't be Now.]
+> [Guide: A Roadmap Item is delivery under the Loop tree (see `guides/the-loop.md`). It is admitted only after its Solution (`parent_solution`) clears its investment gate. `parent_kr` is the KR the Solution moves (`OUT-n-KR-n`) and is inherited from the Solution; `secondary_krs` lists any additional KRs it informs. If you can't connect a Now item to a KR, either the KR is missing or the item shouldn't be Now.]
 
 # RM-001: [Title]
 

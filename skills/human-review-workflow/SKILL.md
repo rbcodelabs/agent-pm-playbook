@@ -5,7 +5,7 @@ description: >-
   records or work, reaching outside the team, shipping to production, spending money or
   human time) and for decisions a human explicitly asked to own; then read, apply, and
   reconcile decisions according to the configured provider's mode. Do not use for
-  reversible work such as prioritization, horizon moves, OOKRST tree changes, or direction choices:
+  reversible work such as prioritization, horizon moves, Loop tree changes, or direction choices:
   the agent makes those and reports them.
 ---
 
@@ -16,7 +16,7 @@ description: >-
 Follow the [Autonomy Policy](../../Autonomy%20Policy.md): act, then report. This workflow
 exists only for the four irreversible categories and for decisions the human explicitly
 asked to own. Never open a request for reversible work (prioritization, `NEXT`/`NOW`
-moves, new OOKRST tree branches, direction choices); do it and report it. Every request carries a
+moves, new Loop tree branches, direction choices); do it and report it. Every request carries a
 recommended default, and one pending request never blocks unrelated work.
 
 An unattended run turns the irreversible step into a durable asynchronous handoff: create

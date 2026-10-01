@@ -1,6 +1,6 @@
 # Discovery Health Metrics
 
-> Diagnostics for your discovery practice and the health of its [OOKRST tree](guides/ookrst-structure.md) (Opportunity → Outcome → KR → Solution → Test). These metrics answer "is my habit healthy?" not "am I a good PM?"
+> Diagnostics for your discovery practice and the health of its [Loop tree](guides/the-loop.md) (Opportunity → Outcome → KR → Solution → Test). These metrics answer "is my habit healthy?" not "am I a good PM?"
 
 **Part of:** [[Agentic PM Playbook]]
 **Last updated:** 2026-05-15
@@ -9,7 +9,7 @@
 
 ## The Core Framing
 
-These metrics are diagnostic, not evaluative. The goal of continuous discovery is the habit. A PM who runs one solid interview per week for a year learns more than one who does a 40-interview sprint quarterly. The accumulation of consistent signals, tracked in a structured ledger, mapped to Opportunities in a maintained OOKRST tree, is what makes discovery useful. Optimizing for metric counts rather than the underlying habit is the failure mode to avoid.
+These metrics are diagnostic, not evaluative. The goal of continuous discovery is the habit. A PM who runs one solid interview per week for a year learns more than one who does a 40-interview sprint quarterly. The accumulation of consistent signals, tracked in a structured ledger, mapped to Opportunities in a maintained Loop tree, is what makes discovery useful. Optimizing for metric counts rather than the underlying habit is the failure mode to avoid.
 
 Use these metrics to catch when the practice is slipping before it shows up in bad product decisions.
 
@@ -25,7 +25,7 @@ Continuous discovery lives or dies on the weekly habit. If synthesis sessions ar
 |---|---|---|
 | Synthesis sessions | At least one per week. Any source type counts: interview, support review, NPS, app reviews, sales call. | Missed for 2+ consecutive weeks |
 | Signal ledger entries | No gap longer than 2 weeks between dated entries | Gap of 2+ weeks |
-| Tree updates | The OOKRST tree is touched every week, even if just a status update, a Test result, or a confidence revision | Not updated in 2+ consecutive weeks |
+| Tree updates | The Loop tree is touched every week, even if just a status update, a Test result, or a confidence revision | Not updated in 2+ consecutive weeks |
 
 **On interview frequency:** Torres's baseline is one customer interview per week. That is a floor, not a quota. One consistent interview per week, maintained over months, builds a richer and more honest picture than sporadic bursts. More is not better beyond the cadence — what matters is the consistency.
 
@@ -117,12 +117,12 @@ Rigorous discovery produces dead ends. If everything in your tree looks viable a
 
 ## Monthly Health Check
 
-Run this prompt monthly against your signal ledger and OOKRST tree. Paste the relevant inputs and ask for a diagnostic report.
+Run this prompt monthly against your signal ledger and Loop tree. Paste the relevant inputs and ask for a diagnostic report.
 
 ```
 Run a discovery health check across these five areas. For each, report status (Healthy / Watch / Flag) and cite specific evidence from the inputs.
 
-1. Cadence: Are there any gaps longer than 2 weeks in the signal ledger? Has the OOKRST tree been updated in the past week? What is the frequency of synthesis sessions over the past 30 days?
+1. Cadence: Are there any gaps longer than 2 weeks in the signal ledger? Has the Loop tree been updated in the past week? What is the frequency of synthesis sessions over the past 30 days?
 
 2. Coverage: In the past 30 days, how many distinct customer segments appear in the ledger? How many distinct source types? Are there any Active or Prioritized Opportunities with no signals attached in the past 30 days? Are there any KRs or fixed-cohort items (e.g., "N of M capability groups") with **zero** Solutions, and if so, how long has that gap persisted?
 
@@ -135,7 +135,7 @@ Run a discovery health check across these five areas. For each, report status (H
 For each flag, state what specifically triggered it and what action would resolve it.
 
 Signal ledger (past 90 days): [PASTE]
-Current OOKRST tree (with IDs): [PASTE]
+Current Loop tree (with IDs): [PASTE]
 ```
 
 ---

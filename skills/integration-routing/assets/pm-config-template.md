@@ -34,7 +34,7 @@ provider_overrides: {}
 | ost | [provider] |
 | experiments | [provider] |
 
-<!-- okrs + ost + experiments jointly resolve the OOKRST tree (Opportunity -> Outcome -> KR -> Solution -> Test; see guides/ookrst-structure.md). They must share one provider family so the parent chain is never split across systems. Override all three together or none. -->
+<!-- okrs + ost + experiments jointly resolve the Loop tree (Opportunity -> Outcome -> KR -> Solution -> Test; see guides/the-loop.md). They must share one provider family so the parent chain is never split across systems. Override all three together or none. -->
 | roadmap | [provider] |
 | delivery | [provider] |
 | reporting_archive | [provider] |

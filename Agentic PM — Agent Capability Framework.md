@@ -2,7 +2,7 @@
 
 > What skills agents need to develop to work nearly autonomously or provide genuinely high-quality support to human PMs.
 
-**Companion to:** [[Agentic PM Playbook]] · [OOKRST Structure](guides/ookrst-structure.md)
+**Companion to:** [[Agentic PM Playbook]] · [The Loop](guides/the-loop.md)
 **Last updated:** 2026-05-08
 
 ---
@@ -18,7 +18,7 @@ Skills are organized into four layers, roughly in order of difficulty to develop
 | Layer | Name | What it covers |
 |---|---|---|
 | 1 | Synthesis & Signal Processing | Extracting and organizing customer signals |
-| 2 | Tree Integrity & Maintenance | Keeping the OOKRST tree (Opportunity → Outcome → KR → Solution → Test) honest |
+| 2 | Tree Integrity & Maintenance | Keeping the Loop tree (Opportunity → Outcome → KR → Solution → Test) honest |
 | 3 | Test & Assumption Reasoning | Designing and interpreting lean Tests on Solutions |
 | 4 | Judgment, Escalation & Metacognition | Knowing what to do without being told |
 
@@ -97,7 +97,7 @@ Maintaining awareness of previously explored and rejected paths. An agent withou
 - Does it surface tree health issues proactively in weekly check-ins?
 
 ### Development approach
-Seed the agent with a deliberately corrupted OOKRST tree (Solutions masquerading as Opportunities, weak-evidence branches, orphaned Solutions, signals pinned to KRs) and ask it to audit the tree. Grade it against the anti-patterns table. Iterate on the system prompt until it catches all of them.
+Seed the agent with a deliberately corrupted Loop tree (Solutions masquerading as Opportunities, weak-evidence branches, orphaned Solutions, signals pinned to KRs) and ask it to audit the tree. Grade it against the anti-patterns table. Iterate on the system prompt until it catches all of them.
 
 ---
 
@@ -232,7 +232,7 @@ A rough progression for evaluating an agent's development across these skills:
 | Level | Description |
 |---|---|
 | **L1 — Reactive** | Responds to prompts accurately. Synthesizes when asked, clusters when asked. No proactive surfacing. |
-| **L2 — Structured** | Applies OOKRST framing consistently. Distinguishes customer voice from product voice. Flags obvious anti-patterns. |
+| **L2 — Structured** | Applies Loop framing consistently. Distinguishes customer voice from product voice. Flags obvious anti-patterns. |
 | **L3 — Critical** | Tags confidence levels. Detects contradictions. States its assumptions instead of stalling on them. Designs lean Tests unprompted. |
 | **L4 — Calibrated** | Surfaces issues before asked. Notices corpus gaps. Self-critiques outputs. Acts on reversible work and escalates only irreversible actions. Maintains tree integrity over time. |
 
@@ -246,7 +246,7 @@ If you want to move your current agent setup up the maturity curve:
 
 - [ ] Add a self-critique step to your synthesis prompts: *"Now flag any Opportunity statements above that use solution language instead of customer language."*
 - [ ] Add a confidence requirement to all clustering outputs: *"For each cluster, note how many sources support it and whether you'd call it strong, medium, or weak evidence."*
-- [ ] Build a tree health check prompt (run bi-weekly): *"Review this OOKRST tree and identify any zombie Tests, orphaned Solutions, KRs with no Solutions, broken parent links, or Opportunities with no attached evidence."*
+- [ ] Build a tree health check prompt (run bi-weekly): *"Review this Loop tree and identify any zombie Tests, orphaned Solutions, KRs with no Solutions, broken parent links, or Opportunities with no attached evidence."*
 - [ ] Add the autonomy rule to your agent instructions: *"Act, then report. Ask first only before deleting or archiving work, contacting anyone outside the team, shipping to production, or spending money or someone else's time."*
 - [ ] Build the null hypothesis habit into Test design prompts: *"Include a kill condition — what result would cause us to abandon this Solution entirely?"*
 

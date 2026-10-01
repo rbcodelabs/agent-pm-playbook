@@ -1,12 +1,12 @@
 # Facilitator Key — ShiftLoop Sample Data
 
-> ⚠️ **Spoilers.** This file is the answer sheet for the Module 2 and Module 3 exercises. **Do the exercises first**, then open this to compare. It's kept in a separate file (not inside `seed-ookrst.md` or `support-tickets.md`) precisely so you don't read the answers while doing the work.
+> ⚠️ **Spoilers.** This file is the answer sheet for the Module 2 and Module 3 exercises. **Do the exercises first**, then open this to compare. It's kept in a separate file (not inside `seed-loop.md` or `support-tickets.md`) precisely so you don't read the answers while doing the work.
 
 ---
 
-## Seed OOKRST tree — planted structural flaws (Module 2)
+## Seed Loop tree — planted structural flaws (Module 2)
 
-`seed-ookrst.md` contains **five** planted structural mistakes. A good health check finds at least four.
+`seed-loop.md` contains **five** planted structural mistakes. A good health check finds at least four.
 
 1. **Solution masquerading as an Opportunity** — *OPP-3, "Build a mobile app for staff."* "Build an app" is a solution, not a customer need. (Check failed: *Opportunity framing*.) The real needs hiding under it are things like *"staff don't submit availability"* (already part of OPP-1, so this is also a duplicate of a need) or *"staff can't easily see when they work."* Reframe to the need; the app is one possible Solution to it, parented by a KR once the need has an Outcome.
 
@@ -28,7 +28,7 @@
 
 ## Support tickets — planted structure (Module 3)
 
-Rule 7 of the OOKRST guide applies: signals attach to Opportunities (and to the Solution or Test they bear on), never to KRs.
+Rule 7 of the Loop guide applies: signals attach to Opportunities (and to the Solution or Test they bear on), never to KRs.
 
 - **Strongest cluster (high confidence, many sources, both channels + interviews):** roster setup / bulk import friction — T-01, T-02, T-03, T-04, T-11, T-14, T-15, T-21, plus Maria and Devon. This is the cluster that maps to the most leverage on OUT-1-KR-1 (activation); it is the core evidence for OPP-1.
 - **Strong cluster:** availability collection from staff — T-07, T-08, T-09, T-17, plus Priya. Note the manager-is-the-bottleneck framing. Also evidence for OPP-1.

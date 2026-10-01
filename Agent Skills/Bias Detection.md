@@ -3,7 +3,7 @@
 > The skill of recognizing when the discovery corpus, synthesis process, or agent's own reasoning is systematically skewed in ways that would distort the Opportunity landscape and the tree built on it — and flagging it before it compounds downstream.
 
 **Layer:** 4 — Judgment, Escalation & Metacognition
-**Companion:** [[Agentic PM — Agent Capability Framework]] · [OOKRST Structure](../guides/ookrst-structure.md)
+**Companion:** [[Agentic PM — Agent Capability Framework]] · [The Loop](../guides/the-loop.md)
 
 ---
 

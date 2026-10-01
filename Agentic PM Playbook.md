@@ -1,11 +1,11 @@
 # Agentic PM Playbook
 
-> An agent-first approach to product management rooted in continuous discovery, empowered teams, and one integrated goal-to-learning tree: Opportunity → Outcome → Key Result → Solution → Test (OOKRST).
+> An agent-first approach to product management rooted in continuous discovery, empowered teams, and one integrated goal-to-learning tree: Opportunity → Outcome → Key Result → Solution → Test (Loop).
 
 **Influences:** Marty Cagan (SVPG), Teresa Torres (Continuous Discovery Habits)
 **Tooling:** Provider-neutral. Adapters exist for Compass (native discovery + roadmap), Jira Product Discovery, Linear, and Markdown/Obsidian.
 **Last updated:** 2026-10-01
-**See also:** [[Agentic PM — Agent Capability Framework]] — what skills agents need to develop to do this work well. [OOKRST Structure](guides/ookrst-structure.md) — the source of truth for levels, rules, and ID formats.
+**See also:** [[Agentic PM — Agent Capability Framework]] — what skills agents need to develop to do this work well. [The Loop](guides/the-loop.md) — the source of truth for levels, rules, and ID formats.
 
 ---
 
@@ -22,7 +22,7 @@ Most product organizations are order-takers: stakeholders bring features, PMs wr
 |---|---|---|
 | **Outcomes over output** | Cagan | Every work item traces back to a measurable customer-behavior outcome. If it doesn't, it shouldn't exist. |
 | **Continuous discovery** | Torres | Weekly touchpoints with customers. Not quarterly research sprints — a permanent, lightweight habit. |
-| **One integrated tree** | Torres, extended | A living artifact that maps the path from evidence-backed opportunity → committed outcome → measurable key results → candidate solutions → tests. The OOKRST tree *is* the strategy. |
+| **One integrated tree** | Torres, extended | A living artifact that maps the path from evidence-backed opportunity → committed outcome → measurable key results → candidate solutions → tests. The Loop tree *is* the strategy. |
 
 ### What "Agentic" Means Here
 Agents do the work that slows PMs down from being PMs:
@@ -36,11 +36,11 @@ Agents do the work that slows PMs down from being PMs:
 
 ---
 
-## 2. OOKRST as the Operating System
+## 2. The Loop as the Operating System
 
-The playbook used to run two separate artifacts: an OKR cycle for goals and an Opportunity Solution Tree for discovery, joined by a link between a Key Result and a Desired Outcome. That seam is gone. OOKRST is **one tree** in which every record has exactly one parent, and every piece of work traces to the opportunity that justified it and to the test that will tell us whether it worked. It is a *thinking tool* that stays alive for the duration of a product initiative.
+The playbook used to run two separate artifacts: an OKR cycle for goals and an Opportunity Solution Tree for discovery, joined by a link between a Key Result and a Desired Outcome. That seam is gone. The Loop is **one tree** in which every record has exactly one parent, and every piece of work traces to the opportunity that justified it and to the test that will tell us whether it worked. It is a *thinking tool* that stays alive for the duration of a product initiative.
 
-The full definition (levels, quality gates, structural rules, ID formats) lives in the [OOKRST Structure guide](guides/ookrst-structure.md). This section summarizes how the playbook uses it.
+The full definition (levels, quality gates, structural rules, ID formats) lives in the [Loop guide](guides/the-loop.md). This section summarizes how the playbook uses it.
 
 ### Structure
 
@@ -98,6 +98,15 @@ Each Solution rests on assumptions. A Test is the cheapest experiment on the *ri
 - Results flow back up the tree: invalidated assumptions prune Solutions; validated ones earn deeper investment
 - A Test is falsifiable, scoped to one assumption, and its result is logged against the KR it informs
 
+### Closing the Loop
+
+A Test is not the end of the chain; its result feeds back into the tree, which is why this is a loop. The full rules are in [Closing the loop](guides/the-loop.md#closing-the-loop):
+
+- **Test fails or is inconclusive:** reopen or re-score its Opportunity, or spawn new Opportunities the result exposed.
+- **Test passes:** promote the Solution and update the parent KR.
+- **KR stalls or is missed:** re-examine the Outcome (and its Opportunity) before piling on more Solutions.
+- **New signal at any step:** it enters as an Opportunity, never as a KR attachment.
+
 ### Tree Maintenance Rules
 - The tree is a *living document*, updated weekly
 - Dead branches (Solutions disproved, Opportunities invalidated) are archived with a reason, not deleted — they're learning
@@ -111,12 +120,12 @@ Each Solution rests on assumptions. A Test is the cheapest experiment on the *ri
 
 ### Skills that cover the tree
 
-Skill ids predate OOKRST and are unchanged; each now covers OOKRST levels:
+Skill ids predate Loop and are unchanged; each now covers Loop levels:
 
 | Skill id | Covers |
 |---|---|
 | `okr-workflow` | Outcome and Key Result levels, plus cycle scoping and check-ins |
-| `ost-workflow` | Tree-wide OOKRST structure: Opportunity, Solution, Test, and the tree health check |
+| `ost-workflow` | Tree-wide Loop structure: Opportunity, Solution, Test, and the tree health check |
 | `experiment-workflow` | Test design, execution, and result recording |
 | `pm-signal-synthesis` | Signals → Opportunities |
 | `investment-gate` | Whether a Solution may advance (and reach the roadmap) |
@@ -128,7 +137,7 @@ Skill ids predate OOKRST and are unchanged; each now covers OOKRST levels:
 
 ### Overview
 
-Each OOKRST level has a corresponding agent workflow. The pattern is always:
+Each Loop level has a corresponding agent workflow. The pattern is always:
 **Agent synthesizes inputs and updates the tree → reports what changed → PM corrects where judgment differs**
 
 Agents ask first only before irreversible actions ([[Autonomy Policy]]).
@@ -238,7 +247,7 @@ The shared framework is provider-neutral. Each adapter maps the five levels to w
 
 ### Jira Product Discovery (Work)
 
-| OOKRST level | JPD construct | Notes |
+| Loop level | JPD construct | Notes |
 |---|---|---|
 | Opportunity | **Insights** | The root. Tag `opportunity`. Link evidence (interview notes, tickets) as attachments or linked issues. |
 | Outcome | **Goal** (JPD Goals) | One per Opportunity-and-cycle. Written as behavior change; no numbers in the title. |
@@ -490,7 +499,7 @@ The tree won't be "right" at first. That's fine. The discipline is updating it w
 
 ## Legacy terminology
 
-Earlier versions of this playbook used a separate OKR cycle and Opportunity Solution Tree (OST) joined at a Key Result. Those terms are retired as levels: OKR Objective and OST Desired Outcome are now one Outcome; the OST Opportunity is now the root Opportunity; the OST Experiment is now a Test; Solutions are parented by a KR. Skill ids (`ost-workflow`, `okr-workflow`) keep their old names. See the mapping table and conversion steps in the [OOKRST Structure guide](guides/ookrst-structure.md#mapping-from-the-legacy-okr--ost-model).
+Earlier versions of this playbook used a separate OKR cycle and Opportunity Solution Tree (OST) joined at a Key Result. Those terms are retired as levels: OKR Objective and OST Desired Outcome are now one Outcome; the OST Opportunity is now the root Opportunity; the OST Experiment is now a Test; Solutions are parented by a KR. Skill ids (`ost-workflow`, `okr-workflow`) keep their old names. See the mapping table and conversion steps in the [Loop guide](guides/the-loop.md#mapping-from-the-legacy-okr--ost-model).
 
 ---
 

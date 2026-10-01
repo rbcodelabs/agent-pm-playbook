@@ -9,7 +9,7 @@
 
 ## Why this module
 
-A course you finish and a practice you keep are different things. Continuous discovery lives or dies on a **weekly habit**, and the failure mode is silent: synthesis sessions quietly stop, the ledger goes stale, the OOKRST tree drifts, and months later it shows up as a bad product decision. This module installs the rhythms that prevent that — and the diagnostics that catch slippage *before* it costs you.
+A course you finish and a practice you keep are different things. Continuous discovery lives or dies on a **weekly habit**, and the failure mode is silent: synthesis sessions quietly stop, the ledger goes stale, the Loop tree drifts, and months later it shows up as a bad product decision. This module installs the rhythms that prevent that — and the diagnostics that catch slippage *before* it costs you.
 
 The key reframe: **the habit is the goal, not the metric count.** A PM who runs one solid synthesis session a week for a year learns more than one who does a 40-interview sprint quarterly. You're not optimizing numbers; you're making sure you keep showing up.
 
