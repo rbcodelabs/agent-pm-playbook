@@ -125,6 +125,10 @@ When verifying a bug fix:
 4. Check for related cases: does the fix hold for similar inputs?
 5. Check for regressions: did the fix break adjacent behavior?
 
+## Compute Offload
+
+Before a heavy test step (test suite, build, typecheck, E2E run) or an interactive dev server, read `pm-config.md` for an optional `compute_offload` entry (see `integration-routing`). If the step type is in its `applies_to` and its `reachability_check` passes, run the step on that compute per the referenced provider. If the entry is absent, or the check fails, run the step locally. In the report, state which machine each heavy step ran on and why. If the check fails because authentication was lost (for example an SSH agent with no identities) rather than the host being down, say so explicitly instead of silently falling back.
+
 ## Escalation Rules
 
 Proceed autonomously:

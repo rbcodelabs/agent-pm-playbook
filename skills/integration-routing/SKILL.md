@@ -64,6 +64,20 @@ stale tables are a configuration error, not an alternate source of routing truth
 | `prototype_artifacts` | Versioned concept and prototype artifacts |
 | `product_analytics` | Metric definitions, exposure, adoption, and outcome measurements |
 
+### Optional compute capability
+
+`compute_offload` is an optional capability for running heavy steps on configured remote compute. It owns no product state and is not part of either profile table. Omitting it means every step runs locally.
+
+```yaml
+compute_offload:
+  provider: <adapter, e.g. skill:<name>>   # how to run steps on the remote compute
+  applies_to: [test, typecheck, build, e2e, dev_server]
+  reachability_check: <shell command; exit 0 means reachable and authenticated>
+  on_unreachable: run_local_and_note
+```
+
+Before a heavy step in `applies_to`, run `reachability_check`. On success, run the step per `provider`. On failure, apply `on_unreachable` (`run_local_and_note`: run locally and state in the report which machine ran each step and why). When the failure is lost authentication rather than an unreachable host, report that explicitly; never fall back silently. Providers are adapters and never mandatory for the shared framework.
+
 ## Invariants
 
 - Exactly one authoritative provider is resolved per state-owning capability.

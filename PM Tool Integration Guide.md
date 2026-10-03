@@ -475,6 +475,10 @@ The whole review should take under 15 minutes. If it takes longer, the tree is t
 
 ---
 
+### Optional: compute offload
+
+Independent of the tool stack, a team may add a `compute_offload` entry to `pm-config.md` so engineering, QA, and release agents run heavy test, typecheck, build, E2E, or dev-server steps on remote compute. Fields: `provider`, `applies_to`, `reachability_check`, `on_unreachable`. Omitted means local. See `integration-routing`.
+
 ## 7. Cross-Tool Principles
 
 These apply regardless of tool stack.

@@ -203,6 +203,10 @@ The most effective development method: **red team the agent's own outputs**. Aft
 
 ---
 
+## Optional Capability — Compute Offload
+
+Engineering, QA, and release agents can offload heavy steps (test, typecheck, build, e2e, dev_server) to remote compute when the team configures a `compute_offload` entry in `pm-config.md`. It is resolved like any provider capability via `integration-routing`, is optional, and falls back to local execution with a note in the report. Lost authentication is reported explicitly, never silently ignored.
+
 ## Skill Profiles by Agent Mode
 
 Different use cases demand different skill mixes.

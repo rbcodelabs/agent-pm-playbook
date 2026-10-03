@@ -38,6 +38,7 @@ Ask one section at a time:
    capacity-change dispatch target. This policy observes human merges; it never grants
    merge authority.
 10. **Secondary copies:** if requested, require the user to choose `inbox`, `export`, `cache`, or `snapshot`; never call the copy authoritative.
+11. **Compute offload (optional):** ask whether heavy test, typecheck, build, E2E, or dev-server steps should run on remote compute. If so, record `compute_offload` (`provider`, `applies_to`, `reachability_check`, `on_unreachable: run_local_and_note`); otherwise omit it and steps run locally.
 
 Resolve and display all nine product capabilities and, for contract v2, all six workflow capabilities. Stop if any state-owning capability has zero or multiple authoritative providers. Notification fallbacks may be ordered only when explicitly configured.
 
