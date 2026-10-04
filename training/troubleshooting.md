@@ -13,9 +13,9 @@ This guide is seeded from two agent-as-learner QA runs and real friction logs. I
 **What's going wrong:** the playbook agents and skills aren't installed, or Claude Code wasn't restarted after install.
 
 **Fix:**
-1. Confirm `setup.sh` ran to completion with no red errors (Module 1, Step 1).
+1. Confirm the plugin installed: `/plugin` should list `agentic-pm` (Module 1, Step 1).
 2. Restart Claude Code: type `exit` in the session, then `claude` again.
-3. Re-run `./setup.sh --force` if a previous partial install left stale symlinks.
+3. If you installed with the old `setup.sh`, remove its leftover symlinks (see the README upgrade note), then reinstall the plugin.
 4. If errors persist, log the exact command and output — it's a real bug.
 
 ### Working without the skill harness (skill can't be invoked at all)

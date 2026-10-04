@@ -125,14 +125,12 @@ Vault Bridges creates a **bidirectional link** between a local folder (a product
 
 The agents and skills (loop-workflow, pm-signal-synthesis, investment-gate, etc.) run in Claude Code, not in Obsidian. If you haven't done this yet:
 
-```bash
-git clone https://github.com/rbcodelabs/agent-pm-playbook
-cd agent-pm-playbook
-./setup.sh --dry-run   # preview what it will install
-./setup.sh             # do it
+```
+/plugin marketplace add rbcodelabs/agent-pm-playbook
+/plugin install agentic-pm@rbcodelabs
 ```
 
-Restart Claude Code afterward (`exit` then `claude` again). Confirm by opening a session and typing `use the pm-coach skill` — it should respond as a thinking partner.
+Restart Claude Code afterward (`exit` then `claude` again). If you previously installed with the old `setup.sh`, see [Upgrading from setup.sh](../README.md#upgrading-from-setupsh-symlink-installs). Confirm by opening a session and typing `use the pm-coach skill` — it should respond as a thinking partner.
 
 > If you haven't installed Claude Code yet, see [Module 1: Environment Setup](../training/module-1-environment-setup.md) for the Step 0 install instructions.
 

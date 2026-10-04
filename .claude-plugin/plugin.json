@@ -1,6 +1,6 @@
 {
   "name": "agentic-pm",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Full AI-augmented product team — PM, Architect, Engineer, QA, and Code Reviewer agents with PM coaching skills built on continuous discovery and outcome-driven thinking",
   "author": {
     "name": "Rick Bowman",
@@ -19,7 +19,7 @@
     "code-review",
     "agentic-team"
   ],
-  "skills": "skills",
+  "skills": "./skills/",
   "agents": [
     "./agents/architect.md",
     "./agents/engineer.md",
@@ -28,16 +28,5 @@
     "./agents/release-manager.md",
     "./agents/reviewer.md"
   ],
-  "displayName": "Agentic PM Playbook",
-  "skillsList": [
-    "./skills/agentic-pm/SKILL.md",
-    "./skills/investment-gate/SKILL.md",
-    "./skills/jira-workflow/SKILL.md",
-    "./skills/loop-workflow/SKILL.md",
-    "./skills/pm-coach/SKILL.md",
-    "./skills/pm-setup/SKILL.md",
-    "./skills/scheduled-product-operations/SKILL.md",
-    "./skills/pm-signal-synthesis/SKILL.md",
-    "./skills/release-manager/SKILL.md"
-  ]
+  "displayName": "Agentic PM Playbook"
 }
