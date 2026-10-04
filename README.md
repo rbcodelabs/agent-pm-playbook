@@ -30,14 +30,43 @@ the same path. Roadmap admission is separate; merge and production remain separa
 
 **Prerequisite:** [Claude Code](https://docs.anthropic.com/en/docs/claude-code) must be installed. Run `claude --version` to confirm.
 
-```bash
-git clone https://github.com/rbcodelabs/agent-pm-playbook
-cd agent-pm-playbook
-./setup.sh --dry-run   # preview what will be installed
-./setup.sh             # install agents + skills into ~/.claude/
+The playbook installs as a Claude Code plugin (`agentic-pm`) straight from GitHub. No clone or install script is needed. In a Claude Code session:
+
+```
+/plugin marketplace add rbcodelabs/agent-pm-playbook
+/plugin install agentic-pm@rbcodelabs
 ```
 
-Restart Claude Code after setup finishes (`exit`, then `claude` again).
+Or from a terminal:
+
+```bash
+claude plugin marketplace add rbcodelabs/agent-pm-playbook
+claude plugin install agentic-pm@rbcodelabs
+```
+
+Restart Claude Code (or run `/reload-plugins`) so the agents and skills load. Plugin skills are namespaced, for example `agentic-pm:pm-coach`; agents appear as `agentic-pm:pm`.
+
+**Update:** `/plugin marketplace update rbcodelabs` refreshes the catalog from GitHub, then update `agentic-pm` from `/plugin` (or reinstall it). Releases are identified by the `version` in `.claude-plugin/plugin.json`.
+
+### Upgrading from `setup.sh` (symlink installs)
+
+Earlier versions installed by running `setup.sh`, which symlinked each agent and skill into `~/.claude/agents/` and `~/.claude/skills/`. That script has been removed. If you used it, remove the old symlinks after installing the plugin, otherwise you will see each agent and skill twice. List the symlinks that point into a playbook checkout (this only matches symbolic links, never real files or directories):
+
+```bash
+find ~/.claude/agents ~/.claude/skills -maxdepth 1 -type l -lname '*agent-pm-playbook*' -print
+```
+
+Review the list. If every entry is one you expect, delete exactly those:
+
+```bash
+find ~/.claude/agents ~/.claude/skills -maxdepth 1 -type l -lname '*agent-pm-playbook*' -delete
+```
+
+If you cloned the repo to a directory with a different name, the pattern will not match; inspect `ls -l ~/.claude/agents ~/.claude/skills` and remove only the links that point at your clone. You can then delete the clone.
+
+### Other hosts (for example Geode agent threads)
+
+The agents are Claude Code plugin agents, so the supported way to get **agents and skills** is the plugin install above, using the same GitHub repository. The skills are ordinary `skills/<name>/SKILL.md` folders, so a host that can add a skill source from a GitHub repository can load the skills without the plugin. Agent definitions (`agents/*.md`) are only registered through the plugin install; a skills-only source does not provide them. Check your host's documentation for what it discovers from a repository.
 
 **Verify your install:**
 ```bash
@@ -49,7 +78,7 @@ Restart Claude Code after setup finishes (`exit`, then `claude` again).
 "Run the pm-setup skill"
 ```
 
-If you get "unknown skill" or "unknown agent" errors, re-run `./setup.sh --force` and restart again.
+If you get "unknown skill" or "unknown agent" errors, run `/plugin` and confirm `agentic-pm` is installed and enabled, then restart Claude Code.
 
 **First-time config:** run this in a Claude Code session inside your product's folder:
 
@@ -100,7 +129,7 @@ If your selected profile uses Obsidian + Claude Threads:
 
 ## The agent team
 
-Six specialized agents installed by `setup.sh`:
+Six specialized agents provided by the `agentic-pm` plugin:
 
 | Agent | Role |
 |---|---|
@@ -133,7 +162,7 @@ Existing multiple-job installations can be consolidated through the same skill.
 
 ## Skills
 
-Skills installed by `setup.sh` include:
+Skills provided by the `agentic-pm` plugin include:
 
 **PM skills**
 

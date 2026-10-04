@@ -17,13 +17,13 @@ There are two layers here, and conflating them is what makes setup feel heavy. K
 | Piece | Layer | What it is | Which shift it serves |
 |---|---|---|---|
 | Claude Code | **Required** | The host you run the agents and skills in | The whole model — this is the engine |
-| The agents + PM skills (via `setup.sh`) | **Required** | 6 agents (pm, architect, engineer, qa, reviewer, release-manager) + PM skills (`pm-coach`, `pm-setup`, `loop-workflow`, `pm-signal-synthesis`, `investment-gate`, …) | *PM as judgment holder* — agents produce artifacts, you decide |
+| The agents + PM skills (via the `agentic-pm` plugin) | **Required** | 6 agents (pm, architect, engineer, qa, reviewer, release-manager) + PM skills (`pm-coach`, `pm-setup`, `loop-workflow`, `pm-signal-synthesis`, `investment-gate`, …) | *PM as judgment holder* — agents produce artifacts, you decide |
 | `pm-config.md` (via `pm-setup`) | **Required** | Your config: notes system, tracker (or "none"), current outcome and headline Key Result | Everything — every skill reads this |
 | Obsidian + Claude Threads | Recommended | A notes home with Claude in the loop | *Continuous discovery* — signal and synthesis in one place |
 | Issue-tracker integration (Linear / Jira / JPD) | Optional | Work items sync between tracker and notes | *Outcomes* — work items stay traceable. **Skip if you track work in plain notes.** |
 | Vault Bridges | Optional | A live link between your product's repo/docs folder and your notes | *Continuous discovery* — product context one search away |
 
-> **This module is also the install smoke test.** You are the canary for every future adopter. Anywhere you hit friction — a command that fails, a name that's wrong, a step that assumes context you don't have — **write it down** (what you did, what you expected, what happened). That friction log is a real deliverable; it's what hardens `setup.sh` and the docs for the public path. Don't push through silently.
+> **This module is also the install smoke test.** You are the canary for every future adopter. Anywhere you hit friction — a command that fails, a name that's wrong, a step that assumes context you don't have — **write it down** (what you did, what you expected, what happened). That friction log is a real deliverable; it's what hardens the plugin and the docs for the public path. Don't push through silently.
 
 ---
 
@@ -66,21 +66,18 @@ Claude Code is a separate CLI application — different from claude.ai. If you h
 
 #### Step 1 — Install the agents and skills
 
-The reliable path is to clone the repo and run `setup.sh`, which symlinks the agents and skills into `~/.claude/` (symlinks mean repo updates propagate automatically):
+Install the playbook as a Claude Code plugin directly from GitHub. No clone or script is needed:
 
-```bash
-git clone https://github.com/rbcodelabs/agent-pm-playbook
-cd agent-pm-playbook
-./setup.sh --dry-run   # preview exactly what it will symlink
-./setup.sh             # do it
+```
+/plugin marketplace add rbcodelabs/agent-pm-playbook
+/plugin install agentic-pm@rbcodelabs
 ```
 
-`setup.sh` prints a ✓ for each agent and skill it links, then a summary and `Restart Claude Code to pick up the new agents.` Restart Claude Code afterward. (To restart: type `exit` in the session and run `claude` again — or close and reopen the desktop app if you're using one.)
+Restart Claude Code afterward. (To restart: type `exit` in the session and run `claude` again — or close and reopen the desktop app if you're using one.) Update later with `/plugin marketplace update rbcodelabs`.
 
-> **Optional alternative — the plugin marketplace.** If you'd rather install via Claude Code's plugin system instead of `setup.sh`, the repo ships a marketplace manifest.
-> ⚠️ **Confirm before relying on this:** the exact `claude plugins` subcommand syntax changes between Claude Code versions, and this repo's plugin manifest is currently a subset of what `setup.sh` installs. Until that's reconciled, **`setup.sh` is the install that gives you the full set** (all 6 agents + all PM skills). Treat the marketplace path as advanced/optional and verify it against `claude plugins --help` on your version.
+> **Upgrading from the old `setup.sh` install?** Remove its symlinks first; see [Upgrading from setup.sh](../README.md#upgrading-from-setupsh-symlink-installs).
 
-**Verify:** `setup.sh` finished with no red errors and a summary listing the agents and skills. Restart Claude Code, then in a session confirm you can reference the `pm` agent and the `pm-coach` skill without an "unknown skill/agent" error.
+**Verify:** `/plugin` lists `agentic-pm` as installed. Restart Claude Code, then in a session confirm you can reference the `pm` agent and the `pm-coach` skill without an "unknown skill/agent" error.
 
 #### Step 2 — Run `pm-setup`
 
@@ -143,7 +140,7 @@ Re-read your `pm-config.md` one more time and confirm the Outcome field is a beh
 
 ## Success criteria
 
-- [ ] `setup.sh` completed and the agents + PM skills are available after a restart.
+- [ ] The `agentic-pm` plugin is installed and the agents + PM skills are available after a restart.
 - [ ] `pm-config.md` exists, its Outcome is a behavior change (Module-0 standard) rather than a feature, and its headline Key Result has a baseline, target and date.
 - [ ] `pm-coach` responds *as a coach* in a thread — it asks about outcomes/evidence.
 - [ ] You made a deliberate decision about each optional stack piece (set up or skipped on purpose) — a skipped tracker with "N/A" recorded counts as done.
@@ -155,9 +152,9 @@ Re-read your `pm-config.md` one more time and confirm the Outcome field is a beh
 
 | Symptom | What's going wrong | Fix |
 |---|---|---|
-| `git clone` or `./setup.sh` errors | Tooling missing, or wrong directory | Confirm git and Claude Code are installed; run `setup.sh` from inside the cloned repo; use `--dry-run` to see what it expects. Log the exact error. |
-| Skills/agents don't appear ("unknown skill") | Claude Code not restarted, or symlinks skipped | Restart Claude Code. Re-run `./setup.sh --force` if a previous install left stale entries. If it persists, log it with the exact command and output. |
-| You tried the `claude plugins` command and the syntax was wrong | Plugin CLI differs by version; repo manifest is a subset | Use the `setup.sh` path — it's the supported full install. Note the discrepancy in your friction log. |
+| `/plugin marketplace add` or `/plugin install` errors | Claude Code too old, no network access to GitHub, or wrong marketplace name | Run `claude --version` and update Claude Code; confirm you can reach github.com; the install target is `agentic-pm@rbcodelabs`. Log the exact error. |
+| Skills/agents don't appear ("unknown skill") | Claude Code not restarted, plugin disabled, or old `setup.sh` symlinks conflicting | Restart Claude Code and check `/plugin`. If you used the old `setup.sh`, remove its symlinks (see the README upgrade note). If it persists, log it with the exact command and output. |
+| The plugin commands are not recognized | Claude Code predates the plugin system | Update Claude Code (`claude --version`), then retry. Note the discrepancy in your friction log. |
 | `pm-coach` answers generically | No `pm-config.md`, or it's empty/stale | Re-run `pm-setup`; the coach anchors to your config. |
 | Outcome is a feature ("ship onboarding v2") | Module-0 lesson didn't carry over | Rewrite the Outcome as a behavior change ("new users get through setup on their own") and put the number in a Key Result ("raise day-2 activation from X% to Y%"). Every skill inherits this. |
 | You feel blocked because you don't have Linear / a code repo | Treating an optional piece as required | The tracker and vault bridge are optional. Record "N/A" and continue — the core is all the course needs. |

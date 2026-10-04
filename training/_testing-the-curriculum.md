@@ -74,7 +74,7 @@ Tested Modules 0–3 (the Phase-1 curriculum). Chose a B2C single-persona produc
 **Cross-cutting findings → all fixed in commit `b0b69c9`:**
 1. No "bring your own product" path — Modules 2 & 3 baked ShiftLoop into the steps and success criteria. → BYO sidebars + templatized language + abstract success criteria.
 2. B2B/multi-persona/tracker assumptions leaked through. → Module 1 split into required core vs. optional stack; persona language templatized.
-3. Module 1 install gaps (the only Blocker). → `setup.sh` made the primary verified path; marketplace path flagged.
+3. Module 1 install gaps (the only Blocker). → `setup.sh` made the primary verified path; marketplace path flagged. (Superseded: `setup.sh` was later removed and the plugin install is now the only path.)
 4. Module 3 Severity table + worked ledger example added; confidence-vs-intensity override; flexible contradiction count.
 5. Facilitator keys split out of the exercise files into `sample-data/facilitator-key.md`.
 
@@ -122,4 +122,4 @@ Full-curriculum pass: Modules 0–6 + capstone. Chose a B2C single-persona solo-
 These surfaced during Run 1 but live outside the training folder, so they're parked here rather than fixed in the curriculum branch:
 
 - **`README.md`** — install command `claude plugins add richardbowman/agent-pm-playbook` appears wrong/outdated, and it uses the `richardbowman` org while the active remote is `rbcodelabs`.
-- **`.claude-plugin/plugin.json`** — stale vs. the repo: `name` is `agentic-product-team` while `marketplace.json` calls the plugin `agentic-pm`; it lists only 3 skills and 5 agents, missing several skills and the `release-manager` agent that `setup.sh` actually installs.
+- **`.claude-plugin/plugin.json`** — stale vs. the repo: `name` is `agentic-product-team` while `marketplace.json` calls the plugin `agentic-pm`; it lists only 3 skills and 5 agents, missing several skills and the `release-manager` agent that `setup.sh` actually installed. (Resolved when `setup.sh` was removed and the manifests were corrected.)

@@ -1,17 +1,23 @@
 {
-  "name": "richardbowman",
+  "name": "rbcodelabs",
   "owner": {
-    "name": "Rick Bowman"
+    "name": "Rick Bowman",
+    "url": "https://github.com/rbcodelabs"
+  },
+  "metadata": {
+    "description": "Plugins from rbcodelabs, including the Agentic PM Playbook."
   },
   "plugins": [
     {
       "name": "agentic-pm",
       "source": "./",
+      "version": "3.0.0",
       "description": "Agentic PM Playbook: AI-augmented product management using the Loop tree (Opportunity, Outcome, KR, Solution, Test) and continuous discovery",
       "author": {
-        "name": "Rick Bowman"
+        "name": "Rick Bowman",
+        "url": "https://github.com/rbcodelabs"
       },
-      "repository": "https://github.com/richardbowman/agent-pm-playbook",
+      "repository": "https://github.com/rbcodelabs/agent-pm-playbook",
       "license": "MIT",
       "keywords": [
         "product-management",
