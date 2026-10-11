@@ -180,6 +180,7 @@ Skills provided by the `agentic-pm` plugin include:
 | `jira-workflow` | Create and update Jira issues from discovery artifacts |
 | `agentic-pm` | Full-cycle PM workflow orchestration |
 | `release-manager` | Triage, merge, and ship open PRs |
+| `product-demo-video` | Produce a narrated product demo video from a script, with actions cued to the voice-over; config-driven for local or remote recording, Electron or web apps |
 
 **Engineering discipline skills**
 
