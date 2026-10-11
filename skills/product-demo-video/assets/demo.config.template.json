@@ -1,0 +1,46 @@
+{
+  "title": "Getting started with Acme Notes",
+  "target": {
+    "type": "web",
+    "url": "http://localhost:3000",
+    "startCommand": "npm run dev",
+    "readySelector": "[data-testid='note-list']"
+  },
+  "environment": {
+    "record": { "runner": "local" }
+  },
+  "capture": { "width": 1280, "height": 800, "fps": 30 },
+  "output": { "width": 1920, "height": 1080, "fps": 30 },
+  "look": {
+    "style": "macos",
+    "windowWidth": 1440,
+    "cornerRadius": 14,
+    "dock": true,
+    "menuBar": {
+      "appName": "Acme Notes",
+      "items": ["File", "Edit", "View", "Window", "Help"],
+      "clock": "Tue 9:41 AM"
+    }
+  },
+  "voice": { "provider": "elevenlabs", "modelId": "eleven_multilingual_v2", "stability": 0.5, "similarityBoost": 0.75, "style": 0 },
+  "timing": { "leadMs": 400, "tailMs": 700, "maxSlowdown": 1.3 },
+  "scenes": [
+    {
+      "id": "intro",
+      "narration": "Welcome to Acme Notes. Your notes live in one list on the left. Let's create a new one.",
+      "actions": [
+        { "type": "waitFor", "selector": "[data-testid='note-list']" },
+        { "type": "hover", "selector": "[data-testid='note-list']", "cue": "one list on the left" },
+        { "type": "click", "selector": "[data-testid='new-note']", "cue": "create a new one" }
+      ]
+    },
+    {
+      "id": "write",
+      "narration": "Give it a title, then start typing. Everything saves automatically.",
+      "actions": [
+        { "type": "type", "text": "Weekly planning", "delayMs": 90, "cue": "Give it a title" },
+        { "type": "press", "key": "Enter", "cue": "start typing" }
+      ]
+    }
+  ]
+}

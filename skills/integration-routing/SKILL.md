@@ -81,6 +81,18 @@ compute_offload:
 
 Before a heavy step in `applies_to`, run `reachability_check`. On success, run the step per `provider`. On failure, apply `on_unreachable` (`run_local_and_note`: run locally and state in the report which machine ran each step and why). When the failure is lost authentication rather than an unreachable host, report that explicitly; never fall back silently. Providers are adapters and never mandatory for the shared framework.
 
+### Optional product demo capability
+
+`product_demo` is an optional capability that tells agents where the team's demo video configuration lives. It owns no product state and is not part of either profile table. Omitting it means the `product-demo-video` skill asks where the config is.
+
+```yaml
+product_demo:
+  config: <path to demo.config.json, relative to the product repository>
+  publish_to: none          # none | <provider>; producing a video never implies publishing it
+```
+
+The config's own `environment` block decides where recording runs; when `compute_offload` is set, reuse its host rather than configuring a second one. `publish_to` is advisory: uploading or embedding a demo still requires explicit authority under the Autonomy Policy.
+
 ## Invariants
 
 - Exactly one authoritative provider is resolved per state-owning capability.

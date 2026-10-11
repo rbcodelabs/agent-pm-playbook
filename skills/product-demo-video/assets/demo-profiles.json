@@ -1,0 +1,40 @@
+{
+  "contract": 1,
+  "description": "Environment options for the product demo video engine. A profile is a starting point for the environment block of demo.config.json; adopt one, then edit it. Anything marked <placeholder> must come from your team's configuration.",
+  "recordRunners": {
+    "local-linux": {
+      "summary": "Record on this machine. It must be Linux with Xvfb and ffmpeg (a laptop with a Linux VM, a Linux workstation, or a CI runner).",
+      "requires": ["Linux", "xvfb", "ffmpeg with x11grab and libx264", "the product's dependencies installed"],
+      "environment": { "record": { "runner": "local" } }
+    },
+    "remote-linux": {
+      "summary": "Record on a Linux host over SSH while voiceover and compose stay on this machine. Use this from a Mac or Windows machine, or whenever the local machine should stay free.",
+      "requires": ["SSH access without a password prompt", "rsync on both ends", "Node, Xvfb and ffmpeg on the host", "the product's dependencies installable on the host"],
+      "environment": {
+        "record": {
+          "runner": "ssh",
+          "host": "<ssh-host-alias>",
+          "remoteDir": "~/product-demo-work",
+          "shellInit": "<optional shell snippet, for example selecting the Node version>",
+          "setup": ["<install dependencies>", "<build the product, if the demo needs a build>"]
+        }
+      }
+    }
+  },
+  "composeHosts": {
+    "macos": "Real system font and the real macOS app icons in the dock. Recommended for the most convincing result.",
+    "linux": "Works, but the dock shows neutral tiles and the menu bar uses the available sans-serif font."
+  },
+  "targets": {
+    "electron": "A desktop app built on Electron. Provide the app folder, readySelector, and optionally a fixture folder and user-data files.",
+    "web": "Any web app. Provide a url, optionally a startCommand that serves it, and a readySelector."
+  },
+  "voice": {
+    "elevenlabs": "Narrated. Needs ELEVENLABS_API_KEY and ELEVENLABS_VOICE_ID. Cached by text, so only edited scenes spend credit.",
+    "none": "Silent but paced like speech (150 words a minute). Cues still work. Use it to draft the timing for free, or when narration is added elsewhere."
+  },
+  "look": {
+    "macos": "Wallpaper, menu bar and dock around a rounded, shadowed window.",
+    "plain": "Wallpaper and window only. No menu bar or dock."
+  }
+}
