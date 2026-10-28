@@ -12,3 +12,7 @@ Preserve the Loop hierarchy: Opportunity, Outcome, Key Result, Solution, Test (w
 Never delete learning merely because it is no longer active; use the available archive or terminal status and record the reason. Do not infer success from a tool call alone: inspect its result and report any partial or rejected operation.
 
 If an operation is not present in the host tool catalog, state the exact unsupported operation. Do not simulate persistence in the response or claim that Compass changed.
+
+Attach evidence to the Opportunity, Solution, or assumption it supports, never to a Key Result. Store a prototype as a first-class Artifact linked to the Solution it demonstrates, and to any Decision it informs; do not substitute a Doc that describes it. Verify the stored Artifact and its links after publishing.
+
+Attach evidence to the Opportunity, Solution, or assumption it supports, never to a Key Result. Store a prototype as a first-class Artifact linked to the Solution it demonstrates, and to any Decision it informs; do not substitute a Doc that describes it. Verify the stored Artifact and its links after publishing.

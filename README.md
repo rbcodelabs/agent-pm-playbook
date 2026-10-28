@@ -203,6 +203,7 @@ Skills provided by the `agentic-pm` plugin include:
 - **[Signal Ledger](Signal%20Ledger.md)** — the synthesis artifact format
 - **[Capability Provider Contract](skills/integration-routing/SKILL.md)** — routing invariants, capabilities, and migration behavior
 - **[PM Tool Integration Guide](PM%20Tool%20Integration%20Guide.md)** — Compass, Obsidian, Linear, JPD, Jira, and hybrid profiles
+- **[Using Compass](guides/using-compass.md)** — where each artifact, piece of evidence, and decision lives in Compass and how to link it
 - **[Success Metrics guide](guides/success-metrics.md)** — how to know the operating model is actually working at 30/60/90 days
 - **[Troubleshooting](training/troubleshooting.md)** — common friction across all modules
 

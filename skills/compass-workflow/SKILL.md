@@ -331,21 +331,37 @@ rather than inventing method names. If a required operation is missing, report t
 capability as blocked, continue the rest, and don't silently redirect the write to
 Markdown or an external tracker.
 
+### Evidence
+
+Attach each signal to the node it supports with `add_evidence` (exactly one of
+`opportunityId`, `solutionId`, `assumptionId`), setting `sourceType` (`interview`,
+`feedback`, `support_ticket`, `experiment_result`, `analytics`), `confidence`, and a
+`sourceUrl` when one exists. Use `link_evidence` to re-parent a misfiled item and
+`promote_research_finding_to_evidence` to lift a research finding. Never attach evidence to a KR.
+
+### Evidence
+
+Attach each signal to the node it supports with `add_evidence` (exactly one of
+`opportunityId`, `solutionId`, `assumptionId`), setting `sourceType` (`interview`,
+`feedback`, `support_ticket`, `experiment_result`, `analytics`), `confidence`, and a
+`sourceUrl` when one exists. Use `link_evidence` to re-parent a misfiled item and
+`promote_research_finding_to_evidence` to lift a research finding. Never attach evidence to a KR.
+
 ### Prototype artifacts
 
-When `prototype_artifacts` resolves to `compass_artifacts`, publish the prototype as a
-first-class Compass Artifact. Use `create_artifact` for the initial version,
-`update_artifact` for later revisions, `get_artifact` or `list_artifacts` to read it,
-and `archive_artifact` when it is no longer active. Link the stable artifact to its
-source product objects with `link_artifact_to_solution` and, when it is a decision aid,
-`link_artifact_to_decision`.
+When `prototype_artifacts` resolves to `compass_artifacts`, a prototype is a first-class
+Compass Artifact. Do not substitute a Compass Doc that describes the prototype or points to
+a machine-local path ([placement rules](../../guides/using-compass.md)).
 
-For an HTML upload, provide one self-contained file so its styles, scripts, and assets
-survive outside the originating machine. Re-read the stored artifact after publishing
-and verify its revision metadata and intended links. Do not substitute a Compass Doc
-that describes the prototype or points to a machine-local path. Compass Docs remain the
-home for vision and durable narratives when the `vision` capability resolves to
-`compass_docs`.
+1. Produce one self-contained HTML file (styles, scripts, and assets inline; 2 MiB maximum).
+2. `prepare_artifact_upload(workspaceId, filename, fileSize)`, upload the file with the
+   returned token, then `create_artifact` with `sourceType: HTML_UPLOAD` and the
+   `uploadReceipt`. Prefer this over inline `html`. Use `kind: SLIDE_DECK` for decks, or
+   `EXTERNAL_LINK` for a hosted prototype.
+3. State in the description which assumption the prototype tests.
+4. `link_artifact_to_solution`; add `link_artifact_to_decision` when it informs a decision.
+5. Re-read with `get_artifact` (or find it with `list_artifacts`) and verify the revision and links. Revise with
+   `update_artifact` (same Artifact, new version), and `archive_artifact` when superseded.
 
 ### OKR check-in
 A check-in propagates up the tree: after `log_checkin`, report the effect on the KR's Outcome and on the Opportunity's status.
