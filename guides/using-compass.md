@@ -17,6 +17,11 @@ repeat either.
 | Interview or usability study material | **Research study** | Evidence (promote findings); Tests it informed |
 | A prototype, mock, or slide deck | **Artifact** | The Solution it demonstrates; the Decision it informs |
 | Vision, durable narrative, written rationale | **Doc** | Referenced by URL from the objects it explains |
+| A proposal, discovery brief, design options, or analysis an agent wrote | **Doc** (type `DESIGN` or `NOTE`) | The Opportunity or Solution it is about |
+| An implementation plan | **Solution Plan** (plus a Doc if long) | The Solution it plans |
+| An architecture decision record | **Doc** (type `ADR`) plus a **Decision** request | The Opportunity or Solution it affects |
+| A QA or verification report | **Doc** (type `QA_REPORT`) | The Task for the work |
+| Run notes or a handoff | **Task** comment, or a Doc | The Task |
 | A choice needing human approval | **Decision** | The Artifacts and evidence that justify it |
 | Work to build a validated Solution | **Roadmap item**, then **Task** | The Solution; the Task to the roadmap item |
 
@@ -27,6 +32,18 @@ If it is **prose that explains**, it is a Doc. Never use a Doc to describe a pro
 to hold a machine-local path: the prototype would not survive outside the machine that
 built it. Publish one self-contained HTML file (or an external link for a hosted
 prototype) and link it to its Solution.
+
+## Agent-authored documents
+
+When `pm-config.md` resolves documents to Compass, an agent writes its proposals, plans,
+briefs and reports into the product's Compass workspace instead of a local note, links them
+to the object they concern, and reads the item back to verify the link. A local note is
+only an index line or a fallback: use it when the product has no Compass workspace, when
+the content is personal or sensitive and must not be uploaded, or when Compass returns
+real errors (mark the note with the error and back-fill Compass afterwards). Keep a
+scheduled export of the workspace in your own archive, since a hosted workspace is not a
+backup of itself. A provider override in `pm-config.md` (for example a reporting archive
+kept in another system) takes precedence for the capability it names.
 
 ## How things connect
 

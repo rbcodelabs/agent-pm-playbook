@@ -326,6 +326,15 @@ references in Compass's research surface. `compass_feedback` owns granular,
 linkable insights. `compass_tasks` owns engineering delivery tasks and their
 status; link each task back to its roadmap item and validated solution.
 
+Agent-authored proposals, plans, briefs, ADRs and QA reports belong in the product's
+Compass workspace when routing resolves documents to Compass: a Doc (type `DESIGN`,
+`NOTE`, `ADR` or `QA_REPORT`) linked to the Opportunity, Solution or Task it concerns, or a
+Solution Plan for an implementation plan. Read the item back to verify the link. Fall back
+to a local note only for products without a Compass workspace, sensitive content that must
+not be uploaded, or real Compass errors (record the error and back-fill). A `pm-config.md`
+provider override wins for the capability it names. See the
+[placement guide](../../guides/using-compass.md#agent-authored-documents).
+
 Use the tools the connected Compass MCP server actually exposes; discover the catalog
 rather than inventing method names. If a required operation is missing, report that one
 capability as blocked, continue the rest, and don't silently redirect the write to
